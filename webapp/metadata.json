@@ -1,0 +1,6 @@
+{
+  "name": "EMP Pulse Generator Simulator",
+  "description": "A high-fidelity simulation of an Electromagnetic Pulse generator, featuring RC charging curves, PFN discharge logic, and real-time oscilloscope visualization.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

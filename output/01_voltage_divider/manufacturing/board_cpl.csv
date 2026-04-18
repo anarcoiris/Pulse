@@ -1,0 +1,4 @@
+Ref,Val,Package,PosX,PosY,Rot,Side
+"J1","VIN-VOUT-GND","PinHeader_1x03_P2.54mm_Vertical",3.000000,-5.000000,0.000000,top
+"R1","10k","R_0805_2012Metric",12.000000,-5.000000,0.000000,top
+"R2","22k","R_0805_2012Metric",12.000000,-10.000000,0.000000,top
