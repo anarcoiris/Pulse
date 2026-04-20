@@ -49,13 +49,18 @@ class PlacedComponent:
     R_on:        float = 0.01
     R_off:       float = 1e9
     is_closed:   bool  = False
+    pins:        Dict[str, str] = field(default_factory=dict)
+    width:       int   = 2
+    height:      int   = 2
 
     @property
     def grid_c2(self) -> int:
+        if self.etype in ('IC', 'MCU'): return self.grid_c + self.width
         return self.grid_c + (1 if self.orientation == 'H' else 0)
 
     @property
     def grid_r2(self) -> int:
+        if self.etype in ('IC', 'MCU'): return self.grid_r + self.height
         return self.grid_r + (1 if self.orientation == 'V' else 0)
 
 
@@ -85,7 +90,7 @@ class CircuitGraph:
     # ── Component CRUD ────────────────────────────────────────
 
     def add(self, etype, grid_c, grid_r, orientation, value, label,
-            n1, n2, **kwargs) -> PlacedComponent:
+            n1="", n2="", **kwargs) -> PlacedComponent:
         uid  = f"{etype}_{self._counter:03d}"
         self._counter += 1
         comp = PlacedComponent(uid=uid, etype=etype, grid_c=grid_c,
@@ -140,6 +145,8 @@ class CircuitGraph:
         for c in self.components:
             if c.n1 == name_drop: c.n1 = name_keep
             if c.n2 == name_drop: c.n2 = name_keep
+            for pin_id, net in c.pins.items():
+                if net == name_drop: c.pins[pin_id] = name_keep
 
     def node_at_grid(self, gc: int, gr: int) -> Optional[str]:
         for c in self.components:
@@ -160,7 +167,9 @@ class CircuitGraph:
             if c.etype != 'GND':
                 nodes.add(c.n1)
                 nodes.add(c.n2)
-        return sorted(nodes - {'GND'})
+                for net in c.pins.values():
+                    nodes.add(net)
+        return sorted(nodes - {'GND', ''})
 
     # ── MNA integration ───────────────────────────────────────
 
@@ -168,7 +177,7 @@ class CircuitGraph:
         from circuit_engine import CircuitSimulator
         sim = CircuitSimulator(dt=1e-3)
         for c in self.components:
-            if c.etype == 'GND':
+            if c.etype in ('GND', 'IC', 'MCU'):
                 continue
             n1, n2 = c.n1, c.n2
             try:
@@ -195,7 +204,8 @@ class CircuitGraph:
                      grid_c=c.grid_c, grid_r=c.grid_r,
                      orientation=c.orientation, value=c.value,
                      label=c.label, n1=c.n1, n2=c.n2,
-                     R_on=c.R_on, R_off=c.R_off, is_closed=c.is_closed)
+                     R_on=c.R_on, R_off=c.R_off, is_closed=c.is_closed,
+                     pins=c.pins, width=c.width, height=c.height)
                 for c in self.components
             ],
             'wires': [

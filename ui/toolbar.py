@@ -63,6 +63,8 @@ FORGE_COL = (0, 200, 180)   # teal
 FORGE_ACTIONS: list = [
     ('FORGE_EXPORT_KICAD', 'K', 'Export KiCad',    FORGE_COL),
     ('FORGE_GEN_PCB',      'P', 'Generar PCB',     FORGE_COL),
+    ('FORGE_ENCLOSURE',    '3', 'Caja 3D (SCAD)',  (150, 100, 255)),
+    ('FORGE_REVIEW',       'D', 'IA DRC Review',   (255, 60, 100)),
     ('FORGE_GERBERS',      'G', 'Export Gerbers',   (220, 160, 40)),
     ('FORGE_KICAD_STATUS', 'i', 'KiCad Status',    DIM),
 ]

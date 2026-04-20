@@ -1,0 +1,4 @@
+Reference,Value,Footprint,Label,Type,Node1,Node2,UID
+V1,5V,Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical,V1 5V,V,A,GND,V_000
+R1,1000Ω,Resistor_SMD:R_0805_2012Metric,R1 1kΩ,R,A,B,R_001
+C1,0.0001F,Capacitor_SMD:C_0805_2012Metric,C1 100µF,C,B,GND,C_002

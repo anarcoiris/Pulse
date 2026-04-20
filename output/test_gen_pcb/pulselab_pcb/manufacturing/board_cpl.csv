@@ -1,0 +1,10 @@
+Ref,Val,Package,PosX,PosY,Rot,Side
+"C_002","0.0001","C_0805_2012Metric",32.000000,-8.000000,0.000000,top
+"GND_003","GND","PinHeader_1x02_P2.54mm_Vertical",8.000000,-18.000000,0.000000,top
+"GND_004","GND","PinHeader_1x02_P2.54mm_Vertical",20.000000,-18.000000,0.000000,top
+"H","","MountingHole_3.2mm_M3",3.000000,-3.000000,0.000000,top
+"H","","MountingHole_3.2mm_M3",42.000000,-3.000000,0.000000,top
+"H","","MountingHole_3.2mm_M3",3.000000,-33.000000,0.000000,top
+"H","","MountingHole_3.2mm_M3",42.000000,-33.000000,0.000000,top
+"R_001","1000","R_0805_2012Metric",20.000000,-8.000000,0.000000,top
+"V_000","5V","PinHeader_1x02_P2.54mm_Vertical",8.000000,-8.000000,0.000000,top

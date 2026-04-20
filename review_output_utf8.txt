@@ -1,0 +1,56 @@
+﻿ÔòöÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòù
+Ôòæ  PulseLab Forge ÔÇö PCB Layout Engine Demo        Ôòæ
+ÔòÜÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòÉÔòØ
+
+=== 1. Divisor de Tensi├│n (20├ù15mm) ===
+  Guardado: output\01_voltage_divider\board.kicad_pcb
+  Stats: {'board_mm': '20.0├ù15.0', 'footprints': 3, 'traces': 7, 'vias': 0, 'nets': 3, 'mounting_holes': 0}
+
+=== 2. 555 LED Driver (40├ù25mm) ===
+  Guardado: output\02_555_led_driver\board.kicad_pcb
+  Stats: {'board_mm': '40.0├ù25.0', 'footprints': 14, 'traces': 3, 'vias': 0, 'nets': 9, 'mounting_holes': 4}
+
+=== 3. ESP8266 Sensor Node (60├ù45mm) ===
+  Calculando Auto-route P2P Manhattan...
+
+--- AI Layout Review ---
+# AI Design Review (DRC) ÔÇö ESP8266 Sensor Node
+**Estado General:** ÔØî FALLIDO (Requiere Revisiones)
+
+## ­ƒö┤ Errores Cr├¡ticos (Violaciones de Reglas de Dise├▒o)
+- Violaci├│n de Clearance: La traza pasa a -0.05mm de C3-2, menor al m├¡nimo permitido (0.2mm).
+- Violaci├│n de Clearance: La traza pasa a -0.15mm de C3-2, menor al m├¡nimo permitido (0.2mm).
+- Violaci├│n de Clearance: La traza pasa a -0.05mm de R1-2, menor al m├¡nimo permitido (0.2mm).
+- Violaci├│n de Clearance: La traza pasa a -0.15mm de R1-2, menor al m├¡nimo permitido (0.2mm).
+- Violaci├│n de Clearance: La traza pasa a -0.05mm de R2-2, menor al m├¡nimo permitido (0.2mm).
+- Violaci├│n de Clearance: La traza pasa a -0.15mm de R2-2, menor al m├¡nimo permitido (0.2mm).
+
+------------------------
+
+  Guardado: output\03_esp8266_node\board.kicad_pcb
+  Stats: {'board_mm': '60.0├ù45.0', 'footprints': 14, 'traces': 209, 'vias': 16, 'nets': 7, 'mounting_holes': 4}
+
+=== KiCad Detection ===
+  available           : True
+  cli_path            : D:\Program Files\KiCad\8.0\bin\kicad-cli.exe
+  version             : 8.0.6
+  symbol_dir          : None
+  footprint_dir       : None
+
+=== Exporting Gerbers from demo board ===
+  Success: True
+  Files: 11 Gerbers
+    output\01_voltage_divider\gerbers\board-B_Cu.gbr
+    output\01_voltage_divider\gerbers\board-B_Fab.gbr
+    output\01_voltage_divider\gerbers\board-B_Mask.gbr
+    output\01_voltage_divider\gerbers\board-B_Paste.gbr
+    output\01_voltage_divider\gerbers\board-B_Silkscreen.gbr
+    output\01_voltage_divider\gerbers\board-Edge_Cuts.gbr
+    output\01_voltage_divider\gerbers\board-F_Cu.gbr
+    output\01_voltage_divider\gerbers\board-F_Fab.gbr
+    output\01_voltage_divider\gerbers\board-F_Mask.gbr
+    output\01_voltage_divider\gerbers\board-F_Paste.gbr
+    output\01_voltage_divider\gerbers\board-F_Silkscreen.gbr
+
+Ô£à Demo completo. Las placas est├ín en output/
+   Abre cualquier .kicad_pcb en KiCad 8 PCBNEW para verlas.

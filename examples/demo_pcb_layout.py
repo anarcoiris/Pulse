@@ -53,6 +53,7 @@ def demo_voltage_divider():
     pcb.add_text("PulseLab", 10.0, 13.5, size=1.0)
 
     out = pcb.save("output/01_voltage_divider/board.kicad_pcb")
+    pcb.export_enclosure(Path("output/01_voltage_divider/enclosures"))
     print(f"  Guardado: {out}")
     print(f"  Stats: {pcb.stats()}")
     return pcb
@@ -123,6 +124,7 @@ def demo_555_led_driver():
     pcb.add_text("PulseLab Forge", 20.0, 1.5, size=0.8)
 
     out = pcb.save("output/02_555_led_driver/board.kicad_pcb")
+    pcb.export_enclosure(Path("output/02_555_led_driver/enclosures"))
     print(f"  Guardado: {out}")
     print(f"  Stats: {pcb.stats()}")
     return pcb
@@ -226,6 +228,15 @@ def demo_esp8266_sensor_node():
     pcb.add_text("IO", 53.0, 6.0, size=0.7)
 
     out = pcb.save("output/03_esp8266_node/board.kicad_pcb")
+    pcb.export_enclosure(Path("output/03_esp8266_node/enclosures"))
+    
+    # Run design review
+    from knowledge.layout_reviewer import LayoutReviewer
+    reviewer = LayoutReviewer(pcb)
+    print("\n--- AI Layout Review ---")
+    print(reviewer.generate_report())
+    print("------------------------\n")
+    
     print(f"  Guardado: {out}")
     print(f"  Stats: {pcb.stats()}")
     return pcb

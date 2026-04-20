@@ -250,7 +250,7 @@ class Zone:
             f'    (hatch edge 0.5)\n'
             f'    (connect_pads (clearance 0.2))\n'
             f'    (min_thickness 0.25)\n'
-            f'    (fill (yes) (thermal_gap 0.508) (thermal_bridge_width 0.508))\n'
+            f'    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508))\n'
             f'    (polygon\n'
             f'      (pts\n          {pts_str}\n      )\n'
             f'    )\n'
@@ -378,6 +378,27 @@ class FootprintPresets:
                     str(pin_num), "smd", "rect",
                     x=px, y=py, w=0.6, h=1.5 if side % 2 == 0 else 1.5,
                 ))
+        return fp
+
+    @staticmethod
+    def sop_ic(ref: str, pins: int = 16, pitch: float = 1.27,
+               body_w: float = 3.9, body_h: float = 9.9, value: str = "IC") -> Footprint:
+        """SOP/SOIC genérico de N pines (Dual In-Line)."""
+        fp = Footprint(ref=ref,
+                       lib_id=f"Package_SO:SOIC-{pins}_{body_w:.1f}x{body_h:.1f}mm_P{pitch:.2f}mm",
+                       value=value)
+        fp.pads = []
+        per_side = pins // 2
+        # Y offsets from center to each pin
+        start_y = -((per_side - 1) * pitch) / 2
+        # X offset is body_width/2 + pad_width/2 + small margin
+        x_off = body_w / 2.0 + 1.2
+        for i in range(per_side):
+            py = start_y + i * pitch
+            # Left side (1 to N/2), Y goes down (top to bottom)
+            fp.pads.append(Pad(str(i + 1), "smd", "rect", x=-x_off, y=py, w=1.5, h=0.6))
+            # Right side (N/2 + 1 to N), Y goes up (bottom to top)
+            fp.pads.append(Pad(str(pins - i), "smd", "rect", x=x_off, y=py, w=1.5, h=0.6))
         return fp
 
     @staticmethod
@@ -537,6 +558,26 @@ class PCBLayout:
         )
         return self.add_footprint(fp, x, y, rotation)
 
+    def add_ic(self, ref: str, value: str, x: float = 0.0, y: float = 0.0,
+               pins: dict = None, pkg_type: str = "SOP16", rotation: float = 0.0) -> Footprint:
+        """Añade un IC multipin parametrizado."""
+        if pins is None: pins = {}
+        
+        if pkg_type == "SOP16":
+            fp = FootprintPresets.sop_ic(ref, pins=16, value=value)
+        elif pkg_type == "ESP12":
+            fp = FootprintPresets.qfp_ic(ref, pins=24, value=value)
+        else:
+            fp = FootprintPresets.sop_ic(ref, pins=8, pitch=1.27, body_w=3.9, body_h=4.9, value=value)
+            
+        for p in fp.pads:
+            net_name = pins.get(p.number)
+            if net_name:
+                p.net_id = self._get_net_id(net_name)
+                p.net_name = net_name
+                
+        return self.add_footprint(fp, x, y, rotation)
+
     def add_mounting_hole(self, x: float, y: float,
                           drill: float = 3.2) -> MountingHole:
         """Coloca un agujero de montaje M3."""
@@ -656,18 +697,12 @@ class PCBLayout:
                 px = fp.x + p.x * math.cos(rad) - p.y * math.sin(rad)
                 py = fp.y + p.x * math.sin(rad) + p.y * math.cos(rad)
                 gx, gy = int(px / grid_size), int(py / grid_size)
-                
-                pad_layers = []
-                if p.pad_type == "thru_hole" or "*.Cu" in p.layers:
-                    pad_layers = [0, 1]
-                elif "B.Cu" in p.layers or fp.layer == "B.Cu":
-                    pad_layers = [1]
-                else:
-                    pad_layers = [0]
+                pad_layers = [0, 1]  # Bloquear TODAS LAS CAPAS visualmente (F.Cu y B.Cu) para forzar un enrutamiento en escalera (detour 2D puro)
                     
-                # Espacio libre alrededor del pad
-                pad_w_c = max(1, int(p.w / 2 / grid_size))
-                pad_h_c = max(1, int(p.h / 2 / grid_size))
+                # Espacio libre alrededor del pad (Dilation para Clearance)
+                clearance = 0.35
+                pad_w_c = max(1, int((p.w / 2 + clearance) / grid_size))
+                pad_h_c = max(1, int((p.h / 2 + clearance) / grid_size))
                 for dx in range(-pad_w_c, pad_w_c + 1):
                     for dy in range(-pad_h_c, pad_h_c + 1):
                         for l_idx in pad_layers:
@@ -716,7 +751,7 @@ class PCBLayout:
                     if dl != 0:
                         cost = 15  # Via cost penalty
                     if is_occupied:
-                        cost = 1000  # Cruces prohibitivos
+                        cost = 1000  # Penalización suave para clearances propios
                         
                     tentative_g = g_score[current] + cost
                     if nb not in g_score or tentative_g < g_score[nb]:
@@ -986,12 +1021,38 @@ class PCBLayout:
         lines.append(')')
         return "\n".join(lines)
 
+    def to_kicad_pro(self, filename: str) -> str:
+        """Genera el JSON mínimo para cargar el entorno del proyecto (.kicad_pro)."""
+        import json
+        return json.dumps({
+            "board": {},
+            "cvpcb": {"equivalence_files": []},
+            "erc": {"erc_exclusions": [], "meta": {"version": 0}, "pin_versions": []},
+            "libraries": {"pinned_footprint_libs": [], "pinned_symbol_libs": []},
+            "meta": {"filename": filename, "version": 1},
+            "netlists": [],
+            "pcbnew": {"last_paths": {"none": ""}, "page_layout_descr_file": ""},
+            "schematic": {"annotate_start_num": 0, "drawing": {}, "legacy_lib_dir": "", "legacy_lib_list": []},
+            "sheets": []
+        }, indent=2)
+
     def save(self, path: str | Path) -> Path:
-        """Guarda el PCB como archivo .kicad_pcb."""
+        """Guarda el PCB y el archivo de proyecto (.kicad_pro)."""
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(self.to_kicad_pcb(), encoding="utf-8")
+        
+        # Guardar archivo de proyecto de KiCad adjunto
+        pro_path = path.with_suffix('.kicad_pro')
+        pro_path.write_text(self.to_kicad_pro(pro_path.name), encoding="utf-8")
+        
         return path
+
+    def export_enclosure(self, output_dir: Path) -> dict:
+        """Exporta el encapsulado 3D de la placa."""
+        from bridge.enclosure_engine import EnclosureGenerator
+        eng = EnclosureGenerator(self)
+        return eng.export(output_dir, basename=self.project_name.lower().replace(" ", "_"))
 
     def stats(self) -> dict:
         return {

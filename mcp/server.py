@@ -873,8 +873,99 @@ if _MCP_OK:
         if not pcb.exists():
             return {"error": f"Archivo no encontrado: {pcb_path}"}
 
+        pcb = Path(pcb_path)
+        if not pcb.exists():
+            return {"error": f"Archivo no encontrado: {pcb_path}"}
+
         out = Path(output_dir) if output_dir else pcb.parent / "manufacturing"
         return generate_all_manufacturing_files(bridge._cli, pcb, out)
+
+    @mcp.tool()
+    def generate_pcb_enclosure(
+        board_width_mm: float,
+        board_height_mm: float,
+        project_name: str = "PulseLab Design",
+        output_dir: str = "output",
+    ) -> dict:
+        """
+        Genera geometría 3D programática (OpenSCAD) para una caja envolvente
+        basada en el tamaño de una placa (PCB) y la posición de sus agujeros.
+
+        Args:
+            board_width_mm: Ancho de la placa a envolver.
+            board_height_mm: Alto de la placa a envolver.
+            project_name: Nombre del proyecto (para nombrar el archivo).
+            output_dir: Directorio de salida.
+
+        Returns:
+            dict con la ruta generada del modelo SCAD.
+        """
+        from bridge.pcb_layout import PCBLayout
+        # Creamos un layout virtual solo con las medidas base para generar la caja
+        pcb = PCBLayout(board_width=board_width_mm, board_height=board_height_mm, project_name=project_name)
+        pcb.add_mounting_holes_corners(margin=3.5)
+        
+        safe_name = "".join(c if c.isalnum() or c in "_-" else "_" for c in project_name)
+        out_p = Path(output_dir) / safe_name / "enclosures"
+        
+        return pcb.export_enclosure(out_p)
+
+    @mcp.tool()
+    def review_layout(
+        board_width_mm: float,
+        board_height_mm: float,
+        components: list[dict],
+        traces: list[dict] = [],
+        trace_width_mm: float = 0.25,
+    ) -> dict:
+        """
+        Ejecuta una auditoría de diseño (DRC) basada en IPC-2221 para encontrar
+        problemas de clearance o manufactura en un PCB. 
+        Utiliza los mismos argumentos de 'create_pcb_layout' para reconstruir y auditar la placa.
+
+        Args:
+            board_width_mm, board_height_mm: Dimensiones
+            components, traces: Diccionarios de diseño (igual que en create_pcb_layout)
+            trace_width_mm: Ancho de pista (para math de choques)
+
+        Returns:
+            dict con el reporte de texto formateado generado por el revisor IA.
+        """
+        from bridge.pcb_layout import PCBLayout
+        from knowledge.layout_reviewer import LayoutReviewer
+        
+        pcb = PCBLayout(board_width=board_width_mm, board_height=board_height_mm, trace_width=trace_width_mm)
+        fp_map = {}
+        for c in components:
+            ctype = c.get("type", "resistor")
+            ref   = c.get("ref", "X1")
+            val   = c.get("value", "")
+            x, y  = float(c.get("x", 0)), float(c.get("y", 0))
+            rot   = float(c.get("rotation", 0))
+            if ctype == "resistor":
+                fp = pcb.add_resistor(ref, val, x, y, rot, c.get("net1",""), c.get("net2",""), c.get("package","0805"))
+            elif ctype == "pin_header":
+                fp = pcb.add_pin_header(ref, int(c.get("pins",2)), x, y, rot, val)
+            elif ctype == "dip_ic":
+                fp = pcb.add_dip_ic(ref, int(c.get("pins",8)), x, y, rot, val)
+            else:
+                fp = pcb.add_resistor(ref, val, x, y, rot, c.get("net1",""), c.get("net2",""), c.get("package","0805"))
+            fp_map[ref] = fp
+
+        for t in traces:
+            fr, tr = t.get("from_ref", ""), t.get("to_ref", "")
+            if fr in fp_map and tr in fp_map:
+                pcb.trace(fp_map[fr], t.get("from_pad","1"), fp_map[tr], t.get("to_pad","1"), width=float(t.get("width", trace_width_mm)), net=t.get("net",""))
+        
+        reviewer = LayoutReviewer(pcb)
+        res_dict = reviewer.audit()
+        report = reviewer.generate_report()
+        
+        return {
+            "passed": res_dict["passed"],
+            "critical_issues": len(res_dict["critical_issues"]),
+            "report_text": report
+        }
 
     @mcp.tool()
     def list_pcb_footprints() -> dict:

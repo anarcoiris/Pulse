@@ -46,7 +46,8 @@ class OscilloscopePanel:
     CTRL_W  = 180    # ancho panel de controles izquierdo
 
     def __init__(self):
-        self.rect = pygame.Rect(0, OSC_Y, W, OSC_H)
+        from ui.theme import CANVAS_X
+        self.rect = pygame.Rect(CANVAS_X, OSC_Y, W - CANVAS_X, OSC_H)
         self._channels: list = []     # lista de node_names observados
         self._all_nodes: list = []    # todos los nodos disponibles
         self._ch_idx  : int  = 0      # nodo del canal 1 en _all_nodes

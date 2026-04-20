@@ -134,6 +134,8 @@ class PropertiesPanel:
         self._delete_rect = pygame.Rect(self.rect.x + self.PAD + bw + self.PAD, iy, bw, 26)
 
     def _fmt_value(self, comp: PlacedComponent) -> str:
+        if isinstance(comp.value, str):
+            return comp.value
         if comp.etype in ('C', 'L'):
             return f"{comp.value:.6g}"
         return f"{comp.value:.4g}"
@@ -148,8 +150,11 @@ class PropertiesPanel:
         if 'n2'    in self._inputs: comp.n2    = self._inputs['n2'].str_val or comp.n2
         if 'label' in self._inputs: comp.label = self._inputs['label'].str_val or comp.label
         if 'valor' in self._inputs:
-            v = self._inputs['valor'].float_val
-            if v != 0 or comp.etype in ('S', 'GND'): comp.value = v
+            if isinstance(comp.value, str):
+                comp.value = self._inputs['valor'].str_val
+            else:
+                v = self._inputs['valor'].float_val
+                if v != 0 or comp.etype in ('S', 'GND'): comp.value = v
         if 'R_on'  in self._inputs: comp.R_on  = max(1e-6, self._inputs['R_on'].float_val)
         if 'R_off' in self._inputs: comp.R_off = max(1.0,  self._inputs['R_off'].float_val)
         # Reload simulator to reflect topology changes
