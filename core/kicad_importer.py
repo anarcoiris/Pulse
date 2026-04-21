@@ -92,6 +92,102 @@ class KicadImporter:
                     
         return connectivity
 
+    @staticmethod
+    def parse_schematic_symbols(sch_path: str) -> list:
+        """Extrae la lista de símbolos de un archivo .kicad_sch."""
+        if not os.path.exists(sch_path):
+            return []
+            
+        with open(sch_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            
+        symbols = []
+        # Buscamos (symbol (lib_id "...") (at X Y ...) ... (property "Reference" "..."))
+        sym_matches = re.finditer(r'\(symbol\s+\(lib_id\s+"([^"]+)"\)\s+\(at\s+([\d.-]+)\s+([\d.-]+)', content)
+        for m in sym_matches:
+            lib_id = m.group(1)
+            x, y = float(m.group(2)), float(m.group(3))
+            
+            # Capturamos el contexto del símbolo para buscar sus propiedades
+            start_idx = m.start()
+            chunk = content[start_idx:start_idx + 2000]
+            
+            ref_m = re.search(r'\(property\s+"Reference"\s+"([^"]+)"', chunk)
+            val_m = re.search(r'\(property\s+"Value"\s+"([^"]+)"', chunk)
+            
+            if ref_m and val_m:
+                symbols.append({
+                    'ref': ref_m.group(1),
+                    'value': val_m.group(1),
+                    'lib_id': lib_id,
+                    'x': x, 'y': y
+                })
+        return symbols
+
+    @staticmethod
+    def parse_schematic_wires(sch_path: str) -> list:
+        """Extrae los hilos (conector visual) de un esquema."""
+        if not os.path.exists(sch_path):
+            return []
+            
+        with open(sch_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            
+        wires = []
+        # (wire (pts (xy 100 100) (xy 120 100)) (uuid ...))
+        matches = re.finditer(r'\(wire\s+\(pts\s+\(xy\s+([\d.-]+)\s+([\d.-]+)\)\s+\(xy\s+([\d.-]+)\s+([\d.-]+)\)\)', content)
+        for m in matches:
+            wires.append([
+                (float(m.group(1)), float(m.group(2))),
+                (float(m.group(3)), float(m.group(4)))
+            ])
+        return wires
+
+    @staticmethod
+    def to_circuit_graph(sch_path: str) -> "CircuitGraph":
+        """
+        Intenta reconstruir un CircuitGraph a partir de un esquema de KiCad.
+        Aplica normalización de coordenadas para mapear al grid de PulseLab.
+        """
+        from ui.editor import CircuitGraph
+        graph = CircuitGraph()
+        symbols = KicadImporter.parse_schematic_symbols(sch_path)
+        
+        if not symbols:
+            return graph
+            
+        # 1. Encontrar el centro para normalizar
+        min_x = min(s['x'] for s in symbols)
+        min_y = min(s['y'] for s in symbols)
+        
+        # 2. Mapeo a PulseLab Grid
+        # KiCad usa coords grandes (mils/mm). Estimamos 1 unit de grid = 1/10" o 50 mils
+        SCALE = 50.0 
+        
+        for s in symbols:
+            # Coords relativas y escaladas
+            gc = int((s['x'] - min_x) / SCALE) + 5 # +5 offset de margen
+            gr = int((s['y'] - min_y) / SCALE) + 5
+            
+            # Mapeo de tipos
+            lib_id = s['lib_id'].lower()
+            etype = "R" # default
+            if "resistor" in lib_id or ":r" in lib_id: etype = "R"
+            elif "capacitor" in lib_id or ":c" in lib_id: etype = "C"
+            elif "gnd" in lib_id: etype = "GND"
+            elif "battery" in lib_id or "vsource" in lib_id: etype = "V"
+            
+            # Extraer valor numérico del string
+            val_str = s['value'].replace('k', '000').replace('u', 'e-6').replace('n', 'e-9').replace('p', 'e-12')
+            try:
+                val = float(re.findall(r"[-+]?\d*\.\d+|\d+", val_str)[0])
+            except:
+                val = 0.0
+                
+            graph.add(etype, gc, gr, "H", val, s['ref'])
+            
+        return graph
+
 if __name__ == "__main__":
     # Test con el board recién generado
     path = "output/esp32_v2/pulselab_pcb/board.kicad_pcb"

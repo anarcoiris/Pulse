@@ -21,8 +21,8 @@ Este documento orquesta las líneas de investigación necesarias para implementa
 ## Próximos Pasos (Milestones)
 - [ ] Implementar el `PulseLogger` global.
 - [ ] Refactorizar el modelo de pines para soporte MCU completo.
-- [ ] Construir el `KicadImporter` básico para lectura de símbolos.
-- [ ] Realizar el primer test de evaluación con la **ESP-32 2.0 Devboard**.
+- [x] Construir el `KicadImporter` básico para lectura de símbolos (Verificado con ESP8266).
+- [ ] Realizar el test de evaluación avanzada con la **ESP-32 2.0 Devboard**.
 
 ---
 *Última actualización: 20 de Abril de 2026*

@@ -19,14 +19,51 @@ from dataclasses import dataclass, field
 from typing      import Optional, Dict, List, Tuple, Set
 from collections import deque
 
-import pygame
+try:
+    import pygame
+except ImportError:
+    # Headless mode
+    class MockPygame:
+        class Rect:
+            def __init__(self, x=0, y=0, w=0, h=0):
+                self.x, self.y, self.w, self.h = x, y, w, h
+                self.topleft = (x, y)
+                self.size = (w, h)
+            def collidepoint(self, *args): return False
+            def inflate(self, *args): return self
+        class Surface:
+            def __init__(self, size, flags=0): self.size = size
+            def fill(self, *args): pass
+            def blit(self, *args): pass
+        def draw(self): pass
+    pygame = MockPygame()
+    pygame.draw = MockPygame() 
+    pygame.SRCALPHA = 0
+    pygame.event = MockPygame()
+    pygame.KMOD_CTRL = 0
+    pygame.key = MockPygame()
+    pygame.key.get_mods = lambda: 0
 
 from ui.theme import (
     CANVAS_X, CANVAS_Y, CANVAS_W, CANVAS_H, GRID_SIZE, GRID_COLS, GRID_ROWS,
     BG, GRID_COL, ACCENT, ACCENT2, WARN, DANGER, SAFE, DIM, WHITE,
-    PANEL_BG, PANEL_BORDER, SELECT_COL, COMP_COLORS,
-    draw_text, lerp_color,
+    PANEL_BG, PANEL_BORDER, SELECT_COL, COMP_COLORS
 )
+
+# Helpers opcionales si pygame está presente
+def maybe_lerp_color(c1, c2, t):
+    try:
+        from ui.theme import lerp_color
+        return lerp_color(c1, c2, t)
+    except:
+        return c1
+
+def maybe_draw_text(surf, text, x, y, font, color=WHITE, anchor="topleft", bg=None):
+    try:
+        from ui.theme import draw_text
+        draw_text(surf, text, x, y, font, color, anchor, bg)
+    except:
+        pass
 
 WIRE_COL   = (100, 140, 200)
 RECT_SEL_C = (  0, 160, 255)   # colour for selection rectangle
@@ -54,6 +91,14 @@ class PlacedComponent:
     height:      int   = 2
     footprint_id: Optional[str] = None
 
+    def __post_init__(self):
+        # Asegurar que pins esté poblado para componentes de 2 pines
+        if self.etype != 'GND' and self.etype not in ('IC', 'MCU'):
+            if '1' not in self.pins: self.pins['1'] = self.n1
+            if '2' not in self.pins: self.pins['2'] = self.n2
+        elif self.etype == 'GND':
+            if '1' not in self.pins: self.pins['1'] = 'GND'
+
     @property
     def grid_c2(self) -> int:
         if self.etype in ('IC', 'MCU'): return self.grid_c + self.width
@@ -71,24 +116,20 @@ class PlacedComponent:
         """
         layout = []
         if self.etype in ('IC', 'MCU'):
-            # Distribución de pines:
-            # Izquierda (1 a N/2), Derecha (N/2+1 a N)
+            # Distribución de pines lateral para ICs
             num_pins = len(self.pins)
             half = num_pins // 2
-            # Los pines se asocian por ID de pin (str)
             pin_ids = sorted(self.pins.keys(), key=lambda x: int(x) if x.isdigit() else x)
             for i, p_id in enumerate(pin_ids):
                 if i < half:
-                    # Lado izquierdo (hacia abajo)
                     layout.append((self.grid_c, self.grid_r + i, p_id))
                 else:
-                    # Lado derecho (hacia arriba o igualando)
                     layout.append((self.grid_c + self.width, self.grid_r + (num_pins - 1 - i), p_id))
-        elif self.etype == 'GND':
-            layout.append((self.grid_c, self.grid_r, '1'))
         else:
+            # Componentes estándar (R, C, L, V, S, GND)
             layout.append((self.grid_c, self.grid_r, '1'))
-            layout.append((self.grid_c2, self.grid_r2, '2'))
+            if self.etype != 'GND':
+                layout.append((self.grid_c2, self.grid_r2, '2'))
         return layout
 
 
@@ -171,10 +212,12 @@ class CircuitGraph:
         if name_keep == name_drop:
             return
         for c in self.components:
-            if c.n1 == name_drop: c.n1 = name_keep
-            if c.n2 == name_drop: c.n2 = name_keep
             for pin_id, net in c.pins.items():
-                if net == name_drop: c.pins[pin_id] = name_keep
+                if net == name_drop:
+                    c.pins[pin_id] = name_keep
+                    # Mantener n1/n2 sincronizados para compatibilidad legacy si es necesario
+                    if pin_id == '1': c.n1 = name_keep
+                    if pin_id == '2': c.n2 = name_keep
 
     def node_at_grid(self, gc: int, gr: int, visited_wires: Set[str] = None) -> Optional[str]:
         if visited_wires is None: visited_wires = set()
@@ -183,11 +226,7 @@ class CircuitGraph:
         for c in self.components:
             for p_gc, p_gr, p_id in c.get_pins_layout():
                 if p_gc == gc and p_gr == gr:
-                    if c.etype == 'GND': return 'GND'
-                    if c.etype in ('IC', 'MCU'):
-                        return c.pins.get(p_id, "")
-                    if p_id == '1': return c.n1
-                    return c.n2
+                    return c.pins.get(p_id, "")
         
         # 2. Check wires
         for w in self.wires:
@@ -207,10 +246,8 @@ class CircuitGraph:
     def all_nodes(self) -> List[str]:
         nodes = set()
         for c in self.components:
-            if c.etype != 'GND':
-                nodes.add(c.n1)
-                nodes.add(c.n2)
-                for net in c.pins.values():
+            for net in c.pins.values():
+                if net:
                     nodes.add(net)
         return sorted(nodes - {'GND', ''})
 

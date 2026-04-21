@@ -156,9 +156,8 @@ pcb.save("output/mi_placa.kicad_pcb")
 ## Próximos Pasos
 
 1. **QFP/TQFP footprints** — Para MCUs como ATmega328P-AU, STM32F103 en SMD
-2. **Auto-router** — Ruteo automático de trazas entre pads conectados
-3. **Copper pour** — Plano de masa (GND) con thermal reliefs
-4. **DRC integrado** — Verificar clearance/trace width antes de exportar
-5. **Parámetros S con scikit-rf** — Carta de Smith, S11/S21
-6. **PDF datasheet ingestion** — Expandir RAG con pdfminer
-7. **Schematic SVG export** — Generar esquemático visual desde CircuitGraph
+2. **Copper pours advanced** — Plano de masa (GND) con thermal reliefs mejorados
+3. **DRC integrado** — Verificar clearance/trace width antes de exportar
+4. **Parámetros S con scikit-rf** — Carta de Smith, S11/S21
+5. **PDF datasheet ingestion** — Expandir RAG con pdfminer
+6. **Schematic SVG export** — Generar esquemático visual desde CircuitGraph

@@ -7,7 +7,14 @@ Centraliza toda la paleta visual (colores, layout, fuentes) eliminando
 la duplicación entre emp_simulator.py y ai_studio_code.py.
 """
 
-import pygame
+try:
+    import pygame
+except ImportError:
+    class MockPygame:
+        class Rect: pass
+        class Surface: pass
+    pygame = MockPygame()
+    pygame.SRCALPHA = 0
 from typing import Tuple
 
 # ─── Window ───────────────────────────────────────────────────────────────────

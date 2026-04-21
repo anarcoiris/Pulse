@@ -132,20 +132,10 @@ class NetlistGenerator:
         # Build net→pins mapping
         net_map: dict[str, list[tuple[str, str]]] = {}
         for c in self.graph.components:
-            if c.etype == "GND":
-                net_map.setdefault("GND", []).append((refs.get(c.uid, c.uid), "1"))
-                continue
-            
-            ref = refs[c.uid]
-            if c.etype in ("IC", "MCU") and c.pins:
-                # Componente multipin
-                for pin_id, net_name in c.pins.items():
-                    if net_name:
-                        net_map.setdefault(net_name, []).append((ref, pin_id))
-            else:
-                # Componente estándar (2 pines)
-                if c.n1: net_map.setdefault(c.n1, []).append((ref, "1"))
-                if c.n2: net_map.setdefault(c.n2, []).append((ref, "2"))
+            ref = refs.get(c.uid, c.uid)
+            for pin_id, net_name in c.pins.items():
+                if net_name:
+                    net_map.setdefault(net_name, []).append((ref, pin_id))
 
         lines.append("  (nets")
         for code, (net_name, nodes) in enumerate(net_map.items(), start=1):
@@ -179,9 +169,9 @@ class NetlistGenerator:
         # Collect unique nets
         nets = set()
         for c in self.graph.components:
-            if c.etype != "GND":
-                nets.add(c.n1)
-                nets.add(c.n2)
+            for net in c.pins.values():
+                if net:
+                    nets.add(net)
         nets.discard("GND")
 
         for n in sorted(nets):
@@ -209,14 +199,17 @@ class NetlistGenerator:
         lines.append("# ── Connections ───────────────────────────────────────")
 
         for c in self.graph.components:
-            if c.etype == "GND":
+            if c.etype in ("GND", "IC", "MCU"):
+                # TODO: Implementar conexiones multipin en SKiDL
                 continue
             ref  = refs[c.uid]
             var  = re.sub(r'[^\w]', '_', ref.lower())
-            n1s  = re.sub(r'[^\w]', '_', c.n1) if c.n1 != "GND" else "gnd"
-            n2s  = re.sub(r'[^\w]', '_', c.n2) if c.n2 != "GND" else "gnd"
-            lines.append(f"{var}['~'][1] += {n1s}")
-            lines.append(f"{var}['~'][2] += {n2s}")
+            n1   = c.pins.get('1', '')
+            n2   = c.pins.get('2', '')
+            n1s  = re.sub(r'[^\w]', '_', n1) if n1 != "GND" else "gnd"
+            n2s  = re.sub(r'[^\w]', '_', n2) if n2 != "GND" else "gnd"
+            if n1: lines.append(f"{var}['~'][1] += {n1s}")
+            if n2: lines.append(f"{var}['~'][2] += {n2s}")
 
         lines.append("")
         lines.append("# ── Export ────────────────────────────────────────────")
@@ -253,8 +246,8 @@ class NetlistGenerator:
                 _DEFAULT_FOOTPRINTS.get(c.etype, ""),
                 c.label,
                 c.etype,
-                c.n1,
-                c.n2,
+                c.pins.get('1', ''),
+                c.pins.get('2', ''),
                 c.uid,
             ])
         return buf.getvalue()
@@ -272,8 +265,8 @@ class NetlistGenerator:
                 "footprint": _DEFAULT_FOOTPRINTS.get(c.etype, ""),
                 "label": c.label,
                 "type": c.etype,
-                "n1": c.n1,
-                "n2": c.n2,
+                "n1": c.pins.get('1', ''),
+                "n2": c.pins.get('2', ''),
                 "uid": c.uid,
             })
         return rows
