@@ -36,29 +36,31 @@ GRID_COLS = CANVAS_W // GRID_SIZE   # 24
 GRID_ROWS = CANVAS_H // GRID_SIZE   # 15
 
 # ─── Color palette ─────────────────────────────────────────────────────────────
-BG           = ( 10,  12,  18)
-GRID_COL     = ( 20,  25,  36)
-ACCENT       = (  0, 220, 160)
-ACCENT2      = (  0, 160, 255)
-WARN         = (255, 160,  30)
-DANGER       = (220,  40,  60)
-SAFE         = ( 50, 200, 100)
-DIM          = ( 75,  85, 105)
-WHITE        = (230, 235, 245)
-PANEL_BG     = ( 14,  17,  26)
-PANEL_BORDER = ( 38,  50,  70)
-SELECT_COL   = (255, 215,   0)   # gold for selection highlight
-WIRE_COL     = ( 55,  85, 130)
-WIRE_GND     = ( 45,  65, 100)
+BG           = (  5,   7,  12)  # Deep Void
+GRID_COL     = ( 15,  20,  30)  # Subtle Grid
+ACCENT       = (  0, 255, 200)  # Neon Teal
+ACCENT2      = (  0, 180, 255)  # Electric Blue
+WARN         = (255, 170,  50)
+DANGER       = (255,  60,  80)
+SAFE         = ( 40, 255, 120)
+DIM          = (100, 115, 140)
+WHITE        = (240, 245, 255)
+PANEL_BG     = ( 18,  22,  33)  # Solid base
+PANEL_GLASS  = ( 25,  30,  45, 140) # Semi-transp for HUD
+PANEL_BORDER = ( 45,  55,  80)
+SELECT_COL   = (255, 230,   0)
+WIRE_COL     = ( 60,  90, 140)
+WIRE_GND     = ( 40,  50,  80)
+RECT_SEL_C   = (  0, 180, 255)
 
 # Component colors by element type
 COMP_COLORS: dict = {
-    'R':   (255, 200,  80),
-    'C':   ( 80, 200, 255),
-    'L':   (200, 120, 255),
-    'V':   ( 80, 255, 120),
-    'S':   (255, 130,  70),
-    'GND': ( 80, 100, 120),
+    'R':   (240, 180,  60),
+    'C':   ( 60, 180, 250),
+    'L':   (180, 100, 240),
+    'V':   ( 60, 240, 100),
+    'S':   (250, 110,  60),
+    'GND': ( 70,  90, 110),
 }
 
 # ─── Font cache ────────────────────────────────────────────────────────────────
@@ -92,11 +94,32 @@ def draw_text(surf, text: str, x: int, y: int, font,
 
 
 def draw_panel(surf, rect: pygame.Rect, title: str = "",
-               font=None, border_col: tuple = PANEL_BORDER) -> None:
-    pygame.draw.rect(surf, PANEL_BG, rect, border_radius=6)
+               font=None, border_col: tuple = PANEL_BORDER,
+               alpha: int = 255) -> None:
+    if alpha < 255:
+        # Pseudo-transparency (Slightly slower, use for HUD only)
+        s = pygame.Surface(rect.size, pygame.SRCALPHA)
+        s.fill((*PANEL_BG, alpha))
+        surf.blit(s, rect.topleft)
+    else:
+        pygame.draw.rect(surf, PANEL_BG, rect, border_radius=6)
+    
     pygame.draw.rect(surf, border_col, rect, 1, border_radius=6)
     if title and font:
         draw_text(surf, title, rect.x + 10, rect.y + 8, font, DIM)
+
+
+def draw_glass_rect(surf, rect: pygame.Rect, color: tuple = PANEL_GLASS, 
+                    border_col: tuple = ACCENT2, radius: int = 8) -> None:
+    """Draw a modern 'glassmorphism' panel with a subtle glow border."""
+    s = pygame.Surface(rect.size, pygame.SRCALPHA)
+    s.fill(color)
+    surf.blit(s, rect.topleft)
+    # Highlight top border
+    pygame.draw.rect(surf, border_col, rect, 1, border_radius=radius)
+    # Inside shadow/depth
+    inner = rect.inflate(-2, -2)
+    pygame.draw.rect(surf, (255, 255, 255, 30), inner, 1, border_radius=radius)
 
 
 def lerp_color(c1: tuple, c2: tuple, t: float) -> tuple:

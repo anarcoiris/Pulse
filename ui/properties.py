@@ -127,6 +127,10 @@ class PropertiesPanel:
         if comp.etype == 'S':
             field('R_on',  comp.R_on)
             field('R_off', comp.R_off)
+            # Add footprint selector info
+            self._inputs['footprint'] = TextInput(pygame.Rect(ix, iy, iw, self.INP_H), 
+                                                comp.footprint_id or 'tactile_switch_6x6')
+            iy += self.ROW
 
         iy += 4
         bw  = (self.rect.width - self.PAD * 3) // 2
@@ -157,6 +161,7 @@ class PropertiesPanel:
                 if v != 0 or comp.etype in ('S', 'GND'): comp.value = v
         if 'R_on'  in self._inputs: comp.R_on  = max(1e-6, self._inputs['R_on'].float_val)
         if 'R_off' in self._inputs: comp.R_off = max(1.0,  self._inputs['R_off'].float_val)
+        if 'footprint' in self._inputs: comp.footprint_id = self._inputs['footprint'].str_val
         # Reload simulator to reflect topology changes
         runner.load(graph)
         return comp
@@ -215,7 +220,7 @@ class PropertiesPanel:
         iy = self.rect.y + 70
         labels = ['n1', 'n2', 'valor', 'label']
         if comp.etype == 'S':
-            labels += ['R_on', 'R_off']
+            labels += ['R_on', 'R_off', 'footprint']
         hints = {
             'n1':    'Nodo +',
             'n2':    'Nodo -',
@@ -223,6 +228,7 @@ class PropertiesPanel:
             'label': 'Etiqueta',
             'R_on':  'R_on (Ω)',
             'R_off': 'R_off (Ω)',
+            'footprint': 'Huella PCB',
         }
         for lbl in labels:
             draw_text(surf, hints.get(lbl, lbl), self.rect.x + self.PAD + 4, iy + 4,

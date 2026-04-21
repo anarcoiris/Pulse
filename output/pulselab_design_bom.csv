@@ -1,5 +1,11 @@
 Reference,Value,Footprint,Label,Type,Node1,Node2,UID
-V1,24V,Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical,V1 24V,V,SRC,GND,V_000
-R1,10Ω,Resistor_SMD:R_0805_2012Metric,R1 10Ω,R,SRC,M1,R_001
-L1,0.001H,Inductor_SMD:L_0805_2012Metric,L1 1mH,L,M1,M2,L_002
-C1,1e-05F,Capacitor_SMD:C_0805_2012Metric,C1 10µF,C,M2,GND,C_003
+V1,5000V,Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical,PSU 5kV,V,SRC,GND,V_000
+S1,SW,Button_Switch_THT:SW_PUSH_6mm,S1 Carga,S,SRC,CARGA_IN,S_001
+R1,1e+04Ω,Resistor_SMD:R_0805_2012Metric,R_lim 10kΩ,R,CARGA_IN,BANCO,R_002
+C1,6e-07F,Capacitor_SMD:C_0805_2012Metric,C 0.6µF,C,BANCO,GND,C_003
+S2,SW,Button_Switch_THT:SW_PUSH_6mm,SCR/IGBT,S,BANCO,PFN_IN,S_004
+L1,2.5e-07H,Inductor_SMD:L_0805_2012Metric,L0 0.25µH,L,PFN_IN,PFN1,L_005
+L2,2.5e-07H,Inductor_SMD:L_0805_2012Metric,L1 0.25µH,L,PFN1,PFN2,L_006
+L3,2.5e-07H,Inductor_SMD:L_0805_2012Metric,L2 0.25µH,L,PFN2,PFN3,L_007
+L4,2.5e-07H,Inductor_SMD:L_0805_2012Metric,L3 0.25µH,L,PFN3,ANT_IN,L_008
+R2,50Ω,Resistor_SMD:R_0805_2012Metric,R_ant 50Ω,R,ANT_IN,GND,R_009

@@ -257,6 +257,24 @@ class Zone:
             f'  )'
         )
 
+@dataclass
+class KeepoutZone:
+    """Zona de exclusión (sin pistas o sin planos)."""
+    points: list[tuple[float, float]] = field(default_factory=list)
+    layers: list[str] = field(default_factory=lambda: ["F.Cu", "B.Cu"])
+
+    def to_sexpr(self) -> str:
+        pts_str = "\n          ".join(f"(xy {x:.4f} {y:.4f})" for x, y in self.points)
+        uid = str(uuid.uuid4())
+        return (
+            f'  (zone (keepout (tracks allowed) (vias allowed) (pads allowed) (copper_pours prohibited))\n'
+            f'    (layer "{self.layers[0]}") (uuid "{uid}")\n'
+            f'    (polygon\n'
+            f'      (pts\n          {pts_str}\n      )\n'
+            f'    )\n'
+            f'  )'
+        )
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # FOOTPRINT PRESETS
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -381,6 +399,22 @@ class FootprintPresets:
         return fp
 
     @staticmethod
+    def esp32_wroom(ref: str, value: str = "ESP32-WROOM") -> Footprint:
+        """Modulo ESP32 con pads en 3 lados (38 pins)."""
+        fp = Footprint(ref, value, "RF_Module:ESP32-WROOM-32")
+        pitch = 1.27
+        # Izquierda (1-14)
+        for i in range(14):
+            fp.pads.append(Pad(str(i+1), "smd", "rect", x=-9.0, y=-8.255 + i*pitch, w=2.0, h=0.9))
+        # Abajo (15-24)
+        for i in range(10):
+            fp.pads.append(Pad(str(i+15), "smd", "rect", x=-5.715 + i*pitch, y=9.0, w=0.9, h=2.0))
+        # Derecha (25-38)
+        for i in range(14):
+            fp.pads.append(Pad(str(38-i), "smd", "rect", x=9.0, y=-8.255 + i*pitch, w=2.0, h=0.9))
+        return fp
+
+    @staticmethod
     def sop_ic(ref: str, pins: int = 16, pitch: float = 1.27,
                body_w: float = 3.9, body_h: float = 9.9, value: str = "IC") -> Footprint:
         """SOP/SOIC genérico de N pines (Dual In-Line)."""
@@ -411,6 +445,21 @@ class FootprintPresets:
             Pad("2", "smd", "rect", x=0.0,  y=3.1, w=1.2, h=1.5, net_id=net2_id, net_name=net2_name),
             Pad("3", "smd", "rect", x=2.3,  y=3.1, w=1.2, h=1.5, net_id=net3_id, net_name=net3_name),
             Pad("2", "smd", "rect", x=0.0,  y=-3.1, w=3.3, h=1.5, net_id=net2_id, net_name=net2_name), # Tab
+        ]
+        return fp
+
+    @staticmethod
+    def tactile_switch_6x6(ref: str, value: str = "Switch",
+                           net1_id: int = 0, net1_name: str = "",
+                           net2_id: int = 0, net2_name: str = "") -> Footprint:
+        """Pulsador THT 6x6mm (4 pins, unidos 2 a 2)."""
+        fp = Footprint(ref=ref, lib_id="Button_Switch_THT:SW_PUSH_6mm", value=value)
+        # Pins 1 & 2 are connected internally, 3 & 4 are connected internally
+        fp.pads = [
+            Pad("1", "thru_hole", "circle", x=-3.25, y=-2.25, w=1.6, h=1.6, drill=1.0, net_id=net1_id, net_name=net1_name),
+            Pad("2", "thru_hole", "circle", x=3.25,  y=-2.25, w=1.6, h=1.6, drill=1.0, net_id=net1_id, net_name=net1_name),
+            Pad("3", "thru_hole", "circle", x=-3.25, y=2.25,  w=1.6, h=1.6, drill=1.0, net_id=net2_id, net_name=net2_name),
+            Pad("4", "thru_hole", "circle", x=3.25,  y=2.25,  w=1.6, h=1.6, drill=1.0, net_id=net2_id, net_name=net2_name),
         ]
         return fp
 
@@ -462,6 +511,7 @@ class PCBLayout:
         self._vias: list[Via] = []
         self._mounting_holes: list[MountingHole] = []
         self._zones: list[Zone] = []
+        self._keepouts: list[KeepoutZone] = []
         self._nets: dict[str, int] = {"": 0}  # net_name → net_id
         self._net_counter = 0
         self._text_items: list[str] = []
@@ -558,6 +608,14 @@ class PCBLayout:
         )
         return self.add_footprint(fp, x, y, rotation)
 
+    def add_switch(self, ref: str, value: str = "Switch", x: float = 0, y: float = 0,
+                   rotation: float = 0, net1: str = "", net2: str = "") -> Footprint:
+        """Añade un pulsador 6x6mm."""
+        fp = FootprintPresets.tactile_switch_6x6(
+            ref, value, self._get_net_id(net1), net1, self._get_net_id(net2), net2
+        )
+        return self.add_footprint(fp, x, y, rotation)
+
     def add_ic(self, ref: str, value: str, x: float = 0.0, y: float = 0.0,
                pins: dict = None, pkg_type: str = "SOP16", rotation: float = 0.0) -> Footprint:
         """Añade un IC multipin parametrizado."""
@@ -565,8 +623,8 @@ class PCBLayout:
         
         if pkg_type == "SOP16":
             fp = FootprintPresets.sop_ic(ref, pins=16, value=value)
-        elif pkg_type == "ESP12":
-            fp = FootprintPresets.qfp_ic(ref, pins=24, value=value)
+        elif pkg_type in ("ESP12", "ESP32"):
+            fp = FootprintPresets.esp32_wroom(ref, value=value)
         else:
             fp = FootprintPresets.sop_ic(ref, pins=8, pitch=1.27, body_w=3.9, body_h=4.9, value=value)
             
@@ -584,6 +642,12 @@ class PCBLayout:
         hole = MountingHole(x=x, y=y, drill_mm=drill)
         self._mounting_holes.append(hole)
         return hole
+
+    def add_keepout(self, points: List[Tuple[float, float]], layers: List[str] = None) -> KeepoutZone:
+        """Define una zona donde el motor no debe verter cobre."""
+        kz = KeepoutZone(points=points, layers=layers or ["F.Cu", "B.Cu"])
+        self._keepouts.append(kz)
+        return kz
 
     def add_text(self, text: str, x: float, y: float,
                  size: float = 1.5, layer: str = "F.SilkS") -> None:
@@ -1017,6 +1081,12 @@ class PCBLayout:
             lines.append('')
             for z in self._zones:
                 lines.append(z.to_sexpr())
+
+        # Keepouts
+        if self._keepouts:
+            lines.append('')
+            for kz in self._keepouts:
+                lines.append(kz.to_sexpr())
 
         lines.append(')')
         return "\n".join(lines)

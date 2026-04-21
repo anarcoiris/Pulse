@@ -65,143 +65,16 @@ from ui.editor import CircuitGraph, Wire
 from knowledge.semantic_reviewer import SemanticAIAgent
 
 
-# ─── Helpers ─────────────────────────────────────────────────────────────────
-
-def _load_preset(name: str) -> CircuitGraph:
-    """Carga un preset por nombre ('emp_pfn' | 'basic_rc' | 'rlc')."""
-    if name == 'basic_rc':
-        from presets.basic_rc import load
-    elif name == 'rlc':
-        from presets.rlc import load
-    elif name == 'mcu':
-        from presets.mcu_uart import load
-    else:
-        from presets.emp_pfn import load
-    return load()
-
-
-def _export_pdf(graph: CircuitGraph, out_dir: str = os.path.join('docs', 'latex_fix')) -> str:
-    """
-    Genera PDF y PNG usando circuit_generator.py.
-    Devuelve el path del PDF generado.
-    """
-    import matplotlib
-    matplotlib.use('Agg')
-    from circuit_generator import generate_from_simulator
-    sim = graph.to_simulator()
-    pdf_path, _ = generate_from_simulator(sim, output_dir=out_dir,
-                                          basename='circuit_custom')
-    return pdf_path
-
-
-def _export_kicad_netlist(graph: CircuitGraph, out_dir: str = 'output') -> dict:
-    """Genera netlist KiCad + script SKiDL + BOM desde el circuito actual."""
-    from bridge.kicad_bridge import KiCadBridge
-    bridge = KiCadBridge()
-    return bridge.generate_netlist(graph, output_dir=out_dir, project_name='pulselab_design')
-
-
-def _generate_pcb(graph: CircuitGraph, out_dir: str = 'output') -> dict:
-    """Genera un .kicad_pcb con los componentes del circuito actual."""
-    from bridge.pcb_layout import PCBLayout
-
-    comps = graph.components
-    n = len(comps)
-    # Auto-size board based on component count
-    cols = max(2, int(n ** 0.5) + 1)
-    w = max(30, cols * 15)
-    h = max(20, (n // cols + 2) * 12)
-
-    pcb = PCBLayout(board_width=w, board_height=h,
-                    corner_radius=1.5, project_name='PulseLab Design')
-
-    # Place components in a grid
-    row, col = 0, 0
-    margin_x, margin_y = 8.0, 8.0
-    spacing_x, spacing_y = 12.0, 10.0
-
-    for c in comps:
-        x = margin_x + col * spacing_x
-        y = margin_y + row * spacing_y
-        etype = c.etype
-        ref   = c.uid
-        val   = f"{c.value:.6g}" if isinstance(c.value, float) else str(c.value)
-
-        if etype in ('R',):
-            pcb.add_resistor(ref, val, x, y, net1=c.n1, net2=c.n2)
-        elif etype in ('C',):
-            pcb.add_capacitor(ref, val, x, y, net1=c.n1, net2=c.n2)
-        elif etype in ('L',):
-            pcb.add_inductor(ref, val, x, y, net1=c.n1, net2=c.n2)
-        elif etype in ('V',):
-            pcb.add_pin_header(ref, 2, x, y, value=f"{val}V")
-        elif etype in ('IC', 'MCU'):
-            pkg = "SOP16"
-            if "ESP" in val.upper() or "NODE" in val.upper(): pkg = "ESP12"
-            if "CH340" in val.upper() or "SOP8" in val.upper(): pkg = "SOP8"
-            pcb.add_ic(ref, val, x, y, pins=getattr(c, 'pins', {}), pkg_type=pkg)
-        else:
-            pcb.add_pin_header(ref, 2, x, y, value=etype)
-
-        col += 1
-        if col >= cols:
-            col = 0
-            row += 1
-
-    if n >= 4:
-        pcb.add_mounting_holes_corners(margin=3.0)
-
-    pcb.add_text('PulseLab Forge', pcb.board.center_x,
-                 pcb.board.origin_y + pcb.board.height_mm + 2, size=0.8)
-
-    # Añadir plano de masa si existe el nodo GND
-    if "GND" in graph.all_nodes:
-        pcb.add_copper_pour("GND", margin=1.0)
-        
-    # Ejecutar nuestro A* auto-router 2D/2L
-    pcb.autoroute(width=0.25, grid_size=0.25)
-
-    # Exportar Schematic (.kicad_sch)
-    from bridge.schematic_generator import SchematicGenerator
-    sch_path = Path(out_dir) / 'pulselab_pcb' / 'board.kicad_sch'
-    sch_gen = SchematicGenerator(graph)
-    sch_gen.save(str(sch_path))
-
-    # Exportar PCB y KiCad Pro
-    out_path = Path(out_dir) / 'pulselab_pcb' / 'board.kicad_pcb'
-    pcb.save(out_path)
-    
-    return {'path': str(out_path), 'stats': pcb.stats(), 'pcb': pcb, 'sch_path': str(sch_path)}
-
-
-def _export_gerbers(pcb_path: str = None) -> dict:
-    """Exporta Gerbers + Drill desde un .kicad_pcb."""
-    from bridge.kicad_bridge import KiCadBridge
-    from bridge.gerber_export import generate_all_manufacturing_files
-    from pathlib import Path
-
-    bridge = KiCadBridge()
-    if not bridge.available:
-        return {'error': 'KiCad no encontrado'}
-
-    if pcb_path is None:
-        pcb_path = 'output/pulselab_pcb/board.kicad_pcb'
-    pcb = Path(pcb_path)
-    if not pcb.exists():
-        return {'error': f'PCB no encontrado: {pcb_path}. Genera primero con FORGE > Generar PCB.'}
-
-    return generate_all_manufacturing_files(bridge._cli, pcb, pcb.parent / 'manufacturing')
-
-
-def _save_json(graph: CircuitGraph, path: str) -> None:
-    with open(path, 'w', encoding='utf-8') as f:
-        json.dump(graph.to_json(), f, indent=2)
-
-
-def _load_json(path: str) -> CircuitGraph:
-    with open(path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-    return CircuitGraph.from_json(data)
+# ─── Helpers (Imported from Forge API) ───────────────────────────────────────
+from bridge.forge_api import (
+    load_preset as _load_preset,
+    export_pdf as _export_pdf,
+    export_kicad_netlist as _export_kicad_netlist,
+    generate_pcb as _generate_pcb,
+    export_gerbers as _export_gerbers,
+    save_json as _save_json,
+    load_json as _load_json
+)
 
 
 # ─── Application ─────────────────────────────────────────────────────────────
@@ -232,6 +105,10 @@ class PulseLabApp:
         self.toolbar = ToolbarPanel()
         self.props   = PropertiesPanel()
         self.osc     = OscilloscopePanel()
+        
+        from ui.properties import TextInput
+        self.search_bar = TextInput(pygame.Rect(W - PROPS_W - 210, 36, 200, 24), '')
+        self.search_active = False
 
         # --- State ---
         self._selected_comp  = None
@@ -307,12 +184,25 @@ class PulseLabApp:
     # ── Event handling ────────────────────────────────────────
 
     def _handle_event(self, event: pygame.event.Event) -> None:
+        # --- AI Reviewer Popup (Higher Priority) ---
+        if self._ai_popup and self._ai_popup.get("visible"):
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                # Close button
+                if self._ai_popup["close_rect"].collidepoint(event.pos):
+                    self._ai_popup["visible"] = False
+                # Fix button (Merge GND)
+                elif self._ai_popup.get("fix_rect") and self._ai_popup["fix_rect"].collidepoint(event.pos):
+                    self._snapshot()
+                    self.graph.merge_nodes("GND", "0")
+                    self._reload_graph()
+                    self._status("Arreglo aplicado: '0' -> 'GND' unificados.", SAFE)
+                    self._ai_popup["visible"] = False
+            return
+
         # --- FORGE Result Popup ---
         if self._forge_popup and self._forge_popup.get("visible"):
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if self._ai_popup and self._ai_popup.get("visible"):
-                    pass # AI popup has precedence if both somehow open
-                elif self._forge_popup["close_rect"].collidepoint(event.pos):
+                if self._forge_popup["close_rect"].collidepoint(event.pos):
                     self._forge_popup["visible"] = False
                 elif self._forge_popup.get("dir_rect") and self._forge_popup["dir_rect"].collidepoint(event.pos):
                     # Abrir carpeta del proyecto (Explorer)
@@ -334,6 +224,9 @@ class PulseLabApp:
                 elif event.key == pygame.K_e: self._action_export_pdf()
                 elif event.key == pygame.K_z: self._undo()
                 elif event.key == pygame.K_y: self._redo()
+                elif event.key == pygame.K_f:
+                    self.search_bar.active = True
+                    self.search_active = True
                 elif event.key == pygame.K_0: self.canvas.reset_view(); self._status('Zoom reseteado.', DIM)
                 elif event.key == pygame.K_d:
                     # Ctrl+D is handled in canvas.handle_event → 'placed' action below
@@ -341,13 +234,22 @@ class PulseLabApp:
                 return
             # F key: canvas handles fit_to_screen internally (K_f in editor.py)
             # Just update status message here
-            if event.key == pygame.K_f:
+            # F key (without Ctrl): canvas handles fit_to_screen
+            if event.key == pygame.K_f and not (mods & pygame.KMOD_CTRL):
                 self.canvas.fit_to_screen()
                 self._status(f'Fit to screen  zoom={self.canvas.zoom:.2f}x', DIM)
 
-        # --- Properties panel (captures keyboard when text fields active) ---
+        # --- Properties panel ---
+        # Before handling event, we might need a snapshot if the panel mutates
+        # Since PropertiesPanel currently mutates directly, we'd need a change-detector.
+        # Temp fix: snapshot before calling handle_event if it's a mouse click or enter
+        if event.type == pygame.MOUSEBUTTONDOWN or (event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN):
+            # Optimización: solo snapshot si el puntero está sobre el panel o escribiendo
+            self._snapshot()
+
         action = self.props.handle_event(event, self.graph, self.runner)
         if action == 'delete':
+            # Snapshot already taken above
             self._selected_comp      = None
             self.canvas.selected_uid = None
             self.osc.set_nodes(self.graph.all_nodes)
@@ -358,6 +260,7 @@ class PulseLabApp:
             return
 
         # --- Toolbar ---
+        # Toolbar actions (SELECT, R, C...) don't mutate graph yet, no snapshot needed
         tb_action = self.toolbar.handle_event(event, self.runner, self.runner.dt_label)
         if tb_action:
             self._handle_toolbar(tb_action)
@@ -367,6 +270,11 @@ class PulseLabApp:
         self.osc.handle_event(event, self.graph.all_nodes)
 
         # --- Canvas ---
+        # IMPORTANTE: Tomar snapshot ANTES de mutaciones en el canvas
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.canvas.active_tool != 'SELECT':
+                self._snapshot()
+
         result = self.canvas.handle_event(event, self.runner)
         if result:
             act  = result['action']
@@ -378,22 +286,28 @@ class PulseLabApp:
                 self._selected_comp = None
                 self.props.load_component(None)
             elif act in ('wire_placed', 'wire_point'):
+                if act == 'wire_placed': self._snapshot() # Snapshot logic after completion too
                 self.osc.set_nodes(self.graph.all_nodes)
             elif act == 'deselected':
                 self._selected_comp = None
                 self.props.load_component(None)
             elif act == 'placed':
-                self._snapshot()
+                # Snapshot ya tomado antes o tomado al finalizar
                 self._selected_comp = comp
                 self.props.load_component(comp)
                 self.osc.set_nodes(self.graph.all_nodes)
                 if comp:
                     self._status(f'Colocado: {comp.uid} ({comp.grid_c},{comp.grid_r})', ACCENT)
             elif act == 'deleted':
-                self._snapshot()
+                # Snapshot ya tomado en el trigger
                 self._selected_comp = None
                 self.osc.set_nodes(self.graph.all_nodes)
                 self._status('Eliminado.', WARN)
+
+        # --- Search Bar ---
+        if self.search_bar.handle_event(event):
+            self.canvas.search_term = self.search_bar.text
+            return
 
     def _handle_toolbar(self, action: str) -> None:
         """Procesa acciones del toolbar."""
@@ -685,6 +599,7 @@ class PulseLabApp:
     def _update(self, dt: float) -> None:
         self.runner.step()
         self.props.update(dt)
+        self.search_bar.update(dt)
         # Update current particles
         self.canvas.particles.update(dt, self.graph, self.runner)
         if self._flash_alpha > 0:
@@ -760,7 +675,13 @@ class PulseLabApp:
         # Active tool badge
         tcol = ACCENT if tool == 'SELECT' else WARN
         draw_text(surf, f'Herramienta: {tool} [{orient}]',
-                  W - PROPS_W - 10, 24, self.fonts['xs'], tcol, 'topright')
+                  W - PROPS_W - 220, 24, self.fonts['xs'], tcol, 'topright')
+
+        # Search bar drawing
+        self.search_bar.draw(surf, self.fonts['xs'])
+        if not self.search_bar.text and not self.search_bar.active:
+            draw_text(surf, 'Buscar (Ctrl+F)...', self.search_bar.rect.x + 5, 
+                      self.search_bar.rect.centery, self.fonts['xs'], (60, 80, 100), 'midleft')
 
     def _draw_status(self, surf: pygame.Surface) -> None:
         sr = pygame.Rect(0, STATUS_Y, W, STATUS_H)

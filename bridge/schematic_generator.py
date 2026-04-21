@@ -96,6 +96,17 @@ class SchematicGenerator:
 
             val = str(c.value) if c.etype != "GND" else "GND"
             
+            # Component placement and pin labels
+            if c.etype in ('IC', 'MCU'):
+                for p_gc, p_gr, p_id in c.get_pins_layout():
+                    net_name = c.pins.get(p_id, "")
+                    if net_name:
+                        px, py = self._grid_to_kicad(p_gc, p_gr)
+                        label = self._net_to_label(net_name)
+                        s.append(f'  (label "{label}" (at {px} {py} 0) (fields_autoplaced)\n'
+                                 f'    (effects (font (size 1.27 1.27)) (justify left bottom))\n'
+                                 f'    (uuid "{self._get_uuid()}")\n  )')
+            
             s_comp = []
             s_comp.append(f'  (symbol (lib_id "{lib_id}") (at {cx} {cy} {angle}) (unit 1)')
             s_comp.append(f'    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)')

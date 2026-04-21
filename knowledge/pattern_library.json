@@ -1,0 +1,113 @@
+{
+  "mcu_support": {
+    "RF_Module:ESP32-WROOM-32": [
+      {
+        "net": "3V3",
+        "support": [
+          {
+            "ref": "C_MCU_000_H",
+            "val": "10uF"
+          },
+          {
+            "ref": "C_MCU_000_L",
+            "val": "100nF"
+          },
+          {
+            "ref": "IC_001",
+            "val": "3.3"
+          },
+          {
+            "ref": "C_IC_001_H",
+            "val": "10uF"
+          },
+          {
+            "ref": "C_IC_001_L",
+            "val": "100nF"
+          },
+          {
+            "ref": "R_004",
+            "val": "10000"
+          }
+        ]
+      }
+    ],
+    "10uF": [
+      {
+        "net": "3V3",
+        "support": [
+          {
+            "ref": "MCU_000",
+            "val": "RF_Module:ESP32-WROOM-32"
+          },
+          {
+            "ref": "C_MCU_000_L",
+            "val": "100nF"
+          },
+          {
+            "ref": "IC_001",
+            "val": "3.3"
+          },
+          {
+            "ref": "C_IC_001_H",
+            "val": "10uF"
+          },
+          {
+            "ref": "C_IC_001_L",
+            "val": "100nF"
+          },
+          {
+            "ref": "R_004",
+            "val": "10000"
+          }
+        ]
+      }
+    ],
+    "100nF": [
+      {
+        "net": "3V3",
+        "support": [
+          {
+            "ref": "MCU_000",
+            "val": "RF_Module:ESP32-WROOM-32"
+          },
+          {
+            "ref": "C_MCU_000_H",
+            "val": "10uF"
+          },
+          {
+            "ref": "IC_001",
+            "val": "3.3"
+          },
+          {
+            "ref": "C_IC_001_H",
+            "val": "10uF"
+          },
+          {
+            "ref": "C_IC_001_L",
+            "val": "100nF"
+          },
+          {
+            "ref": "R_004",
+            "val": "10000"
+          }
+        ]
+      }
+    ],
+    "3.3": [
+      {
+        "net": "3V3",
+        "support": [
+          {
+            "ref": "R_004",
+            "val": "10000"
+          },
+          {
+            "ref": "IC_001",
+            "val": "3.3"
+          }
+        ]
+      }
+    ]
+  },
+  "net_styles": {}
+}

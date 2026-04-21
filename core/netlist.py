@@ -135,9 +135,17 @@ class NetlistGenerator:
             if c.etype == "GND":
                 net_map.setdefault("GND", []).append((refs.get(c.uid, c.uid), "1"))
                 continue
+            
             ref = refs[c.uid]
-            net_map.setdefault(c.n1, []).append((ref, "1"))
-            net_map.setdefault(c.n2, []).append((ref, "2"))
+            if c.etype in ("IC", "MCU") and c.pins:
+                # Componente multipin
+                for pin_id, net_name in c.pins.items():
+                    if net_name:
+                        net_map.setdefault(net_name, []).append((ref, pin_id))
+            else:
+                # Componente estándar (2 pines)
+                if c.n1: net_map.setdefault(c.n1, []).append((ref, "1"))
+                if c.n2: net_map.setdefault(c.n2, []).append((ref, "2"))
 
         lines.append("  (nets")
         for code, (net_name, nodes) in enumerate(net_map.items(), start=1):

@@ -52,6 +52,7 @@ class PlacedComponent:
     pins:        Dict[str, str] = field(default_factory=dict)
     width:       int   = 2
     height:      int   = 2
+    footprint_id: Optional[str] = None
 
     @property
     def grid_c2(self) -> int:
@@ -62,6 +63,33 @@ class PlacedComponent:
     def grid_r2(self) -> int:
         if self.etype in ('IC', 'MCU'): return self.grid_r + self.height
         return self.grid_r + (1 if self.orientation == 'V' else 0)
+
+    def get_pins_layout(self) -> List[Tuple[int, int, str]]:
+        """
+        Devuelve una lista de (grid_c, grid_r, pin_id) para cada pin del componente.
+        Para R/C/L/V/S usa n1/n2. Para IC/MCU usa el diccionario 'pins'.
+        """
+        layout = []
+        if self.etype in ('IC', 'MCU'):
+            # Distribución de pines:
+            # Izquierda (1 a N/2), Derecha (N/2+1 a N)
+            num_pins = len(self.pins)
+            half = num_pins // 2
+            # Los pines se asocian por ID de pin (str)
+            pin_ids = sorted(self.pins.keys(), key=lambda x: int(x) if x.isdigit() else x)
+            for i, p_id in enumerate(pin_ids):
+                if i < half:
+                    # Lado izquierdo (hacia abajo)
+                    layout.append((self.grid_c, self.grid_r + i, p_id))
+                else:
+                    # Lado derecho (hacia arriba o igualando)
+                    layout.append((self.grid_c + self.width, self.grid_r + (num_pins - 1 - i), p_id))
+        elif self.etype == 'GND':
+            layout.append((self.grid_c, self.grid_r, '1'))
+        else:
+            layout.append((self.grid_c, self.grid_r, '1'))
+            layout.append((self.grid_c2, self.grid_r2, '2'))
+        return layout
 
 
 # ─── Wire ─────────────────────────────────────────────────────────────────────
@@ -148,16 +176,31 @@ class CircuitGraph:
             for pin_id, net in c.pins.items():
                 if net == name_drop: c.pins[pin_id] = name_keep
 
-    def node_at_grid(self, gc: int, gr: int) -> Optional[str]:
+    def node_at_grid(self, gc: int, gr: int, visited_wires: Set[str] = None) -> Optional[str]:
+        if visited_wires is None: visited_wires = set()
+        
+        # 1. Check components terminals
         for c in self.components:
-            if c.etype == 'GND':
-                if (c.grid_c, c.grid_r) == (gc, gr):
-                    return 'GND'
-            else:
-                if (c.grid_c, c.grid_r) == (gc, gr):
-                    return c.n1
-                if (c.grid_c2, c.grid_r2) == (gc, gr):
+            for p_gc, p_gr, p_id in c.get_pins_layout():
+                if p_gc == gc and p_gr == gr:
+                    if c.etype == 'GND': return 'GND'
+                    if c.etype in ('IC', 'MCU'):
+                        return c.pins.get(p_id, "")
+                    if p_id == '1': return c.n1
                     return c.n2
+        
+        # 2. Check wires
+        for w in self.wires:
+            if w.uid in visited_wires: continue
+            if (gc, gr) in w.path:
+                visited_wires.add(w.uid)
+                # Check endpoints of this wire
+                n1 = self.node_at_grid(*w.path[0], visited_wires)
+                if n1: return n1
+                n2 = self.node_at_grid(*w.path[-1], visited_wires)
+                if n2: return n2
+                # Fallback to auto-name based on wire start
+                return f"N_{w.path[0][0]}_{w.path[0][1]}"
         return None
 
     @property
@@ -205,7 +248,8 @@ class CircuitGraph:
                      orientation=c.orientation, value=c.value,
                      label=c.label, n1=c.n1, n2=c.n2,
                      R_on=c.R_on, R_off=c.R_off, is_closed=c.is_closed,
-                     pins=c.pins, width=c.width, height=c.height)
+                     pins=c.pins, width=c.width, height=c.height,
+                     footprint_id=c.footprint_id)
                 for c in self.components
             ],
             'wires': [
@@ -443,11 +487,13 @@ class EditorCanvas:
         self._rect_p1:   Tuple[int,int] = (0, 0)
         self._rect_p2:   Tuple[int,int] = (0, 0)
 
-        # Wire drawing
-        self._wire_path: List[Tuple[int, int]] = []
-
-        # Particles
+        # Particles & BG
         self.particles = CurrentParticleSystem()
+        self.bg_dots   = [(random.randint(0, 2000), random.randint(0, 2000)) 
+                          for _ in range(120)]
+        self.bg_phase  = 0.0
+        
+        self.search_term: str = ""
 
     # ── Coordinate helpers ────────────────────────────────────
 
@@ -888,7 +934,15 @@ class EditorCanvas:
         r  = self.rect
         gs = self._gs()
 
-        pygame.draw.rect(surf, (7, 9, 14), r)
+        # Canvas BG
+        pygame.draw.rect(surf, BG, r)
+        
+        # ── Animated Background ───────────────────────────────
+        self.bg_phase += 0.01
+        for bx, by in self.bg_dots:
+            px = int((bx + self.pan_px*0.5) % CANVAS_W) + CANVAS_X
+            py = int((by + self.pan_py*0.5 + math.sin(self.bg_phase + bx)*5) % CANVAS_H) + CANVAS_Y
+            surf.set_at((px, py), (30, 40, 60))
 
         # ── Grid ─────────────────────────────────────────────
         # Extended range to cover panned canvas
@@ -918,10 +972,25 @@ class EditorCanvas:
         # ── Explicit wires ────────────────────────────────────
         self._draw_explicit_wires(surf, runner)
 
-        # ── Components ───────────────────────────────────────
+        # --- Highlighting search results ---
+        if self.search_term:
+            self.bg_phase += 0.1 # Reuse phase for blinking
+            alpha = int(120 + 80 * math.sin(self.bg_phase))
+            for comp in self.graph.components:
+                if (self.search_term.lower() in comp.uid.lower() or 
+                    self.search_term.lower() in comp.label.lower()):
+                    cpx = self.comp_cpx(comp)
+                    pygame.draw.circle(surf, (255, 255, 0, alpha), cpx, 45, 3)
+                    
         for comp in self.graph.components:
-            multi_sel = comp.uid in self.selected_uids
+            is_sel = (comp.uid in self.selected_uids)
+            # Match check for draw_comp styling
+            is_match = (self.search_term and 
+                        (self.search_term.lower() in comp.uid.lower() or 
+                         self.search_term.lower() in comp.label.lower()))
+                
             primary   = (comp.uid == self.selected_uid)
+            multi_sel = is_sel
             self._draw_comp(surf, comp, primary, multi_sel, fonts, runner)
 
         # ── Current particles ─────────────────────────────────
@@ -988,32 +1057,29 @@ class EditorCanvas:
     def _draw_node_wires(self, surf, runner):
         node_pts: Dict[str, List] = {}
         for comp in self.graph.components:
-            t1 = self.comp_t1px(comp)
-            t2 = self.comp_t2px(comp)
-            if comp.etype == 'GND':
-                node_pts.setdefault(comp.n1, []).append(t1)
-            else:
-                node_pts.setdefault(comp.n1, []).append(t1)
-                if comp.etype != 'GND':
-                    node_pts.setdefault(comp.n2, []).append(t2)
+            for gc, gr, p_id in comp.get_pins_layout():
+                node_name = self.graph.node_at_grid(gc, gr)
+                if node_name:
+                    node_pts.setdefault(node_name, []).append(self._g2p(gc, gr))
 
         for node_name, pts in node_pts.items():
             unique = list(dict.fromkeys(map(tuple, pts)))
             if len(unique) < 2:
                 continue
-            color = (45, 65, 100) if node_name == 'GND' else (60, 95, 145)
+            color = WIRE_GND if node_name == 'GND' else WIRE_COL
+            
             if runner.is_running:
                 v = runner.get_voltage(node_name)
                 if abs(v) > 50:
-                    color = lerp_color(color, ACCENT, min(abs(v) / 5000, 0.6))
-            sorted_pts = sorted(unique, key=lambda p: (p[0], p[1]))
-            if len(sorted_pts) >= 2:
-                pygame.draw.lines(surf, color, False, sorted_pts, 2)
+                    glow_color = lerp_color(color, ACCENT, min(abs(v) / 5000, 1.0))
+                    # Multi-pass glow
+                    for thick in range(6, 1, -2):
+                        pygame.draw.lines(surf, glow_color, False, unique, thick)
+                    color = glow_color
+
+            pygame.draw.lines(surf, color, False, unique, 2)
             for p in unique:
                 pygame.draw.circle(surf, color, p, 3)
-            if len(sorted_pts) >= 3:
-                for p in sorted_pts[1:-1]:
-                    pygame.draw.circle(surf, (90, 130, 190), p, 5)
 
     def _draw_explicit_wires(self, surf, runner):
         for wire in self.graph.wires:
@@ -1023,13 +1089,18 @@ class EditorCanvas:
             is_sel = (wire.uid == self._sel_wire_uid)
             col    = SELECT_COL if is_sel else WIRE_COL
             thick  = 3 if is_sel else 2
+            
             if runner.is_running:
                 gc0, gr0 = wire.path[0]
                 n = self.graph.node_at_grid(gc0, gr0)
                 if n:
                     v = runner.get_voltage(n)
                     if abs(v) > 50:
-                        col = lerp_color(WIRE_COL, ACCENT, min(abs(v)/5000, 0.6))
+                        glow_color = lerp_color(col, ACCENT, min(abs(v)/5000, 1.0))
+                        for gw in range(6, 1, -2):
+                            pygame.draw.lines(surf, glow_color, False, pts, gw)
+                        col = glow_color
+
             pygame.draw.lines(surf, col, False, pts, thick)
             for p in pts:
                 pygame.draw.circle(surf, col, p, 4)
@@ -1068,9 +1139,9 @@ class EditorCanvas:
             surf.blit(glow_s, glow_r.topleft)
 
         r_dot = max(2, int(3 * self.zoom))
-        pygame.draw.circle(surf, col, t1, r_dot)
-        if comp.etype != 'GND':
-            pygame.draw.circle(surf, col, t2, r_dot)
+        for gc, gr, p_id in comp.get_pins_layout():
+            pt = self._g2p(gc, gr)
+            pygame.draw.circle(surf, col, pt, r_dot)
 
         if   comp.etype == 'R':   self._drw_R(surf, t1, t2, cp, col)
         elif comp.etype == 'C':   self._drw_C(surf, t1, t2, cp, col, comp.orientation)
@@ -1078,6 +1149,14 @@ class EditorCanvas:
         elif comp.etype == 'V':   self._drw_V(surf, t1, t2, cp, col, fonts)
         elif comp.etype == 'S':   self._drw_S(surf, t1, t2, cp, col, comp.is_closed)
         elif comp.etype == 'GND': self._drw_GND(surf, t1, col)
+        elif comp.etype in ('IC', 'MCU'):
+            # Dibujar caja del IC
+            w_px = comp.width * gs
+            h_px = comp.height * gs
+            pygame.draw.rect(surf, (40, 50, 70), (t1[0], t1[1], w_px, h_px))
+            pygame.draw.rect(surf, col, (t1[0], t1[1], w_px, h_px), 2)
+            # Notch
+            pygame.draw.circle(surf, col, (t1[0] + w_px//2, t1[1]), 4)
 
         # Label
         if gs >= 22:
@@ -1086,13 +1165,17 @@ class EditorCanvas:
 
         # Node names when selected
         if selected:
-            draw_text(surf, comp.n1,
-                      t1[0], t1[1] - max(10, int(14 * self.zoom)),
-                      fonts['xs'], ACCENT, 'center')
-            if comp.etype not in ('GND',):
-                draw_text(surf, comp.n2,
-                          t2[0], t2[1] + max(4, int(6 * self.zoom)),
-                          fonts['xs'], ACCENT, 'center')
+            for gc, gr, p_id in comp.get_pins_layout():
+                pt = self._g2p(gc, gr)
+                node_name = ""
+                if comp.etype == 'GND': node_name = 'GND'
+                elif comp.etype in ('IC', 'MCU'): node_name = comp.pins.get(p_id, "")
+                else: node_name = comp.n1 if p_id == '1' else comp.n2
+                
+                if node_name:
+                    draw_text(surf, node_name,
+                              pt[0], pt[1] - max(10, int(14 * self.zoom)),
+                              fonts['xs'], ACCENT, 'center')
 
         # Live voltage at terminal 1
         if runner.is_running and comp.etype not in ('GND',) and gs >= 32:
@@ -1105,12 +1188,20 @@ class EditorCanvas:
 
     def _drw_R(self, surf, t1, t2, cp, col):
         z  = min(self.zoom, 1.5)
-        w  = int(22 * z)
-        h  = int(9  * z)
+        w  = int(28 * z)
+        h  = int(10 * z)
         pygame.draw.line(surf, col, t1, (cp[0]-w//2, cp[1]), 2)
         pygame.draw.line(surf, col, (cp[0]+w//2, cp[1]), t2, 2)
-        pygame.draw.rect(surf, PANEL_BG, (cp[0]-w//2, cp[1]-h//2, w, h))
-        pygame.draw.rect(surf, col,      (cp[0]-w//2, cp[1]-h//2, w, h), 2, 2)
+        
+        # Body Gradient
+        r_body = pygame.Rect(cp[0]-w//2, cp[1]-h//2, w, h)
+        pygame.draw.rect(surf, PANEL_BG, r_body, border_radius=2)
+        pygame.draw.rect(surf, col,      r_body, 2, border_radius=2)
+        
+        # Color bands simulation
+        for i in range(3):
+            bx = cp[0] - w//2 + 4 + i*6*z
+            pygame.draw.line(surf, ACCENT2, (bx, cp[1]-h//2+2), (bx, cp[1]+h//2-2), 2)
 
     def _drw_C(self, surf, t1, t2, cp, col, orient):
         z = min(self.zoom, 1.5)
@@ -1161,17 +1252,19 @@ class EditorCanvas:
         pygame.draw.line(surf, DANGER, (x-s, y+s), (x+s, y+s), 2)
 
     def _drw_S(self, surf, t1, t2, cp, col, closed: bool):
-        r = max(3, int(4 * self.zoom))
-        pygame.draw.circle(surf, col, t1, r)
-        pygame.draw.circle(surf, col, t2, r)
+        r = max(4, int(5 * self.zoom))
+        pygame.draw.circle(surf, col, t1, r, 2)
+        pygame.draw.circle(surf, col, t2, r, 2)
         if closed:
-            pygame.draw.line(surf, SAFE, t1, t2, 3)
-            pygame.draw.circle(surf, SAFE, cp, r)
+            pygame.draw.line(surf, SAFE, t1, t2, 4)
+            pygame.draw.circle(surf, SAFE, cp, r-1)
         else:
             mx = (t1[0]+t2[0])//2
             my = (t1[1]+t2[1])//2
-            off = max(8, int(12 * self.zoom))
-            pygame.draw.line(surf, WARN, t1, (mx, my - off), 2)
+            off = max(10, int(15 * self.zoom))
+            # Draw lever with mechanical look
+            pygame.draw.line(surf, WARN, t1, (mx, my - off), 3)
+            pygame.draw.circle(surf, WARN, (mx, my - off), 3)
 
     def _drw_GND(self, surf, t1, col):
         x, y = t1
