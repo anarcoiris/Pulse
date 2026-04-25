@@ -127,10 +127,14 @@ class PropertiesPanel:
         if comp.etype == 'S':
             field('R_on',  comp.R_on)
             field('R_off', comp.R_off)
-            # Add footprint selector info
-            self._inputs['footprint'] = TextInput(pygame.Rect(ix, iy, iw, self.INP_H), 
-                                                comp.footprint_id or 'tactile_switch_6x6')
-            iy += self.ROW
+
+        # Add footprint selector info for ALL components
+        default_fp = comp.footprint_id or ''
+        if not default_fp and comp.etype == 'S':
+            default_fp = 'tactile_switch_6x6'
+        
+        self._inputs['footprint'] = TextInput(pygame.Rect(ix, iy, iw, self.INP_H), default_fp)
+        iy += self.ROW
 
         iy += 4
         bw  = (self.rect.width - self.PAD * 3) // 2
@@ -220,7 +224,8 @@ class PropertiesPanel:
         iy = self.rect.y + 70
         labels = ['n1', 'n2', 'valor', 'label']
         if comp.etype == 'S':
-            labels += ['R_on', 'R_off', 'footprint']
+            labels += ['R_on', 'R_off']
+        labels.append('footprint')
         hints = {
             'n1':    'Nodo +',
             'n2':    'Nodo -',

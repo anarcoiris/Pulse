@@ -11,21 +11,12 @@ class SemanticAIAgent:
     def __init__(self):
         try:
             from openai import OpenAI
-            api_key = os.environ.get("OPENAI_API_KEY")
-            
-            if api_key:
-                # Prefer OpenAPI si hay API_KEY
-                self.client = OpenAI(api_key=api_key)
-                self.model = "gpt-4o"  # O gpt-4-turbo
-                self.is_local = False
-            else:
-                # Fallback a Ollama en puerto 11434 por defecto
-                self.client = OpenAI(
-                    base_url="http://localhost:11434/v1",
-                    api_key="ollama" # Requerido pero ignorado por Ollama
-                )
-                self.model = "deepseek-coder:latest" # o qwen2.5-coder
-                self.is_local = True
+            self.client = OpenAI(
+                base_url="http://localhost:11434/v1",
+                api_key="ollama" 
+            )
+            self.model = "qwen2.5:3b"
+            self.is_local = True
                 
         except ImportError:
             self.client = None

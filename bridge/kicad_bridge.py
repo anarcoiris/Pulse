@@ -24,33 +24,41 @@ if TYPE_CHECKING:
 
 # ─── Rutas de KiCad ──────────────────────────────────────────────────────────
 
-_KICAD_SEARCH_PATHS = [
-    # Windows: KiCad 8.x y 10.x — C: y D:
-    r"D:\Program Files\KiCad\8.0\bin",
-    r"D:\Program Files\KiCad\10.0\bin",
-    r"C:\Program Files\KiCad\8.0\bin",
-    r"C:\Program Files\KiCad\9.0\bin",
-    r"C:\Program Files\KiCad\10.0\bin",
-    r"C:\Program Files\KiCad\bin",
-    # Linux
-    "/usr/bin",
-    "/usr/local/bin",
-    "/snap/bin",
-    "/opt/kicad/bin",
-]
-
-
 def find_kicad_cli() -> Optional[Path]:
     """Localiza el ejecutable kicad-cli en el sistema."""
-    # 1. En PATH del sistema
+    # 1. En PATH del sistema (Opción más robusta y preferida)
     found = shutil.which("kicad-cli")
     if found:
         return Path(found)
-    # 2. En rutas conocidas
-    for p in _KICAD_SEARCH_PATHS:
-        cli = Path(p) / ("kicad-cli.exe" if sys.platform == "win32" else "kicad-cli")
+
+    # 2. Rutas conocidas por plataforma
+    import platform
+    system = platform.system()
+    
+    candidates = []
+    if system == "Windows":
+        candidates = [
+            r"C:\Program Files\KiCad\8.0\bin\kicad-cli.exe",
+            r"C:\Program Files\KiCad\9.0\bin\kicad-cli.exe",
+            r"C:\Program Files\KiCad\10.0\bin\kicad-cli.exe",
+            r"D:\Program Files\KiCad\8.0\bin\kicad-cli.exe",
+            r"D:\Program Files\KiCad\10.0\bin\kicad-cli.exe",
+        ]
+    elif system == "Darwin": # macOS
+        candidates = ["/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli"]
+    elif system == "Linux":
+        candidates = [
+            "/usr/bin/kicad-cli",
+            "/usr/local/bin/kicad-cli",
+            "/snap/bin/kicad-cli",
+            "/opt/kicad/bin/kicad-cli",
+        ]
+
+    for p in candidates:
+        cli = Path(p)
         if cli.exists():
             return cli
+            
     return None
 
 
@@ -60,17 +68,21 @@ def find_kicad_symbol_dir() -> Optional[Path]:
     env = os.environ.get("KICAD_SYMBOL_DIR")
     if env and Path(env).exists():
         return Path(env)
-    # Rutas Windows estándar
-    for base in [r"C:\Program Files\KiCad\8.0", r"C:\Program Files\KiCad\10.0",
-                 r"C:\Program Files\KiCad"]:
-        p = Path(base) / "share" / "kicad" / "symbols"
-        if p.exists():
-            return p
-    # Linux
-    for p in [Path("/usr/share/kicad/symbols"),
-              Path("/usr/local/share/kicad/symbols")]:
-        if p.exists():
-            return p
+
+    import platform
+    system = platform.system()
+    
+    if system == "Windows":
+        for base in [r"C:\Program Files\KiCad\8.0", r"D:\Program Files\KiCad\8.0",
+                     r"C:\Program Files\KiCad\10.0", r"C:\Program Files\KiCad"]:
+            p = Path(base) / "share" / "kicad" / "symbols"
+            if p.exists(): return p
+    elif system == "Darwin":
+        p = Path("/Applications/KiCad/KiCad.app/Contents/SharedSupport/symbols")
+        if p.exists(): return p
+    else: # Linux
+        for p in [Path("/usr/share/kicad/symbols"), Path("/usr/local/share/kicad/symbols")]:
+            if p.exists(): return p
     return None
 
 
@@ -79,16 +91,44 @@ def find_kicad_footprint_dir() -> Optional[Path]:
     env = os.environ.get("KICAD_FOOTPRINT_DIR")
     if env and Path(env).exists():
         return Path(env)
-    for base in [r"C:\Program Files\KiCad\8.0", r"C:\Program Files\KiCad\10.0",
-                 r"C:\Program Files\KiCad"]:
-        p = Path(base) / "share" / "kicad" / "footprints"
-        if p.exists():
-            return p
-    for p in [Path("/usr/share/kicad/footprints"),
-              Path("/usr/local/share/kicad/footprints")]:
-        if p.exists():
-            return p
+
+    import platform
+    system = platform.system()
+    
+    if system == "Windows":
+        for base in [r"C:\Program Files\KiCad\8.0", r"D:\Program Files\KiCad\8.0",
+                     r"C:\Program Files\KiCad\10.0", r"C:\Program Files\KiCad"]:
+            p = Path(base) / "share" / "kicad" / "footprints"
+            if p.exists(): return p
+    elif system == "Darwin":
+        p = Path("/Applications/KiCad/KiCad.app/Contents/SharedSupport/footprints")
+        if p.exists(): return p
+    else: # Linux
+        for p in [Path("/usr/share/kicad/footprints"), Path("/usr/local/share/kicad/footprints")]:
+            if p.exists(): return p
     return None
+
+
+def get_kicad_footprint(lib: str, name: str) -> Optional[str]:
+    """
+    Lee un footprint de la biblioteca estándar de KiCad.
+    
+    Args:
+        lib:  Nombre de la librería, e.g. 'Package_QFP'
+        name: Nombre del footprint, e.g. 'LQFP-48_7x7mm_P0.5mm'
+    
+    Returns:
+        Contenido del archivo .kicad_mod como string o None.
+    """
+    fp_dir = find_kicad_footprint_dir()
+    if not fp_dir:
+        return None
+        
+    fp_path = fp_dir / f"{lib}.pretty" / f"{name}.kicad_mod"
+    if not fp_path.exists():
+        return None
+        
+    return fp_path.read_text(encoding='utf-8')
 
 
 # ─── KiCadBridge ─────────────────────────────────────────────────────────────
@@ -248,10 +288,11 @@ class KiCadBridge:
 
     def export_all(self, graph: "CircuitGraph",
                    output_dir: str = "output",
-                   project_name: str = "design") -> dict:
+                   project_name: str = "design",
+                   skip_drc: bool = False) -> dict:
         """
         Pipeline completo: CircuitGraph → netlist + BOM.
-        Si hay un .kicad_pcb en output_dir, también genera Gerbers.
+        Si hay un .kicad_pcb en output_dir, también genera Gerbers (previo DRC).
 
         Returns:
             dict con todos los archivos generados.
@@ -261,6 +302,15 @@ class KiCadBridge:
 
         pcb_path = out / f"{project_name}.kicad_pcb"
         if pcb_path.exists() and self.available:
+            # 1. Ejecutar DRC obligatorio antes de exportar fabricación
+            if not skip_drc:
+                drc = self.run_drc(pcb_path, out / "reports")
+                result["drc_report"] = drc
+                if drc.get("violations") and len(drc["violations"]) > 0:
+                    result["error"] = f"DRC detectó {len(drc['violations'])} violaciones críticas. Exportación abortada."
+                    return result
+
+            # 2. Si DRC OK, exportar archivos de fabricación
             gerber_dir = out / "gerbers"
             result["gerbers"]  = self.export_gerbers(pcb_path, gerber_dir)
             result["drill"]    = self.export_drill(pcb_path, gerber_dir)

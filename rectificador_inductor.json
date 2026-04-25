@@ -1,0 +1,176 @@
+{
+  "version": "1.2",
+  "_counter": 8,
+  "_wcounter": 0,
+  "components": [
+    {
+      "uid": "V_000",
+      "etype": "V",
+      "grid_c": 0,
+      "grid_r": 0,
+      "orientation": "H",
+      "value": 12.0,
+      "label": "VAC",
+      "n1": "AC_L",
+      "n2": "AC_N",
+      "R_on": 0.01,
+      "R_off": 1000000000.0,
+      "is_closed": false,
+      "pins": {
+        "1": "AC_L",
+        "2": "AC_N"
+      },
+      "width": 2,
+      "height": 2,
+      "footprint_id": null
+    },
+    {
+      "uid": "D_001",
+      "etype": "D",
+      "grid_c": 2,
+      "grid_r": 0,
+      "orientation": "H",
+      "value": 0,
+      "label": "D1",
+      "n1": "AC_L",
+      "n2": "DC_POS",
+      "R_on": 0.01,
+      "R_off": 1000000000.0,
+      "is_closed": false,
+      "pins": {
+        "1": "AC_L",
+        "2": "DC_POS"
+      },
+      "width": 2,
+      "height": 2,
+      "footprint_id": null
+    },
+    {
+      "uid": "D_002",
+      "etype": "D",
+      "grid_c": 2,
+      "grid_r": 2,
+      "orientation": "H",
+      "value": 0,
+      "label": "D2",
+      "n1": "AC_N",
+      "n2": "DC_POS",
+      "R_on": 0.01,
+      "R_off": 1000000000.0,
+      "is_closed": false,
+      "pins": {
+        "1": "AC_N",
+        "2": "DC_POS"
+      },
+      "width": 2,
+      "height": 2,
+      "footprint_id": null
+    },
+    {
+      "uid": "D_003",
+      "etype": "D",
+      "grid_c": 4,
+      "grid_r": 0,
+      "orientation": "H",
+      "value": 0,
+      "label": "D3",
+      "n1": "DC_NEG",
+      "n2": "AC_L",
+      "R_on": 0.01,
+      "R_off": 1000000000.0,
+      "is_closed": false,
+      "pins": {
+        "1": "DC_NEG",
+        "2": "AC_L"
+      },
+      "width": 2,
+      "height": 2,
+      "footprint_id": null
+    },
+    {
+      "uid": "D_004",
+      "etype": "D",
+      "grid_c": 4,
+      "grid_r": 2,
+      "orientation": "H",
+      "value": 0,
+      "label": "D4",
+      "n1": "DC_NEG",
+      "n2": "AC_N",
+      "R_on": 0.01,
+      "R_off": 1000000000.0,
+      "is_closed": false,
+      "pins": {
+        "1": "DC_NEG",
+        "2": "AC_N"
+      },
+      "width": 2,
+      "height": 2,
+      "footprint_id": null
+    },
+    {
+      "uid": "L_005",
+      "etype": "L",
+      "grid_c": 6,
+      "grid_r": 1,
+      "orientation": "H",
+      "value": 0.01,
+      "label": "L1 10mH",
+      "n1": "DC_POS",
+      "n2": "L_OUT",
+      "R_on": 0.01,
+      "R_off": 1000000000.0,
+      "is_closed": false,
+      "pins": {
+        "1": "DC_POS",
+        "2": "L_OUT"
+      },
+      "width": 2,
+      "height": 2,
+      "footprint_id": null
+    },
+    {
+      "uid": "R_006",
+      "etype": "R",
+      "grid_c": 8,
+      "grid_r": 1,
+      "orientation": "V",
+      "value": 100,
+      "label": "Rload 100R",
+      "n1": "L_OUT",
+      "n2": "DC_NEG",
+      "R_on": 0.01,
+      "R_off": 1000000000.0,
+      "is_closed": false,
+      "pins": {
+        "1": "L_OUT",
+        "2": "DC_NEG"
+      },
+      "width": 2,
+      "height": 2,
+      "footprint_id": null
+    },
+    {
+      "uid": "R_007",
+      "etype": "R",
+      "grid_c": 8,
+      "grid_r": 3,
+      "orientation": "V",
+      "value": 0.001,
+      "label": "GND_Link",
+      "n1": "DC_NEG",
+      "n2": "GND",
+      "R_on": 0.01,
+      "R_off": 1000000000.0,
+      "is_closed": false,
+      "pins": {
+        "1": "DC_NEG",
+        "2": "GND"
+      },
+      "width": 2,
+      "height": 2,
+      "footprint_id": null
+    }
+  ],
+  "wires": []
+}

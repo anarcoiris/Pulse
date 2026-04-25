@@ -61,6 +61,7 @@ IO_ACTIONS: list = [
 
 FORGE_COL = (0, 200, 180)   # teal
 FORGE_ACTIONS: list = [
+    ('FORGE_GEN_AI',       'A', 'Generador IA',    FORGE_COL),
     ('FORGE_EXPORT_KICAD', 'K', 'Export KiCad',    FORGE_COL),
     ('FORGE_GEN_PCB',      'P', 'Generar PCB',     FORGE_COL),
     ('FORGE_ENCLOSURE',    '3', 'Caja 3D (SCAD)',  (150, 100, 255)),

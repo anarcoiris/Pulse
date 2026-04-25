@@ -122,6 +122,14 @@ class PulseLabApp:
         self._last_save_path = self.DEFAULT_SAVE_PATH
         self._ai_popup       = None
         self._forge_popup    = None
+        
+        # Generator Popup state
+        self._ai_gen_popup = {
+            "visible": False, "loading": False, "error": "",
+            "input": TextInput(pygame.Rect(0, 0, 400, 30), ""),
+            "close_rect": pygame.Rect(0,0,1,1),
+            "submit_rect": pygame.Rect(0,0,1,1)
+        }
 
         # --- Undo / Redo ---
         self._undo_stack: list = []   # list of JSON strings
@@ -184,6 +192,27 @@ class PulseLabApp:
     # ── Event handling ────────────────────────────────────────
 
     def _handle_event(self, event: pygame.event.Event) -> None:
+        # --- AI Generator Popup ---
+        if self._ai_gen_popup["visible"]:
+            # If loading, block input
+            if self._ai_gen_popup["loading"]:
+                return
+                
+            self._ai_gen_popup["input"].handle_event(event)
+            
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                # Close button
+                if self._ai_gen_popup["close_rect"].collidepoint(event.pos):
+                    self._ai_gen_popup["visible"] = False
+                    self._ai_gen_popup["error"] = ""
+                # Submit button
+                elif self._ai_gen_popup["submit_rect"].collidepoint(event.pos):
+                    self._run_ai_generator()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                if self._ai_gen_popup["input"].active:
+                    self._run_ai_generator()
+            return
+
         # --- AI Reviewer Popup (Higher Priority) ---
         if self._ai_popup and self._ai_popup.get("visible"):
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -403,6 +432,9 @@ class PulseLabApp:
         if action == 'FORGE_KICAD_STATUS':
             self._action_forge_kicad_status()
             return
+        if action == 'FORGE_GEN_AI':
+            self._action_forge_gen_ai()
+            return
 
     def _action_save_json(self) -> None:
         try:
@@ -579,6 +611,53 @@ class PulseLabApp:
         except Exception as e:
             self._status(f'KiCad status error: {e}', DANGER)
 
+    def _action_forge_gen_ai(self) -> None:
+        self._ai_gen_popup["visible"] = True
+        self._ai_gen_popup["input"].active = True
+        self._ai_gen_popup["error"] = ""
+        self._ai_gen_popup["loading"] = False
+        
+    def _run_ai_generator(self) -> None:
+        prompt = self._ai_gen_popup["input"].text.strip()
+        if not prompt:
+            self._ai_gen_popup["error"] = "Escribe una descripción."
+            return
+            
+        self._ai_gen_popup["loading"] = True
+        self._ai_gen_popup["error"] = ""
+        
+        def task():
+            try:
+                from knowledge.circuit_synthesizer import CircuitSynthesizer
+                synth = CircuitSynthesizer()
+                res = synth.generate_circuit_json(prompt)
+                
+                if "error" in res:
+                    self._ai_gen_popup["error"] = res["error"]
+                else:
+                    comps = res.get("components", [])
+                    if not comps:
+                        self._ai_gen_popup["error"] = "El modelo no devolvió componentes."
+                    else:
+                        # Convertir a netlist compatible y cargar
+                        from mcp.server import create_circuit_json
+                        netlist = create_circuit_json(comps)
+                        if "error" in netlist:
+                            self._ai_gen_popup["error"] = netlist["error"]
+                        else:
+                            self._snapshot()
+                            c_json = json.loads(netlist["circuit_json"])
+                            self.graph = CircuitGraph.from_json(c_json)
+                            self._reload_graph()
+                            self._ai_gen_popup["visible"] = False
+                            self._status(f'Circuito generado ({len(comps)} componentes).', SAFE)
+            except Exception as e:
+                self._ai_gen_popup["error"] = f"Crash: {str(e)}"
+            finally:
+                self._ai_gen_popup["loading"] = False
+
+        threading.Thread(target=task, daemon=True).start()
+
     def _reload_graph(self) -> None:
         """Actualiza canvas, props y osc tras cambiar self.graph."""
         self.canvas.graph        = self.graph
@@ -647,6 +726,10 @@ class PulseLabApp:
         # Forge Popup
         if self._forge_popup and self._forge_popup.get("visible"):
             self._draw_forge_popup(surf)
+
+        # AI Generator Popup
+        if self._ai_gen_popup["visible"]:
+            self._draw_ai_gen_popup(surf)
 
         pygame.display.flip()
 
@@ -814,6 +897,53 @@ class PulseLabApp:
         pygame.draw.rect(surf, PANEL_BG, self._forge_popup["close_rect"], border_radius=5)
         pygame.draw.rect(surf, ACCENT, self._forge_popup["close_rect"], 1, border_radius=5)
         draw_text(surf, "Cerrar", px + pw - 140 + 50, btn_y + bh//2, self.fonts['sm'], WHITE, 'center')
+    def _draw_ai_gen_popup(self, surf: pygame.Surface) -> None:
+        # Dim background
+        dim = pygame.Surface((W, H), pygame.SRCALPHA)
+        dim.fill((0, 0, 0, 180))
+        surf.blit(dim, (0, 0))
+
+        # Panel
+        pw, ph = 500, 240
+        px, py = (W - pw) // 2, (H - ph) // 2
+        p_rect = pygame.Rect(px, py, pw, ph)
+        draw_panel(surf, p_rect, border_col=(0, 200, 180))
+        
+        # Header
+        draw_text(surf, "🧠 Generador de Circuitos IA (Qwen 2.5)", px + 20, py + 15, self.fonts['bold'], (0, 200, 180))
+        draw_text(surf, "Describe el circuito y la IA creará la topología.", px + 20, py + 45, self.fonts['xs'], DIM)
+        
+        # Text Input
+        inp_rect = self._ai_gen_popup["input"].rect
+        inp_rect.x = px + 20
+        inp_rect.y = py + 75
+        inp_rect.w = pw - 40
+        self._ai_gen_popup["input"].draw(surf, self.fonts['md'])
+        
+        # Error/Loading
+        y_status = py + 120
+        if self._ai_gen_popup["loading"]:
+            draw_text(surf, "⏳ Generando topología... (Puede tardar uns seg.)", px + 20, y_status, self.fonts['sm'], ACCENT)
+        elif self._ai_gen_popup["error"]:
+            draw_text(surf, f"Error: {self._ai_gen_popup['error']}", px + 20, y_status, self.fonts['xs'], DANGER)
+            
+        # Buttons
+        btn_w, btn_h = 120, 35
+        
+        # Submit
+        sub_rect = pygame.Rect(px + pw - btn_w*2 - 30, py + ph - btn_h - 20, btn_w, btn_h)
+        self._ai_gen_popup["submit_rect"] = sub_rect
+        if not self._ai_gen_popup["loading"]:
+            pygame.draw.rect(surf, (0, 80, 50), sub_rect, border_radius=5)
+            pygame.draw.rect(surf, SAFE, sub_rect, 1, border_radius=5)
+            draw_text(surf, "Generar", sub_rect.centerx, sub_rect.centery, self.fonts['sm'], SAFE, 'center')
+        
+        # Close
+        close_rect = pygame.Rect(px + pw - btn_w - 20, py + ph - btn_h - 20, btn_w, btn_h)
+        self._ai_gen_popup["close_rect"] = close_rect
+        pygame.draw.rect(surf, PANEL_BG, close_rect, border_radius=5)
+        pygame.draw.rect(surf, ACCENT, close_rect, 1, border_radius=5)
+        draw_text(surf, "Cerrar", close_rect.centerx, close_rect.centery, self.fonts['sm'], WHITE, 'center')
 
 
 # ─── Entry point ──────────────────────────────────────────────────────────────

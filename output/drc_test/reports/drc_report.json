@@ -1,0 +1,64 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-04-25T22:48:44+0200",
+    "kicad_version": "8.0.6",
+    "schematic_parity": [],
+    "source": "design.kicad_pcb",
+    "unconnected_items": [],
+    "violations": [
+        {
+            "description": "La huella 'R_0805_2012Metric' no coincide con la copia en la biblioteca 'Resistor_SMD'.",
+            "items": [
+                {
+                    "description": "Huella R1",
+                    "pos": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "uuid": "2e79007e-ec17-49e9-b97e-01efd416cebb"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "La huella 'C_0805_2012Metric' no coincide con la copia en la biblioteca 'Capacitor_SMD'.",
+            "items": [
+                {
+                    "description": "Huella C1",
+                    "pos": {
+                        "x": 10.0,
+                        "y": 10.0
+                    },
+                    "uuid": "5e873560-6d25-4c88-94ee-96cf32afa53c"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_mismatch"
+        },
+        {
+            "description": "Solapamiento de serigrafía",
+            "items": [
+                {
+                    "description": "Referencia 'R1'",
+                    "pos": {
+                        "x": 10.0,
+                        "y": 7.5
+                    },
+                    "uuid": "f6874c58-97f7-4dba-a0bd-68e8c53275f2"
+                },
+                {
+                    "description": "Referencia 'C1'",
+                    "pos": {
+                        "x": 10.0,
+                        "y": 7.5
+                    },
+                    "uuid": "a460e227-d53d-473d-9ad4-c99911e7ec33"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        }
+    ]
+}

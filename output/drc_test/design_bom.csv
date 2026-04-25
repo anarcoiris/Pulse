@@ -1,0 +1,3 @@
+Reference,Value,Footprint,Label,Type,Node1,Node2,UID
+R1,1e+04Ω,Resistor_SMD:R_0805_2012Metric,R1,R,VCC,GND,R_000
+C1,1e-07F,Capacitor_SMD:C_0805_2012Metric,C1,C,VCC,GND,C_001

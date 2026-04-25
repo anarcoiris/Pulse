@@ -39,8 +39,8 @@ Pulse/
 │   ├── rf_tools.py         ✅ Microstrip, stripline, matching, skin depth
 │   └── netlist.py          ✅ CircuitGraph → KiCad netlist / SKiDL / BOM
 ├── bridge/
-│   ├── kicad_bridge.py     ✅ Auto-detección KiCad 8 (D: y C:)
-│   ├── pcb_layout.py       ✅ Motor de layout espacial
+│   ├── kicad_bridge.py     ✅ Auto-detección Multi-plataforma (P0)
+│   ├── pcb_layout.py       ✅ Motor de layout (Soporte RawFootprint)
 │   ├── gerber_export.py    ✅ kicad-cli: Gerber, Drill, Pos, SVG
 │   └── bom_generator.py    ✅ BOM enriquecido con ComponentDB
 ├── knowledge/
@@ -119,6 +119,13 @@ Pulse/
 
 ---
 
+## Workflows Documentados 📄
+
+1. [**Pipeline de Fabricación Seguro (DRC Gate)**](file:///c:/Users/soyko/Documents/Pulse/docs/workflows/fabrication_pipeline.md)
+2. [**Gestión de Componentes y Librerías**](file:///c:/Users/soyko/Documents/Pulse/docs/workflows/component_management.md)
+
+---
+
 ## Capacidades del Motor PCB Layout
 
 ```python
@@ -155,9 +162,10 @@ pcb.save("output/mi_placa.kicad_pcb")
 
 ## Próximos Pasos
 
-1. **QFP/TQFP footprints** — Para MCUs como ATmega328P-AU, STM32F103 en SMD
-2. **Copper pours advanced** — Plano de masa (GND) con thermal reliefs mejorados
-3. **DRC integrado** — Verificar clearance/trace width antes de exportar
-4. **Parámetros S con scikit-rf** — Carta de Smith, S11/S21
-5. **PDF datasheet ingestion** — Expandir RAG con pdfminer
-6. **Schematic SVG export** — Generar esquemático visual desde CircuitGraph
+1. **QFP/TQFP footprints** — ✅ Integrado soporte para extracción desde lib oficial.
+2. **Copper pours advanced** — Plano de masa (GND) con thermal reliefs mejorados.
+3. **DRC integrado** — ✅ Pipeline protegido con DRC obligatorio antes de exportar.
+4. **Multi-plataforma** — ✅ Soporte para Windows/Linux/macOS en el bridge.
+5. **Parámetros S con scikit-rf** — Carta de Smith, S11/S21.
+6. **PDF datasheet ingestion** — Expandir RAG con pdfminer.
+7. **Schematic SVG export** — Generar esquemático visual desde CircuitGraph.

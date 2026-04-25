@@ -65,12 +65,26 @@ def generate_pcb(graph: CircuitGraph, out_dir: str = 'output') -> dict:
         ref   = c.uid
         val   = f"{c.value:.6g}" if isinstance(c.value, float) else str(c.value)
 
-        if etype in ('R',):
-            pcb.add_resistor(ref, val, x, y, net1=c.n1, net2=c.n2)
-        elif etype in ('C',):
-            pcb.add_capacitor(ref, val, x, y, net1=c.n1, net2=c.n2)
-        elif etype in ('L',):
-            pcb.add_inductor(ref, val, x, y, net1=c.n1, net2=c.n2)
+        fp_added = False
+        f_id = getattr(c, 'footprint_id', None)
+        if f_id:
+            if ':' in f_id:
+                lib, name = f_id.split(':', 1)
+                if pcb.add_raw_footprint(ref, lib, name, x, y, value=val):
+                    fp_added = True
+            elif f_id == 'tactile_switch_6x6':
+                from bridge.pcb_layout import FootprintPresets
+                fp_sw = FootprintPresets.tactile_switch_6x6(ref, val, net1_name=c.n1, net2_name=c.n2)
+                pcb.add_footprint(fp_sw, x, y)
+                fp_added = True
+
+        if not fp_added:
+            if etype in ('R',):
+                pcb.add_resistor(ref, val, x, y, net1=c.n1, net2=c.n2)
+            elif etype in ('C',):
+                pcb.add_capacitor(ref, val, x, y, net1=c.n1, net2=c.n2)
+            elif etype in ('L',):
+                pcb.add_inductor(ref, val, x, y, net1=c.n1, net2=c.n2)
         elif etype in ('V',):
             pcb.add_pin_header(ref, 2, x, y, value=f"{val}V")
         elif etype in ('IC', 'MCU'):

@@ -195,6 +195,26 @@ if _MCP_OK:
             "nodes": graph.all_nodes,
         }
 
+    @mcp.tool()
+    def generate_circuit_from_text(description: str) -> dict:
+        """
+        Genera una topología de circuito a partir de una descripción en lenguaje natural.
+        Utiliza el agente LLM entrenado (CircuitSynthesizer).
+
+        Args:
+            description: Descripción del circuito. Ej: "Filtro RC pasabajos de 1k y 1uF"
+
+        Returns:
+            dict con circuit_json o mensaje de error.
+        """
+        from knowledge.circuit_synthesizer import CircuitSynthesizer
+        synth = CircuitSynthesizer()
+        res = synth.generate_circuit_json(description)
+        if "error" in res:
+            return res
+            
+        return create_circuit_json(res["components"])
+
     # ══════════════════════════════════════════════════════════════
     # RF / IMPEDANCE TOOLS
     # ══════════════════════════════════════════════════════════════
@@ -718,7 +738,7 @@ if _MCP_OK:
             board_height_mm: Alto de la placa (mm). Ej: 30.
             components: Lista de dicts, cada uno define un componente:
                 {
-                    "type": "resistor"|"capacitor"|"inductor"|"pin_header"|"dip_ic",
+                    "type": "resistor"|"capacitor"|"inductor"|"pin_header"|"dip_ic"|"raw_footprint",
                     "ref": "R1",
                     "value": "10k",
                     "x": 15.0,        // posición X en mm
@@ -727,7 +747,9 @@ if _MCP_OK:
                     "net1": "VCC",    // nombre de la red (pad 1)
                     "net2": "OUT",    // nombre de la red (pad 2)
                     "package": "0805" // solo para R/C/L: "0402","0603","0805","1206"
-                    "pins": 4         // solo para pin_header/dip_ic
+                    "pins": 4,        // solo para pin_header/dip_ic
+                    "lib": "Package_QFP",          // solo para raw_footprint
+                    "name": "LQFP-48_7x7mm_P0.5mm" // solo para raw_footprint
                 }
             traces: Lista de conexiones entre pads:
                 [
@@ -795,6 +817,11 @@ if _MCP_OK:
                     fp = pcb.add_pin_header(ref, pins, x, y, rot, value)
                 elif ctype == "dip_ic":
                     fp = pcb.add_dip_ic(ref, pins, x, y, rot, value)
+                elif ctype == "raw_footprint":
+                    # For raw footprint we expect 'lib' and 'name' in component dict
+                    lib = c.get("lib", "Package_QFP")
+                    name = c.get("name", "LQFP-48_7x7mm_P0.5mm")
+                    fp = pcb.add_raw_footprint(ref, lib, name, x, y, rot, value)
                 else:
                     fp = pcb.add_resistor(ref, value, x, y, rot,
                                            net1, net2, pkg)

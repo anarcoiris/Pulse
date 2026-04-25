@@ -115,6 +115,48 @@ class Footprint:
 
 
 @dataclass
+class RawFootprint(Footprint):
+    """
+    Representa un footprint cargado directamente de un archivo .kicad_mod.
+    Sobrescribe to_sexpr para usar el contenido original con coordenadas actualizadas.
+    """
+    raw_sexpr: str = ""
+
+    def to_sexpr(self) -> str:
+        if not self.raw_sexpr:
+            return super().to_sexpr()
+            
+        lines = self.raw_sexpr.splitlines()
+        new_lines = []
+        for line in lines:
+            trimmed = line.strip()
+            # Ignorar propiedades de Reference/Value/Footprint/Datasheet/Description originales
+            if any(trimmed.startswith(f'(property "{p}"') for p in ["Reference", "Value", "Footprint", "Datasheet", "Description"]):
+                continue
+            # Ignorar el (at ...) de la raíz
+            if trimmed.startswith('(at ') and line.count('(') == 1:
+                continue
+            new_lines.append(line)
+            
+        rotation_str = f" {self.rotation:.1f}" if self.rotation != 0 else ""
+        silk = self.layer.replace('Cu', 'SilkS')
+        
+        header = [
+            f'  (footprint "{self.lib_id}"',
+            f'    (layer "{self.layer}")',
+            f'    (uuid "{self.uuid_str}")',
+            f'    (at {self.x:.4f} {self.y:.4f}{rotation_str})',
+            f'    (property "Reference" "{self.ref}" (at 0 -2.5{rotation_str}) (layer "{silk}") (uuid "{uuid.uuid4()}") (effects (font (size 1 1) (thickness 0.15))))',
+            f'    (property "Value" "{self.value}" (at 0 2.5{rotation_str}) (layer "{silk}") (uuid "{uuid.uuid4()}") (effects (font (size 1 1) (thickness 0.15))))'
+        ]
+        
+        # Omitimos la primera línea del original '(footprint "..." ' y cerramos al final
+        # Pero cuidado, new_lines[0] es la primera línea.
+        body = "\n".join(new_lines[1:])
+        return "\n".join(header) + "\n" + body
+
+
+@dataclass
 class Trace:
     """Una pista (trace) en el PCB."""
     start_x: float
@@ -449,6 +491,15 @@ class FootprintPresets:
         return fp
 
     @staticmethod
+    def from_kicad_lib(ref: str, lib: str, name: str, value: str = "") -> Optional[RawFootprint]:
+        """Carga un footprint desde las librerías de sistema de KiCad."""
+        from bridge.kicad_bridge import get_kicad_footprint
+        raw = get_kicad_footprint(lib, name)
+        if not raw:
+            return None
+        return RawFootprint(ref=ref, lib_id=f"{lib}:{name}", value=value or name, raw_sexpr=raw)
+
+    @staticmethod
     def tactile_switch_6x6(ref: str, value: str = "Switch",
                            net1_id: int = 0, net1_name: str = "",
                            net2_id: int = 0, net2_name: str = "") -> Footprint:
@@ -538,6 +589,15 @@ class PCBLayout:
             fp.rotation = rotation
         self._footprints.append(fp)
         return fp
+
+    def add_raw_footprint(self, ref: str, lib: str, name: str,
+                          x: float = 0, y: float = 0, rotation: float = 0,
+                          value: str = "") -> Optional[Footprint]:
+        """Coloca un footprint extraído de la librería oficial de KiCad."""
+        fp = FootprintPresets.from_kicad_lib(ref, lib, name, value)
+        if fp:
+            return self.add_footprint(fp, x, y, rotation)
+        return None
 
     def add_resistor(self, ref: str, value: str,
                      x: float = 0, y: float = 0,
