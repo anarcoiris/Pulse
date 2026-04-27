@@ -7,3 +7,4 @@ skidl
 schemdraw
 matplotlib
 pytest
+openai

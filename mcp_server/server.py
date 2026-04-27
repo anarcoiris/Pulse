@@ -60,19 +60,60 @@ def _get_bridge():
     from bridge.kicad_bridge import KiCadBridge
     return KiCadBridge()
 
+def create_circuit_json(components: list[dict]) -> dict:
+    """
+    Crea un circuito desde una lista de componentes.
+
+    Args:
+        components: Lista de dicts con keys:
+            - etype:  Tipo ("R", "C", "L", "V", "S", "GND")
+            - value:  Valor numérico (Ω, F, H, V)
+            - n1:     Nodo terminal 1 (string)
+            - n2:     Nodo terminal 2 (string)
+            - label:  Etiqueta descriptiva (opcional)
+
+    Ejemplo:
+        [
+            {"etype": "V", "value": 5.0, "n1": "VCC", "n2": "GND", "label": "Fuente 5V"},
+            {"etype": "R", "value": 1000, "n1": "VCC", "n2": "OUT", "label": "R1 1kΩ"},
+            {"etype": "R", "value": 2200, "n1": "OUT", "n2": "GND", "label": "R2 2.2kΩ"}
+        ]
+
+    Returns:
+        dict con circuit_json.
+    """
+    from ui.editor import CircuitGraph
+    graph = CircuitGraph()
+    for i, c in enumerate(components):
+        # Conversión segura de valor (por si la IA devuelve texto)
+        val_raw = c.get("value", 0)
+        try:
+            val_f = float(val_raw)
+        except (ValueError, TypeError):
+            val_f = 0.0
+            
+        graph.add(
+            etype       = c.get("etype", "R"),
+            grid_c      = i * 2,
+            grid_r      = 0,
+            orientation = "H",
+            value       = val_f,
+            label       = c.get("label", f"{c.get('etype','?')}{i+1}"),
+            n1          = c.get("n1", f"N{i}"),
+            n2          = c.get("n2", f"N{i+1}"),
+        )
+    return {
+        "circuit_json": json.dumps(graph.to_json()),
+        "components": len(graph.components),
+        "nodes": graph.all_nodes,
+    }
+
 
 # ─── FastMCP Server ──────────────────────────────────────────────────────────
 
 if _MCP_OK:
-    mcp = FastMCP(
-        "PulseLab Forge",
-        description=(
-            "AI-assisted electronic design platform. "
-            "Capabilities: circuit simulation (MNA), RF/impedance calculations, "
-            "component database, IPC-2221 design rules, KiCad PCB export, "
-            "Gerber generation, and electronics knowledge retrieval."
-        ),
-    )
+    mcp = FastMCP("PulseLab Forge")
+    mcp.tool()(create_circuit_json)
 
     # ══════════════════════════════════════════════════════════════
     # SIMULATION TOOLS
@@ -153,47 +194,6 @@ if _MCP_OK:
         except Exception as e:
             return {"error": str(e)}
 
-    @mcp.tool()
-    def create_circuit_json(components: list[dict]) -> dict:
-        """
-        Crea un circuito desde una lista de componentes.
-
-        Args:
-            components: Lista de dicts con keys:
-                - etype:  Tipo ("R", "C", "L", "V", "S", "GND")
-                - value:  Valor numérico (Ω, F, H, V)
-                - n1:     Nodo terminal 1 (string)
-                - n2:     Nodo terminal 2 (string)
-                - label:  Etiqueta descriptiva (opcional)
-
-        Ejemplo:
-            [
-                {"etype": "V", "value": 5.0, "n1": "VCC", "n2": "GND", "label": "Fuente 5V"},
-                {"etype": "R", "value": 1000, "n1": "VCC", "n2": "OUT", "label": "R1 1kΩ"},
-                {"etype": "R", "value": 2200, "n1": "OUT", "n2": "GND", "label": "R2 2.2kΩ"}
-            ]
-
-        Returns:
-            dict con circuit_json.
-        """
-        from ui.editor import CircuitGraph
-        graph = CircuitGraph()
-        for i, c in enumerate(components):
-            graph.add(
-                etype       = c.get("etype", "R"),
-                grid_c      = i * 2,
-                grid_r      = 0,
-                orientation = "H",
-                value       = float(c.get("value", 0)),
-                label       = c.get("label", f"{c.get('etype','?')}{i+1}"),
-                n1          = c.get("n1", f"N{i}"),
-                n2          = c.get("n2", f"N{i+1}"),
-            )
-        return {
-            "circuit_json": json.dumps(graph.to_json()),
-            "components": len(graph.components),
-            "nodes": graph.all_nodes,
-        }
 
     @mcp.tool()
     def generate_circuit_from_text(description: str) -> dict:

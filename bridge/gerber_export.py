@@ -47,6 +47,45 @@ def _run_kicad_cli(exe: Path, args: list[str], timeout: int = 60) -> dict:
         return {"success": False, "error": str(e), "stdout": "", "stderr": ""}
 
 
+def run_drc(cli: Optional[Path], pcb_path: Path, output_dir: Optional[Path] = None) -> dict:
+    """
+    Ejecuta el DRC (Design Rule Check) de KiCad.
+    Retorna resultado con violaciones y severidad.
+    """
+    pcb_path = Path(pcb_path)
+    output_dir = Path(output_dir) if output_dir else pcb_path.parent / "reports"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    report_file = output_dir / f"{pcb_path.stem}_drc.json"
+
+    result = _run_kicad_cli(cli, [
+        "pcb", "drc",
+        "--output", str(report_file),
+        "--format", "json",
+        "--severity-all",
+        str(pcb_path),
+    ])
+
+    # Parsear el reporte si existe
+    if report_file.exists():
+        import json
+        try:
+            with open(report_file, "r") as f:
+                data = json.load(f)
+            violations = data.get("violations", [])
+            errors = [v for v in violations if v.get("severity") == "error"]
+            warnings = [v for v in violations if v.get("severity") == "warning"]
+            result["error_count"] = len(errors)
+            result["warning_count"] = len(warnings)
+            result["report_file"] = str(report_file)
+            if errors:
+                result["success"] = False
+                result["error"] = f"Se detectaron {len(errors)} errores de diseño."
+        except Exception as e:
+            result["error"] = f"Error parseando DRC: {e}"
+    
+    return result
+
+
 def export_gerbers(
     cli: Optional[Path],
     pcb_path: Path,
@@ -196,6 +235,13 @@ def generate_all_manufacturing_files(
         "pcb_source": str(pcb_path),
         "output_dir": str(out),
     }
+
+    # P1: DRC obligatorio primero
+    results["drc"] = run_drc(cli, pcb_path, out / "reports")
+    if not results["drc"].get("success", False):
+        results["success"] = False
+        results["summary"] = f"❌ Error de Diseño (DRC): {results['drc'].get('error_count', 0)} errores."
+        return results
 
     results["gerbers"]  = export_gerbers(cli, pcb_path, out / "gerbers")
     results["drill"]    = export_drill(cli, pcb_path, out / "gerbers")

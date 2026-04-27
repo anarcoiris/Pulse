@@ -70,6 +70,12 @@ FORGE_ACTIONS: list = [
     ('FORGE_KICAD_STATUS', 'i', 'KiCad Status',    DIM),
 ]
 
+SYSTEM_ACTIONS: list = [
+    ('SYS_LAUNCH_MCP',    'M', 'Lanzar MCP Server', (100, 200, 100)),
+    ('SYS_LAUNCH_OLLAMA', 'O', 'Lanzar Ollama',     (100, 150, 255)),
+    ('SYS_UPDATE_DEPS',   'U', 'Actualizar Deps',   DIM),
+]
+
 
 # ─── Internal data classes ────────────────────────────────────────────────────
 
@@ -127,6 +133,7 @@ class ToolbarPanel:
             _Section('PRESETS',     ACCENT2,   _make_items(PRESETS),        collapsed=False),
             _Section('SIMULACION',  SAFE,      _make_items(SIM_ACTIONS),    collapsed=False),
             _Section('FORGE',       FORGE_COL, _make_items(FORGE_ACTIONS),  collapsed=True),
+            _Section('SISTEMA',     (180, 180, 180), _make_items(SYSTEM_ACTIONS), collapsed=True),
             _Section('ARCHIVO',     WARN,      _make_items(IO_ACTIONS),     collapsed=True),
         ]
         self._scroll_y: int = 0   # vertical scroll offset (px)

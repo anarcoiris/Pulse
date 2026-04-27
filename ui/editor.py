@@ -47,7 +47,7 @@ except ImportError:
 from ui.theme import (
     CANVAS_X, CANVAS_Y, CANVAS_W, CANVAS_H, GRID_SIZE, GRID_COLS, GRID_ROWS,
     BG, GRID_COL, ACCENT, ACCENT2, WARN, DANGER, SAFE, DIM, WHITE,
-    PANEL_BG, PANEL_BORDER, SELECT_COL, COMP_COLORS
+    PANEL_BG, PANEL_BORDER, SELECT_COL, COMP_COLORS, WIRE_GND, draw_text
 )
 
 # Helpers opcionales si pygame está presente
@@ -149,6 +149,38 @@ class Wire:
 
 class CircuitGraph:
     """Representacion visual + logica del circuito."""
+
+    def merge(self, other: "CircuitGraph", offset: Tuple[int, int] = (0, 0)) -> None:
+        """Fusiona otro grafo de circuitos en este, con un desplazamiento opcional."""
+        ox, oy = offset
+        for comp in other.components:
+            # Crear una copia con UID único
+            new_uid = f"{comp.etype}_{random.getrandbits(16):04x}"
+            new_comp = PlacedComponent(
+                uid=new_uid,
+                etype=comp.etype,
+                grid_c=comp.grid_c + ox,
+                grid_r=comp.grid_r + oy,
+                orientation=comp.orientation,
+                value=comp.value,
+                label=comp.label,
+                n1=comp.n1,
+                n2=comp.n2,
+                R_on=comp.R_on,
+                R_off=comp.R_off,
+                is_closed=comp.is_closed,
+                pins=comp.pins.copy(),
+                width=comp.width,
+                height=comp.height,
+                footprint_id=comp.footprint_id
+            )
+            self.components.append(new_comp)
+            self._counter += 1
+
+        for wire in other.wires:
+            new_path = [(gc + ox, gr + oy) for gc, gr in wire.path]
+            new_wire = Wire(f"W_{random.getrandbits(16):04x}", new_path)
+            self.wires.append(new_wire)
 
     def __init__(self):
         self.components: List[PlacedComponent] = []
@@ -254,7 +286,7 @@ class CircuitGraph:
     # ── MNA integration ───────────────────────────────────────
 
     def to_simulator(self):
-        from circuit_engine import CircuitSimulator
+        from core.circuit_engine import CircuitSimulator
         sim = CircuitSimulator(dt=1e-3)
         for c in self.components:
             if c.etype in ('GND', 'IC', 'MCU'):
@@ -531,6 +563,8 @@ class EditorCanvas:
         self.bg_phase  = 0.0
         
         self.search_term: str = ""
+        self._wire_path: List[Tuple[int, int]] = []
+        self._wire_active = False
 
     # ── Coordinate helpers ────────────────────────────────────
 
@@ -1165,7 +1199,7 @@ class EditorCanvas:
         gs   = self._gs()
         base = COMP_COLORS.get(comp.etype, WHITE)
         col  = SELECT_COL if selected else \
-               lerp_color(base, SELECT_COL, 0.4) if multi_sel else base
+               maybe_lerp_color(base, SELECT_COL, 0.4) if multi_sel else base
 
         # Multi-select glow background
         if multi_sel and not selected:

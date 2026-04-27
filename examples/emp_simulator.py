@@ -25,7 +25,7 @@ import random
 from collections import deque
 from dataclasses import dataclass, field
 from typing import List, Optional
-from circuit_engine import CircuitSimulator
+from core.circuit_engine import CircuitSimulator
 
 # ─────────────────────────────────────────────────────────
 #  CONSTANTES FÍSICAS

@@ -23,7 +23,7 @@ class TextInput:
     Maneja eventos de teclado cuando esta activo (self.active = True).
     """
 
-    def __init__(self, rect: pygame.Rect, initial: str = '', max_len: int = 20):
+    def __init__(self, rect: pygame.Rect, initial: str = '', max_len: int = 500):
         self.rect    = rect
         self.text    = str(initial)
         self.active  = False
@@ -61,7 +61,19 @@ class TextInput:
         pygame.draw.rect(surf, brd, self.rect, 1, border_radius=3)
         label = self.text + ('|' if self.active and self._cursor_vis else '')
         img   = font.render(label, True, WHITE)
-        surf.blit(img, (self.rect.x + 5, self.rect.y + (self.rect.h - img.get_height()) // 2))
+        
+        # Clipping horizontal if text is too long
+        tw, th = img.get_size()
+        tx = self.rect.x + 5
+        if tw > self.rect.w - 10:
+            # Shift to the left so the end of text is visible
+            tx = self.rect.x + (self.rect.w - 5 - tw)
+        
+        # Use a subsurface or clip rect for better look
+        old_clip = surf.get_clip()
+        surf.set_clip(self.rect.inflate(-4, -4))
+        surf.blit(img, (tx, self.rect.y + (self.rect.h - th) // 2))
+        surf.set_clip(old_clip)
 
     @property
     def float_val(self) -> float:

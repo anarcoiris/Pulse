@@ -41,6 +41,7 @@ import argparse
 import math
 import time
 import threading
+import subprocess
 from pathlib import Path
 
 import pygame
@@ -61,6 +62,7 @@ from ui.editor       import CircuitGraph, SimulationRunner, EditorCanvas
 from ui.toolbar      import ToolbarPanel
 from ui.properties   import PropertiesPanel
 from ui.oscilloscope import OscilloscopePanel
+from ui.modals       import ForgeResultModal, AIGeneratorModal, AIReviewModal
 from ui.editor import CircuitGraph, Wire
 from knowledge.semantic_reviewer import SemanticAIAgent
 
@@ -120,16 +122,11 @@ class PulseLabApp:
         self._status_timer   = 5.0
         self._flash_alpha    = 0
         self._last_save_path = self.DEFAULT_SAVE_PATH
-        self._ai_popup       = None
-        self._forge_popup    = None
         
-        # Generator Popup state
-        self._ai_gen_popup = {
-            "visible": False, "loading": False, "error": "",
-            "input": TextInput(pygame.Rect(0, 0, 400, 30), ""),
-            "close_rect": pygame.Rect(0,0,1,1),
-            "submit_rect": pygame.Rect(0,0,1,1)
-        }
+        # Modals
+        self.forge_modal = ForgeResultModal()
+        self.ai_gen_modal = AIGeneratorModal()
+        self.ai_review_modal = AIReviewModal()
 
         # --- Undo / Redo ---
         self._undo_stack: list = []   # list of JSON strings
@@ -192,51 +189,10 @@ class PulseLabApp:
     # ── Event handling ────────────────────────────────────────
 
     def _handle_event(self, event: pygame.event.Event) -> None:
-        # --- AI Generator Popup ---
-        if self._ai_gen_popup["visible"]:
-            # If loading, block input
-            if self._ai_gen_popup["loading"]:
-                return
-                
-            self._ai_gen_popup["input"].handle_event(event)
-            
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                # Close button
-                if self._ai_gen_popup["close_rect"].collidepoint(event.pos):
-                    self._ai_gen_popup["visible"] = False
-                    self._ai_gen_popup["error"] = ""
-                # Submit button
-                elif self._ai_gen_popup["submit_rect"].collidepoint(event.pos):
-                    self._run_ai_generator()
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                if self._ai_gen_popup["input"].active:
-                    self._run_ai_generator()
-            return
-
-        # --- AI Reviewer Popup (Higher Priority) ---
-        if self._ai_popup and self._ai_popup.get("visible"):
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                # Close button
-                if self._ai_popup["close_rect"].collidepoint(event.pos):
-                    self._ai_popup["visible"] = False
-                # Fix button (Merge GND)
-                elif self._ai_popup.get("fix_rect") and self._ai_popup["fix_rect"].collidepoint(event.pos):
-                    self._snapshot()
-                    self.graph.merge_nodes("GND", "0")
-                    self._reload_graph()
-                    self._status("Arreglo aplicado: '0' -> 'GND' unificados.", SAFE)
-                    self._ai_popup["visible"] = False
-            return
-
-        # --- FORGE Result Popup ---
-        if self._forge_popup and self._forge_popup.get("visible"):
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                if self._forge_popup["close_rect"].collidepoint(event.pos):
-                    self._forge_popup["visible"] = False
-                elif self._forge_popup.get("dir_rect") and self._forge_popup["dir_rect"].collidepoint(event.pos):
-                    # Abrir carpeta del proyecto (Explorer)
-                    os.startfile(os.path.abspath(self._forge_popup["output_dir"]))
-            return
+        # Modals intercept events first
+        if self.ai_gen_modal.handle_event(event): return
+        if self.ai_review_modal.handle_event(event): return
+        if self.forge_modal.handle_event(event): return
 
         # --- Global keyboard shortcuts ---
         if event.type == pygame.KEYDOWN:
@@ -435,6 +391,17 @@ class PulseLabApp:
         if action == 'FORGE_GEN_AI':
             self._action_forge_gen_ai()
             return
+            
+        # ── System ───────────────────────────────────────────
+        if action == 'SYS_LAUNCH_MCP':
+            self._action_sys_launch_mcp()
+            return
+        if action == 'SYS_LAUNCH_OLLAMA':
+            self._action_sys_launch_ollama()
+            return
+        if action == 'SYS_UPDATE_DEPS':
+            self._action_sys_update_deps()
+            return
 
     def _action_save_json(self) -> None:
         try:
@@ -503,30 +470,21 @@ class PulseLabApp:
                 if 'path' in fw_res:
                     fw_info = str(fw_path)
 
-            # Preparar Popup de Resultados
-            self._forge_popup = {
-                "visible": True,
-                "output_dir": str(Path(pcb_path).parent),
-                "pcb": pcb_path,
-                "sch": result.get('sch_path', ""),
-                "fw": fw_info,
-                "stats": stats,
-                "render_status": "Renderizando...",
-                "close_rect": pygame.Rect(0,0,1,1),
-                "dir_rect": pygame.Rect(0,0,1,1)
-            }
+            self.forge_modal.show_result(
+                output_dir=str(Path(pcb_path).parent),
+                pcb=pcb_path,
+                sch=result.get('sch_path', ""),
+                fw=fw_info,
+                stats=stats
+            )
 
             if renderer.available:
                 def on_render_done(res):
-                    if self._forge_popup:
-                        if "path" in res:
-                            self._forge_popup["render_status"] = "Render 3D: " + str(Path(res['path']).name)
-                        else:
-                            self._forge_popup["render_status"] = "Render fallido."
+                    self.forge_modal.set_render_status(res)
                 
                 renderer.export_gltf_async(pcb_path, callback=on_render_done)
             else:
-                self._forge_popup["render_status"] = "No render (KiCad CLI missing)"
+                self.forge_modal.render_status = "No render (KiCad CLI missing)"
 
             self._status(f'Hardware + Software Generados!', SAFE)
 
@@ -547,43 +505,34 @@ class PulseLabApp:
             self._status(f'Enclosure error: {e}', DANGER)
 
     def _action_forge_review(self) -> None:
-        self._ai_popup = {
-            "visible": True, "loading": True, "issues": [],
-            "close_rect": pygame.Rect(0,0,1,1), "fix_rect": None
-        }
+        def merge_gnd_fix():
+            self._snapshot()
+            self.graph.merge_nodes("GND", "0")
+            self._reload_graph()
+            self._status("Arreglo aplicado: '0' -> 'GND' unificados.", SAFE)
+            
+        self.ai_review_modal.show_review(merge_gnd_fix)
 
-        # 1. Chequeo Geométrico Sencillo de KiCad y LLM check concurrente
-        def run_ai():
+        def task():
             try:
-                res_pcb = _generate_pcb(self.graph)
-                geom_errs = 0
-                if 'pcb' in res_pcb:
-                    from knowledge.layout_reviewer import LayoutReviewer
-                    lr = LayoutReviewer(res_pcb['pcb'])
-                    audit = lr.audit()
-                    geom_errs = len(audit["critical_issues"])
-                
-                agent = SemanticAIAgent()
-                res = agent.analyze_circuit(self.graph)
-                
-                if self._ai_popup:
-                    self._ai_popup["loading"] = False
-                    if "error" in res:
-                        self._ai_popup["issues"] = [{"msg": res["error"], "severity": "critical"}]
-                    else:
-                        ai_issues = res.get("issues", [])
-                        if geom_errs > 0:
-                            ai_issues.append({"msg": f"El Diseño PCB falló la verificación de clearance/bounds con {geom_errs} fallos críticos estructurales.", "severity": "critical", "proposal": "Mover componentes."})
-                        self._ai_popup["issues"] = ai_issues
+                from mcp_server.server import create_circuit_json
+                from knowledge.semantic_reviewer import SemanticReviewer
 
-                    self._status('Revisión AI/DRC completada.', SAFE)
+                netlist_res = create_circuit_json([c.to_json() for c in self.graph.components])
+                if "error" in netlist_res:
+                    self.ai_review_modal.issues = [{"msg": netlist_res["error"], "severity": "critical"}]
+                    return
 
+                reviewer = SemanticReviewer()
+                rev = reviewer.review_netlist(netlist_res["circuit_json"])
+                self.ai_review_modal.issues = rev.get("issues", [])
+                
             except Exception as e:
-                if self._ai_popup:
-                    self._ai_popup["loading"] = False
-                    self._ai_popup["issues"] = [{"msg": str(e), "severity": "critical"}]
+                self.ai_review_modal.issues = [{"msg": f"Crash en IA: {str(e)}", "severity": "critical"}]
+            finally:
+                self.ai_review_modal.loading = False
 
-        threading.Thread(target=run_ai, daemon=True).start()
+        threading.Thread(target=task, daemon=True).start()
 
     def _action_forge_gerbers(self) -> None:
         try:
@@ -612,19 +561,11 @@ class PulseLabApp:
             self._status(f'KiCad status error: {e}', DANGER)
 
     def _action_forge_gen_ai(self) -> None:
-        self._ai_gen_popup["visible"] = True
-        self._ai_gen_popup["input"].active = True
-        self._ai_gen_popup["error"] = ""
-        self._ai_gen_popup["loading"] = False
+        self.ai_gen_modal.show_prompt(self._run_ai_generator)
         
-    def _run_ai_generator(self) -> None:
-        prompt = self._ai_gen_popup["input"].text.strip()
-        if not prompt:
-            self._ai_gen_popup["error"] = "Escribe una descripción."
-            return
-            
-        self._ai_gen_popup["loading"] = True
-        self._ai_gen_popup["error"] = ""
+    def _run_ai_generator(self, prompt: str) -> None:
+        self.ai_gen_modal.loading = True
+        self.ai_gen_modal.error = ""
         
         def task():
             try:
@@ -633,28 +574,35 @@ class PulseLabApp:
                 res = synth.generate_circuit_json(prompt)
                 
                 if "error" in res:
-                    self._ai_gen_popup["error"] = res["error"]
+                    self.ai_gen_modal.error = res["error"]
                 else:
                     comps = res.get("components", [])
                     if not comps:
-                        self._ai_gen_popup["error"] = "El modelo no devolvió componentes."
+                        self.ai_gen_modal.error = "El modelo no devolvió componentes."
                     else:
-                        # Convertir a netlist compatible y cargar
-                        from mcp.server import create_circuit_json
+                        from mcp_server.server import create_circuit_json
                         netlist = create_circuit_json(comps)
                         if "error" in netlist:
-                            self._ai_gen_popup["error"] = netlist["error"]
+                            self.ai_gen_modal.error = netlist["error"]
                         else:
                             self._snapshot()
                             c_json = json.loads(netlist["circuit_json"])
-                            self.graph = CircuitGraph.from_json(c_json)
+                            new_graph = CircuitGraph.from_json(c_json)
+                            
+                            # Fusionar en lugar de reemplazar (Orquestación Modular)
+                            self.graph.merge(new_graph, offset=(5, 5)) 
                             self._reload_graph()
-                            self._ai_gen_popup["visible"] = False
+                            
+                            # Registrar para entrenamiento de la red neuronal
+                            from knowledge.layout_ai import layout_engine
+                            layout_engine.record_design(self.graph, {"source": "IA_Generator", "prompt": prompt})
+                            
+                            self.ai_gen_modal.hide()
                             self._status(f'Circuito generado ({len(comps)} componentes).', SAFE)
             except Exception as e:
-                self._ai_gen_popup["error"] = f"Crash: {str(e)}"
+                self.ai_gen_modal.error = f"Crash: {str(e)}"
             finally:
-                self._ai_gen_popup["loading"] = False
+                self.ai_gen_modal.loading = False
 
         threading.Thread(target=task, daemon=True).start()
 
@@ -719,17 +667,10 @@ class PulseLabApp:
             flash.fill((220, 40, 60, self._flash_alpha))
             surf.blit(flash, (0, 0))
 
-        # AI Popup
-        if self._ai_popup and self._ai_popup.get("visible"):
-            self._draw_ai_popup(surf)
-
-        # Forge Popup
-        if self._forge_popup and self._forge_popup.get("visible"):
-            self._draw_forge_popup(surf)
-
-        # AI Generator Popup
-        if self._ai_gen_popup["visible"]:
-            self._draw_ai_gen_popup(surf)
+        # Modals
+        self.ai_review_modal.draw(surf, self.fonts)
+        self.forge_modal.draw(surf, self.fonts)
+        self.ai_gen_modal.draw(surf, self.fonts)
 
         pygame.display.flip()
 
@@ -782,171 +723,40 @@ class PulseLabApp:
                   '[Ctrl+Z/Y] undo/redo  [Ctrl+S/O] save/load  [WIRE] cable',
                   W - 10, sr.y + 7, self.fonts['xs'], (40, 50, 70), 'topright')
 
-    def _draw_ai_popup(self, surf: pygame.Surface) -> None:
-        # Dim background
-        dim = pygame.Surface((W, H), pygame.SRCALPHA)
-        dim.fill((0, 0, 0, 150))
-        surf.blit(dim, (0, 0))
-
-        # Panel
-        pw, ph = 600, 400
-        px, py = (W - pw) // 2, (H - ph) // 2
-        p_rect = pygame.Rect(px, py, pw, ph)
-        draw_panel(surf, p_rect, border_col=(60, 200, 255))
-        
-        # Header
-        draw_text(surf, "✦ Asistente AI (Revisión Semántica y DRC)", px + 20, py + 15, self.fonts['bold'], WHITE)
-        
-        # Content
-        y = py + 60
-        if self._ai_popup["loading"]:
-            draw_text(surf, "Evaluando netlist local y reglas KiCad... (Espere)", px + pw//2, py + ph//2, self.fonts['sm'], ACCENT, 'center')
-        else:
-            issues = self._ai_popup["issues"]
-            if not issues:
-                draw_text(surf, "¡Circuito 100% impecable! No se detectaron problemas.", px + 20, y, self.fonts['sm'], SAFE)
-            else:
-                draw_text(surf, f"Se detectaron {len(issues)} problemas semánticos/físicos:", px + 20, y, self.fonts['sm'], WARN)
-                y += 30
-                can_auto_fix = False
-                for idx, iss in enumerate(issues[:4]): # Max 4 issues on box
-                    sev_col = DANGER if iss.get("severity") == "critical" else (220,160,40)
-                    texto = f"[{idx+1}] {iss.get('msg', '')}"
-                    if "'0'" in texto and "'GND'" in texto:
-                        can_auto_fix = True
-                    draw_text(surf, texto, px + 30, y, self.fonts['xs'], sev_col)
-                    y += 20
-                    prop = iss.get("proposal", "")
-                    if prop:
-                        draw_text(surf, f"➜ {prop}", px + 50, y, self.fonts['xs'], DIM)
-                        y += 25
-                    else:
-                        y += 10
-                
-                # Botones de Acción
-                y = py + ph - 60
-                
-                # Fix button si detectamos un mismatch de 0 con GND
-                if can_auto_fix:
-                    btn_fw, btn_fh = 220, 35
-                    self._ai_popup["fix_rect"] = pygame.Rect(px + 20, y, btn_fw, btn_fh)
-                    pygame.draw.rect(surf, (0, 80, 50), self._ai_popup["fix_rect"], border_radius=5)
-                    pygame.draw.rect(surf, SAFE, self._ai_popup["fix_rect"], 1, border_radius=5)
-                    draw_text(surf, "🛠 Merge '0' → 'GND'", px + 20 + btn_fw//2, y + btn_fh//2, self.fonts['sm'], SAFE, 'center')
-
-        # Close Button
-        btn_w, btn_h = 100, 35
-        self._ai_popup["close_rect"] = pygame.Rect(px + pw - btn_w - 20, py + ph - btn_h - 20, btn_w, btn_h)
-        pygame.draw.rect(surf, PANEL_BG, self._ai_popup["close_rect"], border_radius=5)
-        pygame.draw.rect(surf, ACCENT, self._ai_popup["close_rect"], 1, border_radius=5)
-        draw_text(surf, "Cerrar", px + pw - 20 - btn_w//2, py + ph - 20 - btn_h//2, self.fonts['sm'], WHITE, 'center')
-
-    def _draw_forge_popup(self, surf: pygame.Surface) -> None:
-        # Dim background
-        dim = pygame.Surface((W, H), pygame.SRCALPHA)
-        dim.fill((0, 0, 0, 180))
-        surf.blit(dim, (0, 0))
-
-        # Panel
-        pw, ph = 700, 480
-        px, py = (W - pw) // 2, (H - ph) // 2
-        p_rect = pygame.Rect(px, py, pw, ph)
-        draw_panel(surf, p_rect, border_col=ACCENT)
-        
-        # Header
-        draw_text(surf, "🚀 PulseLab Forge: Proyecto Finalizado", px + 30, py + 20, self.fonts['bold'], ACCENT)
-        
-        y = py + 80
-        info = self._forge_popup
-        stats = info.get("stats", {})
-        
-        # Files List
-        items = [
-            ("PROYECTO", Path(info.get("pcb", "")).name.replace(".kicad_pcb", ".kicad_pro"), SAFE),
-            ("ESQUEMA",  Path(info.get("sch", "")).name, SAFE),
-            ("PLACA",    Path(info.get("pcb", "")).name, SAFE),
-            ("RENDER 3D", info.get("render_status", ""), ACCENT2),
-        ]
-        if info.get("fw"):
-            items.append(("FIRMWARE", Path(info["fw"]).name, WARN))
-        
-        for icon, text, col in items:
-            draw_text(surf, icon, px + 40, y, self.fonts['bold'], DIM)
-            draw_text(surf, text, px + 220, y, self.fonts['md'], col)
-            y += 35
-            
-        y += 20
-        # Board stats
-        draw_text(surf, "Métricas del Layout:", px + 40, y, self.fonts['bold'], WHITE)
-        y += 25
-        stats_txt = f"Tamaño: {stats.get('board_mm', '?')}  |  Componentes: {stats.get('footprints', 0)}  |  Nets: {stats.get('nets', 0)}"
-        draw_text(surf, stats_txt, px + 50, y, self.fonts['xs'], DIM)
-        
-        # Bottom Buttons
-        btn_y = py + ph - 65
-        
-        # Open Project Folder
-        bw, bh = 220, 40
-        self._forge_popup["dir_rect"] = pygame.Rect(px + 40, btn_y, bw, bh)
-        pygame.draw.rect(surf, (20, 30, 50), self._forge_popup["dir_rect"], border_radius=5)
-        pygame.draw.rect(surf, ACCENT2, self._forge_popup["dir_rect"], 1, border_radius=5)
-        draw_text(surf, "ABRIR CARPETA PROYECTO", px + 40 + bw//2, btn_y + bh//2, self.fonts['sm'], ACCENT2, 'center')
-        
-        # Close Button
-        self._forge_popup["close_rect"] = pygame.Rect(px + pw - 140, btn_y, 100, bh)
-        pygame.draw.rect(surf, PANEL_BG, self._forge_popup["close_rect"], border_radius=5)
-        pygame.draw.rect(surf, ACCENT, self._forge_popup["close_rect"], 1, border_radius=5)
-        draw_text(surf, "Cerrar", px + pw - 140 + 50, btn_y + bh//2, self.fonts['sm'], WHITE, 'center')
-    def _draw_ai_gen_popup(self, surf: pygame.Surface) -> None:
-        # Dim background
-        dim = pygame.Surface((W, H), pygame.SRCALPHA)
-        dim.fill((0, 0, 0, 180))
-        surf.blit(dim, (0, 0))
-
-        # Panel
-        pw, ph = 500, 240
-        px, py = (W - pw) // 2, (H - ph) // 2
-        p_rect = pygame.Rect(px, py, pw, ph)
-        draw_panel(surf, p_rect, border_col=(0, 200, 180))
-        
-        # Header
-        draw_text(surf, "🧠 Generador de Circuitos IA (Qwen 2.5)", px + 20, py + 15, self.fonts['bold'], (0, 200, 180))
-        draw_text(surf, "Describe el circuito y la IA creará la topología.", px + 20, py + 45, self.fonts['xs'], DIM)
-        
-        # Text Input
-        inp_rect = self._ai_gen_popup["input"].rect
-        inp_rect.x = px + 20
-        inp_rect.y = py + 75
-        inp_rect.w = pw - 40
-        self._ai_gen_popup["input"].draw(surf, self.fonts['md'])
-        
-        # Error/Loading
-        y_status = py + 120
-        if self._ai_gen_popup["loading"]:
-            draw_text(surf, "⏳ Generando topología... (Puede tardar uns seg.)", px + 20, y_status, self.fonts['sm'], ACCENT)
-        elif self._ai_gen_popup["error"]:
-            draw_text(surf, f"Error: {self._ai_gen_popup['error']}", px + 20, y_status, self.fonts['xs'], DANGER)
-            
-        # Buttons
-        btn_w, btn_h = 120, 35
-        
-        # Submit
-        sub_rect = pygame.Rect(px + pw - btn_w*2 - 30, py + ph - btn_h - 20, btn_w, btn_h)
-        self._ai_gen_popup["submit_rect"] = sub_rect
-        if not self._ai_gen_popup["loading"]:
-            pygame.draw.rect(surf, (0, 80, 50), sub_rect, border_radius=5)
-            pygame.draw.rect(surf, SAFE, sub_rect, 1, border_radius=5)
-            draw_text(surf, "Generar", sub_rect.centerx, sub_rect.centery, self.fonts['sm'], SAFE, 'center')
-        
-        # Close
-        close_rect = pygame.Rect(px + pw - btn_w - 20, py + ph - btn_h - 20, btn_w, btn_h)
-        self._ai_gen_popup["close_rect"] = close_rect
-        pygame.draw.rect(surf, PANEL_BG, close_rect, border_radius=5)
-        pygame.draw.rect(surf, ACCENT, close_rect, 1, border_radius=5)
-        draw_text(surf, "Cerrar", close_rect.centerx, close_rect.centery, self.fonts['sm'], WHITE, 'center')
+    # --- (End of drawing methods) ---
 
 
 # ─── Entry point ──────────────────────────────────────────────────────────────
+
+    # ── System Actions ─────────────────────────────────────────
+
+    def _action_sys_launch_mcp(self) -> None:
+        try:
+            # On Windows, creationflags=subprocess.CREATE_NEW_CONSOLE opens a new window
+            cmd = [sys.executable, "mcp_server/server.py"]
+            subprocess.Popen(cmd, creationflags=subprocess.CREATE_NEW_CONSOLE if os.name == 'nt' else 0)
+            self._status("MCP Server lanzado en nueva consola.", SAFE)
+        except Exception as e:
+            self._status(f"Error lanzando MCP: {e}", DANGER)
+
+    def _action_sys_launch_ollama(self) -> None:
+        try:
+            # Intentar arrancar el contenedor existente
+            subprocess.Popen(["docker", "start", "symmetry_ollama"])
+            self._status("Intentando arrancar contenedor symmetry_ollama...", ACCENT)
+        except Exception as e:
+            self._status(f"Error Docker: {e}", DANGER)
+
+    def _action_sys_update_deps(self) -> None:
+        def task():
+            try:
+                self._status("Actualizando dependencias (pip)...", DIM)
+                subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
+                self._status("Dependencias actualizadas correctamente.", SAFE)
+            except Exception as e:
+                self._status(f"Error pip: {e}", DANGER)
+        
+        threading.Thread(target=task, daemon=True).start()
 
 def main():
     parser = argparse.ArgumentParser(description='PulseLab — Circuit Editor & MNA Simulator')
