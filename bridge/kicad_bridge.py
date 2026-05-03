@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from ui.editor import CircuitGraph
+    from core.circuit_graph import CircuitGraph
 
 
 # ─── Rutas de KiCad ──────────────────────────────────────────────────────────

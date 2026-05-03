@@ -82,26 +82,8 @@ def create_circuit_json(components: list[dict]) -> dict:
     Returns:
         dict con circuit_json.
     """
-    from ui.editor import CircuitGraph
-    graph = CircuitGraph()
-    for i, c in enumerate(components):
-        # Conversión segura de valor (por si la IA devuelve texto)
-        val_raw = c.get("value", 0)
-        try:
-            val_f = float(val_raw)
-        except (ValueError, TypeError):
-            val_f = 0.0
-            
-        graph.add(
-            etype       = c.get("etype", "R"),
-            grid_c      = i * 2,
-            grid_r      = 0,
-            orientation = "H",
-            value       = val_f,
-            label       = c.get("label", f"{c.get('etype','?')}{i+1}"),
-            n1          = c.get("n1", f"N{i}"),
-            n2          = c.get("n2", f"N{i+1}"),
-        )
+    from core.circuit_graph import CircuitGraph
+    graph = CircuitGraph.from_component_dicts(components)
     return {
         "circuit_json": json.dumps(graph.to_json()),
         "components": len(graph.components),
@@ -136,7 +118,7 @@ if _MCP_OK:
         Returns:
             dict con voltajes por nodo, tiempo simulado, y cualquier error.
         """
-        from ui.editor import CircuitGraph, SimulationRunner
+        from core.circuit_graph import CircuitGraph, SimulationRunner
         try:
             data  = json.loads(circuit_json)
             graph = CircuitGraph.from_json(data)
@@ -412,7 +394,7 @@ if _MCP_OK:
         Returns:
             dict con paths de archivos generados.
         """
-        from ui.editor import CircuitGraph
+        from core.circuit_graph import CircuitGraph
         from bridge.kicad_bridge import KiCadBridge
         try:
             graph  = CircuitGraph.from_json(json.loads(circuit_json))
@@ -473,7 +455,7 @@ if _MCP_OK:
         Returns:
             dict con content (string del BOM) y rows (lista de componentes).
         """
-        from ui.editor import CircuitGraph
+        from core.circuit_graph import CircuitGraph
         from bridge.bom_generator import generate_bom as _bom
         try:
             graph = CircuitGraph.from_json(json.loads(circuit_json))
@@ -779,90 +761,27 @@ if _MCP_OK:
                  "net":"VOUT","width":0.3}
             ]
         """
-        from bridge.pcb_layout import PCBLayout
+        from bridge.pcb_builder import PCBBuilder
         try:
-            pcb = PCBLayout(
-                board_width=board_width_mm,
-                board_height=board_height_mm,
+            builder = PCBBuilder.from_component_dicts(
+                components,
+                traces=traces,
+                board_width_mm=board_width_mm,
+                board_height_mm=board_height_mm,
+                project_name=project_name,
                 corner_radius=corner_radius_mm,
                 trace_width=trace_width_mm,
-                project_name=project_name,
+                mounting_holes=mounting_holes,
+                output_dir=output_dir,
             )
-
-            # Mapa ref → footprint para las trazas
-            fp_map = {}
-
-            for c in components:
-                ctype = c.get("type", "resistor")
-                ref   = c.get("ref", "X1")
-                value = c.get("value", "?")
-                x     = float(c.get("x", 0))
-                y     = float(c.get("y", 0))
-                rot   = float(c.get("rotation", 0))
-                net1  = c.get("net1", "")
-                net2  = c.get("net2", "")
-                pkg   = c.get("package", "0805")
-                pins  = int(c.get("pins", 2))
-
-                if ctype == "resistor":
-                    fp = pcb.add_resistor(ref, value, x, y, rot,
-                                           net1, net2, pkg)
-                elif ctype == "capacitor":
-                    fp = pcb.add_capacitor(ref, value, x, y, rot,
-                                            net1, net2, pkg)
-                elif ctype == "inductor":
-                    fp = pcb.add_inductor(ref, value, x, y, rot,
-                                           net1, net2, pkg)
-                elif ctype == "pin_header":
-                    fp = pcb.add_pin_header(ref, pins, x, y, rot, value)
-                elif ctype == "dip_ic":
-                    fp = pcb.add_dip_ic(ref, pins, x, y, rot, value)
-                elif ctype == "raw_footprint":
-                    # For raw footprint we expect 'lib' and 'name' in component dict
-                    lib = c.get("lib", "Package_QFP")
-                    name = c.get("name", "LQFP-48_7x7mm_P0.5mm")
-                    fp = pcb.add_raw_footprint(ref, lib, name, x, y, rot, value)
-                else:
-                    fp = pcb.add_resistor(ref, value, x, y, rot,
-                                           net1, net2, pkg)
-
-                fp_map[ref] = fp
-
-            # Trazas
-            for t in (traces or []):
-                fr = t.get("from_ref", "")
-                fp1 = t.get("from_pad", "1")
-                tr = t.get("to_ref", "")
-                tp1 = t.get("to_pad", "1")
-                net = t.get("net", "")
-                w   = float(t.get("width", trace_width_mm))
-
-                if fr in fp_map and tr in fp_map:
-                    pcb.trace(fp_map[fr], fp1, fp_map[tr], tp1,
-                              width=w, net=net)
-
-            if mounting_holes:
-                pcb.add_mounting_holes_corners(margin=3.5)
-
-            # Texto
-            pcb.add_text(project_name,
-                         pcb.board.center_x,
-                         pcb.board.origin_y + pcb.board.height_mm + 2.5,
-                         size=1.0)
-
-            # Guardar
-            safe_name = "".join(c if c.isalnum() or c in "_-" else "_"
-                                 for c in project_name)
-            out_path = Path(output_dir) / safe_name / "board.kicad_pcb"
-            pcb.save(out_path)
-
-            return {
-                "success": True,
-                "pcb_path": str(out_path),
-                "stats": pcb.stats(),
-                "open_in_kicad": f"Abre {out_path} en KiCad PCBNEW para ver el diseño.",
-                "next_step": "Llama generate_pcb_gerbers() con esta ruta para generar Gerbers.",
-            }
+            safe_name = "".join(
+                c if c.isalnum() or c in "_-" else "_"
+                for c in project_name
+            )
+            result = builder.save(sub_dir=safe_name)
+            result["open_in_kicad"] = f"Abre {result['path']} en KiCad PCBNEW para ver el diseño."
+            result["next_step"] = "Llama generate_pcb_gerbers() con esta ruta para generar Gerbers."
+            return result
         except Exception as e:
             return {"error": str(e)}
 

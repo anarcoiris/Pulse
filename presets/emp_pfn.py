@@ -16,7 +16,7 @@ Layout en la cuadricula (GRID_SIZE = 40px):
     CANVAS_X = 200, CANVAS_Y = 50
 """
 
-from ui.editor import CircuitGraph, PlacedComponent
+from core.circuit_graph import CircuitGraph, PlacedComponent
 
 
 def load() -> CircuitGraph:

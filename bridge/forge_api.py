@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from typing import Optional
 
-from ui.editor import CircuitGraph
+from core.circuit_graph import CircuitGraph
 
 def load_preset(name: str) -> CircuitGraph:
     """Carga un preset por nombre ('emp_pfn' | 'basic_rc' | 'rlc' | 'mcu')."""
@@ -41,109 +41,9 @@ def export_kicad_netlist(graph: CircuitGraph, out_dir: str = 'output') -> dict:
 
 def generate_pcb(graph: CircuitGraph, out_dir: str = 'output') -> dict:
     """Genera un .kicad_pcb con los componentes del circuito actual."""
-    from bridge.pcb_layout import PCBLayout
-
-    comps = graph.components
-    n = len(comps)
-    # Auto-size board based on component count
-    cols = max(2, int(n ** 0.5) + 1)
-    w = max(30, cols * 15)
-    h = max(20, (n // cols + 2) * 12)
-
-    pcb = PCBLayout(board_width=w, board_height=h,
-                    corner_radius=1.5, project_name='PulseLab Design')
-
-    # Place components in a grid
-    row, col = 0, 0
-    margin_x, margin_y = 8.0, 8.0
-    spacing_x, spacing_y = 12.0, 10.0
-
-    for c in comps:
-        x = margin_x + col * spacing_x
-        y = margin_y + row * spacing_y
-        etype = c.etype
-        ref   = c.uid
-        val   = f"{c.value:.6g}" if isinstance(c.value, float) else str(c.value)
-
-        fp_added = False
-        f_id = getattr(c, 'footprint_id', None)
-        if f_id:
-            if ':' in f_id:
-                lib, name = f_id.split(':', 1)
-                if pcb.add_raw_footprint(ref, lib, name, x, y, value=val):
-                    fp_added = True
-            elif f_id == 'tactile_switch_6x6':
-                from bridge.pcb_layout import FootprintPresets
-                fp_sw = FootprintPresets.tactile_switch_6x6(ref, val, net1_name=c.n1, net2_name=c.n2)
-                pcb.add_footprint(fp_sw, x, y)
-                fp_added = True
-
-        if not fp_added:
-            if etype in ('R',):
-                pcb.add_resistor(ref, val, x, y, net1=c.n1, net2=c.n2)
-            elif etype in ('C',):
-                pcb.add_capacitor(ref, val, x, y, net1=c.n1, net2=c.n2)
-            elif etype in ('L',):
-                pcb.add_inductor(ref, val, x, y, net1=c.n1, net2=c.n2)
-        elif etype in ('V',):
-            pcb.add_pin_header(ref, 2, x, y, value=f"{val}V")
-        elif etype in ('IC', 'MCU'):
-            pkg = "SOP16"
-            is_esp = ("ESP" in val.upper() or "NODE" in val.upper())
-            if is_esp: pkg = "ESP32"
-            if "CH340" in val.upper() or "SOP8" in val.upper(): pkg = "SOP8"
-            
-            fp = pcb.add_ic(ref, val, x, y, pins=getattr(c, 'pins', {}), pkg_type=pkg)
-            
-            # --- Mejoras Profesionales (v2.1) ---
-            # 1. Decoupling Capacitors (10uF + 100nF)
-            # Buscamos pines de poder (3V3, VCC, VBUS)
-            power_nets = [n for n in getattr(c, 'pins', {}).values() if n in ('3V3', 'VCC', 'VBUS', '5V')]
-            if power_nets:
-                p_net = power_nets[0]
-                pcb.add_capacitor(f"C_{ref}_H", "10uF", x+5, y-5, net1=p_net, net2="GND")
-                pcb.add_capacitor(f"C_{ref}_L", "100nF", x+8, y-5, net1=p_net, net2="GND")
-            
-            # 2. Antenna Keep-out (solo para ESP32)
-            if is_esp:
-                # El footprint ESP32-WROOM mide 18x25.5mm. Antena en la parte superior.
-                # Definimos zona de exclusión de 18x6mm en el tope.
-                pcb.add_keepout([
-                    (x - 9, y - 13), (x + 9, y - 13),
-                    (x + 9, y - 7),  (x - 9, y - 7)
-                ])
-        else:
-            pcb.add_pin_header(ref, 2, x, y, value=etype)
-
-        col += 1
-        if col >= cols:
-            col = 0
-            row += 1
-
-    if n >= 4:
-        pcb.add_mounting_holes_corners(margin=3.0)
-
-    pcb.add_text('PulseLab Forge', pcb.board.center_x,
-                 pcb.board.origin_y + pcb.board.height_mm + 2, size=0.8)
-
-    # Añadir plano de masa si existe el nodo GND
-    if "GND" in graph.all_nodes:
-        pcb.add_copper_pour("GND", margin=1.0)
-        
-    # Ejecutar nuestro A* auto-router 2D/2L
-    pcb.autoroute(width=0.25, grid_size=0.25)
-
-    # Exportar Schematic (.kicad_sch)
-    from bridge.schematic_generator import SchematicGenerator
-    sch_path = Path(out_dir) / 'pulselab_pcb' / 'board.kicad_sch'
-    sch_gen = SchematicGenerator(graph)
-    sch_gen.save(str(sch_path))
-
-    # Exportar PCB y KiCad Pro
-    out_path = Path(out_dir) / 'pulselab_pcb' / 'board.kicad_pcb'
-    pcb.save(out_path)
-    
-    return {'path': str(out_path), 'stats': pcb.stats(), 'pcb': pcb, 'sch_path': str(sch_path)}
+    from bridge.pcb_builder import PCBBuilder
+    builder = PCBBuilder.from_circuit_graph(graph, out_dir=out_dir)
+    return builder.save()
 
 def export_gerbers(pcb_path: str = None) -> dict:
     """Exporta Gerbers + Drill desde un .kicad_pcb."""

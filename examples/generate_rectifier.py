@@ -1,4 +1,6 @@
-from ui.editor import CircuitGraph
+import sys
+sys.path.insert(0, '..')
+from core.circuit_graph import CircuitGraph
 import json
 
 g = CircuitGraph()
@@ -19,7 +21,7 @@ g.add('L', 6, 1, 'H', 0.01, 'L1 10mH', 'DC_POS', 'L_OUT')
 g.add('R', 8, 1, 'V', 100, 'Rload 100R', 'L_OUT', 'DC_NEG')
 g.add('R', 8, 3, 'V', 0.001, 'GND_Link', 'DC_NEG', 'GND')
 
-with open('rectificador_inductor.json', 'w') as f:
+with open('../output/rectificador_inductor.json', 'w') as f:
     json.dump(g.to_json(), f, indent=2)
 
-print("Circuit generated at rectificador_inductor.json")
+print("Circuit generated at output/rectificador_inductor.json")

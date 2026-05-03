@@ -1,0 +1,402 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_Battery-Holder.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_Battery-Holder.kicad_sch",
+    "components": [
+      {
+        "uid": "R21",
+        "etype": "IC",
+        "value": 3.0,
+        "value_raw": "3M",
+        "label": "R21",
+        "lib_id": "easyeda2kicad:RC0603FR-073ML"
+      },
+      {
+        "uid": "R19",
+        "etype": "IC",
+        "value": 5100.0,
+        "value_raw": "5.1K",
+        "label": "R19",
+        "lib_id": "easyeda2kicad:RC0603FR-075K1L"
+      },
+      {
+        "uid": "Q1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CSD18534Q5A",
+        "label": "Q1",
+        "lib_id": "Transistor_FET:CSD18534Q5A"
+      },
+      {
+        "uid": "#PWR061",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR061",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R10",
+        "etype": "IC",
+        "value": 100.0,
+        "value_raw": "100",
+        "label": "R10",
+        "lib_id": "easyeda2kicad:RC0402FR-7W100RL"
+      },
+      {
+        "uid": "#PWR057",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR057",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "F2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Fuse 5A",
+        "label": "F2",
+        "lib_id": "Device:Fuse"
+      },
+      {
+        "uid": "#PWR049",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR049",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "D2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MMSZ5246BS-7-F",
+        "label": "D2",
+        "lib_id": "easyeda2kicad:MMSZ5246BS-7-F"
+      },
+      {
+        "uid": "R23",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "R23",
+        "lib_id": "easyeda2kicad:RC0603FR-070RL"
+      },
+      {
+        "uid": "NTC1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "KNTC0805/10KF3950",
+        "label": "NTC1",
+        "lib_id": "easyeda2kicad:KNTC0805_10KF3950"
+      },
+      {
+        "uid": "#PWR064",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR064",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C22",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "1uF/50V",
+        "label": "C22",
+        "lib_id": "easyeda2kicad:CC0402KRX5R9BB105"
+      },
+      {
+        "uid": "D1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BAS16J_135",
+        "label": "D1",
+        "lib_id": "BAS16J_135:BAS16J_135"
+      },
+      {
+        "uid": "#PWR058",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR058",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R12",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R12",
+        "lib_id": "easyeda2kicad:RC0402FR-7W1KL"
+      },
+      {
+        "uid": "C24",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF/50V",
+        "label": "C24",
+        "lib_id": "easyeda2kicad:CC0603KRX7R9BB104"
+      },
+      {
+        "uid": "#PWR0141",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR0141",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C15",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF/50V",
+        "label": "C15",
+        "lib_id": "easyeda2kicad:CC0603KRX7R9BB104"
+      },
+      {
+        "uid": "C21",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF/50V",
+        "label": "C21",
+        "lib_id": "easyeda2kicad:CC0603KRX7R9BB104"
+      },
+      {
+        "uid": "R11",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "10m / 1W",
+        "label": "R11",
+        "lib_id": "easyeda2kicad:RL2512FK-070R01L"
+      },
+      {
+        "uid": "R22",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R22",
+        "lib_id": "easyeda2kicad:RC0603FR-0710KL"
+      },
+      {
+        "uid": "R18",
+        "etype": "IC",
+        "value": 10.0,
+        "value_raw": "10M",
+        "label": "R18",
+        "lib_id": "easyeda2kicad:RC0603FR-0710ML"
+      },
+      {
+        "uid": "#PWR051",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR051",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR052",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR052",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C20",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "1uF/50V",
+        "label": "C20",
+        "lib_id": "easyeda2kicad:CC0402KRX5R9BB105"
+      },
+      {
+        "uid": "R26",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "R26",
+        "lib_id": "easyeda2kicad:RC0603FR-070RL"
+      },
+      {
+        "uid": "R20",
+        "etype": "IC",
+        "value": 1.0,
+        "value_raw": "1M",
+        "label": "R20",
+        "lib_id": "easyeda2kicad:RC0603FR-071ML"
+      },
+      {
+        "uid": "#PWR063",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR063",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R51",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "R51",
+        "lib_id": "easyeda2kicad:RC0603FR-070RL"
+      },
+      {
+        "uid": "R17",
+        "etype": "IC",
+        "value": 5100.0,
+        "value_raw": "5.1K",
+        "label": "R17",
+        "lib_id": "easyeda2kicad:RC0603FR-075K1L"
+      },
+      {
+        "uid": "R15",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R15",
+        "lib_id": "easyeda2kicad:RC0402FR-7W1KL"
+      },
+      {
+        "uid": "C17",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF/50V",
+        "label": "C17",
+        "lib_id": "easyeda2kicad:CC0603KRX7R9BB104"
+      },
+      {
+        "uid": "#PWR062",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR062",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "Q2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CSD18534Q5A",
+        "label": "Q2",
+        "lib_id": "Transistor_FET:CSD18534Q5A"
+      },
+      {
+        "uid": "PWR_SW1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TK-6580A8-1",
+        "label": "PWR_SW1",
+        "lib_id": "easyeda2kicad:TK-6580A8-1"
+      },
+      {
+        "uid": "#PWR060",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR060",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R9",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R9",
+        "lib_id": "easyeda2kicad:RC0402FR-7W1KL"
+      },
+      {
+        "uid": "C25",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF/50V",
+        "label": "C25",
+        "lib_id": "easyeda2kicad:CC0603KRX7R9BB104"
+      },
+      {
+        "uid": "C16",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF/50V",
+        "label": "C16",
+        "lib_id": "easyeda2kicad:CC0603KRX7R9BB104"
+      },
+      {
+        "uid": "R13",
+        "etype": "IC",
+        "value": 100.0,
+        "value_raw": "100",
+        "label": "R13",
+        "lib_id": "easyeda2kicad:RC0402FR-7W100RL"
+      },
+      {
+        "uid": "R14",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R14",
+        "lib_id": "easyeda2kicad:RC0402FR-7W1KL"
+      },
+      {
+        "uid": "R24",
+        "etype": "IC",
+        "value": 470000.0,
+        "value_raw": "470K",
+        "label": "R24",
+        "lib_id": "easyeda2kicad:RC0603FR-07470KL"
+      },
+      {
+        "uid": "U4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BQ7790512PWR",
+        "label": "U4",
+        "lib_id": "easyeda2kicad:BQ7790512PWR"
+      },
+      {
+        "uid": "C18",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF/50V",
+        "label": "C18",
+        "lib_id": "easyeda2kicad:CC0603KRX7R9BB104"
+      },
+      {
+        "uid": "C19",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF/50V",
+        "label": "C19",
+        "lib_id": "easyeda2kicad:CC0603KRX7R9BB104"
+      },
+      {
+        "uid": "BAT1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BH-18650-B5BA016",
+        "label": "BAT1",
+        "lib_id": "easyeda2kicad:BH-18650-B5BA016"
+      },
+      {
+        "uid": "#PWR059",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "BAT-",
+        "label": "#PWR059",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R27",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "R27",
+        "lib_id": "easyeda2kicad:RC0603FR-070RL"
+      }
+    ],
+    "version": "1.0"
+  }
+}

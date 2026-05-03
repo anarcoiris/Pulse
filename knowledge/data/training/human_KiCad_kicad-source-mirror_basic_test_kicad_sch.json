@@ -1,0 +1,114 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_basic_test.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_basic_test.kicad_sch",
+    "components": [
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "J1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x01_Pin",
+        "label": "J1",
+        "lib_id": "Connector:Conn_01x01_Pin"
+      },
+      {
+        "uid": "J2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x01_Pin",
+        "label": "J2",
+        "lib_id": "Connector:Conn_01x01_Pin"
+      },
+      {
+        "uid": "#PWR03",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR03",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR02",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "J4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x01_Pin",
+        "label": "J4",
+        "lib_id": "Connector:Conn_01x01_Pin"
+      },
+      {
+        "uid": "C1",
+        "etype": "C",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10u",
+        "label": "C1",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R2",
+        "lib_id": "Device:R_US"
+      },
+      {
+        "uid": "R3",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R3",
+        "lib_id": "Device:R_US"
+      },
+      {
+        "uid": "J3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x01_Pin",
+        "label": "J3",
+        "lib_id": "Connector:Conn_01x01_Pin"
+      },
+      {
+        "uid": "#PWR04",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR04",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TLV2371DBV",
+        "label": "U1",
+        "lib_id": "Amplifier_Operational:TLV2371DBV"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R1",
+        "lib_id": "Device:R_US"
+      }
+    ],
+    "version": "1.0"
+  }
+}

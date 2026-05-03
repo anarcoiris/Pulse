@@ -149,7 +149,7 @@ class KicadImporter:
         Intenta reconstruir un CircuitGraph a partir de un esquema de KiCad.
         Aplica normalización de coordenadas para mapear al grid de PulseLab.
         """
-        from ui.editor import CircuitGraph
+        from core.circuit_graph import CircuitGraph
         graph = CircuitGraph()
         symbols = KicadImporter.parse_schematic_symbols(sch_path)
         

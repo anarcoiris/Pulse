@@ -1,0 +1,258 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_nPM1300.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_nPM1300.kicad_sch",
+    "components": [
+      {
+        "uid": "C11",
+        "etype": "C",
+        "value": 2.2e-06,
+        "value_raw": "2.2uF",
+        "label": "C11",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "#PWR041",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VBUS",
+        "label": "#PWR041",
+        "lib_id": "power:VBUS"
+      },
+      {
+        "uid": "L1",
+        "etype": "L",
+        "value": 2.2e-06,
+        "value_raw": "2.2uH",
+        "label": "L1",
+        "lib_id": "Device:L_Small"
+      },
+      {
+        "uid": "#PWR033",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR033",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#SYM4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Logo_Open_Hardware_Small",
+        "label": "#SYM4",
+        "lib_id": "Graphic:Logo_Open_Hardware_Small"
+      },
+      {
+        "uid": "#PWR021",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR021",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "#PWR017",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR017",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C5",
+        "etype": "C",
+        "value": 1e-06,
+        "value_raw": "1uF",
+        "label": "C5",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "#PWR030",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR030",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#SYM3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "~",
+        "label": "#SYM3",
+        "lib_id": "LordsBoards-Graphic:LordsBoardsLogo"
+      },
+      {
+        "uid": "#PWR053",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VSYS",
+        "label": "#PWR053",
+        "lib_id": "power:VBUS"
+      },
+      {
+        "uid": "C8",
+        "etype": "C",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C8",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "#PWR022",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR022",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "D3",
+        "etype": "L",
+        "value": 0.0,
+        "value_raw": "LED_ARGB",
+        "label": "D3",
+        "lib_id": "Device:LED_ARGB"
+      },
+      {
+        "uid": "C3",
+        "etype": "C",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C3",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "#PWR018",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR018",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR031",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR031",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C4",
+        "etype": "C",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C4",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "#PWR035",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+BATT",
+        "label": "#PWR035",
+        "lib_id": "power:+BATT"
+      },
+      {
+        "uid": "C6",
+        "etype": "C",
+        "value": 1e-06,
+        "value_raw": "1uF",
+        "label": "C6",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "C2",
+        "etype": "C",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C2",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "#PWR016",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR016",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR034",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR034",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "U2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "nPM1300-QEXX",
+        "label": "U2",
+        "lib_id": "nordic-lib-kicad-npm:nPM1300-QEXX"
+      },
+      {
+        "uid": "C1",
+        "etype": "C",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C1",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "#PWR015",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR015",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "JP1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SolderJumper_2_Bridged",
+        "label": "JP1",
+        "lib_id": "Jumper:SolderJumper_2_Bridged"
+      },
+      {
+        "uid": "R4",
+        "etype": "R",
+        "value": 330000.0,
+        "value_raw": "330kR",
+        "label": "R4",
+        "lib_id": "Device:R_Small_US"
+      },
+      {
+        "uid": "#PWR020",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR020",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR019",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR019",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR032",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR032",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.0"
+  }
+}

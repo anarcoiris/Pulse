@@ -8,3 +8,7 @@ schemdraw
 matplotlib
 pytest
 openai
+peft
+trl
+bitsandbytes
+datasets

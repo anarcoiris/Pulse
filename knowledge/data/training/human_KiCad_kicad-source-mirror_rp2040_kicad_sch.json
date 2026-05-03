@@ -1,0 +1,370 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_rp2040.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_rp2040.kicad_sch",
+    "components": [
+      {
+        "uid": "#PWR0108",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0108",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR096",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR096",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "C30",
+        "etype": "IC",
+        "value": 6e-12,
+        "value_raw": "6pF",
+        "label": "C30",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR0101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0101",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "R39",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R39",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "C36",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C36",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "U6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "RP2040",
+        "label": "U6",
+        "lib_id": "TinyTapeout:RP2040"
+      },
+      {
+        "uid": "C35",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C35",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR090",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR090",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR0109",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0109",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "C39",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C39",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR0105",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0105",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "C41",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C41",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "R37",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1k",
+        "label": "R37",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "R34",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R34",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "#PWR093",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR093",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "J11",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x06",
+        "label": "J11",
+        "lib_id": "TinyTapeout:Conn_01x06"
+      },
+      {
+        "uid": "#PWR0104",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0104",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR095",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR095",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "R36",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R36",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "C38",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C38",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR099",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR099",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "C33",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C33",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "Y1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "12.0MHz",
+        "label": "Y1",
+        "lib_id": "TinyTapeout:Crystal_GND24"
+      },
+      {
+        "uid": "C32",
+        "etype": "IC",
+        "value": 1e-06,
+        "value_raw": "1uF",
+        "label": "C32",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "C29",
+        "etype": "IC",
+        "value": 6e-12,
+        "value_raw": "6pF",
+        "label": "C29",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR0106",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0106",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "U5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "W25Q32JVSS",
+        "label": "U5",
+        "lib_id": "TinyTapeout:W25Q32JVSS"
+      },
+      {
+        "uid": "C37",
+        "etype": "IC",
+        "value": 1e-06,
+        "value_raw": "1uF",
+        "label": "C37",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "R38",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R38",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "C34",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C34",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR092",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3V3",
+        "label": "#PWR092",
+        "lib_id": "TinyTapeout:+3V3"
+      },
+      {
+        "uid": "#PWR0100",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0100",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR098",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR098",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "J10",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x02",
+        "label": "J10",
+        "lib_id": "TinyTapeout:Conn_01x02"
+      },
+      {
+        "uid": "#PWR0102",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0102",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR091",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR091",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR0107",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0107",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR094",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR094",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "R40",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R40",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "C31",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C31",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR0103",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0103",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "R35",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R35",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "C40",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C40",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR097",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR097",
+        "lib_id": "TinyTapeout:GND"
+      }
+    ],
+    "version": "1.0"
+  }
+}

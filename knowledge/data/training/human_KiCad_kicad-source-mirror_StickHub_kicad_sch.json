@@ -1,0 +1,1114 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_StickHub.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_StickHub.kicad_sch",
+    "components": [
+      {
+        "uid": "R11",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R11",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "#PWR036",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VIN",
+        "label": "#PWR036",
+        "lib_id": "RobotProtos:VIN"
+      },
+      {
+        "uid": "#FLG0102",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG0102",
+        "lib_id": "RobotProtos:PWR_FLAG"
+      },
+      {
+        "uid": "#PWR013",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR013",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "#PWR010",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR010",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "D13",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D13",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "#PWR017",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+1V8",
+        "label": "#PWR017",
+        "lib_id": "RobotProtos:+1V8"
+      },
+      {
+        "uid": "J9",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "EXTGND",
+        "label": "J9",
+        "lib_id": "RobotProtos:Conn_01x01"
+      },
+      {
+        "uid": "C17",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF 100V",
+        "label": "C17",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "D9",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D9",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "C11",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C11",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR025",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR025",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "D15",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB",
+        "label": "D15",
+        "lib_id": "RobotProtos:LED_DUAL_red_green"
+      },
+      {
+        "uid": "#PWR040",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR040",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "Y1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "12MHz 50ppm 16-20pF",
+        "label": "Y1",
+        "lib_id": "RobotProtos:Crystal_small_4P"
+      },
+      {
+        "uid": "#PWR012",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR012",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "C21",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF 100V",
+        "label": "C21",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR029",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR029",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "R5",
+        "etype": "IC",
+        "value": 100000.0,
+        "value_raw": "100k",
+        "label": "R5",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "J5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB4",
+        "label": "J5",
+        "lib_id": "RobotProtos:Conn_01x04_MountingPin"
+      },
+      {
+        "uid": "R3",
+        "etype": "IC",
+        "value": 100000.0,
+        "value_raw": "100k",
+        "label": "R3",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "JP1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "EXTPWR",
+        "label": "JP1",
+        "lib_id": "RobotProtos:JUMPER"
+      },
+      {
+        "uid": "J8",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB7",
+        "label": "J8",
+        "lib_id": "RobotProtos:Conn_01x04_MountingPin"
+      },
+      {
+        "uid": "C19",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF 100V",
+        "label": "C19",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "C9",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C9",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "C28",
+        "etype": "IC",
+        "value": 1.5000000000000002e-08,
+        "value_raw": "15nF",
+        "label": "C28",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "R1",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R1",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "#PWR043",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR043",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "D20",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB",
+        "label": "D20",
+        "lib_id": "RobotProtos:LED_DUAL_red_green"
+      },
+      {
+        "uid": "D21",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB",
+        "label": "D21",
+        "lib_id": "RobotProtos:LED_DUAL_red_green"
+      },
+      {
+        "uid": "#PWR021",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR021",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "#PWR037",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR037",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "D12",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D12",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "C1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "1uF 10V",
+        "label": "C1",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR027",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR027",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "C8",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C8",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "C3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "10uF 6.3V",
+        "label": "C3",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR032",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VIN",
+        "label": "#PWR032",
+        "lib_id": "RobotProtos:VIN"
+      },
+      {
+        "uid": "J7",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB6",
+        "label": "J7",
+        "lib_id": "RobotProtos:Conn_01x04_MountingPin"
+      },
+      {
+        "uid": "#PWR014",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR014",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "#PWR08",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR08",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "D3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D3",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "R13",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R13",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "C35",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C35",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "C32",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C32",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR024",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR024",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "LOGO1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Logo",
+        "label": "LOGO1",
+        "lib_id": "RobotProtos:Logo"
+      },
+      {
+        "uid": "D22",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D22",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "D14",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D14",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "#PWR039",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR039",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "D11",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D11",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "D6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D6",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "#PWR018",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR018",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "#FLG0101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG0101",
+        "lib_id": "RobotProtos:PWR_FLAG"
+      },
+      {
+        "uid": "#PWR03",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR03",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "#PWR011",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR011",
+        "lib_id": "RobotProtos:+3.3V"
+      },
+      {
+        "uid": "#PWR023",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR023",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "#PWR05",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR05",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "D25",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "5V",
+        "label": "D25",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "C4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "10uF 6.3V",
+        "label": "C4",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "R7",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R7",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "C25",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C25",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR04",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR04",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "#PWR041",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR041",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "#PWR035",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR035",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "C24",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C24",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR09",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR09",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "#PWR031",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR031",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "C7",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C7",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR033",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR033",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "C22",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C22",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "H1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Strap",
+        "label": "H1",
+        "lib_id": "RobotProtos:MountingHole"
+      },
+      {
+        "uid": "D18",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB",
+        "label": "D18",
+        "lib_id": "RobotProtos:LED_DUAL_red_green"
+      },
+      {
+        "uid": "R4",
+        "etype": "IC",
+        "value": 100000.0,
+        "value_raw": "100k",
+        "label": "R4",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "#PWR044",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR044",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "C31",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C31",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR022",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR022",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "D5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D5",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "#PWR016",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR016",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "C15",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF 100V",
+        "label": "C15",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "C30",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C30",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "D16",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB",
+        "label": "D16",
+        "lib_id": "RobotProtos:LED_DUAL_red_green"
+      },
+      {
+        "uid": "C10",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C10",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "C23",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C23",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "R12",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R12",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "C6",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C6",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "D2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D2",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "D10",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D10",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "R10",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R10",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "#PWR042",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VIN",
+        "label": "#PWR042",
+        "lib_id": "RobotProtos:VIN"
+      },
+      {
+        "uid": "#PWR020",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR020",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "D17",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB",
+        "label": "D17",
+        "lib_id": "RobotProtos:LED_DUAL_red_green"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MaxLinear_XR22417-48",
+        "label": "U1",
+        "lib_id": "RobotProtos:MaxLinear_XR22417-48"
+      },
+      {
+        "uid": "C33",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C33",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "C2",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C2",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "D1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D1",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "J1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HOST",
+        "label": "J1",
+        "lib_id": "RobotProtos:Conn_01x04_Male"
+      },
+      {
+        "uid": "C29",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C29",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR034",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR034",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "R9",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R9",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "#PWR019",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR019",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "C27",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C27",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "C38",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "330uF 10V",
+        "label": "C38",
+        "lib_id": "RobotProtos:CPsmall"
+      },
+      {
+        "uid": "#PWR038",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR038",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "LOGO2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Logo",
+        "label": "LOGO2",
+        "lib_id": "RobotProtos:Logo"
+      },
+      {
+        "uid": "C37",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C37",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "C26",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C26",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "J3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB2",
+        "label": "J3",
+        "lib_id": "RobotProtos:Conn_01x04_MountingPin"
+      },
+      {
+        "uid": "C14",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF 100V",
+        "label": "C14",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "C20",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF 100V",
+        "label": "C20",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "R6",
+        "etype": "IC",
+        "value": 2700.0,
+        "value_raw": "2.7k",
+        "label": "R6",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "C13",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C13",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR028",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR028",
+        "lib_id": "RobotProtos:+3.3V"
+      },
+      {
+        "uid": "C18",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF 100V",
+        "label": "C18",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR02",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "J4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB3",
+        "label": "J4",
+        "lib_id": "RobotProtos:Conn_01x04_MountingPin"
+      },
+      {
+        "uid": "D4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D4",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "D8",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D8",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "#PWR026",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR026",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "D19",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB",
+        "label": "D19",
+        "lib_id": "RobotProtos:LED_DUAL_red_green"
+      },
+      {
+        "uid": "#PWR07",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR07",
+        "lib_id": "RobotProtos:GND"
+      },
+      {
+        "uid": "C36",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C36",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "D23",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D23",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "J6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB5",
+        "label": "J6",
+        "lib_id": "RobotProtos:Conn_01x04_MountingPin"
+      },
+      {
+        "uid": "C16",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0.1uF 100V",
+        "label": "C16",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR030",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+1V8",
+        "label": "#PWR030",
+        "lib_id": "RobotProtos:+1V8"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VIN",
+        "label": "#PWR01",
+        "lib_id": "RobotProtos:VIN"
+      },
+      {
+        "uid": "C5",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C5",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "#PWR015",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR015",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "U2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Dialog_SLG5NT1487V",
+        "label": "U2",
+        "lib_id": "RobotProtos:Dialog_SLG5NT1487V"
+      },
+      {
+        "uid": "C12",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C12",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "R8",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R8",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "R2",
+        "etype": "IC",
+        "value": 100000.0,
+        "value_raw": "100k",
+        "label": "R2",
+        "lib_id": "RobotProtos:RSMALL"
+      },
+      {
+        "uid": "#PWR06",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR06",
+        "lib_id": "RobotProtos:+5V"
+      },
+      {
+        "uid": "D24",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "5V",
+        "label": "D24",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "C34",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "22uF 10V",
+        "label": "C34",
+        "lib_id": "RobotProtos:Csmall"
+      },
+      {
+        "uid": "D7",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TVS",
+        "label": "D7",
+        "lib_id": "RobotProtos:D_TVS_Filled"
+      },
+      {
+        "uid": "J2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "USB1",
+        "label": "J2",
+        "lib_id": "RobotProtos:Conn_01x04_MountingPin"
+      }
+    ],
+    "version": "1.0"
+  }
+}

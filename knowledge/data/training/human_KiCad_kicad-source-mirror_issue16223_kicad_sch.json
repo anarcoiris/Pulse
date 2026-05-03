@@ -1,0 +1,202 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue16223.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue16223.kicad_sch",
+    "components": [
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R4",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R4",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R7",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R7",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#GND012",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND012",
+        "lib_id": "pspice:0"
+      },
+      {
+        "uid": "R8",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R8",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#GND05",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND05",
+        "lib_id": "pspice:0"
+      },
+      {
+        "uid": "R9",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R9",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#GND04",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND04",
+        "lib_id": "pspice:0"
+      },
+      {
+        "uid": "R11",
+        "etype": "R",
+        "value": 50000.0,
+        "value_raw": "50k",
+        "label": "R11",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#GND08",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND08",
+        "lib_id": "pspice:0"
+      },
+      {
+        "uid": "#GND07",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND07",
+        "lib_id": "pspice:0"
+      },
+      {
+        "uid": "U6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "IBIS_DEVICE",
+        "label": "U6",
+        "lib_id": "Simulation_SPICE:IBIS_DEVICE"
+      },
+      {
+        "uid": "#GND06",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND06",
+        "lib_id": "pspice:0"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R6",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R6",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#GND03",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND03",
+        "lib_id": "pspice:0"
+      },
+      {
+        "uid": "R10",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R10",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#GND011",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND011",
+        "lib_id": "pspice:0"
+      },
+      {
+        "uid": "#GND09",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND09",
+        "lib_id": "pspice:0"
+      },
+      {
+        "uid": "#GND01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND01",
+        "lib_id": "pspice:0"
+      },
+      {
+        "uid": "#GND010",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND010",
+        "lib_id": "pspice:0"
+      },
+      {
+        "uid": "R5",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R5",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R3",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R3",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#GND02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "#GND02",
+        "lib_id": "pspice:0"
+      }
+    ],
+    "version": "1.0"
+  }
+}

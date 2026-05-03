@@ -1,0 +1,34 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_io_driver_32x.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_io_driver_32x.kicad_sch",
+    "components": [
+      {
+        "uid": "R452",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R452",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R449",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R449",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R450",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R450",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      }
+    ],
+    "version": "1.0"
+  }
+}

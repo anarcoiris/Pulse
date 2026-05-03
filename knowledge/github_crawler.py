@@ -30,30 +30,44 @@ class GitHubPCBCrawler:
             
         return res.json().get("items", [])
 
-    def download_pcb_files(self, repo_full_name):
-        """Busca archivos .kicad_pcb en un repo y los descarga."""
-        search_url = f"{self.base_url}/search/code"
-        # Buscamos archivos .kicad_pcb en el repo específico
-        query = f"extension:kicad_pcb repo:{repo_full_name}"
-        res = requests.get(search_url, headers=self.headers, params={"q": query})
-        
-        if res.status_code != 200:
+    def download_kicad_files(self, repo_full_name, file_extension="kicad_sch"):
+        """Busca archivos de KiCad en un repo y los descarga usando la API de git/trees."""
+        # Obtenemos la rama por defecto
+        repo_info_url = f"{self.base_url}/repos/{repo_full_name}"
+        repo_res = requests.get(repo_info_url, headers=self.headers)
+        if repo_res.status_code != 200:
+            print(f"❌ Error API GitHub al obtener repo: {repo_res.status_code} - {repo_res.text}")
             return 0
             
-        items = res.json().get("items", [])
+        default_branch = repo_res.json().get("default_branch", "master")
+        
+        # Obtenemos el árbol de archivos recursivamente
+        tree_url = f"{self.base_url}/repos/{repo_full_name}/git/trees/{default_branch}?recursive=1"
+        tree_res = requests.get(tree_url, headers=self.headers)
+        
+        if tree_res.status_code != 200:
+            print(f"❌ Error API GitHub al obtener tree: {tree_res.status_code} - {tree_res.text}")
+            return 0
+            
+        tree = tree_res.json().get("tree", [])
+        # Filtramos por extensión
+        items = [item for item in tree if item.get("type") == "blob" and item.get("path", "").endswith(f".{file_extension}")]
+        
         downloaded = 0
         
         for item in items:
-            raw_url = item["html_url"].replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
-            file_name = f"{repo_full_name.replace('/', '_')}_{item['name']}"
+            path = item["path"]
+            filename = os.path.basename(path)
+            raw_url = f"https://raw.githubusercontent.com/{repo_full_name}/{default_branch}/{path}"
+            file_name = f"{repo_full_name.replace('/', '_')}_{filename}"
             
-            print(f"  📥 Descargando: {item['name']}...")
+            print(f"  📥 Descargando: {filename}...")
             f_res = requests.get(raw_url)
             if f_res.status_code == 200:
                 with open(self.save_dir / file_name, "wb") as f:
                     f.write(f_res.content)
                 downloaded += 1
-                time.sleep(1) # Rate limit protection
+                time.sleep(1) # Protección contra rate limit de descargas raw
                 
         return downloaded
 
@@ -65,7 +79,8 @@ if __name__ == "__main__":
     total = 0
     for repo in repos:
         print(f"🚀 Procesando {repo['full_name']} ({repo['stargazers_count']} ⭐)")
-        count = crawler.download_pcb_files(repo['full_name'])
+        # Descargamos esquemáticos que contienen la información lógica necesaria
+        count = crawler.download_kicad_files(repo['full_name'], file_extension="kicad_sch")
         total += count
         
     print(f"\n✅ Proceso completado. {total} archivos de diseño listos en {crawler.save_dir}")

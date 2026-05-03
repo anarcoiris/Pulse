@@ -12,7 +12,7 @@ Constantes:
     Sistema subamortiguado (alpha < omega_0)
 """
 
-from ui.editor import CircuitGraph
+from core.circuit_graph import CircuitGraph
 
 
 def load() -> CircuitGraph:

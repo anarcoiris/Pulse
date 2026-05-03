@@ -1,0 +1,50 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_fpga-power-gnd.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_fpga-power-gnd.kicad_sch",
+    "components": [
+      {
+        "uid": "#PWR0211",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0211",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0213",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0213",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0212",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PSADC_AGND",
+        "label": "#PWR0212",
+        "lib_id": "vme-wren:PSADC_AGND"
+      },
+      {
+        "uid": "IC14",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "XCZU4CG-1SFVC784E",
+        "label": "IC14",
+        "lib_id": "Logic:XCZU4CG-1SFVC784E"
+      },
+      {
+        "uid": "L2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "IND0805_WURTH_742792040",
+        "label": "L2",
+        "lib_id": "Inductors SMD:IND0805_WURTH_742792040"
+      }
+    ],
+    "version": "1.0"
+  }
+}

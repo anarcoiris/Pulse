@@ -58,12 +58,11 @@ from ui.theme import (
     PANEL_BG, PANEL_BORDER,
     get_fonts, draw_text, draw_panel,
 )
-from ui.editor       import CircuitGraph, SimulationRunner, EditorCanvas
+from ui.editor       import CircuitGraph, SimulationRunner, EditorCanvas, Wire
 from ui.toolbar      import ToolbarPanel
 from ui.properties   import PropertiesPanel
 from ui.oscilloscope import OscilloscopePanel
 from ui.modals       import ForgeResultModal, AIGeneratorModal, AIReviewModal
-from ui.editor import CircuitGraph, Wire
 from knowledge.semantic_reviewer import SemanticAIAgent
 
 
@@ -127,6 +126,18 @@ class PulseLabApp:
         self.forge_modal = ForgeResultModal()
         self.ai_gen_modal = AIGeneratorModal()
         self.ai_review_modal = AIReviewModal()
+
+        # Forge orchestration controller
+        from ui.forge_controller import ForgeController
+        self.forge = ForgeController(
+            graph_fn=lambda: self.graph,
+            status_fn=self._status,
+            forge_modal=self.forge_modal,
+            ai_review_modal=self.ai_review_modal,
+            ai_gen_modal=self.ai_gen_modal,
+            snapshot_fn=self._snapshot,
+            reload_fn=self._reload_graph,
+        )
 
         # --- Undo / Redo ---
         self._undo_stack: list = []   # list of JSON strings
@@ -369,27 +380,27 @@ class PulseLabApp:
             self._status('Canvas limpiado.  Ctrl+Z para deshacer.', WARN)
             return
 
-        # ── Forge (KiCad / PCB / Gerbers) ────────────────────
+        # ── Forge (KiCad / PCB / Gerbers) — delegated to ForgeController ──
         if action == 'FORGE_EXPORT_KICAD':
-            self._action_forge_export_kicad()
+            self.forge.export_kicad()
             return
         if action == 'FORGE_GEN_PCB':
-            self._action_forge_gen_pcb()
+            self.forge.gen_pcb()
             return
         if action == 'FORGE_ENCLOSURE':
-            self._action_forge_enclosure()
+            self.forge.gen_enclosure()
             return
         if action == 'FORGE_REVIEW':
-            self._action_forge_review()
+            self.forge.review_ai()
             return
         if action == 'FORGE_GERBERS':
-            self._action_forge_gerbers()
+            self.forge.export_gerbers()
             return
         if action == 'FORGE_KICAD_STATUS':
-            self._action_forge_kicad_status()
+            self.forge.kicad_status()
             return
         if action == 'FORGE_GEN_AI':
-            self._action_forge_gen_ai()
+            self.forge.gen_ai()
             return
             
         # ── System ───────────────────────────────────────────
@@ -425,186 +436,9 @@ class PulseLabApp:
         except Exception as e:
             self._status(f'Error exportando: {e}', DANGER)
 
-    # ── Forge Actions ─────────────────────────────────────────
+    # ── Forge Actions — delegated to ForgeController (ui/forge_controller.py) ──
+    #    All _action_forge_* methods have been extracted to ForgeController.
 
-    def _action_forge_export_kicad(self) -> None:
-        try:
-            result = _export_kicad_netlist(self.graph)
-            if 'error' in result:
-                self._status(f'Forge: {result["error"]}', DANGER)
-            else:
-                num_files = sum(1 for k in ['netlist', 'skidl_script', 'bom_csv'] if k in result)
-                self._status(f'KiCad: {num_files} archivos → output/', (0, 200, 180))
-        except Exception as e:
-            self._status(f'Forge error: {e}', DANGER)
-
-    def _action_forge_gen_pcb(self) -> None:
-        try:
-            n = len(self.graph.components)
-            if n == 0:
-                self._status('Sin componentes. Dibuja un circuito primero.', WARN)
-                return
-            
-            # 1. Generación de Proyectos (PCB + SCH + Netlist)
-            result = _generate_pcb(self.graph)
-            if 'error' in result:
-                self._status(f'PCB error: {result["error"]}', DANGER)
-                return
-
-            stats = result.get('stats', {})
-            pcb_path = result['path']
-            
-            # 2. Renderizado 3D (Async)
-            from bridge.render_engine import RenderEngine3D
-            renderer = RenderEngine3D()
-            renderer_callback = None
-            
-            # 3. Síntesis de Firmware (si hay MCUs)
-            fw_info = None
-            has_mcu = any(c.etype in ('IC', 'MCU') for c in self.graph.components)
-            if has_mcu:
-                from knowledge.firmware_synthesizer import FirmwareSynthesizer
-                synth = FirmwareSynthesizer()
-                fw_path = Path(pcb_path).parent / 'main.py'
-                fw_res = synth.generate_firmware(self.graph, str(fw_path))
-                if 'path' in fw_res:
-                    fw_info = str(fw_path)
-
-            self.forge_modal.show_result(
-                output_dir=str(Path(pcb_path).parent),
-                pcb=pcb_path,
-                sch=result.get('sch_path', ""),
-                fw=fw_info,
-                stats=stats
-            )
-
-            if renderer.available:
-                def on_render_done(res):
-                    self.forge_modal.set_render_status(res)
-                
-                renderer.export_gltf_async(pcb_path, callback=on_render_done)
-            else:
-                self.forge_modal.render_status = "No render (KiCad CLI missing)"
-
-            self._status(f'Hardware + Software Generados!', SAFE)
-
-        except Exception as e:
-            self._status(f'PCB error: {e}', DANGER)
-
-    def _action_forge_enclosure(self) -> None:
-        try:
-            res = _generate_pcb(self.graph)
-            if 'error' in res:
-                self._status(f'PCB error: {res["error"]}', DANGER)
-                return
-            pcb = res.get('pcb')
-            out_p = Path('output/pulselab_pcb/enclosures')
-            eng_res = pcb.export_enclosure(out_p)
-            self._status(f'Caja 3D: {eng_res["scad_file"]}', (150, 100, 255))
-        except Exception as e:
-            self._status(f'Enclosure error: {e}', DANGER)
-
-    def _action_forge_review(self) -> None:
-        def merge_gnd_fix():
-            self._snapshot()
-            self.graph.merge_nodes("GND", "0")
-            self._reload_graph()
-            self._status("Arreglo aplicado: '0' -> 'GND' unificados.", SAFE)
-            
-        self.ai_review_modal.show_review(merge_gnd_fix)
-
-        def task():
-            try:
-                from mcp_server.server import create_circuit_json
-                from knowledge.semantic_reviewer import SemanticReviewer
-
-                netlist_res = create_circuit_json([c.to_json() for c in self.graph.components])
-                if "error" in netlist_res:
-                    self.ai_review_modal.issues = [{"msg": netlist_res["error"], "severity": "critical"}]
-                    return
-
-                reviewer = SemanticReviewer()
-                rev = reviewer.review_netlist(netlist_res["circuit_json"])
-                self.ai_review_modal.issues = rev.get("issues", [])
-                
-            except Exception as e:
-                self.ai_review_modal.issues = [{"msg": f"Crash en IA: {str(e)}", "severity": "critical"}]
-            finally:
-                self.ai_review_modal.loading = False
-
-        threading.Thread(target=task, daemon=True).start()
-
-    def _action_forge_gerbers(self) -> None:
-        try:
-            result = _export_gerbers()
-            if 'error' in result:
-                self._status(f'Gerber: {result["error"]}', DANGER)
-            else:
-                summary = result.get('summary', 'OK')
-                self._status(f'Gerbers: {summary}', (220, 160, 40))
-        except Exception as e:
-            self._status(f'Gerber error: {e}', DANGER)
-
-    def _action_forge_kicad_status(self) -> None:
-        try:
-            from bridge.kicad_bridge import KiCadBridge
-            bridge = KiCadBridge()
-            st = bridge.status()
-            if st['available']:
-                self._status(
-                    f'KiCad {st["version"]} ✓ — {st.get("cli_path","?")}',
-                    (0, 200, 180)
-                )
-            else:
-                self._status('KiCad no encontrado. Instala KiCad 8+', DANGER)
-        except Exception as e:
-            self._status(f'KiCad status error: {e}', DANGER)
-
-    def _action_forge_gen_ai(self) -> None:
-        self.ai_gen_modal.show_prompt(self._run_ai_generator)
-        
-    def _run_ai_generator(self, prompt: str) -> None:
-        self.ai_gen_modal.loading = True
-        self.ai_gen_modal.error = ""
-        
-        def task():
-            try:
-                from knowledge.circuit_synthesizer import CircuitSynthesizer
-                synth = CircuitSynthesizer()
-                res = synth.generate_circuit_json(prompt)
-                
-                if "error" in res:
-                    self.ai_gen_modal.error = res["error"]
-                else:
-                    comps = res.get("components", [])
-                    if not comps:
-                        self.ai_gen_modal.error = "El modelo no devolvió componentes."
-                    else:
-                        from mcp_server.server import create_circuit_json
-                        netlist = create_circuit_json(comps)
-                        if "error" in netlist:
-                            self.ai_gen_modal.error = netlist["error"]
-                        else:
-                            self._snapshot()
-                            c_json = json.loads(netlist["circuit_json"])
-                            new_graph = CircuitGraph.from_json(c_json)
-                            
-                            # Fusionar en lugar de reemplazar (Orquestación Modular)
-                            self.graph.merge(new_graph, offset=(5, 5)) 
-                            self._reload_graph()
-                            
-                            # Registrar para entrenamiento de la red neuronal
-                            from knowledge.layout_ai import layout_engine
-                            layout_engine.record_design(self.graph, {"source": "IA_Generator", "prompt": prompt})
-                            
-                            self.ai_gen_modal.hide()
-                            self._status(f'Circuito generado ({len(comps)} componentes).', SAFE)
-            except Exception as e:
-                self.ai_gen_modal.error = f"Crash: {str(e)}"
-            finally:
-                self.ai_gen_modal.loading = False
-
-        threading.Thread(target=task, daemon=True).start()
 
     def _reload_graph(self) -> None:
         """Actualiza canvas, props y osc tras cambiar self.graph."""

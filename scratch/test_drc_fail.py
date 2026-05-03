@@ -6,7 +6,7 @@ sys.path.append(str(Path('.').absolute()))
 
 from bridge.pcb_layout import PCBLayout
 from bridge.kicad_bridge import KiCadBridge
-from ui.editor import CircuitGraph
+from core.circuit_graph import CircuitGraph
 
 def test_drc_short_circuit():
     print("Generating a board with an intentional short circuit...")

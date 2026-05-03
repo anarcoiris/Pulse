@@ -1,8 +1,8 @@
 import sys
 from pathlib import Path
 
-# Agregar raíz al path
-sys.path.append(str(Path.cwd()))
+# Agregar raíz al path (tests/ -> Pulse/)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from core.kicad_importer import KicadImporter
 from core.logger import logger

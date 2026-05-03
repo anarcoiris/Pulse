@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
-    from ui.editor import CircuitGraph, PlacedComponent
+    from core.circuit_graph import CircuitGraph, PlacedComponent
 
 # Mapeado de etypes de PulseLab → símbolo KiCad y valor
 _KICAD_SYMBOLS: dict[str, str] = {

@@ -1,0 +1,538 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_modul.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_modul.kicad_sch",
+    "components": [
+      {
+        "uid": "#PWR011",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR011",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#VCC028",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#VCC028",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#VCC033",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#VCC033",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#+030",
+        "etype": "IC",
+        "value": 5.0,
+        "value_raw": "+5F",
+        "label": "#+030",
+        "lib_id": "video_schlib:+5F"
+      },
+      {
+        "uid": "#+029",
+        "etype": "IC",
+        "value": 5.0,
+        "value_raw": "+5F",
+        "label": "#+029",
+        "lib_id": "video_schlib:+5F"
+      },
+      {
+        "uid": "#+031",
+        "etype": "IC",
+        "value": 5.0,
+        "value_raw": "+5F",
+        "label": "#+031",
+        "lib_id": "video_schlib:+5F"
+      },
+      {
+        "uid": "#+032",
+        "etype": "IC",
+        "value": 5.0,
+        "value_raw": "+5F",
+        "label": "#+032",
+        "lib_id": "video_schlib:+5F"
+      },
+      {
+        "uid": "#GND015",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND015",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND014",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND014",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND016",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND016",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND020",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND020",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND012",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND012",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND013",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND013",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#PWR010",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR010",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND019",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND019",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND018",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND018",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND021",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND021",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#PWR09",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR09",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND022",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND022",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND017",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND017",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND027",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND027",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND024",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND024",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND023",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND023",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND025",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND025",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND026",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND026",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#FLG07",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG07",
+        "lib_id": "video_schlib:PWR_FLAG"
+      },
+      {
+        "uid": "#FLG08",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG08",
+        "lib_id": "video_schlib:PWR_FLAG"
+      },
+      {
+        "uid": "L2",
+        "etype": "IC",
+        "value": 2.2e-05,
+        "value_raw": "22uH",
+        "label": "L2",
+        "lib_id": "video_schlib:INDUCTOR"
+      },
+      {
+        "uid": "L1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "2,2uH",
+        "label": "L1",
+        "lib_id": "video_schlib:INDUCTOR"
+      },
+      {
+        "uid": "L3",
+        "etype": "IC",
+        "value": 2.2e-05,
+        "value_raw": "22uH",
+        "label": "L3",
+        "lib_id": "video_schlib:INDUCTOR"
+      },
+      {
+        "uid": "R30",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "3,3K",
+        "label": "R30",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R4",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R4",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R31",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R31",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R10",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R10",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R9",
+        "etype": "IC",
+        "value": 150000.0,
+        "value_raw": "150K",
+        "label": "R9",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R11",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R11",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R16",
+        "etype": "IC",
+        "value": 220.0,
+        "value_raw": "220",
+        "label": "R16",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R17",
+        "etype": "IC",
+        "value": 220.0,
+        "value_raw": "220",
+        "label": "R17",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R18",
+        "etype": "IC",
+        "value": 220.0,
+        "value_raw": "220",
+        "label": "R18",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R32",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R32",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R33",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R33",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R34",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R34",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R39",
+        "etype": "IC",
+        "value": 68.0,
+        "value_raw": "68",
+        "label": "R39",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R40",
+        "etype": "IC",
+        "value": 68.0,
+        "value_raw": "68",
+        "label": "R40",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R41",
+        "etype": "IC",
+        "value": 68.0,
+        "value_raw": "68",
+        "label": "R41",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "C54",
+        "etype": "IC",
+        "value": 4.7e-06,
+        "value_raw": "4.7uF",
+        "label": "C54",
+        "lib_id": "video_schlib:CP"
+      },
+      {
+        "uid": "C64",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "6,8uF",
+        "label": "C64",
+        "lib_id": "video_schlib:CP"
+      },
+      {
+        "uid": "C55",
+        "etype": "IC",
+        "value": 4.7e-06,
+        "value_raw": "4.7uF",
+        "label": "C55",
+        "lib_id": "video_schlib:CP"
+      },
+      {
+        "uid": "C44",
+        "etype": "IC",
+        "value": 2.2e-07,
+        "value_raw": "220nF",
+        "label": "C44",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C43",
+        "etype": "IC",
+        "value": 2.2e-07,
+        "value_raw": "220nF",
+        "label": "C43",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C59",
+        "etype": "IC",
+        "value": 4.7000000000000004e-08,
+        "value_raw": "47nF",
+        "label": "C59",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C60",
+        "etype": "IC",
+        "value": 4.7000000000000004e-08,
+        "value_raw": "47nF",
+        "label": "C60",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C58",
+        "etype": "IC",
+        "value": 4.7000000000000004e-08,
+        "value_raw": "47nF",
+        "label": "C58",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C61",
+        "etype": "IC",
+        "value": 4.7000000000000004e-08,
+        "value_raw": "47nF",
+        "label": "C61",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C45",
+        "etype": "IC",
+        "value": 2.2e-07,
+        "value_raw": "220nF",
+        "label": "C45",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C48",
+        "etype": "IC",
+        "value": 2.2000000000000002e-08,
+        "value_raw": "22nF",
+        "label": "C48",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C53",
+        "etype": "IC",
+        "value": 3.3e-10,
+        "value_raw": "330pF",
+        "label": "C53",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C46",
+        "etype": "IC",
+        "value": 2.2e-10,
+        "value_raw": "220pF",
+        "label": "C46",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "CV1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "5/30pF",
+        "label": "CV1",
+        "lib_id": "video_schlib:CTRIM"
+      },
+      {
+        "uid": "POT1",
+        "etype": "IC",
+        "value": 100000.0,
+        "value_raw": "100K",
+        "label": "POT1",
+        "lib_id": "video_schlib:POT"
+      },
+      {
+        "uid": "X3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4.433618MHz",
+        "label": "X3",
+        "lib_id": "video_schlib:CRYSTAL"
+      },
+      {
+        "uid": "Q1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BC848",
+        "label": "Q1",
+        "lib_id": "video_schlib:NPN"
+      },
+      {
+        "uid": "Q2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BC848",
+        "label": "Q2",
+        "lib_id": "video_schlib:NPN"
+      },
+      {
+        "uid": "Q3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BC848",
+        "label": "Q3",
+        "lib_id": "video_schlib:NPN"
+      },
+      {
+        "uid": "L6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "470ns",
+        "label": "L6",
+        "lib_id": "video_schlib:LIGNE_A_RETARD"
+      },
+      {
+        "uid": "U20",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TDA8501",
+        "label": "U20",
+        "lib_id": "video_schlib:TDA8501"
+      }
+    ],
+    "version": "1.0"
+  }
+}

@@ -1,0 +1,290 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_ampli_ht.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_ampli_ht.kicad_sch",
+    "components": [
+      {
+        "uid": "RV?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7K",
+        "label": "RV?",
+        "lib_id": "complex_hierarchy_schlib:POT"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HT",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:HT"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HT",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:HT"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HT",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:HT"
+      },
+      {
+        "uid": "Q?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MPSA92",
+        "label": "Q?",
+        "lib_id": "complex_hierarchy_schlib:MPSA92"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7K",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 47.0,
+        "value_raw": "47",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "C?",
+        "etype": "IC",
+        "value": 8.2e-10,
+        "value_raw": "820pF",
+        "label": "C?",
+        "lib_id": "complex_hierarchy_schlib:C"
+      },
+      {
+        "uid": "U?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LM358N",
+        "label": "U?",
+        "lib_id": "complex_hierarchy_schlib:LM358N"
+      },
+      {
+        "uid": "P?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_2",
+        "label": "P?",
+        "lib_id": "complex_hierarchy_schlib:CONN_2"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "#U?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12V",
+        "label": "#U?",
+        "lib_id": "complex_hierarchy_schlib:+12V"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 220000.0,
+        "value_raw": "220K",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 220000.0,
+        "value_raw": "220K",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "D?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "1N4148",
+        "label": "D?",
+        "lib_id": "complex_hierarchy_schlib:D_Small"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 470.0,
+        "value_raw": "470",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "D?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "1N4148",
+        "label": "D?",
+        "lib_id": "complex_hierarchy_schlib:D_Small"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "Q?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MPSA42",
+        "label": "Q?",
+        "lib_id": "complex_hierarchy_schlib:MPSA42"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "D?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "1N4148",
+        "label": "D?",
+        "lib_id": "complex_hierarchy_schlib:D_Small"
+      },
+      {
+        "uid": "Q?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MPSA92",
+        "label": "Q?",
+        "lib_id": "complex_hierarchy_schlib:MPSA92"
+      },
+      {
+        "uid": "Q?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MPSA42",
+        "label": "Q?",
+        "lib_id": "complex_hierarchy_schlib:MPSA42"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "-VAA",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:-VAA"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "5,6K",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "D?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "1N4148",
+        "label": "D?",
+        "lib_id": "complex_hierarchy_schlib:D_Small"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 47.0,
+        "value_raw": "47",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 220000.0,
+        "value_raw": "220K",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "P?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_2",
+        "label": "P?",
+        "lib_id": "complex_hierarchy_schlib:CONN_2"
+      }
+    ],
+    "version": "1.0"
+  }
+}

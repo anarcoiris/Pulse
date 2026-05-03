@@ -1,28 +1,22 @@
-import os
-import json
-from typing import Dict, Any, List
+"""
+knowledge/semantic_reviewer.py
+==============================
+Agente LLM para análisis semántico de circuitos (DRC basado en IA).
+Detecta problemas de diseño como GNDs aislados, condensadores de
+desacople faltantes, pines flotantes, etc.
 
-class SemanticAIAgent:
-    """
-    Agente LLM para analizar la semántica del circuito (rutas lógicas fallidas,
-    GNDs aislados, condensadores de desacople faltantes, etc.)
-    Usa OpenAI API o Ollama Local de fallback.
-    """
-    def __init__(self):
-        try:
-            from openai import OpenAI
-            self.client = OpenAI(
-                base_url="http://localhost:11434/v1",
-                api_key="ollama" 
-            )
-            self.model = "qwen2.5:3b"
-            self.is_local = True
-                
-        except ImportError:
-            self.client = None
-            self.model = None
-            
-        self.system_prompt = """
+Exports:
+  - SemanticAIAgent:   Clase legacy (acepta un CircuitGraph directo).
+  - SemanticReviewer:  Clase nueva (acepta JSON string de netlist).
+"""
+
+import json
+from typing import Dict, Any
+
+from knowledge.llm_client import get_llm_client
+
+
+_SYSTEM_PROMPT = """
 Eres un ingeniero electrónico experto revisando una Netlist de PulseLab Forge.
 El formato que recibirás detalla componentes, su tipo y a qué nodos conectan (n1, n2 o pines numéricos).
 
@@ -41,34 +35,92 @@ Deberás analizar el circuito y responder ÚNICAMENTE en formato JSON estricto c
 }
 """
 
+
+class SemanticAIAgent:
+    """
+    Agente LLM para analizar la semántica del circuito (rutas lógicas fallidas,
+    GNDs aislados, condensadores de desacople faltantes, etc.)
+    Usa el LLMClient unificado con health check y retry.
+    """
+    def __init__(self):
+        self.llm = get_llm_client()
+        self.system_prompt = _SYSTEM_PROMPT
+
     def analyze_circuit(self, graph) -> Dict[str, Any]:
-        if not self.client:
-            return {"error": "Librería 'openai' no instalada."}
-            
+        if not self.llm.available:
+            return {"error": "Servicio LLM no disponible. ¿Está corriendo Ollama?"}
+
         # Preparar data
         netlist_desc = "PulseLab Netlist:\n"
         for c in graph.components:
             pins_desc = f"n1={c.n1}, n2={c.n2}" if not c.pins else f"pins={c.pins}"
             netlist_desc += f"- {c.uid} ({c.etype}): value={c.value}, {pins_desc}\n"
-            
+
         if not graph.components:
             return {"issues": []}
 
+        result = self.llm.chat(
+            system=self.system_prompt,
+            user=netlist_desc,
+            temperature=0.1,
+            max_tokens=800,
+        )
+
+        if "error" in result:
+            return result
+
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": self.system_prompt},
-                    {"role": "user", "content": netlist_desc}
-                ],
-                max_tokens=800,
-                temperature=0.1,
-                response_format={ "type": "json_object" }
-            )
-            
-            content = response.choices[0].message.content
-            data = json.loads(content)
+            data = json.loads(result["content"])
             return {"status": "ok", "issues": data.get("issues", [])}
-            
-        except Exception as e:
-            return {"error": f"Error contactando al LLM ({'Local' if self.is_local else 'Cloud'}): {str(e)}"}
+        except json.JSONDecodeError:
+            return {"error": f"LLM devolvió JSON inválido: {result['content'][:100]}..."}
+
+
+class SemanticReviewer:
+    """
+    Variante que acepta un JSON string de netlist en lugar de un CircuitGraph.
+    Usada desde el ForgeController donde el graph ya está serializado.
+    """
+    def __init__(self):
+        self.llm = get_llm_client()
+        self.system_prompt = _SYSTEM_PROMPT
+
+    def review_netlist(self, circuit_json: str) -> Dict[str, Any]:
+        """Revisa un circuito a partir de su representación JSON serializada."""
+        if not self.llm.available:
+            return {"error": "Servicio LLM no disponible. ¿Está corriendo Ollama?"}
+
+        try:
+            data = json.loads(circuit_json)
+        except json.JSONDecodeError:
+            return {"error": "JSON de circuito inválido."}
+
+        components = data.get("components", [])
+        if not components:
+            return {"issues": []}
+
+        # Formatear netlist para el LLM
+        netlist_desc = "PulseLab Netlist:\n"
+        for c in components:
+            pins = c.get("pins", {})
+            if pins:
+                pins_desc = f"pins={pins}"
+            else:
+                pins_desc = f"n1={c.get('n1', '?')}, n2={c.get('n2', '?')}"
+            netlist_desc += f"- {c.get('uid', '?')} ({c.get('etype', '?')}): value={c.get('value', 0)}, {pins_desc}\n"
+
+        result = self.llm.chat(
+            system=self.system_prompt,
+            user=netlist_desc,
+            temperature=0.1,
+            max_tokens=800,
+        )
+
+        if "error" in result:
+            return result
+
+        try:
+            resp_data = json.loads(result["content"])
+            return {"status": "ok", "issues": resp_data.get("issues", [])}
+        except json.JSONDecodeError:
+            return {"error": f"LLM devolvió JSON inválido: {result['content'][:100]}..."}

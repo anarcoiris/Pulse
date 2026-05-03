@@ -1,0 +1,178 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue23389.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue23389.kicad_sch",
+    "components": [
+      {
+        "uid": "C1",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "6n8",
+        "label": "C1",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "#PWR07",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR07",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "U2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LM2595S-ADJ",
+        "label": "U2",
+        "lib_id": "Regulator_Switching:LM2595S-ADJ"
+      },
+      {
+        "uid": "JP1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Jumper_2_Bridged",
+        "label": "JP1",
+        "lib_id": "Jumper:Jumper_2_Bridged"
+      },
+      {
+        "uid": "#PWR05",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR05",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C2",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "100u/35V",
+        "label": "C2",
+        "lib_id": "Device:C_Polarized_Small"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PBO-3-S24",
+        "label": "U1",
+        "lib_id": "Converter_ACDC:PBO-3-S24"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR02",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 1000.0,
+        "value_raw": "1k",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#PWR04",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR04",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "L1",
+        "etype": "L",
+        "value": 0.00015,
+        "value_raw": "150uH",
+        "label": "L1",
+        "lib_id": "Device:L"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 470.0,
+        "value_raw": "470R",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+1V8",
+        "label": "#PWR01",
+        "lib_id": "power:+1V8"
+      },
+      {
+        "uid": "J1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Vstup 230V",
+        "label": "J1",
+        "lib_id": "Connector:Screw_Terminal_01x02"
+      },
+      {
+        "uid": "#PWR06",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR06",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR03",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR03",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "J2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Vystup +1,8V",
+        "label": "J2",
+        "lib_id": "Connector:Screw_Terminal_01x02"
+      },
+      {
+        "uid": "C3",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "330u/6,3V",
+        "label": "C3",
+        "lib_id": "Device:C_Polarized_Small"
+      },
+      {
+        "uid": "#PWR08",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR08",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C4",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "10u/350V",
+        "label": "C4",
+        "lib_id": "Device:C_Polarized_Small"
+      },
+      {
+        "uid": "D1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "1N5822",
+        "label": "D1",
+        "lib_id": "Diode:1N5822"
+      }
+    ],
+    "version": "1.0"
+  }
+}

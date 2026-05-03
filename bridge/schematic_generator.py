@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, List, Dict, Tuple
 
 if TYPE_CHECKING:
-    from ui.editor import CircuitGraph, PlacedComponent, Wire
+    from core.circuit_graph import CircuitGraph, PlacedComponent, Wire
 
 SCALE = 5.08  # 1 unidad de grid de PulseLab = 5.08 mm en KiCad (standard 0.2 inch)
 OFFSET_X = 50.0 # Margen izquierdo papel A4

@@ -1,0 +1,290 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_nRF54L15.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_nRF54L15.kicad_sch",
+    "components": [
+      {
+        "uid": "#PWR045",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR045",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "D1",
+        "etype": "L",
+        "value": 0.0,
+        "value_raw": "LED_Small",
+        "label": "D1",
+        "lib_id": "Device:LED_Small"
+      },
+      {
+        "uid": "U4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "W25Q16JVUXIQ",
+        "label": "U4",
+        "lib_id": "Memory_Flash:W25Q32JVZP"
+      },
+      {
+        "uid": "R5",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10kR",
+        "label": "R5",
+        "lib_id": "Device:R_Small_US"
+      },
+      {
+        "uid": "#PWR010",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR010",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "Y1",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "32.768KHz",
+        "label": "Y1",
+        "lib_id": "Device:Crystal_Small"
+      },
+      {
+        "uid": "R3",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10kR",
+        "label": "R3",
+        "lib_id": "Device:R_Small_US"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BM15x",
+        "label": "U1",
+        "lib_id": "nordic-lib-kicad-nrf54-modules:BM15x"
+      },
+      {
+        "uid": "#SYM7",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "~",
+        "label": "#SYM7",
+        "lib_id": "LordsBoards-Graphic:LordsBoardsLogo"
+      },
+      {
+        "uid": "J6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x05_MountingPin",
+        "label": "J6",
+        "lib_id": "Connector_Generic_MountingPin:Conn_01x05_MountingPin"
+      },
+      {
+        "uid": "R7",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10kR",
+        "label": "R7",
+        "lib_id": "Device:R_Small_US"
+      },
+      {
+        "uid": "#PWR043",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR043",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "#PWR011",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR011",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR014",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR014",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C13",
+        "etype": "C",
+        "value": 3e-10,
+        "value_raw": "300pF",
+        "label": "C13",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10kR",
+        "label": "R2",
+        "lib_id": "Device:R_Small_US"
+      },
+      {
+        "uid": "SW2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SW_Push",
+        "label": "SW2",
+        "lib_id": "Switch:SW_Push"
+      },
+      {
+        "uid": "#PWR039",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR039",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR038",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR038",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "TP1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TestPoint",
+        "label": "TP1",
+        "lib_id": "Connector:TestPoint_Small"
+      },
+      {
+        "uid": "#PWR052",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR052",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "TP2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TestPoint",
+        "label": "TP2",
+        "lib_id": "Connector:TestPoint_Small"
+      },
+      {
+        "uid": "C9",
+        "etype": "C",
+        "value": 4.7e-06,
+        "value_raw": "4.7uF",
+        "label": "C9",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "#PWR037",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR037",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR050",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR050",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "C12",
+        "etype": "C",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C12",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "SW1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SW_Push",
+        "label": "SW1",
+        "lib_id": "Switch:SW_Push"
+      },
+      {
+        "uid": "#PWR051",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR051",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "TP4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TestPoint",
+        "label": "TP4",
+        "lib_id": "Connector:TestPoint"
+      },
+      {
+        "uid": "TP3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TestPoint",
+        "label": "TP3",
+        "lib_id": "Connector:TestPoint_Small"
+      },
+      {
+        "uid": "#SYM8",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Logo_Open_Hardware_Small",
+        "label": "#SYM8",
+        "lib_id": "Graphic:Logo_Open_Hardware_Small"
+      },
+      {
+        "uid": "R6",
+        "etype": "R",
+        "value": 470.0,
+        "value_raw": "470R",
+        "label": "R6",
+        "lib_id": "Device:R_Small_US"
+      },
+      {
+        "uid": "#PWR026",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR026",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "C14",
+        "etype": "C",
+        "value": 3e-10,
+        "value_raw": "300pF",
+        "label": "C14",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "#PWR046",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR046",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.0"
+  }
+}

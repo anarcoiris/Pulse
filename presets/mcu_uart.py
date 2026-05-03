@@ -3,7 +3,7 @@ presets/mcu_uart.py
 ===================
 Dibuja un circuito IoT Típico: ESP8266 + CH340 (USB a UART) + Capacitores para validar la nueva arquitectura Multi-Pin y la capacidad visual 2D del AutoRouter de KiCad.
 """
-from ui.editor import CircuitGraph
+from core.circuit_graph import CircuitGraph
 
 def load() -> CircuitGraph:
     g = CircuitGraph()

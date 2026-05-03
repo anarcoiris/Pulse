@@ -1,0 +1,114 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_pp_driver_2x.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_pp_driver_2x.kicad_sch",
+    "components": [
+      {
+        "uid": "C381",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_4.7UF_6.3V_20%_X5R",
+        "label": "C381",
+        "lib_id": "Capacitors SMD:CC0402_4.7UF_6.3V_20%_X5R"
+      },
+      {
+        "uid": "#PWR0366",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR0366",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "D78",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PESD3V3S1UB",
+        "label": "D78",
+        "lib_id": "Diodes:PESD3V3S1UB"
+      },
+      {
+        "uid": "#PWR0521",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0521",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0365",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0365",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0376",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0376",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0369",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0369",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C380",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C380",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR0375",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0375",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "D77",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PESD3V3S1UB",
+        "label": "D77",
+        "lib_id": "Diodes:PESD3V3S1UB"
+      },
+      {
+        "uid": "#PWR0364",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR0364",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "IC62",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SN74LVTH125RGY",
+        "label": "IC62",
+        "lib_id": "Standard Logic:SN74LVTH125RGY"
+      },
+      {
+        "uid": "#PWR0367",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0367",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.0"
+  }
+}

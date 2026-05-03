@@ -1,0 +1,301 @@
+"""
+bridge/pcb_builder.py
+=====================
+Builder unificado para generación de PCBs.
+
+Centraliza la lógica de generación que antes estaba duplicada entre
+``forge_api.generate_pcb()`` y ``mcp_server/server.py::create_pcb_layout()``.
+
+Dos entry-points:
+  - ``from_circuit_graph(graph)`` — usado por la GUI y forge_api.
+  - ``from_component_dicts(components, traces, ...)`` — usado por el MCP server / LLMs.
+
+Ambos producen un ``PCBLayout`` con las mismas mejoras profesionales:
+  - Auto-sizing de placa
+  - Decoupling caps para ICs
+  - Keepout zones para antenas ESP32
+  - Copper pour GND
+  - Auto-routing A*
+  - Generación automática de esquemático (.kicad_sch)
+"""
+
+from __future__ import annotations
+from pathlib import Path
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from core.circuit_graph import CircuitGraph
+
+from bridge.pcb_layout import PCBLayout
+
+
+class PCBBuilder:
+    """Builder que produce un PCBLayout completo listo para exportar."""
+
+    def __init__(
+        self,
+        board_width: Optional[float] = None,
+        board_height: Optional[float] = None,
+        project_name: str = "PulseLab Design",
+        corner_radius: float = 1.5,
+        trace_width: float = 0.25,
+        mounting_holes: bool = True,
+        output_dir: str = "output",
+    ):
+        self.board_width = board_width
+        self.board_height = board_height
+        self.project_name = project_name
+        self.corner_radius = corner_radius
+        self.trace_width = trace_width
+        self.mounting_holes = mounting_holes
+        self.output_dir = output_dir
+        self._pcb: Optional[PCBLayout] = None
+        self._graph: Optional[CircuitGraph] = None
+
+    # ── Builders ──────────────────────────────────────────────
+
+    @classmethod
+    def from_circuit_graph(
+        cls,
+        graph: "CircuitGraph",
+        out_dir: str = "output",
+        **kwargs,
+    ) -> "PCBBuilder":
+        """Construye un PCB a partir de un CircuitGraph completo."""
+        builder = cls(output_dir=out_dir, **kwargs)
+        builder._graph = graph
+        builder._build_from_graph(graph)
+        return builder
+
+    @classmethod
+    def from_component_dicts(
+        cls,
+        components: list[dict],
+        traces: list[dict] | None = None,
+        board_width_mm: float | None = None,
+        board_height_mm: float | None = None,
+        **kwargs,
+    ) -> "PCBBuilder":
+        """Construye un PCB a partir de dicts LLM-friendly (API MCP)."""
+        builder = cls(
+            board_width=board_width_mm,
+            board_height=board_height_mm,
+            **kwargs,
+        )
+        builder._build_from_dicts(components, traces or [])
+        return builder
+
+    # ── Output ────────────────────────────────────────────────
+
+    @property
+    def pcb(self) -> PCBLayout:
+        if self._pcb is None:
+            raise RuntimeError("PCBBuilder: no se ha construido aún. Usa from_circuit_graph() o from_component_dicts().")
+        return self._pcb
+
+    def save(self, sub_dir: str = "pulselab_pcb") -> dict:
+        """Guarda el PCB y devuelve un dict con rutas y stats."""
+        pcb = self.pcb
+        safe_name = "".join(
+            c if c.isalnum() or c in "_-" else "_" for c in self.project_name
+        )
+        base_dir = Path(self.output_dir) / sub_dir
+        out_path = base_dir / "board.kicad_pcb"
+        pcb.save(out_path)
+
+        result = {
+            "path": str(out_path),
+            "stats": pcb.stats(),
+            "pcb": pcb,
+            "success": True,
+        }
+
+        # Generar esquemático si tenemos el graph
+        if self._graph is not None:
+            from bridge.schematic_generator import SchematicGenerator
+            sch_path = base_dir / "board.kicad_sch"
+            SchematicGenerator(self._graph).save(str(sch_path))
+            result["sch_path"] = str(sch_path)
+
+        return result
+
+    # ── Internal: Build from CircuitGraph ─────────────────────
+
+    def _build_from_graph(self, graph: "CircuitGraph") -> None:
+        comps = graph.components
+        n = len(comps)
+
+        # Auto-size
+        cols = max(2, int(n ** 0.5) + 1)
+        w = self.board_width or max(30, cols * 15)
+        h = self.board_height or max(20, (n // cols + 2) * 12)
+
+        pcb = PCBLayout(
+            board_width=w, board_height=h,
+            corner_radius=self.corner_radius,
+            trace_width=self.trace_width,
+            project_name=self.project_name,
+        )
+
+        # Place components in grid
+        row, col = 0, 0
+        margin_x, margin_y = 8.0, 8.0
+        spacing_x, spacing_y = 12.0, 10.0
+
+        for c in comps:
+            x = margin_x + col * spacing_x
+            y = margin_y + row * spacing_y
+            etype = c.etype
+            ref = c.uid
+            val = f"{c.value:.6g}" if isinstance(c.value, float) else str(c.value)
+
+            fp_added = False
+            f_id = getattr(c, 'footprint_id', None)
+            if f_id:
+                if ':' in f_id:
+                    lib, name = f_id.split(':', 1)
+                    if pcb.add_raw_footprint(ref, lib, name, x, y, value=val):
+                        fp_added = True
+                elif f_id == 'tactile_switch_6x6':
+                    from bridge.pcb_layout import FootprintPresets
+                    fp_sw = FootprintPresets.tactile_switch_6x6(
+                        ref, val, net1_name=c.n1, net2_name=c.n2
+                    )
+                    pcb.add_footprint(fp_sw, x, y)
+                    fp_added = True
+
+            if not fp_added:
+                if etype == 'R':
+                    pcb.add_resistor(ref, val, x, y, net1=c.n1, net2=c.n2)
+                elif etype == 'C':
+                    pcb.add_capacitor(ref, val, x, y, net1=c.n1, net2=c.n2)
+                elif etype == 'L':
+                    pcb.add_inductor(ref, val, x, y, net1=c.n1, net2=c.n2)
+                elif etype == 'V':
+                    pcb.add_pin_header(ref, 2, x, y, value=f"{val}V")
+                elif etype in ('IC', 'MCU'):
+                    self._place_ic(pcb, c, ref, val, x, y)
+                else:
+                    pcb.add_pin_header(ref, 2, x, y, value=etype)
+
+            col += 1
+            if col >= cols:
+                col = 0
+                row += 1
+
+        # Post-processing
+        self._finalize(pcb, graph.all_nodes, n)
+        self._pcb = pcb
+
+    def _place_ic(self, pcb: PCBLayout, comp, ref: str, val: str, x: float, y: float) -> None:
+        """Coloca un IC/MCU con decoupling caps y keepout zones."""
+        pkg = "SOP16"
+        is_esp = ("ESP" in val.upper() or "NODE" in val.upper())
+        if is_esp:
+            pkg = "ESP32"
+        if "CH340" in val.upper() or "SOP8" in val.upper():
+            pkg = "SOP8"
+
+        pcb.add_ic(ref, val, x, y, pins=getattr(comp, 'pins', {}), pkg_type=pkg)
+
+        # Decoupling Capacitors (10µF + 100nF)
+        power_nets = [
+            n for n in getattr(comp, 'pins', {}).values()
+            if n in ('3V3', 'VCC', 'VBUS', '5V')
+        ]
+        if power_nets:
+            p_net = power_nets[0]
+            pcb.add_capacitor(f"C_{ref}_H", "10uF", x + 5, y - 5, net1=p_net, net2="GND")
+            pcb.add_capacitor(f"C_{ref}_L", "100nF", x + 8, y - 5, net1=p_net, net2="GND")
+
+        # Antenna Keep-out (ESP32)
+        if is_esp:
+            pcb.add_keepout([
+                (x - 9, y - 13), (x + 9, y - 13),
+                (x + 9, y - 7),  (x - 9, y - 7),
+            ])
+
+    def _finalize(self, pcb: PCBLayout, all_nodes: list, n_comps: int) -> None:
+        """Pasos finales comunes a ambos builders."""
+        if self.mounting_holes and n_comps >= 4:
+            pcb.add_mounting_holes_corners(margin=3.0)
+
+        pcb.add_text(
+            self.project_name, pcb.board.center_x,
+            pcb.board.origin_y + pcb.board.height_mm + 2, size=0.8,
+        )
+
+        # Copper pour GND
+        if "GND" in all_nodes:
+            pcb.add_copper_pour("GND", margin=1.0)
+
+        # Auto-router A*
+        pcb.autoroute(width=self.trace_width, grid_size=0.25)
+
+    # ── Internal: Build from dicts (MCP server) ──────────────
+
+    def _build_from_dicts(self, components: list[dict], traces: list[dict]) -> None:
+        n = len(components)
+        cols = max(2, int(n ** 0.5) + 1)
+        w = self.board_width or max(30, cols * 15)
+        h = self.board_height or max(20, (n // cols + 2) * 12)
+
+        pcb = PCBLayout(
+            board_width=w, board_height=h,
+            corner_radius=self.corner_radius,
+            trace_width=self.trace_width,
+            project_name=self.project_name,
+        )
+
+        fp_map = {}
+        all_nets: set[str] = set()
+
+        for c in components:
+            ctype = c.get("type", "resistor")
+            ref   = c.get("ref", "X1")
+            value = c.get("value", "?")
+            x     = float(c.get("x", 0))
+            y     = float(c.get("y", 0))
+            rot   = float(c.get("rotation", 0))
+            net1  = c.get("net1", "")
+            net2  = c.get("net2", "")
+            pkg   = c.get("package", "0805")
+            pins  = int(c.get("pins", 2))
+
+            if net1: all_nets.add(net1)
+            if net2: all_nets.add(net2)
+
+            if ctype == "resistor":
+                fp = pcb.add_resistor(ref, value, x, y, rot, net1, net2, pkg)
+            elif ctype == "capacitor":
+                fp = pcb.add_capacitor(ref, value, x, y, rot, net1, net2, pkg)
+            elif ctype == "inductor":
+                fp = pcb.add_inductor(ref, value, x, y, rot, net1, net2, pkg)
+            elif ctype == "pin_header":
+                fp = pcb.add_pin_header(ref, pins, x, y, rot, value)
+            elif ctype == "dip_ic":
+                fp = pcb.add_dip_ic(ref, pins, x, y, rot, value)
+            elif ctype == "raw_footprint":
+                lib = c.get("lib", "Package_QFP")
+                name = c.get("name", "LQFP-48_7x7mm_P0.5mm")
+                fp = pcb.add_raw_footprint(ref, lib, name, x, y, rot, value)
+            else:
+                fp = pcb.add_resistor(ref, value, x, y, rot, net1, net2, pkg)
+
+            fp_map[ref] = fp
+
+        # Traces manuales
+        for t in traces:
+            fr = t.get("from_ref", "")
+            fp1 = t.get("from_pad", "1")
+            tr = t.get("to_ref", "")
+            tp1 = t.get("to_pad", "1")
+            net = t.get("net", "")
+            tw = float(t.get("width", self.trace_width))
+
+            if fr in fp_map and tr in fp_map:
+                pcb.trace(fp_map[fr], fp1, fp_map[tr], tp1, width=tw, net=net)
+
+        # Finalize con las mismas mejoras que el graph builder
+        self._finalize(pcb, sorted(all_nets), n)
+        self._pcb = pcb

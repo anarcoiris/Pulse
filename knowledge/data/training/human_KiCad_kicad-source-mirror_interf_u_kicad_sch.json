@@ -1,0 +1,426 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_interf_u.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_interf_u.kicad_sch",
+    "components": [
+      {
+        "uid": "BUS1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BUSPC",
+        "label": "BUS1",
+        "lib_id": "interf_u:Bus_ISA_8bit"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "74LS245",
+        "label": "U1",
+        "lib_id": "interf_u:74LS245"
+      },
+      {
+        "uid": "U8",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "EP600",
+        "label": "U8",
+        "lib_id": "interf_u:EP600"
+      },
+      {
+        "uid": "R4",
+        "etype": "IC",
+        "value": 330.0,
+        "value_raw": "330",
+        "label": "R4",
+        "lib_id": "interf_u:R"
+      },
+      {
+        "uid": "R5",
+        "etype": "IC",
+        "value": 330.0,
+        "value_raw": "330",
+        "label": "R5",
+        "lib_id": "interf_u:R"
+      },
+      {
+        "uid": "D1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LED",
+        "label": "D1",
+        "lib_id": "interf_u:LED"
+      },
+      {
+        "uid": "D2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LED",
+        "label": "D2",
+        "lib_id": "interf_u:LED"
+      },
+      {
+        "uid": "U9",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4003APG120",
+        "label": "U9",
+        "lib_id": "interf_u:4003APG120"
+      },
+      {
+        "uid": "U2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "74LS688",
+        "label": "U2",
+        "lib_id": "interf_u:74LS688"
+      },
+      {
+        "uid": "C6",
+        "etype": "IC",
+        "value": 4.7e-05,
+        "value_raw": "47uF",
+        "label": "C6",
+        "lib_id": "interf_u:CP"
+      },
+      {
+        "uid": "C5",
+        "etype": "IC",
+        "value": 4.7e-05,
+        "value_raw": "47uF",
+        "label": "C5",
+        "lib_id": "interf_u:CP"
+      },
+      {
+        "uid": "C4",
+        "etype": "IC",
+        "value": 4.7e-05,
+        "value_raw": "47uF",
+        "label": "C4",
+        "lib_id": "interf_u:CP"
+      },
+      {
+        "uid": "C1",
+        "etype": "IC",
+        "value": 4.7e-05,
+        "value_raw": "47uF",
+        "label": "C1",
+        "lib_id": "interf_u:CP"
+      },
+      {
+        "uid": "R1",
+        "etype": "IC",
+        "value": 100000.0,
+        "value_raw": "100K",
+        "label": "R1",
+        "lib_id": "interf_u:R"
+      },
+      {
+        "uid": "R2",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R2",
+        "lib_id": "interf_u:R"
+      },
+      {
+        "uid": "X1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "8MHz",
+        "label": "X1",
+        "lib_id": "interf_u:Crystal"
+      },
+      {
+        "uid": "C2",
+        "etype": "IC",
+        "value": 4.7e-11,
+        "value_raw": "47pF",
+        "label": "C2",
+        "lib_id": "interf_u:C"
+      },
+      {
+        "uid": "C3",
+        "etype": "IC",
+        "value": 4.7e-11,
+        "value_raw": "47pF",
+        "label": "C3",
+        "lib_id": "interf_u:C"
+      },
+      {
+        "uid": "#022",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#022",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#021",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#021",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#020",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#020",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#019",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#019",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#018",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#018",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#017",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#017",
+        "lib_id": "interf_u:VCC"
+      },
+      {
+        "uid": "U5",
+        "etype": "IC",
+        "value": 628128.0,
+        "value_raw": "628128",
+        "label": "U5",
+        "lib_id": "interf_u:628128"
+      },
+      {
+        "uid": "R3",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R3",
+        "lib_id": "interf_u:R"
+      },
+      {
+        "uid": "P1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "DB25FEMELLE",
+        "label": "P1",
+        "lib_id": "interf_u:DB25_Female"
+      },
+      {
+        "uid": "#016",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#016",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "RR1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "9x1K",
+        "label": "RR1",
+        "lib_id": "interf_u:RR9"
+      },
+      {
+        "uid": "#015",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#015",
+        "lib_id": "interf_u:VCC"
+      },
+      {
+        "uid": "JP1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_8X2",
+        "label": "JP1",
+        "lib_id": "interf_u:Conn_02x08_Odd_Even"
+      },
+      {
+        "uid": "#GND014",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND014",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#PWR013",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR013",
+        "lib_id": "interf_u:VCC"
+      },
+      {
+        "uid": "#PWR08",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR08",
+        "lib_id": "interf_u:VCC"
+      },
+      {
+        "uid": "#PWR07",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#PWR07",
+        "lib_id": "interf_u:PWR_FLAG"
+      },
+      {
+        "uid": "#FLG06",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG06",
+        "lib_id": "interf_u:PWR_FLAG"
+      },
+      {
+        "uid": "#PWR05",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR05",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#PWR04",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR04",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#PWR03",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR03",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR02",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "U3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "74LS541",
+        "label": "U3",
+        "lib_id": "interf_u:74LS541"
+      },
+      {
+        "uid": "#PWR09",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR09",
+        "lib_id": "interf_u:VCC"
+      },
+      {
+        "uid": "#PWR010",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR010",
+        "lib_id": "interf_u:VCC"
+      },
+      {
+        "uid": "#PWR011",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR011",
+        "lib_id": "interf_u:VCC"
+      },
+      {
+        "uid": "#PWR012",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR012",
+        "lib_id": "interf_u:VCC"
+      },
+      {
+        "uid": "#GND01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND01",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#PWR06",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR06",
+        "lib_id": "interf_u:VCC"
+      },
+      {
+        "uid": "#PWR014",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR014",
+        "lib_id": "interf_u:VCC"
+      },
+      {
+        "uid": "#PWR015",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR015",
+        "lib_id": "interf_u:VCC"
+      },
+      {
+        "uid": "#GND02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND02",
+        "lib_id": "interf_u:GND"
+      },
+      {
+        "uid": "#GND03",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND03",
+        "lib_id": "interf_u:GND"
+      }
+    ],
+    "version": "1.0"
+  }
+}

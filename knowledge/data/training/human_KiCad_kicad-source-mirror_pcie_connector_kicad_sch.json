@@ -1,0 +1,114 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_pcie_connector.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_pcie_connector.kicad_sch",
+    "components": [
+      {
+        "uid": "#PWR01131",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01131",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR01129",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01129",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C515",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C515",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR01128",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01128",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C513",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C513",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "C514",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C514",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "J13",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TYCO_2149027-1",
+        "label": "J13",
+        "lib_id": "TYCO:TYCO_2149027-1"
+      },
+      {
+        "uid": "J13",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TYCO_2149027-1",
+        "label": "J13",
+        "lib_id": "TYCO:TYCO_2149027-1"
+      },
+      {
+        "uid": "C516",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C516",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR01132",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01132",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "J13",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TYCO_2149027-1",
+        "label": "J13",
+        "lib_id": "TYCO:TYCO_2149027-1"
+      },
+      {
+        "uid": "#PWR01130",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01130",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "J13",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TYCO_2149027-1",
+        "label": "J13",
+        "lib_id": "TYCO:TYCO_2149027-1"
+      }
+    ],
+    "version": "1.0"
+  }
+}

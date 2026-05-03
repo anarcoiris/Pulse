@@ -1,0 +1,202 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_multichannel_mixer.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_multichannel_mixer.kicad_sch",
+    "components": [
+      {
+        "uid": "#PWR03",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR03",
+        "lib_id": "multichannel_mixer:GND"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12V",
+        "label": "#PWR02",
+        "lib_id": "multichannel_mixer:+12V"
+      },
+      {
+        "uid": "C2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CTEB_2.2UF_35V_10%_254-500X840",
+        "label": "C2",
+        "lib_id": "multichannel_mixer:CTEB_2.2UF_35V_10%_254-500X840"
+      },
+      {
+        "uid": "#PWR04",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR04",
+        "lib_id": "multichannel_mixer:GND"
+      },
+      {
+        "uid": "#PWR013",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR013",
+        "lib_id": "multichannel_mixer:GND"
+      },
+      {
+        "uid": "C3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC1206_100NF_50V_10%_X7R",
+        "label": "C3",
+        "lib_id": "multichannel_mixer:CC1206_100NF_50V_10%_X7R"
+      },
+      {
+        "uid": "#PWR010",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR010",
+        "lib_id": "multichannel_mixer:GND"
+      },
+      {
+        "uid": "J5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Power",
+        "label": "J5",
+        "lib_id": "multichannel_mixer:CLIFF_FC68148(DC-10A)"
+      },
+      {
+        "uid": "R1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R1206_10K_1%_0.25W_100PPM",
+        "label": "R1",
+        "lib_id": "multichannel_mixer:R1206_10K_1%_0.25W_100PPM"
+      },
+      {
+        "uid": "#PWR06",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR06",
+        "lib_id": "multichannel_mixer:GND"
+      },
+      {
+        "uid": "IC1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TL072CD",
+        "label": "IC1",
+        "lib_id": "multichannel_mixer:TL072CD"
+      },
+      {
+        "uid": "#PWR011",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12V",
+        "label": "#PWR011",
+        "lib_id": "multichannel_mixer:+12V"
+      },
+      {
+        "uid": "#PWR08",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "vbias",
+        "label": "#PWR08",
+        "lib_id": "multichannel_mixer:+1V1"
+      },
+      {
+        "uid": "R2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R1206_10K_1%_0.25W_100PPM",
+        "label": "R2",
+        "lib_id": "multichannel_mixer:R1206_10K_1%_0.25W_100PPM"
+      },
+      {
+        "uid": "#PWR012",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR012",
+        "lib_id": "multichannel_mixer:GND"
+      },
+      {
+        "uid": "R3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R1206_10K_1%_0.25W_100PPM",
+        "label": "R3",
+        "lib_id": "multichannel_mixer:R1206_10K_1%_0.25W_100PPM"
+      },
+      {
+        "uid": "IC1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TL072CD",
+        "label": "IC1",
+        "lib_id": "multichannel_mixer:TL072CD"
+      },
+      {
+        "uid": "#PWR046",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12V",
+        "label": "#PWR046",
+        "lib_id": "multichannel_mixer:+12V"
+      },
+      {
+        "uid": "#PWR047",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR047",
+        "lib_id": "multichannel_mixer:GND"
+      },
+      {
+        "uid": "#PWR07",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR07",
+        "lib_id": "multichannel_mixer:GND"
+      },
+      {
+        "uid": "C1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CTEB_2.2UF_35V_10%_254-500X840",
+        "label": "C1",
+        "lib_id": "multichannel_mixer:CTEB_2.2UF_35V_10%_254-500X840"
+      },
+      {
+        "uid": "#PWR09",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "vbias",
+        "label": "#PWR09",
+        "lib_id": "multichannel_mixer:+1V1"
+      },
+      {
+        "uid": "C4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CTEB_2.2UF_35V_10%_254-500X840",
+        "label": "C4",
+        "lib_id": "multichannel_mixer:CTEB_2.2UF_35V_10%_254-500X840"
+      },
+      {
+        "uid": "#PWR05",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12V",
+        "label": "#PWR05",
+        "lib_id": "multichannel_mixer:+12V"
+      }
+    ],
+    "version": "1.0"
+  }
+}

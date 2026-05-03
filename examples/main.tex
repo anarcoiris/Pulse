@@ -1,0 +1,870 @@
+% ============================================================
+%  PRUEBA TÉCNICA — SISTEMAS DE ACOPLAMIENTO ELECTROMAGNÉTICO
+%  Formato: Technical Report / IEEE-style
+% ============================================================
+\documentclass[11pt,a4paper]{article}
+
+% ─── Codificación y fuentes ───────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,activeacute]{babel}
+\usepackage{mathpazo}   % Palatino + Euler math
+\usepackage{microtype}
+
+% ─── Matemáticas ──────────────────────────────────────────
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,}, separate-uncertainty=true}
+
+% ─── Página y márgenes ────────────────────────────────────
+\usepackage[
+  a4paper,
+  top=25mm, bottom=28mm,
+  left=22mm, right=22mm,
+  headheight=14pt
+]{geometry}
+
+% ─── Color ────────────────────────────────────────────────
+\usepackage[dvipsnames,table]{xcolor}
+\definecolor{azulprincipal}{RGB}{0,74,140}
+\definecolor{azulclaro}{RGB}{220,235,250}
+\definecolor{azulmed}{RGB}{180,210,240}
+\definecolor{gristexto}{RGB}{60,60,70}
+\definecolor{grisinfobox}{RGB}{245,247,250}
+\definecolor{naranja}{RGB}{190,80,20}
+\definecolor{verdemed}{RGB}{30,115,60}
+\definecolor{rojoaviso}{RGB}{160,30,20}
+\definecolor{grisbordes}{RGB}{180,185,195}
+
+% ─── Encabezados y pie de página ──────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{gristexto}\textsc{Prueba Técnica de Ingeniería}}
+\fancyhead[R]{\small\color{gristexto}\textsc{Acoplamiento Electromagnético}}
+\fancyfoot[C]{\small\color{gristexto}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{azulprincipal}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+
+% ─── Títulos de sección ───────────────────────────────────
+\usepackage{titlesec}
+\titleformat{\section}
+  {\large\bfseries\color{azulprincipal}}
+  {\thetitle.\quad}{0pt}{}[{\color{azulprincipal}\titlerule[0.6pt]}]
+\titlespacing{\section}{0pt}{18pt}{8pt}
+
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{gristexto}}
+  {\thetitle\quad}{0pt}{}
+\titlespacing{\subsection}{0pt}{12pt}{5pt}
+
+\titleformat{\subsubsection}
+  {\small\bfseries\itshape\color{naranja}}
+  {\thetitle\quad}{0pt}{}
+\titlespacing{\subsubsection}{0pt}{8pt}{3pt}
+
+% ─── Tablas y figuras ─────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{caption}
+\captionsetup{
+  font={small,it},
+  labelfont={bf,color=azulprincipal},
+  labelsep=period,
+  skip=6pt
+}
+
+% ─── Cajas y entornos especiales ──────────────────────────
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable,theorems}
+
+% Caja de contexto / descripción
+\newtcolorbox{contextobox}[1][]{
+  enhanced, breakable,
+  colback=grisinfobox,
+  colframe=azulprincipal,
+  boxrule=0.5pt,
+  leftrule=3pt,
+  arc=2pt,
+  fonttitle=\small\bfseries\color{azulprincipal},
+  title={Contexto},
+  #1
+}
+
+% Caja de requisito
+\newtcolorbox{requisitobox}[2][]{
+  enhanced,
+  colback=white,
+  colframe=grisbordes,
+  boxrule=0.5pt,
+  leftrule=2.5pt,
+  arc=1pt,
+  left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fontupper=\small,
+  overlay={
+    \node[anchor=north west, fill=azulprincipal, text=white,
+          font=\tiny\bfseries\ttfamily, inner sep=2pt, minimum width=1cm]
+      at (frame.north west) {#2};
+  },
+  #1
+}
+
+% Caja de aviso ético
+\newtcolorbox{avisobox}{
+  enhanced, breakable,
+  colback=yellow!6!white,
+  colframe=rojoaviso,
+  boxrule=0.5pt,
+  leftrule=3pt,
+  arc=2pt,
+  fonttitle=\small\bfseries\color{rojoaviso},
+  title={\faWarning~Nota Ética y Regulatoria},
+}
+
+% Caja de fórmula
+\newtcolorbox{formulabox}[1][]{
+  enhanced,
+  colback=azulclaro!40!white,
+  colframe=azulprincipal!60!white,
+  boxrule=0.4pt,
+  arc=2pt,
+  left=10pt, right=10pt, top=6pt, bottom=6pt,
+  #1
+}
+
+% Caja de tarea
+\newtcolorbox{tareabox}[2][]{
+  enhanced, breakable,
+  colback=white,
+  colframe=azulprincipal,
+  boxrule=0.5pt,
+  arc=2pt,
+  fonttitle=\small\bfseries,
+  coltitle=white,
+  attach boxed title to top left={yshift=-\tcboxedtitleheight/2, xshift=6pt},
+  boxed title style={colback=azulprincipal, arc=1pt, boxrule=0pt},
+  title={#2},
+  #1
+}
+
+% Caja de criterio
+\newtcolorbox{criteriobox}[1][]{
+  enhanced,
+  colback=verdemed!5!white,
+  colframe=verdemed!60!white,
+  boxrule=0.4pt,
+  leftrule=2.5pt,
+  arc=1pt,
+  fonttitle=\small\bfseries\color{verdemed},
+  #1
+}
+
+% ─── Listas personalizadas ────────────────────────────────
+\usepackage{enumitem}
+\setlist[itemize]{
+  leftmargin=1.2em,
+  itemsep=2pt,
+  topsep=4pt,
+  label={\color{azulprincipal}\small$\blacktriangleright$}
+}
+\setlist[enumerate]{
+  leftmargin=1.4em,
+  itemsep=3pt,
+  topsep=4pt,
+  label={\color{azulprincipal}\textbf{\arabic*.}}
+}
+
+% ─── TikZ para diagramas ──────────────────────────────────
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, decorations.pathmorphing, backgrounds, fit, calc, shadows}
+
+\tikzset{
+  bloque/.style={
+    rectangle, rounded corners=2pt, minimum width=2.4cm, minimum height=0.9cm,
+    text centered, font=\small\bfseries, draw=azulprincipal, fill=azulclaro,
+    text=gristexto, general shadow={shadow scale=1.005, shadow xshift=0.5pt, shadow yshift=-0.5pt, fill=black!20, opacity=0.5}
+  },
+  bloquenaranja/.style={bloque, draw=naranja, fill=naranja!10},
+  bloqueverde/.style={bloque, draw=verdemed, fill=verdemed!10},
+  flecha/.style={-Stealth, thick, color=azulprincipal},
+  flechadouble/.style={Stealth-Stealth, thick, color=naranja, dashed},
+}
+
+% ─── Hipervínculos ────────────────────────────────────────
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=azulprincipal,
+  urlcolor=azulprincipal,
+  citecolor=naranja,
+  pdftitle={Prueba Técnica -- Acoplamiento Electromagnético},
+  pdfauthor={Ingeniería Electromagnética},
+  pdfsubject={Technical Test},
+}
+
+% ─── Utilidades ───────────────────────────────────────────
+\usepackage{parskip}
+\setlength{\parskip}{5pt}
+\usepackage{lipsum}
+
+% Operadores matemáticos
+\DeclareMathOperator{\sinc}{sinc}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+
+% ─── Línea divisoria de sección ───────────────────────────
+\newcommand{\partedivider}[1]{%
+  \vspace{10pt}
+  \noindent
+  \begin{tikzpicture}[remember picture]
+    \fill[azulprincipal] (0,0) rectangle (\linewidth, 3pt);
+    \node[anchor=west, fill=azulprincipal, text=white,
+          font=\large\bfseries, inner xsep=8pt, inner ysep=6pt]
+      at (0,-0.05) {#1};
+  \end{tikzpicture}
+  \vspace{6pt}
+}
+
+% ============================================================
+\begin{document}
+% ============================================================
+
+% ─── PORTADA ─────────────────────────────────────────────
+\thispagestyle{empty}
+\begin{titlepage}
+
+\begin{tikzpicture}[remember picture, overlay]
+  % Banda superior
+  \fill[azulprincipal] (current page.north west) rectangle
+    ([yshift=-4cm] current page.north east);
+  % Detalle geométrico
+  \fill[azulprincipal!60!black] (current page.north east) --
+    ([xshift=-6cm, yshift=-4cm] current page.north east) --
+    ([yshift=-4cm] current page.north east) -- cycle;
+  % Banda inferior
+  \fill[azulprincipal!20!white] (current page.south west) rectangle
+    ([yshift=1.4cm] current page.south east);
+  \node[anchor=south east, font=\small\color{azulprincipal}, inner sep=8pt]
+    at ([yshift=1.4cm] current page.south east)
+    {\textit{Versión para evaluación académica}};
+\end{tikzpicture}
+
+\vspace*{1.8cm}
+
+{\raggedright
+  {\color{white}\fontsize{9}{11}\selectfont\bfseries\MakeUppercase{Prueba Técnica de Ingeniería}}
+  \par\vspace{0.5cm}
+  {\color{white}\fontsize{24}{28}\selectfont\bfseries
+    Sistemas de Acoplamiento\\[4pt]
+    Electromagnético
+  }
+  \par\vspace{0.4cm}
+  {\color{azulmed}\fontsize{14}{18}\selectfont\itshape
+    Diseño, Análisis y Validación Experimental
+  }
+}
+
+\vspace{2.8cm}
+
+\noindent
+\begin{tabular}{@{}p{0.46\linewidth}p{0.46\linewidth}@{}}
+  \toprule[1.2pt]
+  \multicolumn{2}{l}{\small\bfseries\color{azulprincipal} METADATOS DEL DOCUMENTO} \\[4pt]
+  \small\textbf{Disciplina} & \small Ingeniería Electromagnética \\[2pt]
+  \small\textbf{Modalidad}  & \small Teórico-Práctica \\[2pt]
+  \small\textbf{Nivel}      & \small Ingeniería Avanzada \\[2pt]
+  \small\textbf{Extensión}  & \small Máximo 15 páginas \\[2pt]
+  \small\textbf{Formato}    & \small Documento técnico + demostración \\[2pt]
+  \bottomrule[1.2pt]
+\end{tabular}
+
+\vspace{1.4cm}
+
+\noindent\textbf{\color{azulprincipal}Resumen ejecutivo.}
+Esta prueba técnica evalúa simultáneamente el dominio teórico de los principios
+electromagnéticos y las habilidades prácticas de diseño e implementación de circuitos.
+Consta de dos partes diferenciadas: una sección teórica orientada al análisis de sistemas
+de pulsos electromagnéticos de alta frecuencia, y una sección práctica centrada en la
+demostración experimental del acoplamiento inductivo resonante entre circuitos de baja
+tensión. Se valoran especialmente el rigor analítico, la calidad de la justificación técnica
+y la capacidad de relacionar fenómenos físicos con limitaciones reales de hardware.
+
+\vfill
+
+\noindent\begin{minipage}{\linewidth}
+  \small\color{gray}
+  \textbf{Nota:} Este documento tiene carácter estrictamente académico y formativo.
+  Ninguna sección del mismo constituye una guía operativa para el desarrollo de
+  dispositivos con fines no autorizados.
+\end{minipage}
+
+\end{titlepage}
+
+% ─── TABLA DE CONTENIDOS ────────────────────────────────
+\setcounter{page}{1}
+\tableofcontents
+\vspace{10pt}
+\noindent\color{grisbordes}\rule{\linewidth}{0.4pt}
+\newpage
+
+% ============================================================
+\partedivider{PARTE I \quad Análisis Teórico: Pulsos Electromagnéticos}
+% ============================================================
+
+\section{Contexto y Especificaciones del Sistema}
+
+\begin{contextobox}
+Se solicita el diseño conceptual de un sistema de pulsos electromagnéticos (EMP, del
+inglés \textit{Electromagnetic Pulse}) orientado a la inhabilitación de sistemas electrónicos
+embarcados. El sistema debe emitir pulsos de alta energía en un rango de frecuencias que
+comienza en $f_{\min} = \SI{300}{\mega\hertz}$, buscando maximizar el espectro de cobertura
+por encima de dicha frecuencia de corte. El diseño contempla acoplamiento efectivo a
+distancia variable~$d$ y adaptabilidad a diferentes frecuencias de resonancia del objetivo.
+\end{contextobox}
+
+
+\subsection{Requisitos del sistema}
+
+\begin{requisitobox}{R-01}
+\textbf{Rango de frecuencia.} El sistema debe emitir pulsos efectivos desde
+$f_{\min} = \SI{300}{\mega\hertz}$ hasta la mayor cobertura espectral posible.
+La relación entre la anchura temporal del pulso~$\tau_p$ y su contenido espectral viene dada por:
+\[
+  \Delta f \approx \frac{1}{\tau_p}
+\]
+lo que implica que pulsos más cortos generan mayor cobertura en frecuencia.
+\end{requisitobox}
+
+\vspace{6pt}
+
+\begin{requisitobox}{R-02}
+\textbf{Acoplamiento a distancia.} El sistema debe garantizar acoplamiento efectivo
+con objetivos a distancia variable~$d$. Debe diferenciarse entre la región de campo
+cercano ($d < \lambda/2\pi$) y la de campo lejano ($d \gg \lambda$), dado que las
+leyes de atenuación difieren sustancialmente en cada zona.
+\end{requisitobox}
+
+\vspace{6pt}
+
+\begin{requisitobox}{R-03}
+\textbf{Maximización de energía transmitida.} Optimizar la energía entregada al
+objetivo, considerando las limitaciones térmicas, la ganancia de antena disponible
+y los márgenes de susceptibilidad del objetivo.
+\end{requisitobox}
+
+\vspace{6pt}
+
+\begin{requisitobox}{R-04}
+\textbf{Adaptabilidad espectral.} El sistema debe operar eficazmente con circuitos
+objetivo cuya frecuencia de resonancia~$f_0$ no está predeterminada, ya sea mediante
+técnicas de banda ancha (UWB) o barrido dinámico de frecuencia.
+\end{requisitobox}
+
+% ============================================================
+\section{Tareas a Realizar --- Parte Teórica}
+
+\subsection{T-01: Diseño conceptual del sistema}
+
+Se propone el siguiente \textbf{diagrama de bloques} del sistema completo:
+
+\vspace{8pt}
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[node distance=0.7cm and 0.5cm]
+
+  % Nodos
+  \node[bloque, fill=naranja!15, draw=naranja] (fuente) {Fuente de\\alimentación};
+  \node[bloque, right=of fuente] (genp) {Generador\\de pulsos};
+  \node[bloque, right=of genp]   (etapa) {Etapa de\\potencia};
+  \node[bloque, right=of etapa]  (antena) {Sistema\\de antena};
+  \node[bloque, fill=rojoaviso!10, draw=rojoaviso, right=of antena, xshift=0.4cm]
+    (objetivo) {Objetivo\\(electrónica)};
+
+  % Control (debajo)
+  \node[bloquenaranja, below=1.2cm of genp, xshift=1.5cm]
+    (control) {Unidad de\\control/sync.};
+  \node[bloqueverde, below=1.2cm of etapa, xshift=1.4cm]
+    (blindaje) {Blindaje\\EMP propio};
+
+  % Flechas principales
+  \draw[flecha] (fuente) -- (genp);
+  \draw[flecha] (genp)   -- (etapa);
+  \draw[flecha] (etapa)  -- (antena);
+  \draw[flecha] (antena) -- node[above, font=\tiny, color=gray]{radiación} (objetivo);
+
+  % Flechas control
+  \draw[-Stealth, dashed, color=naranja] (control) -- (genp);
+  \draw[-Stealth, dashed, color=naranja] (control) -- (etapa);
+  \draw[-Stealth, dashed, color=naranja] (control) -- (antena);
+
+  % Retroalimentación blindaje
+  \draw[-Stealth, dashed, color=verdemed] (blindaje) -- (etapa);
+  \draw[-Stealth, dashed, color=verdemed] (blindaje) -| (antena);
+
+  % Etiquetas de flujo
+  \node[font=\tiny\it, color=gray, below=3pt of fuente] {Alta tensión};
+  \node[font=\tiny\it, color=gray, below=3pt of genp]   {Pulsos ns};
+  \node[font=\tiny\it, color=gray, below=3pt of etapa]  {Amplificación};
+  \node[font=\tiny\it, color=gray, below=3pt of antena] {Radiación};
+
+\end{tikzpicture}
+\caption{Diagrama de bloques del sistema EMP. Las líneas discontinuas representan señales de control y gestión.}
+\end{figure}
+
+\subsection{T-02: Análisis matemático}
+
+\subsubsection{Potencia radiada y ecuación de Friis modificada}
+
+La potencia recibida efectiva por el objetivo a distancia~$d$ en espacio libre se expresa mediante
+la \textbf{ecuación de Friis}:
+
+\begin{formulabox}
+\begin{equation}
+  P_r = P_t \, G_t(\theta, \phi) \, G_r \left(\frac{\lambda}{4\pi d}\right)^2
+  \label{eq:friis}
+\end{equation}
+\end{formulabox}
+
+donde $P_t$ es la potencia transmitida, $G_t$ y $G_r$ son las ganancias de antena transmisora
+y receptora (objetivo), $\lambda = c/f$ es la longitud de onda y $d$ la distancia de separación.
+
+Para deshabilitar un circuito electrónico se requiere superar su umbral de susceptibilidad
+$P_{\text{sus}}$ (típicamente en el rango de \SIrange{0.1}{100}{\milli\watt} según el componente):
+
+\begin{equation}
+  P_t \geq P_{\text{sus}} \cdot \frac{(4\pi d)^2}{G_t \, G_r \, \lambda^2}
+  \label{eq:potencianec}
+\end{equation}
+
+\subsubsection{Atenuación con la distancia y régimen de campo}
+
+La frontera entre campo cercano y campo lejano para una antena de apertura efectiva $D$ viene dada por:
+\[
+  d_{\text{Fraunhofer}} = \frac{2D^2}{\lambda}
+\]
+
+En el \textbf{campo lejano} la densidad de potencia decrece como $d^{-2}$ (ley del inverso
+del cuadrado). En el \textbf{campo cercano inductivo} la dependencia es de orden $d^{-3}$,
+con lo que la energía disponible se reduce mucho más rápidamente:
+
+\begin{equation}
+  S(d) \propto \begin{cases}
+    d^{-2} & d \gg \lambda/2\pi \quad \text{(campo lejano)} \\
+    d^{-3} & d \ll \lambda/2\pi \quad \text{(campo cercano reactivo)}
+  \end{cases}
+\end{equation}
+
+\subsubsection{Contenido espectral del pulso y transformada de Fourier}
+
+Para un pulso rectangular de amplitud $A$ y duración $\tau_p$ el espectro de energía es:
+\begin{equation}
+  |E(f)|^2 = A^2 \tau_p^2 \sinc^2(f \tau_p), \qquad \sinc(x) \triangleq \frac{\sin(\pi x)}{\pi x}
+  \label{eq:espectro}
+\end{equation}
+
+El primer cero del espectro se produce en $f = 1/\tau_p$, por lo que reducir $\tau_p$ desplaza
+la energía hacia frecuencias más altas. Para cubrir el espectro a partir de \SI{300}{\mega\hertz}:
+\[
+  \tau_p \lesssim \frac{1}{\SI{300}{\mega\hertz}} \approx \SI{3.3}{\nano\second}
+\]
+
+\subsection{T-03: Diseño de antena}
+
+\begin{tareabox}{Criterios de selección de antena}
+Para un sistema EMP de banda ancha ($f \geq \SI{300}{\mega\hertz}$), la antena debe satisfacer:
+\begin{itemize}
+  \item \textbf{Ancho de banda elevado:} cociente $f_{\max}/f_{\min} \gg 1$ (antena UWB o de apertura).
+  \item \textbf{Alta directividad:} concentrar la energía en la dirección del objetivo.
+  \item \textbf{Alta eficiencia de radiación:} minimizar las pérdidas óhmicas en la estructura.
+  \item \textbf{Bajo rizado de la fase:} para preservar la integridad del pulso temporal.
+\end{itemize}
+\end{tareabox}
+
+\vspace{6pt}
+
+\noindent La Tabla~\ref{tab:antenas} presenta una comparativa de topologías candidatas:
+
+\begin{table}[h!]
+\centering
+\caption{Comparativa de topologías de antena para sistemas de banda ancha}
+\label{tab:antenas}
+\small
+\rowcolors{2}{azulclaro!30}{white}
+\begin{tabularx}{\linewidth}{@{}l c c c X@{}}
+  \toprule[1.2pt]
+  \rowcolor{azulprincipal}
+  \color{white}\textbf{Topología} &
+  \color{white}\textbf{BW relativo} &
+  \color{white}\textbf{Ganancia} &
+  \color{white}\textbf{$\eta_\text{rad}$} &
+  \color{white}\textbf{Observaciones} \\
+  \midrule
+  Bocina piramidal  & Moderado (1:3)   & \SIrange{10}{25}{\dBi}  & $>90\%$ & Buena directividad, voluminosa \\
+  Vivaldi graduada  & Muy alto (1:20+) & \SIrange{5}{12}{\dBi}   & $>85\%$ & Excelente para UWB, compacta \\
+  Helicoidal axial  & Moderado (1:2)   & \SIrange{8}{15}{\dBi}   & $>80\%$ & Polarización circular \\
+  Bicónica          & Alto (1:10)      & $\sim\SI{3}{\dBi}$      & $>75\%$ & Omnidireccional, cobertura total \\
+  \textbf{TEM horn} & \textbf{Muy alto (1:30+)} & \textbf{\SIrange{8}{18}{\dBi}} & \textbf{$>92\%$} & \textbf{Candidata óptima} \\
+  \bottomrule[1.2pt]
+\end{tabularx}
+\end{table}
+
+\noindent\textbf{Justificación:} La antena de cuerno TEM (\textit{Transverse Electromagnetic horn})
+presenta el mejor compromiso entre ancho de banda ultrancho, directividad moderada-alta y
+preservación de la fase del pulso, siendo ampliamente empleada en sistemas de diagnóstico EMC.
+
+\subsection{T-04: Consideraciones prácticas}
+
+\subsubsection{Gestión térmica}
+
+La potencia disipada en la etapa de conmutación puede estimarse como:
+\[
+  P_{\text{dis}} = P_{\text{entrada}} \cdot (1 - \eta_{\text{RF}})
+\]
+Para disiparla se propone: refrigeración líquida de la etapa de potencia, interruptores basados en
+SiC o GaN (alta temperatura de operación, baja resistencia en conducción), y monitorización
+en tiempo real de temperatura con corte de seguridad.
+
+\subsubsection{Blindaje del propio sistema (EMP hardening)}
+
+Los componentes de control y la fuente de alimentación deben protegerse con:
+\begin{itemize}
+  \item Apantallamiento de la caja con lámina de cobre ($t \geq 3\delta_s$, donde $\delta_s$ es la profundidad de efecto piel a $f_{\min}$).
+  \item Filtros de entrada LC de orden elevado en todas las líneas de alimentación.
+  \item Fotoacopladores en señales de control para eliminar caminos de acoplamiento galvánico.
+\end{itemize}
+
+\subsubsection{Sintonización dinámica}
+
+Para adaptarse a una frecuencia de resonancia desconocida del objetivo se propone un
+\textbf{barrido de frecuencia lineal (chirp)}, cuya representación temporal es:
+\begin{equation}
+  s(t) = A(t)\cos\!\left(2\pi f_0 t + \pi \mu t^2\right), \quad
+  \mu = \frac{f_{\max}-f_{\min}}{T_{\text{barrido}}}
+  \label{eq:chirp}
+\end{equation}
+Alternativamente, una antena de banda ancha real (UWB) que cubra el espectro completo
+de forma simultánea elimina la necesidad de sintonización.
+
+% ============================================================
+\section{Criterios de Evaluación --- Parte Teórica}
+
+\begin{criteriobox}[title={Rúbrica de evaluación teórica}, fonttitle=\small\bfseries\color{verdemed}]
+\begin{enumerate}
+  \item \textbf{Rigor técnico del diseño:} consistencia física y matemática del sistema propuesto.
+  \item \textbf{Justificación de decisiones:} cada elección de diseño debe argumentarse con criterios cuantitativos.
+  \item \textbf{Originalidad de soluciones:} creatividad en el tratamiento de los desafíos planteados.
+  \item \textbf{Comprensión de principios físicos:} evidencia de dominio de electromagnetismo y teoría de circuitos.
+\end{enumerate}
+\end{criteriobox}
+
+\newpage
+% ============================================================
+\partedivider{PARTE II \quad Práctica: Acoplamiento Inductivo Resonante}
+% ============================================================
+
+\section{Contexto y Especificaciones Técnicas}
+
+\begin{contextobox}[title={Descripción del experimento}]
+Se desarrollará una aplicación de \textbf{baja tensión} ($V_{CC} \in [\SI{5}{\volt}, \SI{12}{\volt}]$)
+que demuestre experimentalmente los principios del acoplamiento inductivo resonante entre dos
+circuitos RLC. El objetivo es transferir energía de forma inalámbrica desde un circuito transmisor~(A)
+hasta un circuito receptor~(B), evidenciando el encendido de un LED como indicador visual de
+transferencia energética.
+\end{contextobox}
+
+\subsection{Especificaciones de los circuitos}
+
+\subsubsection{Circuito transmisor A}
+
+\begin{itemize}
+  \item Conectado a una fuente de alimentación de baja tensión ($\SI{5}{\volt}$ -- $\SI{12}{\volt}$ DC).
+  \item Debe generar un campo magnético variable capaz de inducir corriente en el circuito B.
+  \item Topología recomendada: oscilador de Colpitts, Hartley o driver MOSFET con feedback resonante.
+\end{itemize}
+
+\subsubsection{Circuito receptor B}
+
+\begin{itemize}
+  \item Configuración RLC (serie o paralelo), con un LED como carga indicadora.
+  \item Sin conexión eléctrica directa con el circuito A.
+  \item Debe encender el LED únicamente mediante el acoplamiento inductivo mutuo.
+  \item Incorporar condensador variable para ajuste fino de sintonía.
+\end{itemize}
+
+% ============================================================
+\section{Marco Matemático del Sistema}
+
+\subsection{Frecuencia de resonancia}
+
+La condición de resonancia, que maximiza la impedancia en configuración paralelo y
+la minimiza en configuración serie, es:
+
+\begin{formulabox}
+\begin{equation}
+  f_0 = \frac{1}{2\pi\sqrt{LC}}
+  \label{eq:resonancia}
+\end{equation}
+\end{formulabox}
+
+Para que la transferencia de energía sea máxima, ambos circuitos deben operar en la misma
+frecuencia de resonancia $f_0$, de modo que $L_A C_A = L_B C_B$.
+
+\subsection{Factor de calidad y selectividad}
+
+El factor de calidad $Q$ cuantifica la eficiencia energética del circuito resonante y su
+selectividad en frecuencia:
+
+\begin{equation}
+  Q_{\text{serie}} = \frac{1}{R}\sqrt{\frac{L}{C}}, \qquad
+  Q_{\text{paralelo}} = R\sqrt{\frac{C}{L}}
+  \label{eq:Qfactor}
+\end{equation}
+
+El ancho de banda a $-\SI{3}{\dB}$ del circuito resonante es:
+\begin{equation}
+  \Delta f_{-3\,\text{dB}} = \frac{f_0}{Q}
+  \label{eq:BW}
+\end{equation}
+
+Un $Q$ alto proporciona mayor selectividad pero menor tolerancia al desajuste de sintonía.
+Se recomienda $Q \in [10, 50]$ para facilitar el ajuste experimental.
+
+\subsection{Acoplamiento mutuo inductivo}
+
+La inductancia mutua~$M$ entre las dos bobinas se relaciona con el coeficiente de
+acoplamiento~$k$ mediante:
+
+\begin{formulabox}
+\begin{equation}
+  M = k\sqrt{L_A L_B}, \qquad k \in [0,\,1]
+  \label{eq:mutua}
+\end{equation}
+\end{formulabox}
+
+Para dos bobinas circulares coaxiales de radios $a_A$, $a_B$ y separadas una distancia~$d$,
+la aproximación de Neumann para campo magnético lejano proporciona:
+
+\begin{equation}
+  M \approx \frac{\mu_0 \pi N_A N_B\, a_A^2 a_B^2}{2\left(d^2 + a_A^2\right)^{3/2}}
+  \qquad (a_B \ll d)
+  \label{eq:Neumann}
+\end{equation}
+
+\subsection{Eficiencia de transferencia de potencia}
+
+La eficiencia máxima teórica de transferencia de potencia en el punto de operación resonante
+está dada por:
+
+\begin{formulabox}
+\begin{equation}
+  \eta_{\max} = \frac{k^2 Q_A Q_B}{\left(1 + \sqrt{1 + k^2 Q_A Q_B}\right)^2}
+  \label{eq:eficiencia}
+\end{equation}
+\end{formulabox}
+
+De la expresión~\eqref{eq:eficiencia} se desprende que para maximizar $\eta$ deben maximizarse
+simultáneamente $k$, $Q_A$ y $Q_B$. La figura de mérito del sistema es el producto $kQ$:
+\begin{equation}
+  \text{FOM} = k\sqrt{Q_A Q_B}
+  \label{eq:FOM}
+\end{equation}
+
+\subsection{Inductancia de una bobina helicoidal}
+
+Para una bobina cilíndrica de $N$ espiras, radio $r$ y longitud~$\ell$:
+\begin{equation}
+  L = \frac{\mu_0 \mu_r N^2 \pi r^2}{\ell} \cdot K_L
+  \label{eq:inductancia}
+\end{equation}
+donde $K_L$ es el factor de corrección de Nagaoka (función de la relación $2r/\ell$), que toma el
+valor $K_L \to 1$ para solenoides largos ($\ell \gg 2r$) y decrece para bobinas planas.
+
+\subsection{Tensión inducida en el circuito receptor}
+
+En régimen sinusoidal y a la frecuencia de resonancia:
+\begin{equation}
+  V_{\text{oc},B} = j\omega_0 M \, I_A = j\omega_0 \, k \sqrt{L_A L_B}\, I_A
+  \label{eq:VOC}
+\end{equation}
+
+La corriente pico en el transmisor viene determinada por la impedancia de la fuente y la
+reactancia del circuito A. En resonancia la impedancia de A es puramente resistiva ($Z_A = R_A$),
+luego $I_A = V_s / R_A$.
+
+% ============================================================
+\section{Valores de Diseño Orientativos}
+
+La Tabla~\ref{tab:valores} proporciona un punto de partida razonado para el diseño experimental:
+
+\begin{table}[h!]
+\centering
+\caption{Parámetros de diseño orientativos para el sistema de acoplamiento inductivo}
+\label{tab:valores}
+\small
+\rowcolors{2}{azulclaro!25}{white}
+\begin{tabularx}{\linewidth}{@{} l >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\raggedright\arraybackslash}X @{}}
+  \toprule[1.2pt]
+  \rowcolor{azulprincipal}
+  \color{white}\textbf{Parámetro} &
+  \color{white}\textbf{Circuito TX (A)} &
+  \color{white}\textbf{Circuito RX (B)} &
+  \color{white}\textbf{Observaciones} \\
+  \midrule
+  Inductancia $L$        & \SI{50}{}--\SI{200}{\micro\henry}  & \SI{50}{}--\SI{200}{\micro\henry}   & Igualar para resonancia común \\
+  Capacidad $C$          & \SI{10}{}--\SI{100}{\nano\farad}   & Variable (condensador ajustable)     & $C_B$ ajustable para sintonía fina \\
+  Resistencia $R$        & $R_{\text{int}}$ bobina             & $R_{\text{LED}} + R_{\text{serie}}$ & Minimizar $R_A$ para maximizar $Q$ \\
+  Frecuencia $f_0$       & \multicolumn{2}{c}{\SI{100}{\kilo\hertz} -- \SI{1}{\mega\hertz}} & Rango cómodo en protoboard \\
+  Tensión $V_{CC}$       & \SI{5}{}--\SI{12}{\volt DC}        & ---                                 & Baja tensión de seguridad \\
+  N.º de espiras $N$     & 10--50                              & 10--50                              & Ajustar según radio elegido \\
+  Radio de bobina $r$    & \SI{3}{}--\SI{8}{\centi\metre}     & \SI{3}{}--\SI{8}{\centi\metre}      & Bobinas planas o cilíndricas \\
+  Factor $Q$ estimado    & 20--50                              & 20--50                              & Alambres de cobre, núcleo aire \\
+  \bottomrule[1.2pt]
+\end{tabularx}
+\end{table}
+
+\textbf{Ejemplo de cálculo:} Para $L = \SI{100}{\micro\henry}$ y $f_0 = \SI{500}{\kilo\hertz}$:
+\[
+  C = \frac{1}{(2\pi f_0)^2 L}
+    = \frac{1}{(2\pi \cdot 5\times 10^5)^2 \cdot 10^{-4}}
+    \approx \SI{1.01}{\nano\farad}
+\]
+
+% ============================================================
+\section{Tareas a Realizar --- Parte Práctica}
+
+\subsection{T-01: Diseño de circuitos}
+
+\begin{enumerate}
+  \item Calcule los valores óptimos de $L$, $C$ y $R$ para ambos circuitos, estableciendo una
+        frecuencia de resonancia común $f_0$ mediante la ecuación~\eqref{eq:resonancia}.
+  \item Justifique la elección de configuración RLC (serie o paralelo) en función del
+        perfil de la carga (LED) y del objetivo de maximizar la tensión o la corriente inducida.
+  \item Determine el factor $Q$ de ambos circuitos mediante~\eqref{eq:Qfactor} y estime
+        su influencia sobre la eficiencia y la selectividad.
+  \item Calcule la inductancia mutua $M$ para la geometría de bobinas elegida usando~\eqref{eq:Neumann}.
+\end{enumerate}
+
+\subsection{T-02: Implementación del sistema}
+
+\begin{enumerate}
+  \item Construya ambos circuitos en protoboard o, en su defecto, simúlelos en
+        LTspice, Falstad o Multisim. En la simulación deberá reproducir las
+        condiciones de acoplamiento mutuo mediante el parámetro~$k$.
+  \item Implemente un mecanismo de ajuste de sintonía en el circuito RX:
+        \begin{itemize}
+          \item Condensador variable (\textit{trimmer}) en paralelo con $C_B$, o
+          \item Núcleo de ferrita con posición ajustable dentro de la bobina $L_B$.
+        \end{itemize}
+  \item Verifique el encendido del LED a diferentes distancias $d$ y orientaciones relativas
+        de las bobinas.
+\end{enumerate}
+
+\subsection{T-03: Optimización y caracterización experimental}
+
+\begin{enumerate}
+  \item Experimente con distintas geometrías de bobina para maximizar $k$:
+        bobinas circulares, helicoidales planas (\textit{pancake}) y cilíndricas.
+  \item Determine la distancia máxima de operación $d_{\max}$ y represente
+        experimentalmente $\eta(d)$.
+  \item Cuantifique la eficiencia de transferencia:
+        \begin{equation}
+          \eta_{\text{exp}} = \frac{P_{\text{out}}}{P_{\text{in}}}
+                            = \frac{V_{\text{LED}} \cdot I_{\text{LED}}}{V_{CC} \cdot I_{CC}}
+          \label{eq:etaexp}
+        \end{equation}
+  \item Estudie la degradación de $\eta$ en función del ángulo de desalineamiento~$\alpha$
+        entre los ejes de las bobinas y ajuste el modelo teórico a los datos medidos.
+\end{enumerate}
+
+% ============================================================
+\section{Criterios de Evaluación --- Parte Práctica}
+
+\begin{criteriobox}[title={Rúbrica de evaluación práctica}, fonttitle=\small\bfseries\color{verdemed}]
+\begin{enumerate}
+  \item \textbf{Funcionalidad del sistema:} encendido reproducible y estable del LED en las condiciones
+        de referencia. Se valorará la distancia máxima alcanzada.
+  \item \textbf{Eficiencia energética:} eficiencia medida $\eta_{\text{exp}}$ según~\eqref{eq:etaexp},
+        maximizada mediante optimización de $k$ y $Q$.
+  \item \textbf{Calidad del análisis:} contraste cuantitativo entre predicciones teóricas y medidas
+        experimentales. Discusión argumentada de las discrepancias observadas.
+  \item \textbf{Documentación técnica:} memoria clara con esquemas de circuito, tablas de medidas,
+        gráficas de $\eta(d)$ y conclusiones.
+\end{enumerate}
+\end{criteriobox}
+
+% ============================================================
+\newpage
+\section*{Condiciones de Entrega}
+\addcontentsline{toc}{section}{Condiciones de Entrega}
+
+\noindent\begin{tabularx}{\linewidth}{@{} >{\bfseries}p{3cm} X @{}}
+  \toprule[1.2pt]
+  \rowcolor{azulprincipal}
+  \color{white}\textbf{Entregable} & \color{white}\textbf{Descripción} \\
+  \midrule
+  Parte teórica &
+    Documento técnico de \textbf{máximo 15 páginas} que incluya: diagrama de bloques,
+    desarrollo matemático completo, justificación del diseño de antena, análisis de
+    consideraciones prácticas y referencias bibliográficas en formato IEEE. \\[4pt]
+  Parte práctica &
+    \textbf{Demostración funcional} (en directo o en vídeo) del sistema montado, acompañada
+    de una memoria descriptiva con esquemas de circuito, procedimiento de montaje, tabla de
+    medidas, gráficas de eficiencia y conclusiones del proceso de optimización. \\[4pt]
+  \bottomrule[1.2pt]
+\end{tabularx}
+
+\vspace{12pt}
+\begin{tcolorbox}[
+  enhanced, colback=azulprincipal!8!white, colframe=azulprincipal,
+  boxrule=0.5pt, arc=3pt, left=10pt, right=10pt
+]
+\small
+\textbf{Alcance de la evaluación.}
+El desarrollo de esta prueba tiene como fin la introducción al contexto de proyecto, a la vez que mostrar \textbf{la capacidad del candidato para aprender y profundizar} 
+Se valora especialmente la capacidad para documentar el proceso con rigor técnico y de relacionar los fenómenos físicos, siendo consciente de las limitaciones de los modelos ideales y recurriendo al enfoque modal cuántico cuando sea necesario. 
+\end{tcolorbox}
+
+
+% ============================================================
+%  REFERENCIAS
+% ============================================================
+\newpage
+\section*{Referencias Bibliográficas de Referencia}
+\addcontentsline{toc}{section}{Referencias Bibliográficas}
+
+\begin{enumerate}[label={[\arabic*]}]
+  \item C.~A.~Balanis, \textit{Antenna Theory: Analysis and Design}, 4.ª ed.
+        Hoboken, NJ: Wiley, 2016.
+  \item D.~M.~Pozar, \textit{Microwave Engineering}, 4.ª ed.
+        Hoboken, NJ: Wiley, 2012.
+  \item S.~Ramo, J.~R.~Whinnery y T.~Van~Duzer, \textit{Fields and Waves in
+        Communication Electronics}, 3.ª ed. New York: Wiley, 1994.
+  \item A.~Kurs, A.~Karalis, R.~Moffatt, J.~D.~Joannopoulos, P.~Fisher y
+        M.~Solja\v{c}i\'c, ``Wireless power transfer via strongly coupled magnetic
+        resonances,'' \textit{Science}, vol.~317, n.º~5834, pp.~83--86, jul.~2007.
+  \item W.~X.~Zhong y S.~Y.~R.~Hui, ``Maximum energy efficiency tracking for
+        wireless power transfer systems,'' \textit{IEEE Trans.\ Power Electron.},
+        vol.~30, n.º~7, pp.~4025--4034, 2015.
+  \item H.~Haus y J.~Melcher, \textit{Electromagnetic Fields and Energy}.
+        MIT OpenCourseWare, 1989. [En línea]. Disponible en:
+        \url{https://ocw.mit.edu}
+  \item K.~Finkenzeller, \textit{RFID Handbook: Fundamentals and Applications
+        in Contactless Smart Cards and Identification}, 2.ª ed.
+        Chichester: Wiley, 2003.
+\end{enumerate}
+
+% ─── PIE FINAL ───────────────────────────────────────────
+\vfill
+\noindent\color{grisbordes}\rule{\linewidth}{0.4pt}
+\begin{center}
+  \small\color{gray}
+  \textit{Prueba Técnica de Ingeniería --- Sistemas de Acoplamiento Electromagnético}\\
+  Documento de carácter académico. Todos los derechos reservados.
+\end{center}
+
+\end{document}

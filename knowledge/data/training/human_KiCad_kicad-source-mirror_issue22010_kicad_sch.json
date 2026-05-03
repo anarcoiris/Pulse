@@ -1,0 +1,34 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue22010.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue22010.kicad_sch",
+    "components": [
+      {
+        "uid": "U2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MT40A512M16JY",
+        "label": "U2",
+        "lib_id": "Memory_RAM:MT40A512M16JY"
+      },
+      {
+        "uid": "#PWR04",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR04",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR05",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR05",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.0"
+  }
+}

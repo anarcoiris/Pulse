@@ -11,7 +11,7 @@ de carga: V_C(t) = V1 * (1 - exp(-t / RC))
   tau = RC = 1000 * 100e-6 = 100 ms
 """
 
-from ui.editor import CircuitGraph
+from core.circuit_graph import CircuitGraph
 
 
 def load() -> CircuitGraph:

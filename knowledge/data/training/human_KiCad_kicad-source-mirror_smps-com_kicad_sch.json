@@ -1,0 +1,210 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_smps-com.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_smps-com.kicad_sch",
+    "components": [
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "L1",
+        "etype": "L",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10u",
+        "label": "L1",
+        "lib_id": "Device:L"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Generic OpAmp",
+        "label": "U1",
+        "lib_id": "Simulation_SPICE:OPAMP"
+      },
+      {
+        "uid": "V5",
+        "etype": "IC",
+        "value": 10.0,
+        "value_raw": "10",
+        "label": "V5",
+        "lib_id": "Simulation_SPICE:VDC"
+      },
+      {
+        "uid": "V3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VPULSE",
+        "label": "V3",
+        "lib_id": "Simulation_SPICE:VPULSE"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "V6",
+        "etype": "IC",
+        "value": 0.5,
+        "value_raw": "0.5",
+        "label": "V6",
+        "lib_id": "Simulation_SPICE:VDC"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 9100.0,
+        "value_raw": "9.1k",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#FLG02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG02",
+        "lib_id": "power:PWR_FLAG"
+      },
+      {
+        "uid": "V4",
+        "etype": "IC",
+        "value": 10.0,
+        "value_raw": "10",
+        "label": "V4",
+        "lib_id": "Simulation_SPICE:VDC"
+      },
+      {
+        "uid": "C2",
+        "etype": "C",
+        "value": 1e-08,
+        "value_raw": "10n",
+        "label": "C2",
+        "lib_id": "Device:C_Small"
+      },
+      {
+        "uid": "C2",
+        "etype": "C",
+        "value": 4.7e-06,
+        "value_raw": "4.7u",
+        "label": "C2",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "A1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWM",
+        "label": "A1",
+        "lib_id": "PWM:PWM"
+      },
+      {
+        "uid": "V3",
+        "etype": "IC",
+        "value": -0.5,
+        "value_raw": "-0.5",
+        "label": "V3",
+        "lib_id": "Simulation_SPICE:VDC"
+      },
+      {
+        "uid": "#FLG01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG01",
+        "lib_id": "power:PWR_FLAG"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 10.0,
+        "value_raw": "10Meg",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R='time >13m ? 20 : 60'",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 1000.0,
+        "value_raw": "1k",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 1000.0,
+        "value_raw": "1k",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 20000.0,
+        "value_raw": "20k",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 1.0,
+        "value_raw": "1",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 2.2,
+        "value_raw": "2.2m",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "Q1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "NMOS",
+        "label": "Q1",
+        "lib_id": "Simulation_SPICE:NMOS"
+      }
+    ],
+    "version": "1.0"
+  }
+}

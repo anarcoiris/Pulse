@@ -1,0 +1,34 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_test_hier_no_connect.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_test_hier_no_connect.kicad_sch",
+    "components": [
+      {
+        "uid": "U4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "~",
+        "label": "U4",
+        "lib_id": "TEST_LIB:TEST_DOUBLE"
+      },
+      {
+        "uid": "U6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "~",
+        "label": "U6",
+        "lib_id": "TEST_LIB:TEST_STACKED"
+      },
+      {
+        "uid": "U2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "~",
+        "label": "U2",
+        "lib_id": "TEST_LIB:TEST_STACKED"
+      }
+    ],
+    "version": "1.0"
+  }
+}

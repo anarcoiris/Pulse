@@ -1,0 +1,66 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_RoyalBlue54L-Feather.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_RoyalBlue54L-Feather.kicad_sch",
+    "components": [
+      {
+        "uid": "H2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MountingHole",
+        "label": "H2",
+        "lib_id": "Mechanical:MountingHole"
+      },
+      {
+        "uid": "#SYM1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Logo_Open_Hardware_Small",
+        "label": "#SYM1",
+        "lib_id": "Graphic:Logo_Open_Hardware_Small"
+      },
+      {
+        "uid": "H4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MountingHole",
+        "label": "H4",
+        "lib_id": "Mechanical:MountingHole"
+      },
+      {
+        "uid": "#SYM2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "~",
+        "label": "#SYM2",
+        "lib_id": "LordsBoards-Graphic:LordsBoardsLogo"
+      },
+      {
+        "uid": "H1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MountingHole",
+        "label": "H1",
+        "lib_id": "Mechanical:MountingHole"
+      },
+      {
+        "uid": "H3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MountingHole",
+        "label": "H3",
+        "lib_id": "Mechanical:MountingHole"
+      },
+      {
+        "uid": "LOGO1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "~",
+        "label": "LOGO1",
+        "lib_id": "LordsBoards-Graphic:LordsBoardsLogo"
+      }
+    ],
+    "version": "1.0"
+  }
+}

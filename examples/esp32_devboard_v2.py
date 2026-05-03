@@ -1,6 +1,6 @@
 
 from bridge.forge_api import generate_pcb
-from ui.editor import CircuitGraph, PlacedComponent
+from core.circuit_graph import CircuitGraph, PlacedComponent
 
 def create_esp32_devboard_v2():
     graph = CircuitGraph()
