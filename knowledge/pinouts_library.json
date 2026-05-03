@@ -1,0 +1,84 @@
+{
+  "ESP32-S3": {
+    "type": "MCU",
+    "description": "ESP32-S3 Microcontroller",
+    "pins": {
+      "3V3": "Power supply 3.3V",
+      "GND": "Ground",
+      "EN": "Enable (pull-up required)",
+      "IO0": "Strapping pin / GPIO",
+      "TXD0": "UART TX",
+      "RXD0": "UART RX",
+      "SDA": "I2C Data",
+      "SCL": "I2C Clock",
+      "MISO": "SPI MISO",
+      "MOSI": "SPI MOSI",
+      "SCK": "SPI Clock",
+      "CS": "SPI Chip Select"
+    }
+  },
+  "SSD1306": {
+    "type": "IC",
+    "description": "I2C OLED Display",
+    "pins": {
+      "VDD": "Power supply 3.3V",
+      "GND": "Ground",
+      "SDA": "I2C Data",
+      "SCL": "I2C Clock"
+    }
+  },
+  "PN532": {
+    "type": "IC",
+    "description": "NFC RFID Module (SPI/I2C)",
+    "pins": {
+      "VCC": "Power supply 3.3V/5V",
+      "GND": "Ground",
+      "SCK": "SPI Clock / I2C SCL",
+      "MISO": "SPI MISO",
+      "MOSI": "SPI MOSI / I2C SDA",
+      "CS": "SPI Chip Select",
+      "IRQ": "Interrupt Request"
+    }
+  },
+  "CC1101": {
+    "type": "IC",
+    "description": "Sub-GHz RF Transceiver",
+    "pins": {
+      "VCC": "Power supply 3.3V",
+      "GND": "Ground",
+      "MOSI": "SPI MOSI",
+      "SCK": "SPI Clock",
+      "MISO": "SPI MISO",
+      "CSN": "SPI Chip Select (Active Low)",
+      "GDO0": "Digital Output 0",
+      "GDO2": "Digital Output 2"
+    }
+  },
+  "BME280": {
+    "type": "IC",
+    "description": "I2C Environmental Sensor",
+    "pins": {
+      "VIN": "Power supply",
+      "GND": "Ground",
+      "SCL": "I2C Clock",
+      "SDA": "I2C Data"
+    }
+  },
+  "A4988": {
+    "type": "IC",
+    "description": "Stepper Motor Driver",
+    "pins": {
+      "VMOT": "Motor Supply (8-35V)",
+      "GND_MOT": "Motor Ground",
+      "VDD": "Logic Supply (3.3-5V)",
+      "GND_LOG": "Logic Ground",
+      "STEP": "Step input",
+      "DIR": "Direction input",
+      "EN": "Enable input (active low)",
+      "1A": "Motor coil 1A",
+      "1B": "Motor coil 1B",
+      "2A": "Motor coil 2A",
+      "2B": "Motor coil 2B"
+    }
+  }
+}

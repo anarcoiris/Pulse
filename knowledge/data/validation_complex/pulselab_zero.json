@@ -1,0 +1,69 @@
+{
+  "test_case": "Proyecto Final: PulseLab Zero (Clon Flipper Zero)",
+  "prompt": "Diseña un dispositivo estilo Flipper Zero llamado PulseLab Zero. Debe tener un microcontrolador ESP32-S3 como núcleo, una pantalla OLED SSD1306 por I2C, un módulo NFC PN532 por SPI, un transceptor sub-GHz CC1101 por SPI, un D-Pad de 5 botones direccionales conectados a GPIOs con resistencias pull-up, y un conector de expansión de 8 pines (GPIOs libres, 3.3V y GND). Incluye condensadores de desacoplo para el ESP32.",
+  "circuit": [
+    {
+      "etype": "IC",
+      "value": 0.0,
+      "n1": "ESP32-S3",
+      "n2": "GND",
+      "label": "Microcontrolador ESP32-S3"
+    },
+    {
+      "etype": "V",
+      "value": 3.3,
+      "n1": "3V3",
+      "n2": "GND",
+      "label": "3.3V"
+    },
+    {
+      "etype": "GND",
+      "value": 0.0,
+      "n1": "GND",
+      "n2": "GND",
+      "label": "Tierra"
+    },
+    {
+      "etype": "IC",
+      "value": 0.0,
+      "n1": "SSD1306",
+      "n2": "GND",
+      "label": "Pantalla OLED SSD1306"
+    },
+    {
+      "etype": "IC",
+      "value": 0.0,
+      "n1": "PN532",
+      "n2": "GND",
+      "label": "Módulo NFC PN532"
+    },
+    {
+      "etype": "IC",
+      "value": 0.0,
+      "n1": "CC1101",
+      "n2": "GND",
+      "label": "Transceptor sub-GHz CC1101"
+    },
+    {
+      "etype": "S",
+      "value": 0.0,
+      "n1": "D-Pad",
+      "n2": "GND",
+      "label": "D-Pad"
+    },
+    {
+      "etype": "R",
+      "value": 10000.0,
+      "n1": "D-Pad",
+      "n2": "ESP32-S3",
+      "label": "Pull-up resistencias D-Pad"
+    },
+    {
+      "etype": "IC",
+      "value": 0.0,
+      "n1": "Expander",
+      "n2": "GND",
+      "label": "Conector de expansión de 8 pines"
+    }
+  ]
+}

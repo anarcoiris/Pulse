@@ -1,0 +1,74 @@
+{
+  "test_case": "ESP32 Devboard + Sensores",
+  "prompt": "Diseña un circuito basado en un microcontrolador ESP32. Conecta una pantalla OLED SSD1306 al bus I2C (pines SDA, SCL). Conecta también un sensor ambiental BME280 al mismo bus I2C. Asegúrate de incluir resistencias pull-up en las líneas I2C y condensadores de desacoplo para la alimentación del ESP32.",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 3.3,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "V1"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-S3",
+      "pins": {
+        "3V3": "3.3V",
+        "GND": "GND",
+        "SDA": "I2C_SDA",
+        "SCL": "I2C_SCL"
+      },
+      "label": "U1"
+    },
+    {
+      "etype": "IC",
+      "value": "SSD1306",
+      "pins": {
+        "VDD": "3.3V",
+        "GND": "GND",
+        "SDA": "I2C_SDA",
+        "SCL": "I2C_SCL"
+      },
+      "label": "OLED"
+    },
+    {
+      "etype": "IC",
+      "value": "BME280",
+      "pins": {
+        "VIN": "3.3V",
+        "GND": "GND",
+        "SCL": "I2C_SCL",
+        "SDA": "I2C_SDA"
+      },
+      "label": "BME280"
+    },
+    {
+      "etype": "R",
+      "value": 4700.0,
+      "n1": "3.3V",
+      "n2": "I2C_SDA",
+      "label": "R_PULLUP_SDA"
+    },
+    {
+      "etype": "R",
+      "value": 4700.0,
+      "n1": "3.3V",
+      "n2": "I2C_SCL",
+      "label": "R_PULLUP_SCL"
+    },
+    {
+      "etype": "C",
+      "value": 100.0,
+      "n1": "I2C_SDA",
+      "n2": "GND",
+      "label": "C_SDA"
+    },
+    {
+      "etype": "C",
+      "value": 100.0,
+      "n1": "I2C_SCL",
+      "n2": "GND",
+      "label": "C_SCL"
+    }
+  ]
+}
