@@ -113,8 +113,18 @@ class NetlistGenerator:
             if c.etype == "GND":
                 continue
             ref  = refs[c.uid]
-            sym  = _KICAD_SYMBOLS.get(c.etype, "Device:R")
-            fp   = _DEFAULT_FOOTPRINTS.get(c.etype, "")
+            sym  = getattr(c, 'symbol_id', '') or _KICAD_SYMBOLS.get(c.etype, "")
+            fp   = getattr(c, 'footprint_id', '') or _DEFAULT_FOOTPRINTS.get(c.etype, "")
+            
+            if not sym and c.etype in ('IC', 'MCU'):
+                # Heurística: si no hay símbolo pero tiene pines, asume conector genérico
+                num_pins = len(c.pins) if c.pins else 2
+                sym = f"Connector_Generic:Conn_01x{num_pins:02d}"
+                fp  = f"Connector_PinHeader_2.54mm:PinHeader_1x{num_pins:02d}_P2.54mm_Vertical"
+            
+            if not sym: sym = "Device:R"
+            if not fp: fp = "Resistor_SMD:R_0805_2012Metric"
+            
             val  = _fmt_value(c.etype, c.value)
             # Sanitize label for kicad (no special chars)
             label = re.sub(r'[^\w\-]', '_', c.label)

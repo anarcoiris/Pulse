@@ -52,6 +52,7 @@ class PlacedComponent:
     width:       int   = 2
     height:      int   = 2
     footprint_id: Optional[str] = None
+    symbol_id:    Optional[str] = None
 
     def __post_init__(self):
         # Asegurar que pins esté poblado para componentes de 2 pines
@@ -343,6 +344,8 @@ class CircuitGraph:
                 n1          = c.get("n1", f"N{i}"),
                 n2          = c.get("n2", f"N{i+1}"),
                 pins        = c.get("pins", {}).copy(),
+                symbol_id   = c.get("symbol", ""),
+                footprint_id= c.get("footprint", ""),
             )
         return g
 

@@ -30,12 +30,28 @@ def export_json_to_pcb(json_path: str):
     print("Generando PCB y Esquemático...")
     res = generate_pcb(graph)
 
+    import subprocess
+    
     if "error" in res:
         print(f"❌ Error al generar PCB: {res['error']}")
     else:
         print(f"✅ Generación Exitosa.")
-        print(f"📄 Esquemático guardado en: {res.get('sch_path', 'N/A')}")
-        print(f"🖨️ PCB guardado en: {res.get('path', 'N/A')}")
+        sch_path = res.get('sch_path', '')
+        pcb_path = res.get('path', '')
+        print(f"📄 Esquemático guardado en: {sch_path}")
+        print(f"🖨️ PCB guardado en: {pcb_path}")
+        
+        if sch_path:
+            out_pdf = sch_path.replace(".kicad_sch", ".pdf")
+            print(f"📸 Exportando PDF del esquemático...")
+            subprocess.run(["kicad-cli", "sch", "export", "pdf", sch_path, "-o", out_pdf], check=False)
+            
+        if pcb_path:
+            out_svg = pcb_path.replace(".kicad_pcb", ".svg")
+            print(f"📸 Exportando SVG del PCB a {out_svg}...")
+            layers = "F.Cu,B.Cu,F.SilkS,F.Mask,Edge.Cuts"
+            subprocess.run(["kicad-cli", "pcb", "export", "svg", pcb_path, "-l", layers, "-o", out_svg], check=False)
+            print(f"✅ SVG PCB generado.")
 
 if __name__ == "__main__":
     import sys

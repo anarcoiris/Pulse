@@ -16,6 +16,7 @@ class CircuitSynthesizer:
     def __init__(self):
         self.llm = get_llm_client()
         self.rag = ElectronicsKnowledgeBase()
+        self.pinouts_db = self._load_pinouts()
 
         self.base_system_prompt = """
 Eres el 'PulseLab Circuit Engine', un experto en diseño electrónico.
@@ -27,8 +28,10 @@ REGLAS DE FORMATO:
     "etype": "R" (resistencia), "C" (cap), "L" (ind), "V" (fuente), "S" (sw), "GND" (tierra), o "IC", "MCU".
     "value": Valor NUMÉRICO real para pasivos o string para nombre de ICs (ej. "ESP32", "1000").
     "n1", "n2": Nombres de nodos (strings) para componentes de 2 pines (R, C, L, V, S). 'GND' es obligatorio para la referencia.
-    "pins": (SOLO PARA IC/MCU) Un objeto que mapea el ID/Nombre del pin al nombre del NET al que está conectado. Ej: {"3V3": "VCC", "GND": "GND", "SDA": "I2C_SDA", "SCL": "I2C_SCL"}.
+    "pins": (SOLO PARA IC/MCU) Un objeto que mapea el NÚMERO del pad (string, ej. "1", "2") al nombre de la red. Ej: {"1": "VCC", "2": "GND", "3": "I2C_SDA"}. REVISAR CUIDADOSAMENTE EL NÚMERO CORRECTO EN EL CONTEXTO.
     "label": Etiqueta descriptiva corta.
+    "symbol": (SOLO PARA IC/MCU) Símbolo KiCad extraído del contexto.
+    "footprint": (SOLO PARA IC/MCU) Footprint KiCad extraído del contexto.
 
 EJEMPLOS ESTATICOS:
 Usuario: "Un ESP32 conectado a una pantalla I2C y a un resistor pull-up a 3.3V"
@@ -36,8 +39,8 @@ Respuesta:
 {
   "circuit": [
     {"etype": "V", "value": 3.3, "n1": "3.3V", "n2": "GND", "label": "V1"},
-    {"etype": "MCU", "value": "ESP32-S3", "pins": {"3V3": "3.3V", "GND": "GND", "SDA": "I2C_SDA", "SCL": "I2C_SCL"}, "label": "U1"},
-    {"etype": "IC", "value": "SSD1306", "pins": {"VDD": "3.3V", "GND": "GND", "SDA": "I2C_SDA", "SCL": "I2C_SCL"}, "label": "OLED"},
+    {"etype": "MCU", "value": "ESP32-S3", "symbol": "RF_Module:ESP32-WROOM-32", "footprint": "RF_Module:ESP32-WROOM-32", "pins": {"2": "3.3V", "1": "GND", "33": "I2C_SDA", "36": "I2C_SCL"}, "label": "U1"},
+    {"etype": "IC", "value": "SSD1306", "symbol": "Connector_Generic:Conn_01x04", "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical", "pins": {"2": "3.3V", "1": "GND", "4": "I2C_SDA", "3": "I2C_SCL"}, "label": "OLED"},
     {"etype": "R", "value": 4700.0, "n1": "3.3V", "n2": "I2C_SDA", "label": "R_PULLUP_SDA"}
   ]
 }
@@ -45,16 +48,20 @@ Respuesta:
 RECUERDA: Devuelve un JSON válido. Usa SIEMPRE "pins" para interconectar módulos complejos, NO uses "S" (switches) para eso.
 """
 
-    def _get_pinouts_context(self) -> str:
+    def _load_pinouts(self):
         try:
             import os
             path = os.path.join(os.path.dirname(__file__), "pinouts_library.json")
             if os.path.exists(path):
                 with open(path, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                return "\nLIBRERÍA DE PINOUTS HARDWARE:\n" + json.dumps(data, indent=2) + "\n"
+                    return json.load(f)
         except Exception:
             pass
+        return {}
+
+    def _get_pinouts_context(self) -> str:
+        if self.pinouts_db:
+            return "\nLIBRERÍA DE PINOUTS HARDWARE:\n" + json.dumps(self.pinouts_db, indent=2) + "\n"
         return ""
 
 
@@ -110,6 +117,16 @@ RECUERDA: Devuelve un JSON válido. Usa SIEMPRE "pins" para interconectar módul
                         
             if not isinstance(components, list):
                 return {"error": "Formato inesperado: Se esperaba una lista de componentes en 'circuit'."}
+
+            # Inyectar atributos físicos desde la base de datos de pinouts
+            for comp in components:
+                val = str(comp.get("value", ""))
+                if val in self.pinouts_db:
+                    db_entry = self.pinouts_db[val]
+                    if "symbol" in db_entry and not comp.get("symbol"):
+                        comp["symbol"] = db_entry["symbol"]
+                    if "footprint" in db_entry and not comp.get("footprint"):
+                        comp["footprint"] = db_entry["footprint"]
 
             return {"status": "ok", "components": components}
 
