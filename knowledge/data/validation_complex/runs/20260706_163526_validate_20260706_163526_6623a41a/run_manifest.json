@@ -1,0 +1,120 @@
+{
+  "run_session": "validate_20260706_163526_6623a41a",
+  "started_at": "2026-07-06T16:35:32.153986+00:00",
+  "backend_pref": "auto",
+  "backends": {
+    "primary": {
+      "label": "Ollama Qwythos 9B (reasoning)",
+      "available": true,
+      "base_url": "http://localhost:11431/v1",
+      "model": "qwythos-9b-96k",
+      "api": "auto",
+      "think": "low",
+      "roles": [
+        "reasoning",
+        "complex_synthesis",
+        "review"
+      ],
+      "limits": {
+        "num_ctx": 98304,
+        "max_tokens": 16384,
+        "prompt_max_chars": 48000,
+        "json_mode": false,
+        "think": "low",
+        "api": "auto"
+      }
+    },
+    "atomic": {
+      "label": "llama-server atomic lane (MCP execution)",
+      "available": false,
+      "base_url": "http://localhost:11439/v1",
+      "model": "qwen3-4b-instruct-48k",
+      "api": "openai",
+      "think": false,
+      "roles": [
+        "mcp_execution",
+        "fast_json",
+        "parallel_slots"
+      ],
+      "limits": {
+        "num_ctx": 49152,
+        "max_tokens": 16384,
+        "prompt_max_chars": 24000,
+        "json_mode": true,
+        "think": false,
+        "api": "openai"
+      },
+      "atomic": {
+        "available": false,
+        "port": 11439,
+        "base_url": "http://localhost:11439/v1",
+        "profile": "concurrent2",
+        "parallel": 2,
+        "slot_ctx": 49152,
+        "total_ctx": 98304,
+        "model": "auto",
+        "server_alias": "qwen3-4b-instruct-48k",
+        "pid": 29292,
+        "state_file": "C:\\Users\\soyko\\Documents\\Ollama\\docker\\llamacpp\\qwythos.state.json",
+        "api": "openai",
+        "think": "none",
+        "roles": [
+          "mcp_execution",
+          "fast_json",
+          "parallel_slots"
+        ],
+        "last_switch": {}
+      }
+    },
+    "routing": {
+      "default_backend": "primary",
+      "mcp_tool_backend": "atomic",
+      "complex_circuit_backend": "primary",
+      "review_backend": "primary",
+      "auto_fallback": true
+    }
+  },
+  "results": [
+    {
+      "name": "esp32_sensors",
+      "elapsed_s": 578.8,
+      "session_id": "validate_20260706_163526_6623a41a",
+      "ok": true,
+      "components": 9,
+      "backend": "primary",
+      "output_file": "knowledge\\data\\validation_complex\\runs\\20260706_163526_validate_20260706_163526_6623a41a\\esp32_sensors.json",
+      "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_163526_6623a41a",
+      "pin_coverage": {
+        "per_component": [
+          {
+            "label": "U1",
+            "value": "ESP32-WROOM-32",
+            "generated_pins": 4,
+            "total_pins": 39,
+            "coverage": 0.1026,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "OLED",
+            "value": "SSD1306",
+            "generated_pins": 4,
+            "total_pins": 4,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "SENSOR",
+            "value": "BME280",
+            "generated_pins": 4,
+            "total_pins": 4,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          }
+        ],
+        "unmatched": [],
+        "average_coverage": 0.7009
+      }
+    }
+  ],
+  "finished_at": "2026-07-06T16:45:11.137625+00:00"
+}

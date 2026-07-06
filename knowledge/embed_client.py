@@ -36,6 +36,14 @@ class EmbedClient:
         self.timeout = float(timeout if timeout is not None else cfg("llm.embed.timeout_s", 60))
         self._last_error: Optional[str] = None
 
+    @staticmethod
+    def _clip_text(text: str) -> str:
+        """Ollama nomic-embed-text returns HTTP 500 on very long prompts (~3.7k+ chars observed)."""
+        max_chars = int(cfg("llm.embed.max_prompt_chars", 2000))
+        if len(text) <= max_chars:
+            return text
+        return text[:max_chars]
+
     @property
     def available(self) -> bool:
         if not _NUMPY_OK:
@@ -60,7 +68,7 @@ class EmbedClient:
         url = f"{self.base_url}/api/embeddings"
         vectors = []
         for text in texts:
-            payload = json.dumps({"model": self.model, "prompt": text}).encode("utf-8")
+            payload = json.dumps({"model": self.model, "prompt": self._clip_text(text)}).encode("utf-8")
             req = urllib.request.Request(
                 url,
                 data=payload,

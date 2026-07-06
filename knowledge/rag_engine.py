@@ -163,6 +163,20 @@ def _chunk_training_sample(sample: dict, source_name: str) -> dict:
         "data": sample,
     }
 
+
+def normalize_part_name(name: str) -> str:
+    """Normaliza un nombre de parte para comparación tolerante a variantes de
+    formato (ej. "LM2596S-5.0" vs "LM2596S-5", "NE555" vs "NE555P").
+
+    Usado para decidir cuándo un override de `pinouts_library.json` debe
+    reemplazar (no duplicar) un chunk `pinout` ya generado desde el índice de
+    símbolos KiCad real — ver `ElectronicsKnowledgeBase._load_symbol_index()`.
+    Sólo colapsa separadores/mayúsculas; no resuelve el drift de nombres reales
+    documentado en docs/calibration_forge/kicad_symbol_kb.md (ej. "NE555" no
+    normaliza a lo mismo que "NE555P" — son partes distintas a propósito).
+    """
+    return re.sub(r"[^a-z0-9]", "", name.lower())
+
 class ElectronicsKnowledgeBase:
     """
     Base de conocimiento RAG para electrónica.
@@ -249,6 +263,88 @@ class ElectronicsKnowledgeBase:
                     "data": {"text": rule, "board_id": board_id, "mcu": mcu},
                 })
 
+    def _load_symbol_index(self) -> None:
+        """Carga `knowledge/data/symbols_index.json` (construido por
+        `python -m knowledge.build_symbol_index` desde una instalación real de
+        KiCad, ver docs/calibration_forge/kicad_symbol_kb.md) como chunks
+        `chunk_type="pinout"`, uno por símbolo con pines conocidos.
+
+        Después carga `knowledge/pinouts_library.json` (datos curados a mano)
+        también como chunks `pinout`, pero con prioridad: si el nombre de parte
+        normalizado (`normalize_part_name`) ya tiene un chunk generado desde el
+        índice KiCad, el override lo REEMPLAZA en vez de duplicarlo — así
+        `_match_pinouts()`/`kb.query(chunk_type="pinout")` no necesitan lógica
+        especial de prioridad, el override ya "gana" por ser lo último indexado
+        bajo la misma clave. Esto preserva el comportamiento de Sesión 3 para
+        las partes que `pinouts_library.json` ya cubre (incluyendo enriquecidos
+        como `uart_programming`), mientras extiende la cobertura de pinout a
+        cientos de MCUs/reguladores/drivers reales que antes no existían en
+        ningún lado del sistema.
+        """
+        pinout_chunks: dict[str, dict] = {}
+        order: list[str] = []
+
+        index_file = self._data_dir / "symbols_index.json"
+        if index_file.exists():
+            try:
+                with open(index_file, encoding="utf-8") as f:
+                    index = json.load(f)
+            except (json.JSONDecodeError, OSError):
+                index = {}
+            for sym in index.get("symbols", []) or []:
+                lib_id = sym.get("lib_id")
+                pins = sym.get("pins") or {}
+                if not lib_id or not pins:
+                    continue
+                key = normalize_part_name(lib_id)
+                library = sym.get("library", "")
+                text = " ".join(str(p) for p in (
+                    lib_id, library, sym.get("description", ""), sym.get("keywords", ""),
+                ) if p)
+                data = {
+                    "name": lib_id,
+                    "symbol": f"{library}:{lib_id}" if library else lib_id,
+                    "footprint": sym.get("footprint_default", ""),
+                    "description": sym.get("description", ""),
+                    "pins": pins,
+                }
+                if key not in pinout_chunks:
+                    order.append(key)
+                pinout_chunks[key] = {
+                    "text": text,
+                    "source": f"KiCadSymbol:{library}:{lib_id}",
+                    "type": "pinout",
+                    "data": data,
+                }
+
+        manual_file = _HERE / "pinouts_library.json"
+        if manual_file.exists():
+            try:
+                with open(manual_file, encoding="utf-8") as f:
+                    manual = json.load(f)
+            except (json.JSONDecodeError, OSError):
+                manual = {}
+            for name, entry in (manual or {}).items():
+                if not isinstance(entry, dict):
+                    continue
+                key = normalize_part_name(name)
+                text = " ".join(str(p) for p in (
+                    name, entry.get("type", ""), entry.get("description", ""),
+                ) if p)
+                data = dict(entry)
+                data["name"] = name
+                if key not in pinout_chunks:
+                    order.append(key)
+                pinout_chunks[key] = {
+                    "text": text,
+                    "source": f"Override:{name}",
+                    "type": "pinout",
+                    "data": data,
+                }
+
+        for key in order:
+            self._chunks.append(pinout_chunks[key])
+
     def _load_embed_cache(self) -> None:
         """Load persisted dense vectors if manifest matches chunk count."""
         if not _SKLEARN_OK or np is None:
@@ -276,7 +372,20 @@ class ElectronicsKnowledgeBase:
         if not client.available:
             return {"error": client.status().get("last_error", "embed unavailable")}
         texts = [c["text"] for c in self._chunks]
-        vectors = client.embed_batch(texts)
+        vectors = []
+        batch_size = 100
+        for start in range(0, len(texts), batch_size):
+            batch = texts[start : start + batch_size]
+            batch_vecs = client.embed_batch(batch)
+            if len(batch_vecs) != len(batch):
+                return {
+                    "error": (
+                        f"embedding batch incomplete at offset {start}: "
+                        f"got {len(batch_vecs)}/{len(batch)} — "
+                        f"{client.status().get('last_error', 'unknown')}"
+                    )
+                }
+            vectors.extend(batch_vecs)
         if len(vectors) != len(texts):
             return {"error": "embedding batch incomplete"}
         _EMBED_DIR.mkdir(parents=True, exist_ok=True)
@@ -309,6 +418,7 @@ class ElectronicsKnowledgeBase:
 
         self._load_training_examples()
         self._load_experiences()
+        self._load_symbol_index()
         self._fit()
 
     def ingest_text(self, text: str, source: str = "user",

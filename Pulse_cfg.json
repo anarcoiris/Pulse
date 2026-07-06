@@ -6,23 +6,25 @@
     "think": "low",
     "num_ctx": 98304,
     "max_tokens": 24576,
-    "num_predict": 12288,
+    "num_predict": 8192,
     "timeout_s": 900,
     "max_retries": 2,
     "retry_backoff_base_s": 1.0,
     "health_check_timeout_s": 3,
-    "default_temperature": 0.3,
+    "default_temperature": 0.6,
     "log_io": true,
     "log_dir": "knowledge/data/llm_sessions",
     "embed": {
       "model": "nomic-embed-text",
       "timeout_s": 120,
-      "health_check_timeout_s": 3
+      "health_check_timeout_s": 3,
+      "max_prompt_chars": 2000
     },
     "agents": {
       "circuit_synthesizer": {
-        "temperature": 0.1,
+        "temperature": 0.6,
         "rag_top_k": 1,
+        "rag_top_k_variant_b": 4,
         "rag_max_components": 8,
         "prompt_max_chars": 48000,
         "max_pinout_entries": 2,
@@ -30,11 +32,11 @@
         "description_meta_max_chars": 2000
       },
       "semantic_reviewer": {
-        "temperature": 0.1,
+        "temperature": 0.6,
         "max_tokens": 4096
       },
       "firmware_synthesizer": {
-        "temperature": 0.3,
+        "temperature": 0.6,
         "max_tokens": 8192
       }
     },

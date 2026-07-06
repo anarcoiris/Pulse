@@ -1,0 +1,118 @@
+{
+  "run_session": "validate_20260706_163526_6623a41a",
+  "test_case": "ESP32 Devboard + Sensores",
+  "prompt": "Diseña un circuito basado en un microcontrolador ESP32. Conecta una pantalla OLED SSD1306 al bus I2C (pines SDA, SCL). Conecta también un sensor ambiental BME280 al mismo bus I2C. Asegúrate de incluir resistencias pull-up en las líneas I2C y condensadores de desacoplo para la alimentación del ESP32.",
+  "backend": "primary",
+  "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_163526_6623a41a",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 3.3,
+      "n1": "VCC",
+      "n2": "GND",
+      "label": "V1"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-WROOM-32",
+      "label": "U1",
+      "symbol": "RF_Module:ESP32-WROOM-32",
+      "footprint": "RF_Module:ESP32-WROOM-32",
+      "pins": {
+        "1": "GND",
+        "2": "VCC",
+        "21": "I2C_SCL",
+        "22": "I2C_SDA"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "SSD1306",
+      "label": "OLED",
+      "symbol": "Connector_Generic:Conn_01x04",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "VCC",
+        "3": "I2C_SCL",
+        "4": "I2C_SDA"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "BME280",
+      "label": "SENSOR",
+      "pins": {
+        "1": "GND",
+        "2": "VCC",
+        "3": "I2C_SCL",
+        "4": "I2C_SDA"
+      },
+      "symbol": "Connector_Generic:Conn_01x04",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
+    },
+    {
+      "etype": "R",
+      "value": 4700,
+      "n1": "VCC",
+      "n2": "I2C_SCL",
+      "label": "R_PULLUP_SCL"
+    },
+    {
+      "etype": "R",
+      "value": 4700,
+      "n1": "VCC",
+      "n2": "I2C_SDA",
+      "label": "R_PULLUP_SDA"
+    },
+    {
+      "etype": "C",
+      "value": 1e-05,
+      "n1": "VCC",
+      "n2": "GND",
+      "label": "C_ESP_VCC_10uF"
+    },
+    {
+      "etype": "C",
+      "value": 1e-07,
+      "n1": "VCC",
+      "n2": "GND",
+      "label": "C_ESP_VCC_100nF"
+    },
+    {
+      "etype": "GND",
+      "value": 0,
+      "label": "GND"
+    }
+  ],
+  "pin_coverage": {
+    "per_component": [
+      {
+        "label": "U1",
+        "value": "ESP32-WROOM-32",
+        "generated_pins": 4,
+        "total_pins": 39,
+        "coverage": 0.1026,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "OLED",
+        "value": "SSD1306",
+        "generated_pins": 4,
+        "total_pins": 4,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "SENSOR",
+        "value": "BME280",
+        "generated_pins": 4,
+        "total_pins": 4,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      }
+    ],
+    "unmatched": [],
+    "average_coverage": 0.7009
+  }
+}

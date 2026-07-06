@@ -37,7 +37,7 @@ outputs/
 output/
 manufacturing/
 reports/
-scratch/
+
 *_drc.json
 *.kicad_pcb
 *.kicad_prl

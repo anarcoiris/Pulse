@@ -53,7 +53,8 @@ Technical reviews (chronological, latest first):
 - [`pulselab_review_23042026.md`](./reviews/pulselab_review_23042026.md) — superseded; kept as historical record.
 
 Active research lines (Calibration Forge, see [`calibration_forge/index.md`](./calibration_forge/index.md) for the full index):
-- [`pin_model_coverage.md`](./calibration_forge/pin_model_coverage.md) — MCU pin tables are truncated/capped before reaching the LLM, so generated circuits under-represent real physical pins (e.g. 4/39 pins on ESP32-WROOM-32 in current validation runs).
-- [`knowledge_base_fidelity.md`](./calibration_forge/knowledge_base_fidelity.md) — natural-language design intent and schematic annotations are dropped during RAG ingestion (one is an outright indexing bug, the other a parser gap).
-- [`prompt_vs_rag_balance.md`](./calibration_forge/prompt_vs_rag_balance.md) — hardcoded "OBLIGATORIAS" rules in `circuit_synthesizer.py`/`semantic_reviewer.py` prompts may now be over-constraining a larger local model that could rely more on RAG retrieval.
-- [`dormant_features_audit.md`](./calibration_forge/dormant_features_audit.md) — `PulseLogger` and the `design_experience.py` feedback loop are fully implemented but not yet integrated/producing data.
+- [`pin_model_coverage.md`](./calibration_forge/pin_model_coverage.md) — ~~MCU pin tables truncated before LLM~~ **resuelto y re-confirmado sin regresión** (Session 3 fix + Session 4a migration to RAG, both 100% on `esp32_sensors`).
+- [`kicad_symbol_kb.md`](./calibration_forge/kicad_symbol_kb.md) — ~~hand-maintain `pinouts_library.json`~~ **resuelto** (Session 4a): pinouts now sourced from a real KiCad install (5320 symbols / 29 libraries indexed) via RAG `chunk_type="pinout"`.
+- [`knowledge_base_fidelity.md`](./calibration_forge/knowledge_base_fidelity.md) — ~~natural-language design intent dropped during RAG ingestion~~ **resuelto** (Session 1).
+- [`prompt_vs_rag_balance.md`](./calibration_forge/prompt_vs_rag_balance.md) — hardcoded "OBLIGATORIAS" rules may over-constrain a larger local model; unified KiCad pinout retrieval (Session 4a) is done, Session 4b should run the A/B experiment.
+- [`dormant_features_audit.md`](./calibration_forge/dormant_features_audit.md) — ~~PulseLogger and design_experience loop not integrated~~ **resuelto** (Session 2).

@@ -15,6 +15,7 @@ from typing import Dict, Any
 
 from knowledge.pulse_config import cfg
 from knowledge.llm_client import get_llm_client
+from knowledge.llm_json import parse_json_object
 from core.logger import logger
 
 
@@ -79,7 +80,7 @@ class SemanticAIAgent:
             return result
 
         try:
-            data = json.loads(result["content"])
+            data = parse_json_object(result["content"])
             issues = data.get("issues", [])
             critical = sum(1 for i in issues if i.get("severity") == "critical")
             logger.ai_review(
@@ -89,7 +90,7 @@ class SemanticAIAgent:
             return {"status": "ok", "issues": issues}
         except json.JSONDecodeError:
             logger.error("semantic_reviewer", f"analyze_circuit() JSON invalido: {result['content'][:100]}")
-            return {"error": f"LLM devolvió JSON inválido: {result['content'][:100]}..."}
+            return {"error": f"LLM devolvió JSON inválido: {result['content'][:200]}..."}
 
 
 class SemanticReviewer:
@@ -140,7 +141,7 @@ class SemanticReviewer:
             return result
 
         try:
-            resp_data = json.loads(result["content"])
+            resp_data = parse_json_object(result["content"])
             issues = resp_data.get("issues", [])
             critical = sum(1 for i in issues if i.get("severity") == "critical")
             logger.ai_review(
@@ -150,4 +151,4 @@ class SemanticReviewer:
             return {"status": "ok", "issues": issues}
         except json.JSONDecodeError:
             logger.error("semantic_reviewer", f"review_netlist() JSON invalido: {result['content'][:100]}")
-            return {"error": f"LLM devolvió JSON inválido: {result['content'][:100]}..."}
+            return {"error": f"LLM devolvió JSON inválido: {result['content'][:200]}..."}

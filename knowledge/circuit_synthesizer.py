@@ -16,16 +16,19 @@ from knowledge.llm_prompt_format import chat_options_for_backend, format_system_
 from knowledge.llm_session_log import new_call_id
 from knowledge.ollama_native import normalize_think
 from knowledge.pulse_config import cfg, PULSE_LLM_THINK
-from knowledge.rag_engine import ElectronicsKnowledgeBase
+from knowledge.rag_engine import ElectronicsKnowledgeBase, normalize_part_name
 from core.logger import logger
 
-class CircuitSynthesizer:
-    def __init__(self, backend: str = "auto"):
-        self.backend_pref = backend
-        self.rag = ElectronicsKnowledgeBase()
-        self.pinouts_db = self._load_pinouts()
+_OBLIGATORIAS_UART_USB = """
+REGLAS UART / USB (OBLIGATORIAS):
+- Para ESP32-WROOM-32 programación UART: U0TXD=GPIO1, U0RXD=GPIO3.
+- CH340/CP2102: TXD del bridge va a RX del MCU; RXD del bridge va a TX del MCU.
+- Incluir condensadores de desacople 100nF + 10uF en alimentación del MCU.
+- Pines EN del ESP32 requieren pull-up 10k a 3.3V.
+- USB D+ y D- deben nombrarse USB_D+ y USB_D- (o D+/D-).
+"""
 
-        self.base_system_prompt = """
+_PROMPT_CORE = """
 Eres el 'PulseLab Circuit Engine', un experto en diseño electrónico.
 Tu tarea es convertir descripciones de circuitos en un JSON estricto.
 
@@ -56,17 +59,25 @@ FIDELIDAD DE PINES (IC/MCU) — OBLIGATORIO:
 EJEMPLOS:
 {example_block}
 RECUERDA: Devuelve un JSON válido. Usa SIEMPRE "pins" para interconectar módulos complejos, NO uses "S" (switches) para eso.
-
-REGLAS UART / USB (OBLIGATORIAS):
-- Para ESP32-WROOM-32 programación UART: U0TXD=GPIO1, U0RXD=GPIO3.
-- CH340/CP2102: TXD del bridge va a RX del MCU; RXD del bridge va a TX del MCU.
-- Incluir condensadores de desacople 100nF + 10uF en alimentación del MCU.
-- Pines EN del ESP32 requieren pull-up 10k a 3.3V.
-- USB D+ y D- deben nombrarse USB_D+ y USB_D- (o D+/D-).
-
+{obligatorias_block}
 Devuelve SOLO el JSON final, sin explicaciones ni bloques de razonamiento.
 Si usas razonamiento interno, termina con el objeto JSON en una sola respuesta.
-""".replace("{example_block}", self._build_examples_block())
+"""
+
+
+class CircuitSynthesizer:
+    def __init__(self, backend: str = "auto", ab_variant: str = "a"):
+        self.backend_pref = backend
+        self.ab_variant = ab_variant if ab_variant in ("a", "b") else "a"
+        self.rag = ElectronicsKnowledgeBase()
+        self.pinouts_db = self._load_pinouts()
+        self.base_system_prompt = self._build_base_system_prompt()
+
+    def _build_base_system_prompt(self) -> str:
+        obligatorias = _OBLIGATORIAS_UART_USB if self.ab_variant == "a" else ""
+        return _PROMPT_CORE.replace("{example_block}", self._build_examples_block()).replace(
+            "{obligatorias_block}", obligatorias
+        )
 
     JSON_USER_SUFFIX = (
         "\n\nResponde UNICAMENTE con el objeto JSON. "
@@ -91,6 +102,24 @@ Si usas razonamiento interno, termina con el objeto JSON en una sola respuesta.
     @property
     def _max_pinout_pins(self) -> int:
         return int(cfg("llm.agents.circuit_synthesizer.max_pinout_pins", 14))
+
+    def _circuit_example_rag_top_k(self) -> int:
+        """Variant-aware top_k for chunk_type=circuit_example (Session 4b A/B)."""
+        if self.ab_variant == "b":
+            key = "llm.agents.circuit_synthesizer.rag_top_k_variant_b"
+            default = 4
+        else:
+            key = "llm.agents.circuit_synthesizer.rag_top_k"
+            default = 1
+        raw = cfg(key, default)
+        top_k = int(raw)
+        if top_k < 1:
+            logger.warning(
+                "circuit_synthesizer",
+                f"rag_top_k truncado a 0 desde cfg {key}={raw!r}; usando 1",
+            )
+            top_k = 1
+        return top_k
 
     _STATIC_EXAMPLE = """Usuario: "Un ESP32 conectado a una pantalla I2C y a un resistor pull-up a 3.3V"
 Respuesta:
@@ -165,6 +194,14 @@ de cobertura completa a continuación para eso."""
         )
 
     def _load_pinouts(self):
+        """Carga `pinouts_library.json` directo (sin pasar por el RAG).
+
+        Desde Sesión 4a, `_match_pinouts()` ya no usa `self.pinouts_db` para
+        retrieval (migrado a `self.rag.query(chunk_type="pinout")`); se mantiene
+        esta carga sólo porque `_build_dynamic_pinout_example()` necesita lookup
+        directo por nombre exacto (`self.pinouts_db.get("ESP32-WROOM-32")`) para
+        construir el ejemplo estático de cobertura completa embebido en el prompt.
+        """
         try:
             import os
             path = os.path.join(os.path.dirname(__file__), "pinouts_library.json")
@@ -177,25 +214,53 @@ de cobertura completa a continuación para eso."""
 
     def _match_pinouts(self, description: str) -> list[tuple[str, dict]]:
         """Return at most `_max_pinout_entries` best-matching pinout entries, ordered
-        best-first (avoid dumping all ESP32 variants). The first item is the
-        high-confidence/primary match; any others are secondary/low-confidence and get
-        compacted in `_compact_pinout` instead of a full pin dump."""
-        desc = description.lower()
-        scored: list[tuple[int, str, dict]] = []
-        for key, entry in self.pinouts_db.items():
-            kl = key.lower()
-            score = 0
-            if kl in desc:
-                score += 100 + len(kl)
-            if desc in kl:
-                score += 50
-            for part in kl.replace("-", " ").split():
-                if len(part) >= 4 and part in desc:
-                    score += 15
-            if score > 0:
-                scored.append((score, key, entry))
-        scored.sort(key=lambda x: x[0], reverse=True)
-        return [(k, v) for _, k, v in scored[: self._max_pinout_entries]]
+        best-first (avoid dumping all ESP32 variants) via RAG semantic search over the
+        unified `chunk_type="pinout"` index (real KiCad symbols + curated overrides from
+        `pinouts_library.json`, see `ElectronicsKnowledgeBase._load_symbol_index()`). The
+        first item is the high-confidence/primary match; any others are secondary/
+        low-confidence and get compacted in `_compact_pinout` instead of a full pin dump.
+
+        Migrated in Sesión 4a from an exact-substring match against `self.pinouts_db` (kept
+        below only for `_build_dynamic_pinout_example`'s direct name lookup) to TF-IDF/dense
+        retrieval — this lets natural-language descriptions find parts by description/
+        keywords even when the exact lib_id never appears verbatim in the prompt (ver drift
+        de nombres hand-curado vs. real en docs/calibration_forge/kicad_symbol_kb.md).
+
+        Pure semantic ranking alone regressed the exact-name case: with ~5300 real KiCad
+        chunks now in the index, a literal part number in the description (ej. "BME280",
+        "SSD1306") could lose to a semantically-similar-but-wrong part (ej. "TMP1075D", also
+        an "I2C digital sensor") whose indexed description/keywords happen to share more
+        vocabulary with the query — confirmed empirically via a live regression run where
+        `ESP32-WROOM-32`/`BME280` dropped out of the top matches entirely for a prompt that
+        names them verbatim. To fix this without losing the new semantic fallback, we fetch
+        a wider candidate pool from RAG and re-rank with an exact-normalized-name boost
+        (mirrors the old scorer's `if kl in desc: score += 100 + len(kl)` bonus) layered on
+        top of the base RAG score — literal name matches win when present, semantic
+        similarity still decides everything else (drifted/undocumented names).
+        """
+        if not description:
+            return []
+        pool_size = max(self._max_pinout_entries * 5, 10)
+        results = self.rag.query(description, top_k=pool_size, chunk_type="pinout")
+        if not results:
+            return []
+        desc_norm = normalize_part_name(description)
+
+        def _boosted_score(r: dict) -> float:
+            name = (r.get("data") or {}).get("name", "")
+            key_norm = normalize_part_name(name)
+            score = r["score"]
+            if key_norm and key_norm in desc_norm:
+                score += 100 + len(key_norm)
+            return score
+
+        results.sort(key=_boosted_score, reverse=True)
+        matched: list[tuple[str, dict]] = []
+        for r in results[: self._max_pinout_entries]:
+            entry = r.get("data") or {}
+            key = entry.get("name") or r.get("source", "")
+            matched.append((key, entry))
+        return matched
 
     def _compact_pinout(self, entry: dict, full: bool = False) -> dict:
         """Pinout snippet for prompt injection.
@@ -301,24 +366,26 @@ de cobertura completa a continuación para eso."""
 
         rag_results = self.rag.query(
             description,
-            top_k=int(cfg("llm.agents.circuit_synthesizer.rag_top_k", 1)),
+            top_k=self._circuit_example_rag_top_k(),
             chunk_type="circuit_example",
         )
-        if rag_results:
-            res = rag_results[0]
+        for res in rag_results:
             raw = self._extract_circuit_list(res.get("data", {}))
             circuit_data = [
                 self._compact_component(c)
                 for c in raw[: self._max_rag_components]
                 if isinstance(c, dict)
             ]
+            if not circuit_data:
+                continue
             chunk = (
                 f"\nEJEMPLO SIMILAR ({res.get('source', 'RAG')}):\n"
                 + json.dumps({"circuit": circuit_data}, ensure_ascii=False)
                 + "\n"
             )
-            if len(prompt) + len(chunk) <= budget:
-                prompt += chunk
+            if len(prompt) + len(chunk) > budget:
+                break
+            prompt += chunk
         return format_system_prompt(prompt[:budget], backend)
 
     def _call_llm(
@@ -364,6 +431,7 @@ de cobertura completa a continuación para eso."""
         run_meta = {
             "description": description[: int(cfg("llm.agents.circuit_synthesizer.description_meta_max_chars", 2000))],
             "backend": backend_name,
+            "ab_variant": self.ab_variant,
             **(meta or {}),
         }
 
@@ -467,6 +535,7 @@ de cobertura completa a continuación para eso."""
                 "log_path": result.get("log_path"),
                 "session_dir": result.get("session_dir"),
                 "backend": backend_name,
+                "ab_variant": self.ab_variant,
             }
 
         except Exception as e:

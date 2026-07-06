@@ -63,7 +63,7 @@ La revisión anterior señaló varios gaps que **ya están resueltos** y uno que
 Estos tres hallazgos nacen de una intuición del usuario validada contra el código real. Cada uno tiene su propio informe de investigación con evidencia línea-por-línea y próximos pasos concretos:
 
 ### 4.1 [Cobertura de pines físicos incompleta](../calibration_forge/pin_model_coverage.md)
-El pipeline conoce el pinout completo de un ESP32 (39-48 pines, `knowledge/pinouts_library.json`) pero el prompt del sintetizador **trunca la tabla de pines a 14** y el único ejemplo estático embebido en el prompt solo muestra 4 pines conectados. Resultado medible: la corrida de validación de hoy (`esp32_sensors.json`, 19:20 UTC) generó un ESP32 con **4 de 39 pines** representados. No es una limitación del modelo — es un límite de contexto autoimpuesto que ya no tiene sentido con un modelo de 98k tokens.
+~~El pipeline truncaba pinouts a 14 pines y el ejemplo estático anclaba salidas de 4 pines.~~ **Mitigado en Session 3 (06-jul-2026):** pinout completo para match primario, convención NC, métrica Pin Coverage Fidelity. ~~La **fuente** de pinouts sigue siendo `pinouts_library.json` (~12 entradas manuales)~~ **resuelto en Session 4a (06-jul-2026)** — ver §4.5: la fuente ahora es un índice real de 5320 símbolos KiCad, con `pinouts_library.json` reducido a capa de override.
 
 ### 4.2 [Pérdida de descripciones en lenguaje natural del knowledge base](../calibration_forge/knowledge_base_fidelity.md)
 Dos bugs de indexación independientes:
@@ -71,10 +71,13 @@ Dos bugs de indexación independientes:
 2. Para las muestras auto-generadas (`knowledge/data/training/sample_*.json`), el campo `metadata.prompt` (la descripción en lenguaje natural original, ej. *"RLC con LED, funcionando como receptor de pulsos..."*) existe en el JSON pero **`_summarize_circuit_data()` nunca lo lee** porque busca `data["source"]` en la raíz en vez de `data["metadata"]["prompt"]`. Es un bug de 1-2 líneas, no una limitación arquitectónica.
 
 ### 4.3 [Prompts sobre-especificados vs. RAG + modelo más capaz](../calibration_forge/prompt_vs_rag_balance.md)
-`circuit_synthesizer.py` y `semantic_reviewer.py` codifican reglas de electrónica como texto imperativo fijo en el system prompt (UART crossover, pull-ups, desacoplo) en vez de dejar que el modelo las infiera de ejemplos recuperados. Además existe un sistema de retrieval paralelo y redundante (`_match_pinouts()`, scoring por keywords) que duplica lo que `ElectronicsKnowledgeBase` ya hace mejor. Con un modelo de razonamiento local más grande, esta rigidez probablemente resta más de lo que aporta.
+`circuit_synthesizer.py` y `semantic_reviewer.py` codifican reglas de electrónica como texto imperativo fijo en el system prompt (UART crossover, pull-ups, desacoplo) en vez de dejar que el modelo las infiera de ejemplos recuperados. ~~Además existe un sistema de retrieval paralelo y redundante (`_match_pinouts()`, scoring por keywords) que duplica lo que `ElectronicsKnowledgeBase` ya hace mejor.~~ **Retrieval unificado en Session 4a (06-jul-2026)** — `_match_pinouts()` ahora consulta `ElectronicsKnowledgeBase` (`chunk_type="pinout"`) en vez de un scorer ad-hoc propio, ver `kicad_symbol_kb.md` §Resultado. La pregunta de las reglas fijas en el prompt sigue abierta para el experimento A/B de Session 4b. Con un modelo de razonamiento local más grande, esta rigidez probablemente resta más de lo que aporta.
 
 ### 4.4 [Funcionalidades construidas pero inactivas](../calibration_forge/dormant_features_audit.md)
-`PulseLogger` y el loop de `design_experience.py` están completos mas no conectados/alimentados en el flujo real. Se documenta dónde deberían engancharse.
+~~`PulseLogger` y el loop de `design_experience.py` están completos mas no conectados/alimentados en el flujo real.~~ **Resuelto en Session 2 (06-jul-2026)** — ver §Resultado en ese documento.
+
+### 4.5 [Base de conocimiento de componentes desde KiCad](../calibration_forge/kicad_symbol_kb.md)
+~~`pinouts_library.json` y `components.json` se mantienen a mano (~12 y ~10 entradas)... `find_kicad_symbol_dir()` localiza las librerías pero ningún parser las lee aún.~~ **Implementado en Session 4a (06-jul-2026)** — ver [`kicad_symbol_kb.md` §Resultado](../calibration_forge/kicad_symbol_kb.md#resultado-sesión-4a-06-jul-2026): `kicad_symbol_parser.py` + `build_symbol_index.py` indexaron 5320 símbolos reales (29 librerías) desde una instalación local de KiCad 10.0 hallada bajo `AppData\Local\Programs` (ruta que `find_kicad_symbol_dir()` no cubría, también corregido esta sesión); ingestados en el RAG como 5326 chunks `chunk_type="pinout"`. `pinouts_library.json` se mantiene como capa de override (no deprecado del todo — sigue siendo la única fuente para módulos breakout sin símbolo KiCad oficial).
 
 ---
 
@@ -92,11 +95,12 @@ Dos bugs de indexación independientes:
 |---|---|---|
 | ✅ Hecho | Corregir `_summarize_circuit_data()` para indexar `metadata.prompt` | → ver `knowledge_base_fidelity.md` §Resultado (density 80%, USB test fixed) |
 | ✅ Hecho | Extender `KiCadSchematicParser` para capturar `title_block`/`text`/`label` | → ver `knowledge_base_fidelity.md` §Resultado (320 archivos re-ingestados) |
-| 🔴 Alta | Eliminar el cap de 14 pines en `_compact_pinout()`; inyectar tabla completa del MCU detectado | `pin_model_coverage.md` |
-| 🟡 Media | Añadir convención `"unconnected_pins"` / `NC` al esquema de salida del sintetizador | `pin_model_coverage.md` |
+| ✅ Hecho | Eliminar el cap de 14 pines en `_compact_pinout()`; inyectar tabla completa del MCU detectado | → ver `pin_model_coverage.md` §Resultado (match primario 39/39 pines en prompt) |
+| ✅ Hecho | Añadir convención `"unconnected_pins"` / `NC` al esquema de salida del sintetizador | → ver `pin_model_coverage.md` §Resultado + `evaluation_metrics.md` §4 |
+| ✅ Hecho | Base de conocimiento de pinouts desde KiCad (`.kicad_sym` → RAG) en vez de curar `pinouts_library.json` a mano | → ver `kicad_symbol_kb.md` §Resultado (Session 4a: 5320 símbolos / 29 librerías → 5326 chunks `pinout`) |
 | 🟡 Media | Auditar y, si procede, recortar las "REGLAS OBLIGATORIAS" del prompt de `circuit_synthesizer.py` a favor de RAG con más ejemplos (`rag_top_k` > 1) | `prompt_vs_rag_balance.md` |
-| 🟡 Media | Conectar `core/logger.py` al pipeline real (`pcb_layout.py`, `circuit_synthesizer.py`, `gerber_export.py`) | `dormant_features_audit.md` |
-| 🟢 Baja | Investigar por qué `knowledge/experiences/` está vacío pese a `record_design_outcome()` estar wired | `dormant_features_audit.md` |
+| ✅ Hecho | Conectar `core/logger.py` al pipeline real (`pcb_layout.py`, `circuit_synthesizer.py`, `gerber_export.py`) | → ver `dormant_features_audit.md` §Resultado (Session 2) |
+| ✅ Hecho | Investigar por qué `knowledge/experiences/` está vacío pese a `record_design_outcome()` estar wired | → ver `dormant_features_audit.md` §Resultado (Session 2) |
 | 🟢 Baja | Fusionar/clarificar duplicidad `docs/Architecture*.md` vs `docs/architecture/*.md` | — |
 | 🟢 Baja | Pin versions en `requirements.txt` | — |
 

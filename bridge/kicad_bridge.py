@@ -24,6 +24,32 @@ if TYPE_CHECKING:
 
 # ─── Rutas de KiCad ──────────────────────────────────────────────────────────
 
+_KICAD_VERSIONS = ("10.0", "9.0", "8.0")
+
+
+def _windows_kicad_install_roots() -> list[str]:
+    """Directorios base candidatos de instalación de KiCad en Windows.
+
+    Cubre instalaciones con privilegios de admin (`Program Files`) Y
+    instalaciones de usuario sin admin (`%LOCALAPPDATA%\\Programs\\KiCad\\<version>`,
+    el patrón que usa el instalador oficial de KiCad cuando se ejecuta sin
+    privilegios elevados — no cubierto originalmente, ver
+    docs/calibration_forge/kicad_symbol_kb.md).
+    """
+    roots = []
+    for base in (r"C:\Program Files\KiCad", r"D:\Program Files\KiCad"):
+        roots.append(base)
+        for v in _KICAD_VERSIONS:
+            roots.append(f"{base}\\{v}")
+
+    local_appdata = os.environ.get("LOCALAPPDATA")
+    if local_appdata:
+        for v in _KICAD_VERSIONS:
+            roots.append(str(Path(local_appdata) / "Programs" / "KiCad" / v))
+
+    return roots
+
+
 def find_kicad_cli() -> Optional[Path]:
     """Localiza el ejecutable kicad-cli en el sistema."""
     # 1. En PATH del sistema (Opción más robusta y preferida)
@@ -34,16 +60,10 @@ def find_kicad_cli() -> Optional[Path]:
     # 2. Rutas conocidas por plataforma
     import platform
     system = platform.system()
-    
+
     candidates = []
     if system == "Windows":
-        candidates = [
-            r"C:\Program Files\KiCad\8.0\bin\kicad-cli.exe",
-            r"C:\Program Files\KiCad\9.0\bin\kicad-cli.exe",
-            r"C:\Program Files\KiCad\10.0\bin\kicad-cli.exe",
-            r"D:\Program Files\KiCad\8.0\bin\kicad-cli.exe",
-            r"D:\Program Files\KiCad\10.0\bin\kicad-cli.exe",
-        ]
+        candidates = [str(Path(root) / "bin" / "kicad-cli.exe") for root in _windows_kicad_install_roots()]
     elif system == "Darwin": # macOS
         candidates = ["/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli"]
     elif system == "Linux":
@@ -71,10 +91,9 @@ def find_kicad_symbol_dir() -> Optional[Path]:
 
     import platform
     system = platform.system()
-    
+
     if system == "Windows":
-        for base in [r"C:\Program Files\KiCad\8.0", r"D:\Program Files\KiCad\8.0",
-                     r"C:\Program Files\KiCad\10.0", r"C:\Program Files\KiCad"]:
+        for base in _windows_kicad_install_roots():
             p = Path(base) / "share" / "kicad" / "symbols"
             if p.exists(): return p
     elif system == "Darwin":
@@ -94,10 +113,9 @@ def find_kicad_footprint_dir() -> Optional[Path]:
 
     import platform
     system = platform.system()
-    
+
     if system == "Windows":
-        for base in [r"C:\Program Files\KiCad\8.0", r"D:\Program Files\KiCad\8.0",
-                     r"C:\Program Files\KiCad\10.0", r"C:\Program Files\KiCad"]:
+        for base in _windows_kicad_install_roots():
             p = Path(base) / "share" / "kicad" / "footprints"
             if p.exists(): return p
     elif system == "Darwin":

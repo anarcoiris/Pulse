@@ -1,0 +1,119 @@
+{
+  "run_session": "validate_20260706_131935_51ac21cf",
+  "started_at": "2026-07-06T13:19:40.799390+00:00",
+  "backend_pref": "auto",
+  "backends": {
+    "primary": {
+      "label": "Ollama Qwythos 9B (reasoning)",
+      "available": true,
+      "base_url": "http://localhost:11431/v1",
+      "model": "qwythos-9b-96k",
+      "api": "auto",
+      "think": "low",
+      "roles": [
+        "reasoning",
+        "complex_synthesis",
+        "review"
+      ],
+      "limits": {
+        "num_ctx": 98304,
+        "max_tokens": 16384,
+        "prompt_max_chars": 48000,
+        "json_mode": false,
+        "think": "low",
+        "api": "auto"
+      }
+    },
+    "atomic": {
+      "label": "llama-server atomic lane (MCP execution)",
+      "available": false,
+      "base_url": "http://localhost:11439/v1",
+      "model": "qwen3-4b-instruct-48k",
+      "api": "openai",
+      "think": false,
+      "roles": [
+        "mcp_execution",
+        "fast_json",
+        "parallel_slots"
+      ],
+      "limits": {
+        "num_ctx": 49152,
+        "max_tokens": 16384,
+        "prompt_max_chars": 24000,
+        "json_mode": true,
+        "think": false,
+        "api": "openai"
+      },
+      "atomic": {
+        "available": false,
+        "port": 11439,
+        "base_url": "http://localhost:11439/v1",
+        "profile": "concurrent2",
+        "parallel": 2,
+        "slot_ctx": 49152,
+        "total_ctx": 98304,
+        "model": "auto",
+        "server_alias": "qwen3-4b-instruct-48k",
+        "pid": 29292,
+        "state_file": "C:\\Users\\soyko\\Documents\\Ollama\\docker\\llamacpp\\qwythos.state.json",
+        "api": "openai",
+        "think": "none",
+        "roles": [
+          "mcp_execution",
+          "fast_json",
+          "parallel_slots"
+        ],
+        "last_switch": {}
+      }
+    },
+    "routing": {
+      "default_backend": "primary",
+      "mcp_tool_backend": "atomic",
+      "complex_circuit_backend": "primary",
+      "review_backend": "primary",
+      "auto_fallback": true
+    }
+  },
+  "results": [
+    {
+      "name": "pulselab_zero",
+      "elapsed_s": 1477.3,
+      "session_id": "validate_20260706_131935_51ac21cf",
+      "ok": true,
+      "components": 11,
+      "backend": "primary",
+      "output_file": "knowledge\\data\\validation_complex\\runs\\20260706_131935_validate_20260706_131935_51ac21cf\\pulselab_zero.json",
+      "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_131935_51ac21cf",
+      "pin_coverage": {
+        "per_component": [
+          {
+            "label": "U1",
+            "value": "ESP32-S3",
+            "generated_pins": 48,
+            "total_pins": 48,
+            "coverage": 1.0
+          },
+          {
+            "label": "OLED_SSD1306",
+            "value": "SSD1306",
+            "generated_pins": 4,
+            "total_pins": 4,
+            "coverage": 1.0
+          }
+        ],
+        "unmatched": [
+          {
+            "label": "U_SPI",
+            "value": "PN532_CC1101"
+          },
+          {
+            "label": "EXP_8PIN",
+            "value": "GPIO_HDR_L"
+          }
+        ],
+        "average_coverage": 1.0
+      }
+    }
+  ],
+  "finished_at": "2026-07-06T13:44:18.055782+00:00"
+}
