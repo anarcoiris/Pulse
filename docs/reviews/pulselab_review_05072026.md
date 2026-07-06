@@ -1,8 +1,12 @@
 # PulseLab Forge — Revisión técnica (05 julio 2026): recap de estado, correcciones y líneas de investigación
 
-> Revisión realizada el 5 de julio de 2026, a partir de inspección directa de código, logs de ejecución del día (`knowledge/data/validation_complex/runs/20260705_*`), y `docs/baseline_report.md`.
+> **Role:** review (point-in-time)  
+> **Status:** active narrative; **metrics superseded** by [`../status/FORGE_STATUS.md`](../status/FORGE_STATUS.md) and finding §Resultado docs  
+> **Last verified:** 2026-07-07  
+
+> Revisión realizada el 5 de julio de 2026, a partir de inspección directa de código, logs de ejecución del día (`knowledge/data/validation_complex/runs/20260705_*`), y [`../archive/baseline_report_20260705.md`](../archive/baseline_report_20260705.md).
 > **Supera y corrige** a [`pulselab_review_23042026.md`](./pulselab_review_23042026.md) — varios hallazgos de esa revisión ya están resueltos; otros siguen abiertos y se detallan aquí con más profundidad.
-> Ver también: [`docs/roadmap.md`](../roadmap.md) · [`docs/calibration_forge/index.md`](../calibration_forge/index.md) · [`FORGE_STATUS.md`](../../FORGE_STATUS.md)
+> Ver también: [`../roadmap.md`](../roadmap.md) · [`../calibration_forge/index.md`](../calibration_forge/index.md) · [`../status/FORGE_STATUS.md`](../status/FORGE_STATUS.md) · [`../status/CURRENT_SPRINT.md`](../status/CURRENT_SPRINT.md)
 
 ---
 
@@ -20,12 +24,12 @@ Además, dos piezas de infraestructura ya construidas (`core/logger.py` / `Pulse
 
 | Área | Estado | Evidencia |
 |------|--------|-----------|
-| Pipeline `CircuitGraph → .kicad_pcb → Gerber` | ✅ Verificado | `docs/baseline_report.md`, 3 placas de ejemplo + runs de hoy |
-| Tests | 8/8 `test_forge.py`, 4/4 `test_rag_retrieval.py` | `docs/baseline_report.md` |
+| Pipeline `CircuitGraph → .kicad_pcb → Gerber` | ✅ Verificado | [`../archive/baseline_report_20260705.md`](../archive/baseline_report_20260705.md), 3 placas de ejemplo + runs de hoy |
+| Tests | 8/8 `test_forge.py`, 4/4 `test_rag_retrieval.py` (05-jul snapshot) | [`../archive/baseline_report_20260705.md`](../archive/baseline_report_20260705.md) — ver [`../status/FORGE_STATUS.md`](../status/FORGE_STATUS.md) para números actuales |
 | RAG | Híbrido TF-IDF + `nomic-embed-text` (358 chunks, 326 `circuit_example`) | `knowledge/rag_engine.py`, `knowledge/data/embeddings/manifest.json` |
 | Backend LLM | Doble carril: `primary` (qwythos-9b-96k, razonamiento, 98304 ctx) + `atomic` (llama-server, ejecución MCP rápida) | `Pulse_cfg.json` |
 | MCP tools | **31** herramientas expuestas (no 23 — ver §3) | `mcp_server/server.py` |
-| DRC Gate | ✅ Implementado (`kicad-cli pcb drc` obligatorio antes de exportar) | `docs/workflows/fabrication_pipeline.md` |
+| DRC Gate | ✅ Implementado (`kicad-cli pcb drc` obligatorio antes de exportar) | `docs/workflows/howto/fabrication_pipeline.md` |
 | Autorouter | ✅ A* con clearance/dilation por pad, penalización de vías, 2 capas — **no es el gap que se creía** | `bridge/pcb_layout.py:829-940`, usado en `bridge/pcb_builder.py:255` |
 | Footprints SMD (ESP32, QFN, etc.) | ✅ Vía biblioteca KiCad (`get_kicad_footprint`) | `bridge/kicad_bridge.py` |
 | Multiplataforma `kicad-cli` | ✅ `shutil.which` + fallback por SO (Win/macOS/Linux) | `bridge/kicad_bridge.py:30-51` |
@@ -49,7 +53,7 @@ La revisión anterior señaló varios gaps que **ya están resueltos** y uno que
 | 3.2 | Rutas Windows hardcodeadas | ✅ Resuelto | `shutil.which` + candidatos por SO |
 | 3.4 | "Autorouter sin evitación de colisiones" | ✅ Resuelto | Implementado A* con `occupied` set, dilatación de pads por `clearance=0.35mm`, coste de vía. La propuesta original (`OccupancyGrid` + BFS) nunca se creó como archivo aparte, pero el problema que resolvía ya no existe: la solución tomó otra forma (A* dentro de `pcb_layout.py`) |
 | 3.5 | Sin footprints SMD para MCUs modernos | ✅ Resuelto | `get_kicad_footprint` + símbolos `RF_Module:ESP32-WROOM-32`, etc. |
-| 3.6 | Sin DRC antes de exportar | ✅ Resuelto | Gate obligatorio documentado en `docs/workflows/fabrication_pipeline.md` |
+| 3.6 | Sin DRC antes de exportar | ✅ Resuelto | Gate obligatorio documentado en `docs/workflows/howto/fabrication_pipeline.md` |
 | 3.3 | "RAG demasiado básico" (solo TF-IDF) | ⚠️ Parcialmente resuelto, pero **el síntoma correcto era otro** | El backend ahora es híbrido (denso + TF-IDF), pero el problema real no era el algoritmo de retrieval — es que **el contenido indexado está incompleto** (ver `knowledge_base_fidelity.md`). Mejorar el motor de búsqueda no ayuda si los chunks no contienen la información relevante. |
 | 3.7 | Archivos de trabajo en el repo (`scratch/`) | ⚠️ Sigue presente | `scratch/test_drc_fail.py` sigue en el repo; sin verificar `.gitignore` |
 | 3.8 | Sin CI/CD | ❌ Sigue pendiente | — |
@@ -83,9 +87,10 @@ Dos bugs de indexación independientes:
 
 ## 5. Otros puntos menores observados
 
-- `scratch/test_drc_fail.py` sigue en el repo (higiene, bajo impacto).
-- `requirements.txt` no fija versiones — riesgo de romper el solver MNA si `numpy`/`pygame` suben de major version sin test de regresión (ver `docs/architecture/SEGURIDAD_DEPENDENCIAS.md`).
-- `docs/Architecture.md` / `docs/Architecture_violations.md` (raíz de `docs/`) y `docs/architecture/APP_ARCHITECTURE.md` / `ARCHITECTURE_VIOLATIONS.md` (subcarpeta) son documentos **duplicados con contenido distinto** — el de raíz menciona "Autorouting: Initial A* implementation" (ahora confirmado correcto) mientras el de la subcarpeta no lo menciona. Recomendable fusionar o clarificar cuál es la fuente de verdad.
+- ~~`scratch/test_drc_fail.py` sigue en el repo (higiene, bajo impacto).~~ **Resuelto (Session 5 — repo hygiene, 07-jul-2026)**: convertido en test real con `pytest.mark.skipif` sobre `find_kicad_cli()` y movido a `tests/test_kicad_drc_integration.py` (verificado en verde localmente); `scratch/test_drc_fail.py` eliminado.
+- ~~`requirements.txt` no fija versiones — riesgo de romper el solver MNA si `numpy`/`pygame` suben de major version sin test de regresión.~~ **Resuelto (Session 5, 07-jul-2026)**: las 15 dependencias quedaron fijadas con `==` a las versiones actualmente instaladas y verificadas (`numpy==2.5.1`, `pygame==2.6.1`, etc. — ver `requirements.txt`).
+- ~~`docs/Architecture.md` / `docs/Architecture_violations.md` (raíz de `docs/`) y `docs/architecture/APP_ARCHITECTURE.md` / `ARCHITECTURE_VIOLATIONS.md` (subcarpeta) son documentos **duplicados con contenido distinto**~~ **Resuelto (Session 5, 07-jul-2026)**: contenido de los ficheros raíz fusionado como anexo dentro de sus contrapartes en `docs/architecture/`; los ficheros raíz ahora son stubs que redirigen a la fuente de verdad consolidada.
+- Añadido en Session 5 (07-jul-2026): workflow mínimo de CI (`.github/workflows/ci.yml`) que instala `requirements.txt` y corre `pytest tests/ -q` en push/PR sobre Python 3.11/3.12.
 
 ---
 
@@ -106,4 +111,4 @@ Dos bugs de indexación independientes:
 
 ---
 
-*Este documento se sincroniza con `docs/roadmap.md`, `docs/calibration_forge/index.md` y `FORGE_STATUS.md` en el mismo commit.*
+*Este documento se sincroniza con [`../roadmap.md`](../roadmap.md), [`../calibration_forge/index.md`](../calibration_forge/index.md) y [`../status/FORGE_STATUS.md`](../status/FORGE_STATUS.md).*

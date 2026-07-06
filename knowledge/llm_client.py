@@ -101,8 +101,13 @@ class LLMClient:
         json_mode: bool = False,
         disable_thinking: bool = False,
         think: str | bool | None = None,
+        history: list[dict[str, str]] | None = None,
         **kwargs,
     ) -> dict:
+        """history: optional prior turns (e.g. [{"role": "user", ...},
+        {"role": "assistant", ...}]) inserted between system and the final user
+        message — used for continuation turns on truncated output (see
+        circuit_synthesizer._continue_truncated_json)."""
         if max_tokens is None:
             max_tokens = self.DEFAULT_NUM_PREDICT
         if temperature is None:
@@ -116,10 +121,10 @@ class LLMClient:
         session_id = str(kwargs.pop("session_id", new_call_id()))
         meta: dict[str, Any] = dict(kwargs.pop("meta", {}) or {})
 
-        messages = [
-            {"role": "system", "content": system},
-            {"role": "user", "content": user},
-        ]
+        messages = [{"role": "system", "content": system}]
+        if history:
+            messages.extend(history)
+        messages.append({"role": "user", "content": user})
 
         api = "native" if self._use_native(disable_thinking) else "openai"
         t0 = time.perf_counter()
@@ -167,6 +172,10 @@ class LLMClient:
             result["call_id"] = call_id
             result["session_id"] = session_id
             result["session_dir"] = str(log_path.parent)
+
+        if "done_reason" not in result:
+            raw = result.get("raw") or {}
+            result["done_reason"] = raw.get("done_reason") or raw.get("finish_reason") or ""
 
         return result
 
@@ -248,11 +257,14 @@ class LLMClient:
                             break
                 else:
                     thinking = getattr(msg, "thinking", None) or ""
+                finish_reason = getattr(choice, "finish_reason", None) or ""
                 return {
                     "content": content,
                     "thinking": thinking,
                     "model": self.model,
                     "tokens": getattr(resp.usage, "total_tokens", 0) if resp.usage else 0,
+                    "done_reason": finish_reason,
+                    "raw": {"finish_reason": finish_reason},
                 }
             except Exception as e:
                 last_error = e

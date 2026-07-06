@@ -33,7 +33,7 @@
       },
       "semantic_reviewer": {
         "temperature": 0.6,
-        "max_tokens": 4096
+        "max_tokens": 8192
       },
       "firmware_synthesizer": {
         "temperature": 0.6,
@@ -81,7 +81,7 @@
       "default_backend": "primary",
       "mcp_tool_backend": "atomic",
       "complex_circuit_backend": "primary",
-      "review_backend": "primary",
+      "review_backend": "atomic",
       "auto_fallback": true
     }
   },

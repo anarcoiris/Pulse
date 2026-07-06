@@ -3,22 +3,14 @@
 > Parte de [Calibration Forge](./index.md) · Referenciado desde [`pulselab_review_05072026.md`](../reviews/pulselab_review_05072026.md) §4.3
 > Depende de que se resuelva primero [`knowledge_base_fidelity.md`](./knowledge_base_fidelity.md) para que el RAG tenga señal suficiente como para reemplazar reglas fijas.
 
-> **Estado de la dependencia (actualizado 06-jul-2026):** Session 1 completada — ver [Resultado](./knowledge_base_fidelity.md#resultado-sesión-de-fix-0506-jul-2026). El RAG **ya indexa contexto enriquecido** (`circuit_example_description_density` = **80%**, 261/326 chunks). `test_rag_usb_retrieval` pasó (antes fallaba). Queries de design-intent en `sample_*.json` recuperan `design_intent: … RF … induccion`. **Caveat para Session 4:** el índice denso (`vectors.npy`) no se regeneró — Ollama no estaba corriendo; el backend híbrido usa TF-IDF fresh + embeddings stale pre-fix. Correr `python -m knowledge.build_embed_index` con Ollama activo antes del experimento A/B si se quiere comparar retrieval denso post-fix. La señal TF-IDF sola ya es suficiente para empezar el A/B con precaución.
+> **Estado de dependencias (07-jul-2026)** — ver [`docs/status/CURRENT_SPRINT.md`](../../status/CURRENT_SPRINT.md) (source of truth para orden de sesiones):
+> - Sessions 1–3, **4a**: ✅ completadas (enlaces §Resultado en docs citados abajo).
+> - **4b parte 1 (A/B confundido)**: ✅ registrada — §Resultado A/B más abajo (runs `182955`/`201754`; **no usar para trimming**).
+> - **4c P0**: ✅ verificado live (runs `212059`/`213418`) — [`pipelines/llm_output_pipeline.md`](./pipelines/llm_output_pipeline.md) §Resultado.
+> - **4d**: code landed (`review_backend: atomic`); pendiente corrida live con review en atomic.
+> - **4b clean re-run**: ⏳ siguiente hito tras verificación 4d.
 >
-> **Session 2 completada (06-jul-2026)** — ver [`dormant_features_audit.md` §Resultado](./dormant_features_audit.md#resultado-sesión-de-wiring-06-jul-2026). El loop de `design_experience.py` ya produce y persiste datos (causa raíz corregida: hook nunca alcanzado + `ingest_to_rag()` no persistía entre procesos; ambos arreglados). Como groundwork directo para la propuesta #3 de este documento, se creó `knowledge/seed_poc_experience.py`: migra la regla "ESP32 EN pull-up 10k" (hardcodeada hoy en `circuit_synthesizer.py` y `semantic_reviewer.py`) a un `DesignExperience.lessons_learned`, y confirma que es recuperable vía `kb.query(..., chunk_type="design_experience")` desde una KB nueva — el chunk ya aparece como resultado natural en queries de ESP32 (`test_rag_esp32_component`). La regla **no se eliminó** de los prompts — eso sigue siendo trabajo de esta sesión (propuesta #3), que ahora tiene un ejemplo funcionando de extremo a extremo para apoyarse.
->
-> **Session 3 completada (06-jul-2026)** — ver [`pin_model_coverage.md` §Resultado](./pin_model_coverage.md#resultado-sesión-de-fix-06-jul-2026). `_match_pinouts()` ahora devuelve `list[tuple[str, dict]]` (ordenada por score, no `dict`); `_compact_pinout(entry, full=True)` inyecta la tabla completa solo para el match primario. Convención `"NC"` / `"unconnected_pins"` + `_normalize_unconnected_pins()` en `circuit_synthesizer.py`. Métrica Pin Coverage Fidelity en `validate_complex_apps.py`. **Al fusionar pinouts en RAG (propuesta #2 abajo), preservar la semántica full/compact y el tipo de retorno ordenado** — no reintroducir el cap binario de 14 pines. **Actualización 06-jul-2026 13:09-13:16 UTC:** re-corrida `validate_complex_apps --case esp32_sensors` con backend `primary` activo (`atomic` seguía caído) — cobertura confirmada **10.3% → 100%** (39/39 pines ESP32-WROOM-32, 4/4 OLED, 4/4 BME280; ver `pin_model_coverage.md` §Resultado). Ya no está pendiente para ese caso; los otros 4 casos (`esp32_steppers`, `esp32_rf_nfc`, `esp32_usb_devkit`, `pulselab_zero`) quedan cubiertos por el baseline (a) del A/B de esta sesión.
->
-> **Arquitectura acordada (06-jul-2026):** la fuente de pinouts para RAG **no debe ser** ampliar `pinouts_library.json` a mano (~12 entradas). KiCad ya trae miles de símbolos en `.kicad_sym` (texto S-expression) — ver [`kicad_symbol_kb.md`](./kicad_symbol_kb.md). Session 4 propuesta #2 = indexar desde `kicad_symbol_parser.py` → `symbols_index` → `chunk_type="pinout"`, con `components.json` para params semánticos y `pinouts_library.json` solo como overrides temporales.
->
-> **Session 4a completada (06-jul-2026)** — ver [`kicad_symbol_kb.md` §Resultado](./kicad_symbol_kb.md#resultado-sesión-4a-06-jul-2026). La propuesta #2 de abajo está **hecha**: `_match_pinouts()` ahora llama `kb.query(description, chunk_type="pinout")` sobre un índice de 5320 símbolos KiCad reales (5326 chunks con overrides), preservando exactamente el retorno ordenado, la lógica full/compact y `_normalize_unconnected_pins()` de Session 3. Regresión confirmada sin cambios: `esp32_sensors` 100% de cobertura, `pytest tests/` 79/79.
->
-> **⚠️ Session 4b RE-BLOQUEADA (06-jul-2026 tarde)** — ver [`llm_truncation_review_06072026.md`](./llm_truncation_review_06072026.md) y plan [`llm_output_pipeline.md`](./llm_output_pipeline.md). Corridas `validate_20260706_182955_b47ed4ea` / `180421_48b2fa28` muestran truncación, stub MCU y reviewer vacío — el A/B confundiría prompt/RAG con fallos de pipeline. **Orden obligatorio:** Session **4c** (guardrails P0 + multi-turn) → Session **4d** (routing primary/atomic, recomendado) → Session **4b**. Ver `CURENT_SPRINT.md` prompts 4c/4d/4b.
->
-> **⚠️ BLOQUEANTE detectado 06-jul-2026 (verificación independiente, ver [`session_4b_preflight_verification.md`](./session_4b_preflight_verification.md)) — leer antes de correr la tarea 1:**
-> 1. **`rag_top_k` es `0.95` en `Pulse_cfg.json`, no `1`.** El código hace `top_k=int(cfg("llm.agents.circuit_synthesizer.rag_top_k", 1))` (`circuit_synthesizer.py` línea 340) y `int(0.95) == 0` en Python — trunca, no redondea. **Esto significa que ninguna corrida de `validate_complex_apps.py` hecha hasta ahora (incluidas las citadas arriba como "100% pin coverage confirmado" en Session 3 y 4a) inyectó jamás un ejemplo `chunk_type="circuit_example"`** — `self.rag.query(..., top_k=0, ...)` siempre devuelve `[]`. La variante (a) de la tarea 1 ("current behavior with RAG") debe arreglar este valor a un entero ≥ 1 ANTES de correr el A/B, o la variante (a) medirá "cero ejemplos de RAG" por accidente de config, no "comportamiento actual documentado". **Esto NO afecta** el pinout RAG de Session 4a (`_match_pinouts()` usa su propio `pool_size = max(max_pinout_entries * 5, 10)`, línea 214-215, independiente de `rag_top_k`) — solo afecta el mecanismo de "ejemplo de circuito similar completo".
-> 2. **`vectors.npy` sigue obsoleto.** Verificado en vivo: `knowledge/data/embeddings/manifest.json` tiene `chunk_count: 358`; una `ElectronicsKnowledgeBase()` real hoy carga **5685** chunks (`pinout: 5326, circuit_example: 326, component: 10, support_circuit: 9, design_rule: 13, design_experience: 1`). `_load_embed_cache()` descarta el índice denso por mismatch (`embed_index_loaded: False` en `kb.stats()`), así que el backend `hybrid` configurado corre como TF-IDF puro ahora mismo, silenciosamente. Correr `python -m knowledge.build_embed_index` con Ollama activo antes del A/B si se quiere que "hybrid" sea real y no solo el valor de config.
-> 3. `temperature` real en `Pulse_cfg.json` es `0.6` (no `0.1`, el valor que sigue como fallback hardcodeado en `circuit_synthesizer.py`/`semantic_reviewer.py` y el que asume la propuesta #5 más abajo) — confirmar si esto fue un cambio intencional de una sesión anterior o drift de config antes de usarlo como parte del baseline (a).
+> Blockers de preflight **resueltos** (ver [`verification/session_4b_preflight.md`](./verification/session_4b_preflight.md) §7): `rag_top_k: 1`, embeddings **5685** chunks, reviewer guardrails.
 
 ## Problema observado
 
@@ -106,3 +98,60 @@ Como se documenta en `pin_model_coverage.md`, el resultado generado hoy (`esp32_
 ## Alcance de la investigación
 
 Este hallazgo es el que más se beneficia de resolver primero `knowledge_base_fidelity.md` — sin ejemplos de RAG con intención y contexto real, retirar las reglas fijas del prompt probablemente empeoraría los resultados a corto plazo. El orden de trabajo recomendado es: (1) fix de indexación → (2) parser extendido → (3) re-ingesta → (4) recién entonces el experimento A/B de este documento.
+
+---
+
+## Resultado A/B — Session 4b, parte 1 (experimento confundido, sin decisión de trimming)
+
+**Fecha:** 06-jul-2026  
+**Estado:** Datos recogidos; **no válidos para decidir trimming** hasta Session **4c** (guardrails reviewer) + **4d** (reviewer en `atomic`) + rebuild de embeddings.
+
+### Confounders activos durante la corrida
+
+| Confounder | Efecto observado |
+|---|---|
+| Reviewer en `primary` con `think=low` y `max_tokens=4096` | 9/10 revisiones fallaron con JSON vacío (thinking agotó budget). Solo `esp32_usb_devkit` variante B devolvió issues. |
+| Embeddings densos obsoletos (358 vs ~5685 chunks) | Backend `hybrid` ejecutó como TF-IDF puro. |
+| Variante A: `atomic` caído al inicio | Run A sin lane paralela; variante B tuvo `atomic` disponible pero reviewer siguió en `primary`. |
+| 2/10 generaciones fallaron (variante A) | `esp32_steppers` JSON truncado; `pulselab_zero` respuesta vacía. |
+
+### Tabla comparativa (pin coverage + semantic review)
+
+Runs:
+- **Variante A:** [`20260706_182955_validate_20260706_182955_b47ed4ea`](../../knowledge/data/validation_complex/runs/20260706_182955_validate_20260706_182955_b47ed4ea/)
+- **Variante B:** [`20260706_201754_validate_20260706_201754_36f71d18`](../../knowledge/data/validation_complex/runs/20260706_201754_validate_20260706_201754_36f71d18/)
+
+| Caso | Var | Gen | Comp | Pin cov avg | Review issues | Review critical | Gen time | Review time |
+|---|---|---|---|---|---|---|---|---|
+| esp32_sensors | A | OK | 9 | 100% | FAIL | — | 793s | 196s |
+| esp32_sensors | B | OK | 7 | 99% | FAIL | — | 200s | 198s |
+| esp32_steppers | A | **FAIL** | — | — | — | — | 1764s | — |
+| esp32_steppers | B | OK | 15 | 99% | FAIL | — | 163s | 201s |
+| esp32_rf_nfc | A | OK | 7 | 100% | FAIL | — | 875s | 199s |
+| esp32_rf_nfc | B | OK | 6 | 100% | FAIL | — | 636s | 198s |
+| esp32_usb_devkit | A | OK | 11 | 100% | FAIL | — | 665s | 199s |
+| esp32_usb_devkit | B | OK | 12 | 85% | **4** | **2** | 515s | 107s |
+| pulselab_zero | A | **FAIL** | — | — | — | — | 1779s | — |
+| pulselab_zero | B | OK | 19 | 146%* | FAIL | — | 699s | 201s |
+
+\* Promedio >100% indica enumeración de pines alucinada (ej. PN532 con 16 pines generados vs 7 de referencia).
+
+### Lectura preliminar (no decisoria)
+
+- **Generación:** variante B completó 5/5 casos vs 3/5 en A; tiempos más bajos en la mayoría de casos exitosos. Parte del delta puede ser varianza del modelo, no solo el toggle A/B.
+- **Pin coverage:** ambas variantes logran alta fidelidad en ESP32 cuando generan; variante B mostró sobre-enumeración en `pulselab_zero`.
+- **Semantic review:** métrica primaria **inutilizable** en esta corrida — el reviewer truncó en ~90% de casos. No se puede comparar "reglas vs RAG" con esta señal.
+- **Decisión de trimming (tareas 2-3 de Session 4b):** permanece **abierta**; requiere re-ejecución limpia tras 4c+4d.
+
+### Infra arreglada (antes del re-run limpio)
+
+- `rag_top_k: 0.95 → 1` + `rag_top_k_variant_b: 4` en `Pulse_cfg.json`
+- Toggle `--variant a|b` en harness + `tests/test_ab_variant.py`
+- Session **4c P0** — ver [`llm_output_pipeline.md`](./llm_output_pipeline.md) §Resultado
+- Embeddings rebuild — **5685** chunks (`manifest.json`)
+
+### Próximo paso (ver [`docs/status/CURRENT_SPRINT.md`](../../status/CURRENT_SPRINT.md))
+
+1. Verificar review en `atomic` (Session 4d — cfg ya en `review_backend: atomic`)
+2. **4b clean re-run** (`--variant a` + `--variant b`, 5 casos cada uno)
+3. Decisión trimming con datos no confundidos

@@ -51,3 +51,30 @@ def parse_json_object(raw: str) -> dict:
     if not cleaned:
         raise json.JSONDecodeError("empty LLM response", raw or "", 0)
     return json.loads(cleaned)
+
+
+def parse_llm_result(content: str, thinking: str = "") -> dict:
+    """Parse JSON from content, falling back to thinking when content is empty."""
+    last_err: json.JSONDecodeError | None = None
+    for raw in (content, thinking):
+        if not (raw or "").strip():
+            continue
+        try:
+            return parse_json_object(raw)
+        except json.JSONDecodeError as exc:
+            last_err = exc
+    if last_err is not None:
+        raise last_err
+    raise json.JSONDecodeError("empty LLM response", content or "", 0)
+
+
+def llm_output_truncated(result: dict) -> bool:
+    """True when the model hit output budget or returned no usable text."""
+    reason = str(result.get("done_reason") or "").lower()
+    if reason == "length":
+        return True
+    content = (result.get("content") or "").strip()
+    thinking = (result.get("thinking") or "").strip()
+    if reason == "stop" and not content and not thinking:
+        return True
+    return not content and not thinking

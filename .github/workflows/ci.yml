@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    name: pytest (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Scoped to the engine/RAG smoke tests that run fully offline (no live
+      # LLM/Ollama backend, no KiCad install required — both self-skip
+      # gracefully when unavailable). The rest of tests/ exercises live LLM
+      # backends and is intended for local/manual runs, not CI.
+      - name: Run offline smoke tests
+        run: python -m pytest tests/test_forge.py tests/test_rag_retrieval.py tests/test_circuit_graph.py tests/test_circuit_engine.py -v

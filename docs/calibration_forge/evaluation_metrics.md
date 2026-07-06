@@ -92,6 +92,52 @@ tras cada generación exitosa y persistida en el JSON por caso (`"semantic_revie
 La decisión de recortar reglas del prompt (tareas 2-3 de Session 4b) requiere comparar estas
 métricas entre variantes y juicio humano — no se automatiza aquí.
 
+### 6. Completitud de Generación (Generation Completeness)
+
+> Añadida en Session 4c (06-jul-2026) — ver [`llm_output_pipeline.md`](./llm_output_pipeline.md) y
+> [`verification/llm_truncation_review_06072026.md`](./verification/llm_truncation_review_06072026.md) para la evidencia de
+> los 4 modos de fallo que motivan esta métrica.
+
+**Objetivo:** distinguir "la generación produjo JSON parseable" de "la generación realmente
+completó lo que se le pidió", que **no son lo mismo** — un stub sintácticamente válido pero
+semánticamente vacío (ej. un MCU con pinout inyectado pero sin ningún pin declarado) pasaba
+como éxito antes de Session 4c. Pin Coverage Fidelity (§4) ya detecta este caso concreto para
+componentes IC/MCU, pero es una métrica *posterior* al parseo; Generation Completeness es la
+señal de *pipeline* — si la llamada al LLM en sí terminó de forma sana.
+
+**Definición formal**, por cada llamada LLM (síntesis o revisión) registrada vía
+`knowledge/llm_client.py::LLMClient.chat()`:
+
+- `done_reason`: normalizado desde `raw.done_reason` (path native) o `choice.finish_reason`
+  (path OpenAI) en un único campo top-level del resultado — ver `llm_client.py` y
+  `llm_session_log.py::record_llm_exchange()` (persistido también como `content_len` /
+  `thinking_len` / `done_reason` a nivel de registro, no solo dentro de `output`).
+- **Truncado** (`knowledge/llm_json.py::llm_output_truncated()`): `True` si `done_reason ==
+  "length"`, o si `done_reason == "stop"` con `content` y `thinking` ambos vacíos tras strip.
+- **Recuperado vía continuación**: si la síntesis truncó con contenido parcial parseable-en-
+  progreso, `circuit_synthesizer._continue_truncated_json()` intenta hasta 2 turnos de
+  continuación antes de caer al reintento completo con RAG. Un caso se cuenta como
+  "generación completa con recuperación" si el resultado final proviene de una continuación
+  (`meta.attempt` con prefijo `continue_`), no de un intento limpio.
+- **Validación semántica post-parse**: incluso con `done_reason == "stop"` y JSON válido,
+  `circuit_synthesizer._validate_injected_pinouts()` puede seguir marcando el intento como
+  incompleto si un IC/MCU con pinout completo inyectado no declaró ningún pin
+  (`"sin pines pese a pinout completo inyectado"`) o declaró una enumeración sospechosa
+  (`"enumeracion sospechosa (N pines vs M esperados)"`, guard contra el modo de fallo
+  "1000 pines" de `llm_truncation_review_06072026.md`).
+
+**Valores posibles por intento:** `ok` (stop + contenido válido + validación semántica pasa),
+`ok_continued` (recuperado tras 1-2 turnos de continuación), `truncated` (agotó continuación y
+el reintento con RAG completo), `stub_rejected` (JSON válido pero rechazado por validación
+post-parse). Estos no reemplazan `pin_coverage` ni `semantic_review` — son ortogonales: un
+intento puede ser `ok` en Generation Completeness y aun así tener baja Pin Coverage si el
+componente no tenía pinout de referencia conocido.
+
+**Implementación:** guards en `knowledge/circuit_synthesizer.py` (`_components_from_llm_result`,
+`_continue_truncated_json`, `_validate_injected_pinouts`) y `knowledge/semantic_reviewer.py`
+(mismo `llm_output_truncated()` antes de intentar parsear `issues`). Tests de regresión con
+fixtures (sin LLM en vivo) en `tests/test_llm_truncation_guards.py`.
+
 ## Tolerancias admitidas
 - `Posición`: < 2.54mm (0.1 inch) de desviación.
 - `Orientación`: Debe ser exacta.

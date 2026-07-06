@@ -1,0 +1,160 @@
+{
+  "run_session": "validate_20260706_213340_b12415d7",
+  "test_case": "ESP32 Devboard + Sensores",
+  "prompt": "Diseña un circuito basado en un microcontrolador ESP32. Conecta una pantalla OLED SSD1306 al bus I2C (pines SDA, SCL). Conecta también un sensor ambiental BME280 al mismo bus I2C. Asegúrate de incluir resistencias pull-up en las líneas I2C y condensadores de desacoplo para la alimentación del ESP32.",
+  "ab_variant": "a",
+  "backend": "primary",
+  "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_213340_b12415d7",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 3.3,
+      "label": "VCC",
+      "n1": "VCC33",
+      "n2": "GND"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-WROOM-32",
+      "label": "U1",
+      "symbol": "RF_Module:ESP32-WROOM-32",
+      "footprint": "RF_Module:ESP32-WROOM-32",
+      "pins": {
+        "1": "GND",
+        "2": "VCC33",
+        "3": "I2C_SDA",
+        "4": "I2C_SCL"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "SSD1306",
+      "label": "OLED",
+      "symbol": "Connector_Generic:Conn_01x04",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+      "pins": {
+        "1": "VCC33",
+        "2": "GND",
+        "3": "I2C_SDA",
+        "4": "I2C_SCL"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "BME280",
+      "label": "BME280",
+      "symbol": "Connector_Generic:Conn_01x04",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+      "pins": {
+        "1": "VCC33",
+        "2": "GND",
+        "3": "SCL",
+        "4": "SDA"
+      }
+    },
+    {
+      "etype": "R",
+      "value": 4700,
+      "label": "R_PULLUP_SDA",
+      "n1": "VCC33",
+      "n2": "I2C_SDA"
+    },
+    {
+      "etype": "R",
+      "value": 4700,
+      "label": "R_PULLUP_SCL",
+      "n1": "VCC33",
+      "n2": "I2C_SCL"
+    },
+    {
+      "etype": "C",
+      "value": 1e-05,
+      "label": "C_ESP_H",
+      "n1": "VCC33",
+      "n2": "GND"
+    },
+    {
+      "etype": "C",
+      "value": 1e-07,
+      "label": "C_ESP_L",
+      "n1": "VCC33",
+      "n2": "GND"
+    },
+    {
+      "etype": "GND",
+      "value": 0,
+      "label": "GND"
+    }
+  ],
+  "pin_coverage": {
+    "per_component": [
+      {
+        "label": "U1",
+        "value": "ESP32-WROOM-32",
+        "generated_pins": 4,
+        "total_pins": 39,
+        "coverage": 0.1026,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "OLED",
+        "value": "SSD1306",
+        "generated_pins": 4,
+        "total_pins": 4,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "BME280",
+        "value": "BME280",
+        "generated_pins": 4,
+        "total_pins": 4,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      }
+    ],
+    "unmatched": [],
+    "average_coverage": 0.7009
+  },
+  "semantic_review": {
+    "issue_count": 7,
+    "critical_count": 2,
+    "issues": [
+      {
+        "msg": "El terminal negativo de la fuente de voltaje (V) está conectado al nodo 'GND'. Según la regla AI DRC #1, si un componente se conecta a '0' y 'GND' no están aliados, el circuito queda aislado. Asegúrate de que 'GND' esté aliado a '0' o conecta el pin negativo directamente al nodo '0' de tierra de simulación.",
+        "severity": "critical",
+        "proposal": "Verificar alias entre 'GND' y '0'. Si no existen, crear un alias GND->0 en PulseLab Forge y re-verificar la netlist."
+      },
+      {
+        "msg": "El MCU ESP32-WROOM-32 no tiene condensadores de desacople (decoupling caps) conectados a sus pines VCC33/GND. La regla AI DRC #2 exige condensadores cerca de los pines de alimentación para estabilidad.",
+        "severity": "critical",
+        "proposal": "Agregar un capacitor de 100nF (o similar) entre el nodo VCC33 y GND en la netlist, preferiblemente cerca del pin 2 (VCC33) del MCU."
+      },
+      {
+        "msg": "El ESP32 EN (pin 5) no aparece en la lista de pines del MCU y falta un pull-up. La regla AI DRC #5 requiere un pull-up de 10kΩ a VCC33 para que el ESP32 arranque correctamente.",
+        "severity": "warning",
+        "proposal": "Agregar una resistencia de 10kΩ entre VCC33 y EN del ESP32 (pin 5)."
+      },
+      {
+        "msg": "El ESP32 GPIO0 (BOOT) no está conectado. La regla AI DRC #5 indica que GPIO0 debe poder ir a GND para el modo flash. Aunque en este netlist parece estar flotante o desconectado, es crítico asegurarse de que tenga un camino a GND si se desea usar el modo flash.",
+        "severity": "warning",
+        "proposal": "Verificar si GPIO0 está conectado; si no, agregar una conexión a GND cuando sea necesario para flashing."
+      },
+      {
+        "msg": "El pin I2C_SDA del ESP32 está conectado a un resistor de 4700Ω entre VCC33 y el nodo I2C_SDA. Este resistor actúa como pull-up, pero el pin SCL del ESP32 también tiene un pull-up similar. Aunque funcionalmente válido, se recomienda usar valores estándar (ej. 4.7kΩ) y asegurar que ambos pines tengan pull-ups correctos a VCC33.",
+        "severity": "info",
+        "proposal": "Mantener los pull-ups en I2C_SDA e I2C_SCL a VCC33 con valores entre 4.7kΩ y 10kΩ."
+      },
+      {
+        "msg": "El IC SSD1306 no tiene condensadores de desacople en su nodo GND. La regla AI DRC #2 aplica a todos los ICs.",
+        "severity": "warning",
+        "proposal": "Agregar un capacitor de 100nF entre GND y VCC33 del SSD1306."
+      },
+      {
+        "msg": "El IC BME280 no tiene condensadores de desacople en su nodo GND. La regla AI DRC #2 aplica a todos los ICs.",
+        "severity": "warning",
+        "proposal": "Agregar un capacitor de 100nF entre GND y VCC33 del BME280."
+      }
+    ]
+  }
+}

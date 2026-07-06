@@ -11,7 +11,7 @@ import re
 from typing import Any
 
 from knowledge.llm_backends import backend_limits, get_backend_client, resolve_backend_name
-from knowledge.llm_json import extract_json_text, parse_json_object
+from knowledge.llm_json import extract_json_text, llm_output_truncated, parse_llm_result
 from knowledge.llm_prompt_format import chat_options_for_backend, format_system_prompt, format_user_prompt
 from knowledge.llm_session_log import new_call_id
 from knowledge.ollama_native import normalize_think
@@ -55,6 +55,12 @@ FIDELIDAD DE PINES (IC/MCU) — OBLIGATORIO:
   Usa "NC"/"unconnected_pins" para "no conectado a propósito"; nunca dejes un pin fuera
   de la respuesta solo para ahorrar espacio — con eso no se puede distinguir "decidido
   no usar" de "olvidado por el generador".
+- Si "PINOUTS RELEVANTES" NO incluye una tabla completa para un componente (no viene en el
+  contexto, o el componente no aparece ahí), declara ÚNICAMENTE los pines que realmente
+  conoces y usas en el diseño. NUNCA inventes ni enumeres pines consecutivos (1, 2, 3, ...)
+  para "completar" un rango que no conoces con certeza — eso genera pinouts falsos que no
+  corresponden al componente real. Ante la duda, menos pines declarados con confianza es
+  mejor que una enumeración adivinada.
 
 EJEMPLOS:
 {example_block}
@@ -412,7 +418,181 @@ de cobertura completa a continuación para eso."""
             meta={**(meta or {}), "attempt": attempt, "backend": backend},
         )
 
+    def _components_from_llm_result(
+        self,
+        result: dict,
+        description: str,
+    ) -> tuple[list | None, str | None]:
+        if "error" in result:
+            return None, result["error"]
+        if llm_output_truncated(result):
+            reason = result.get("done_reason") or "unknown"
+            return None, f"LLM truncado (done_reason={reason})"
 
+        try:
+            data = parse_llm_result(result.get("content", ""), result.get("thinking", ""))
+        except json.JSONDecodeError as je:
+            return None, f"Crash decoding JSON: {je}"
+
+        components = self._extract_circuit_list(data)
+        return self._finalize_components(components, description)
+
+    def _finalize_components(
+        self,
+        components: Any,
+        description: str,
+    ) -> tuple[list | None, str | None]:
+        """Shared post-parse validation for a freshly-parsed component list, used by
+        both the normal single-turn path and the continuation-turn recovery path
+        (_continue_truncated_json) so both go through the same pinout/enrichment
+        checks instead of duplicating them."""
+        if not isinstance(components, list):
+            return None, "Formato inesperado: Se esperaba una lista de componentes en 'circuit'."
+
+        for comp in components:
+            val = str(comp.get("value", ""))
+            if val in self.pinouts_db:
+                db_entry = self.pinouts_db[val]
+                if "symbol" in db_entry and not comp.get("symbol"):
+                    comp["symbol"] = db_entry["symbol"]
+                if "footprint" in db_entry and not comp.get("footprint"):
+                    comp["footprint"] = db_entry["footprint"]
+
+        pin_err = self._validate_injected_pinouts(components, description)
+        if pin_err:
+            return None, pin_err
+
+        self._normalize_unconnected_pins(components)
+        return components, None
+
+    def _continue_truncated_json(
+        self,
+        system_prompt: str,
+        user_msg: str,
+        description: str,
+        *,
+        backend_name: str,
+        llm,
+        session_id: str,
+        meta: dict,
+        first_result: dict,
+        max_continuations: int = 2,
+    ) -> tuple[list | None, str | None]:
+        """Recover from done_reason=='length' by asking the model to continue the
+        partial JSON in a fresh turn instead of discarding the (expensive) partial
+        output and restarting the whole generation from scratch. Caps total extra
+        turns at `max_continuations` (default 2), so a single generate_circuit_json()
+        call never issues more than 1 (initial) + 2 (continuation) LLM calls via this
+        path — the pre-existing "retry with full RAG" attempt=2 path is a SEPARATE,
+        orthogonal fallback used only when there is no usable partial content to
+        continue from (see generate_circuit_json)."""
+        accumulated = first_result.get("content", "") or ""
+        history = [
+            {"role": "user", "content": user_msg},
+            {"role": "assistant", "content": accumulated},
+        ]
+        continue_msg = (
+            "Continua el JSON EXACTAMENTE desde donde te detuviste. No repitas nada "
+            "de lo ya generado, no agregues texto ni explicaciones, no reinicies el "
+            "objeto. Cuando el JSON quede completo y valido, no generes nada mas."
+        )
+        opts = chat_options_for_backend(backend_name)
+        last_result = first_result
+        self._last_continuation_calls = 0
+        for i in range(max_continuations):
+            self._last_continuation_calls += 1
+            cont_result = llm.chat(
+                system=system_prompt,
+                user=continue_msg,
+                history=history,
+                temperature=float(cfg("llm.agents.circuit_synthesizer.temperature", 0.1)),
+                max_tokens=opts["max_tokens"],
+                json_mode=opts["json_mode"],
+                disable_thinking=opts["disable_thinking"],
+                caller="circuit_synthesizer",
+                session_id=session_id,
+                meta={**meta, "attempt": f"continue_{i + 1}", "backend": backend_name},
+            )
+            if "error" in cont_result:
+                return None, cont_result["error"]
+
+            piece = cont_result.get("content", "") or ""
+            accumulated += piece
+            history[-1] = {"role": "assistant", "content": accumulated}
+            last_result = cont_result
+
+            try:
+                data = parse_llm_result(accumulated, cont_result.get("thinking", ""))
+                components = self._extract_circuit_list(data)
+                finalized, err = self._finalize_components(components, description)
+                if finalized is not None:
+                    logger.ai_review(
+                        "circuit_synthesizer",
+                        f"session={session_id} continuacion {i + 1}/{max_continuations} exitosa",
+                    )
+                    return finalized, None
+            except json.JSONDecodeError:
+                pass
+
+            if not llm_output_truncated(cont_result):
+                # Model stopped normally but JSON still doesn't parse/validate —
+                # further continuation turns won't help.
+                break
+
+        reason = last_result.get("done_reason") or "unknown"
+        return None, f"Continuacion agotada tras {max_continuations} turno(s) (done_reason={reason})"
+
+    def _validate_injected_pinouts(self, components: list, description: str) -> str | None:
+        matched = self._match_pinouts(description)
+        if not matched:
+            return None
+        primary_key, primary_entry = matched[0]
+        expected_pins = primary_entry.get("pins") or {}
+        if not expected_pins:
+            return None
+        expected_count = len(expected_pins)
+        primary_norm = normalize_part_name(primary_key)
+
+        for comp in components:
+            if comp.get("etype") not in ("IC", "MCU"):
+                continue
+            val_norm = normalize_part_name(str(comp.get("value", "")))
+            if primary_norm not in val_norm and val_norm not in primary_norm:
+                continue
+            pins = comp.get("pins") or {}
+            unconn = comp.get("unconnected_pins") or []
+            declared = {str(p) for p in pins} | {str(p) for p in unconn}
+            if not declared:
+                return (
+                    f"{comp.get('value')}: sin pines pese a pinout completo inyectado ({primary_key})"
+                )
+            # Partial-stub guard: FIDELIDAD DE PINES requires every physical pin to be
+            # accounted for (used OR explicitly NC/unconnected), not just "some" pins.
+            # A component that declares e.g. 4/39 pins is JSON-valid and non-empty, so
+            # the "sin pines" check above misses it — this is exactly the "stub
+            # semantico" failure mode from llm_truncation_review_06072026.md, just with
+            # a handful of real pins instead of zero. Mirrors the >=90% tolerance used
+            # for Pin Coverage Fidelity in evaluation_metrics.md.
+            if len(declared) < expected_count * 0.9:
+                return (
+                    f"{comp.get('value')}: cobertura de pines incompleta "
+                    f"({len(declared)}/{expected_count} declarados; se esperaba dar cuenta "
+                    f"de todos los pines, usados o marcados NC/unconnected_pins)"
+                )
+            if len(pins) > max(expected_count * 2, 120):
+                return (
+                    f"{comp.get('value')}: enumeracion sospechosa ({len(pins)} pines vs "
+                    f"{expected_count} esperados)"
+                )
+            if pins and all(
+                isinstance(v, str) and (v.strip().upper() == "NC" or v.startswith("NC_"))
+                for v in pins.values()
+            ):
+                if len(pins) > expected_count + 10:
+                    return f"{comp.get('value')}: demasiados pines NC ({len(pins)})"
+        return None
+
+    # NOTE: Couldn't we just try and return the result and detected problems for quick correction with a new pass? Maybe with secondary model or lane (qwen3-4b-instruct-48k))
     def generate_circuit_json(
         self,
         description: str,
@@ -456,74 +636,64 @@ de cobertura completa a continuación para eso."""
 
         if "error" in result:
             logger.error("circuit_synthesizer", f"session={session_id} attempt=1 LLM error: {result['error']}")
-            return result
+            return {**result, "generation_attempts": 1, "truncated": False}
+
+        attempts = 1
+        truncated = llm_output_truncated(result)
+
+        components, err = self._components_from_llm_result(result, description)
+        if err and llm_output_truncated(result) and (result.get("content") or "").strip():
+            logger.warning(
+                "circuit_synthesizer",
+                f"session={session_id} attempt=1 truncado con contenido parcial "
+                f"(done_reason={result.get('done_reason')}); intentando continuacion",
+            )
+            components, cont_err = self._continue_truncated_json(
+                system_prompt, user_msg, description,
+                backend_name=backend_name, llm=llm,
+                session_id=session_id, meta=run_meta, first_result=result,
+            )
+            attempts += getattr(self, "_last_continuation_calls", 0)
+            if components is not None:
+                err = None
+            else:
+                err = f"{err}; {cont_err}"
+
+        if err:
+            logger.warning(
+                "circuit_synthesizer",
+                f"session={session_id} attempt=1 fallo ({err}); reintentando con RAG completo",
+            )
+            rag_prompt = self._build_system_prompt(description, include_rag=True, backend=backend_name)
+            recent_context = "\n".join(logger.get_context().splitlines()[-20:])
+            if recent_context:
+                rag_prompt += (
+                    "\n\nHISTORIAL DE EJECUCION RECIENTE (para depurar el intento anterior fallido):\n"
+                    f"{recent_context}\n"
+                )
+            attempts += 1
+            retry = self._call_llm(
+                rag_prompt, user_msg,
+                backend=backend_name, llm=llm,
+                session_id=session_id, meta=run_meta, attempt=2,
+            )
+            truncated = truncated or llm_output_truncated(retry)
+            if "error" in retry:
+                logger.error("circuit_synthesizer", f"session={session_id} attempt=2 LLM error: {retry['error']}")
+                return {"error": err, "generation_attempts": attempts, "truncated": truncated}
+            result = retry
+            components, err = self._components_from_llm_result(result, description)
+            if err:
+                logger.error("circuit_synthesizer", f"session={session_id} attempt=2 fallo: {err}")
+                raw_content = result.get("content", "")
+                snippet = extract_json_text(raw_content) or raw_content
+                return {
+                    "error": f"{err}. Respuesta: {(snippet or '(vacio)')[:200]}...",
+                    "generation_attempts": attempts,
+                    "truncated": truncated,
+                }
 
         try:
-            raw_content = result.get("content", "")
-            try:
-                data = parse_json_object(raw_content)
-            except json.JSONDecodeError as je:
-                logger.warning(
-                    "circuit_synthesizer",
-                    f"session={session_id} attempt=1 JSON invalido ({je}); reintentando con RAG completo",
-                )
-                # Retry with one compact RAG example, still capped.
-                # Inject the recent AI-context buffer so the model can see what
-                # happened right before the parse failure (logging_strategy.md
-                # "AI Context Buffer").
-                rag_prompt = self._build_system_prompt(description, include_rag=True, backend=backend_name)
-                recent_context = "\n".join(logger.get_context().splitlines()[-20:])
-                if recent_context:
-                    rag_prompt += (
-                        "\n\nHISTORIAL DE EJECUCION RECIENTE (para depurar el intento anterior fallido):\n"
-                        f"{recent_context}\n"
-                    )
-                retry = self._call_llm(
-                    rag_prompt, user_msg,
-                    backend=backend_name, llm=llm,
-                    session_id=session_id, meta=run_meta, attempt=2,
-                )
-                if "error" in retry:
-                    logger.error("circuit_synthesizer", f"session={session_id} attempt=2 LLM error: {retry['error']}")
-                    snippet = extract_json_text(raw_content) or raw_content
-                    return {
-                        "error": f"Crash decoding JSON: {je}. Respuesta: {(snippet or '(vacio)')[:200]}..."
-                    }
-                raw_content = retry.get("content", "")
-                try:
-                    data = parse_json_object(raw_content)
-                except json.JSONDecodeError as je2:
-                    logger.error("circuit_synthesizer", f"session={session_id} attempt=2 JSON invalido: {je2}")
-                    snippet = extract_json_text(raw_content) or raw_content
-                    return {
-                        "error": f"Crash decoding JSON: {je2}. Respuesta: {(snippet or '(vacio)')[:200]}..."
-                    }
-
-            # Extraer la lista de componentes desde la clave "circuit"
-            components = data.get("circuit", data)
-            
-            if isinstance(components, dict):
-                # Fallback si no retornó {"circuit": [...]} sino el array directo (raro con json_object)
-                for k, v in components.items():
-                    if isinstance(v, list):
-                        components = v
-                        break
-                        
-            if not isinstance(components, list):
-                return {"error": "Formato inesperado: Se esperaba una lista de componentes en 'circuit'."}
-
-            # Inyectar atributos físicos desde la base de datos de pinouts
-            for comp in components:
-                val = str(comp.get("value", ""))
-                if val in self.pinouts_db:
-                    db_entry = self.pinouts_db[val]
-                    if "symbol" in db_entry and not comp.get("symbol"):
-                        comp["symbol"] = db_entry["symbol"]
-                    if "footprint" in db_entry and not comp.get("footprint"):
-                        comp["footprint"] = db_entry["footprint"]
-
-            self._normalize_unconnected_pins(components)
-
             logger.ai_review(
                 "circuit_synthesizer",
                 f"session={session_id} generado OK: {len(components)} componentes",
@@ -536,8 +706,10 @@ de cobertura completa a continuación para eso."""
                 "session_dir": result.get("session_dir"),
                 "backend": backend_name,
                 "ab_variant": self.ab_variant,
+                "generation_attempts": attempts,
+                "truncated": truncated,
             }
 
         except Exception as e:
             logger.error("circuit_synthesizer", f"session={session_id} crash: {e}")
-            return {"error": f"Crash: {str(e)}"}
+            return {"error": f"Crash: {str(e)}", "generation_attempts": attempts, "truncated": truncated}

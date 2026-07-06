@@ -42,7 +42,7 @@ El código está referenciado desde `bridge/gerber_export.py` y `ui/forge_contro
 knowledge/experiences/*.json → 0 archivos
 ```
 
-A pesar de que ya se han generado y exportado varias placas con éxito hoy mismo (`esp32_usb_devkit_test`, `esp32_v2`, ejemplos de `bridge_pcb`), **ningún diseño ha producido todavía un registro de experiencia**. El loop de retroalimentación descrito en `docs/baseline_report.md` ("Phase 5: `design_experience.py` hooked to Forge + Gerber DRC") está *conectado* pero no *disparándose*, o está fallando silenciosamente.
+El loop de retroalimentación descrito en [`../archive/baseline_report_20260705.md`](../archive/baseline_report_20260705.md) ("Phase 5: `design_experience.py` hooked to Forge + Gerber DRC") está *conectado* pero no *disparándose*, o está fallando silenciosamente.
 
 ### Por qué importa
 Este es precisamente el mecanismo que debería, con el tiempo, reducir la necesidad de reglas fijas en el prompt (ver `prompt_vs_rag_balance.md`, propuesta 3) — lecciones aprendidas de diseños reales, alimentadas de vuelta al RAG. Si nunca se llena, esa vía de mejora simplemente no existe en la práctica, aunque el código sugiera lo contrario.
@@ -60,7 +60,7 @@ No es código dormido, pero es el mismo patrón de "trabajo hecho en dos lugares
 ## Resumen de acciones de sincronización ya aplicadas en este ciclo
 
 - `docs/roadmap.md`: `PulseLogger` marcado como implementado (sink), con nota de integración pendiente.
-- `FORGE_STATUS.md`: conteo de MCP tools corregido (23 → 31); "Próximos Pasos" actualizado con lo ya resuelto.
+- [`../status/FORGE_STATUS.md`](../status/FORGE_STATUS.md): conteo de MCP tools corregido (23 → 31); "Próximos Pasos" actualizado con lo ya resuelto.
 - `docs/calibration_forge/index.md`: fecha de actualización y milestones sincronizados; enlaces a los nuevos documentos de investigación añadidos.
 - `docs/reviews/pulselab_review_23042026.md`: banner añadido señalando que fue superado por `pulselab_review_05072026.md`, sin alterar el contenido histórico.
 

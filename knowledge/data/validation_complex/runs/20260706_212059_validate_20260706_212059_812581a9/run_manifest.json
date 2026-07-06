@@ -1,0 +1,142 @@
+{
+  "run_session": "validate_20260706_212059_812581a9",
+  "started_at": "2026-07-06T21:21:00.903438+00:00",
+  "backend_pref": "auto",
+  "ab_variant": "a",
+  "backends": {
+    "primary": {
+      "label": "Ollama Qwythos 9B (reasoning)",
+      "available": true,
+      "base_url": "http://localhost:11431/v1",
+      "model": "qwythos-9b-96k",
+      "api": "auto",
+      "think": "low",
+      "roles": [
+        "reasoning",
+        "complex_synthesis",
+        "review"
+      ],
+      "limits": {
+        "num_ctx": 98304,
+        "max_tokens": 16384,
+        "prompt_max_chars": 48000,
+        "json_mode": false,
+        "think": "low",
+        "api": "auto"
+      }
+    },
+    "atomic": {
+      "label": "llama-server atomic lane (MCP execution)",
+      "available": true,
+      "base_url": "http://localhost:11439/v1",
+      "model": "qwen3-4b-instruct-48k",
+      "api": "openai",
+      "think": false,
+      "roles": [
+        "mcp_execution",
+        "fast_json",
+        "parallel_slots"
+      ],
+      "limits": {
+        "num_ctx": 49152,
+        "max_tokens": 16384,
+        "prompt_max_chars": 24000,
+        "json_mode": true,
+        "think": false,
+        "api": "openai"
+      },
+      "atomic": {
+        "available": true,
+        "port": 11439,
+        "base_url": "http://localhost:11439/v1",
+        "profile": "concurrent2",
+        "parallel": 2,
+        "slot_ctx": 49152,
+        "total_ctx": 98304,
+        "model": "qwen3-4b-instruct-48k",
+        "server_alias": "qwen3-4b-instruct-48k",
+        "pid": 27828,
+        "state_file": "C:\\Users\\soyko\\Documents\\Ollama\\docker\\llamacpp\\qwythos.state.json",
+        "api": "openai",
+        "think": "none",
+        "roles": [
+          "mcp_execution",
+          "fast_json",
+          "parallel_slots"
+        ],
+        "last_switch": {
+          "targetProfile": "concurrent2",
+          "requestedProfile": "concurrent2",
+          "previousProfile": "concurrent3",
+          "reason": "manual",
+          "noop": false,
+          "reloadSec": 9.29,
+          "switchedAt": "2026-07-06T21:44:44.4145512+02:00"
+        }
+      }
+    },
+    "routing": {
+      "default_backend": "primary",
+      "mcp_tool_backend": "atomic",
+      "complex_circuit_backend": "primary",
+      "review_backend": "primary",
+      "auto_fallback": true
+    }
+  },
+  "results": [
+    {
+      "name": "esp32_rf_nfc",
+      "elapsed_s": 733.9,
+      "session_id": "validate_20260706_212059_812581a9",
+      "ok": true,
+      "components": 8,
+      "backend": "primary",
+      "ab_variant": "a",
+      "output_file": "knowledge\\data\\validation_complex\\runs\\20260706_212059_validate_20260706_212059_812581a9\\esp32_rf_nfc.json",
+      "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_212059_812581a9",
+      "pin_coverage": {
+        "per_component": [
+          {
+            "label": "U1",
+            "value": "ESP32-WROOM-32",
+            "generated_pins": 40,
+            "total_pins": 39,
+            "coverage": 1.0256,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U2",
+            "value": "PN532",
+            "generated_pins": 7,
+            "total_pins": 7,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U3",
+            "value": "CC1101",
+            "generated_pins": 4,
+            "total_pins": 8,
+            "coverage": 0.5,
+            "source": "pinouts_library"
+          }
+        ],
+        "unmatched": [],
+        "average_coverage": 0.8419
+      },
+      "semantic_review": {
+        "issue_count": 1,
+        "critical_count": 1,
+        "issues": [
+          {
+            "msg": "MCU ESP32-WROOM-32 conecta directamente a 'GND' en sus pines 0 y 2. Según la regla de aislamiento entre tierra de simulación ('0') y malla física ('GND'), estos pines quedan AISLADOS físicamente, impidiendo el funcionamiento del chip.",
+            "severity": "critical",
+            "proposal": "Reemplazar los nodos 'GND' conectados al ESP32 por '0'. Esto cerrará correctamente el circuito de tierra de simulación y permitirá que el MCU funcione (asumiendo que la malla física en KiCad ya está definida adecuadamente para el paquete)."
+          }
+        ]
+      },
+      "review_elapsed_s": 61.3
+    }
+  ],
+  "finished_at": "2026-07-06T21:34:16.564357+00:00"
+}

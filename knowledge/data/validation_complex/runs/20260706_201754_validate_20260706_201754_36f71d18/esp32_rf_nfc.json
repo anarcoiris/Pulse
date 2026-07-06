@@ -1,0 +1,146 @@
+{
+  "run_session": "validate_20260706_201754_36f71d18",
+  "test_case": "ESP32 + NFC + 433 MHz RF",
+  "prompt": "Diseña un sistema IoT con un ESP32. Conecta un lector NFC PN532 a través de I2C. Conecta un transceptor de radio 433 MHz CC1101 a través del bus SPI (MISO, MOSI, SCK, CS). Incluye alimentación de 3.3V para todos los módulos y condensadores de bypass.",
+  "ab_variant": "b",
+  "backend": "primary",
+  "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_201754_36f71d18",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 3.3,
+      "n1": "VCC33",
+      "n2": "GND",
+      "label": "V3V3"
+    },
+    {
+      "etype": "GND",
+      "value": 0,
+      "label": "GND"
+    },
+    {
+      "etype": "C",
+      "value": 1e-07,
+      "n1": "VCC33",
+      "n2": "GND",
+      "label": "C_BYPASS"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-WROOM-32",
+      "symbol": "RF_Module:ESP32-WROOM-32",
+      "footprint": "RF_Module:ESP32-WROOM-32",
+      "label": "U1",
+      "pins": {
+        "1": "GND",
+        "2": "VCC33",
+        "3": "EN",
+        "4": "NC_U1_4",
+        "5": "SPI_MOSI",
+        "6": "SPI_MISO",
+        "7": "NC_U1_7",
+        "8": "NC_U1_8",
+        "9": "NC_U1_9",
+        "10": "NC_U1_10",
+        "11": "NC_U1_11",
+        "12": "NC_U1_12",
+        "13": "NC_U1_13",
+        "14": "NC_U1_14",
+        "15": "NC_U1_15",
+        "16": "NC_U1_16",
+        "17": "NC_U1_17",
+        "18": "SPI_SCLK",
+        "19": "SPI_CS",
+        "20": "NC_U1_20",
+        "21": "I2C_SDA",
+        "22": "I2C_SCL",
+        "23": "NC_U1_23",
+        "24": "IO2",
+        "25": "IO0",
+        "26": "NC_U1_26",
+        "27": "NC_U1_27",
+        "28": "NC_U1_28",
+        "29": "NC_U1_29",
+        "30": "NC_U1_30",
+        "31": "NC_U1_31",
+        "32": "NC_U1_32",
+        "33": "I2C_SDA",
+        "34": "I2C_SCL",
+        "35": "MCU_TX",
+        "36": "MCU_RX",
+        "37": "NC_U1_37",
+        "38": "GND",
+        "39": "NC_U1_39"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "CC1101",
+      "label": "RF_TX",
+      "symbol": "Connector_Generic:Conn_01x08",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+      "pins": {
+        "1": "VCC33",
+        "2": "GND",
+        "3": "SPI_MOSI",
+        "4": "SPI_SCLK",
+        "5": "SPI_MISO",
+        "6": "NC_RF_TX_6",
+        "7": "NC_RF_TX_7",
+        "8": "SPI_CS"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "PN532",
+      "label": "U2",
+      "symbol": "Connector_Generic:Conn_01x07",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "VCC33",
+        "3": "I2C_SDA",
+        "4": "I2C_SCL",
+        "5": "NC_U2_5",
+        "6": "NC_U2_6",
+        "7": "NC_U2_7"
+      }
+    }
+  ],
+  "pin_coverage": {
+    "per_component": [
+      {
+        "label": "U1",
+        "value": "ESP32-WROOM-32",
+        "generated_pins": 39,
+        "total_pins": 39,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "RF_TX",
+        "value": "CC1101",
+        "generated_pins": 8,
+        "total_pins": 8,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "U2",
+        "value": "PN532",
+        "generated_pins": 7,
+        "total_pins": 7,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      }
+    ],
+    "unmatched": [],
+    "average_coverage": 1.0
+  },
+  "semantic_review": {
+    "error": "LLM devolvió JSON inválido: ...",
+    "issue_count": null,
+    "critical_count": null,
+    "issues": []
+  }
+}

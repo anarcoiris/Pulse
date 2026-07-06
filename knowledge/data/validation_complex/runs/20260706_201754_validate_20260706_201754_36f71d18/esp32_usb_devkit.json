@@ -1,0 +1,235 @@
+{
+  "run_session": "validate_20260706_201754_36f71d18",
+  "test_case": "ESP32-WROOM-32 USB Devboard",
+  "prompt": "Diseña una placa estilo devkit con ESP32-WROOM-32, alimentación 5V USB regulada a 3.3V con AMS1117, puente USB-UART CH340G con pares USB_D+ y USB_D-, pull-up EN 10k, condensadores de desacople, y headers GPIO. UART: CH340 TXD a RX del ESP32 (GPIO3), CH340 RXD a TX del ESP32 (GPIO1).",
+  "ab_variant": "b",
+  "backend": "primary",
+  "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_201754_36f71d18",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 5.0,
+      "label": "VUSB",
+      "n1": "VUSB",
+      "n2": "GND"
+    },
+    {
+      "etype": "IC",
+      "value": "AMS1117-3.3",
+      "label": "U2",
+      "symbol": "Regulator_Linear:AMS1117-3.3",
+      "pins": {
+        "1": "GND",
+        "2": "VCC33",
+        "3": "VUSB"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "CH340G",
+      "label": "U1",
+      "symbol": "Interface_USB:CH340G",
+      "footprint": "Package_SO:SOP-16_3.9x9.9mm_P1.27mm",
+      "pins": {
+        "1": "GND",
+        "2": "MCU_TX",
+        "3": "MCU_RX",
+        "4": "VCC33",
+        "5": "USB_D+",
+        "6": "USB_D-",
+        "13": "DTR",
+        "14": "RTS",
+        "16": "VUSB"
+      }
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-WROOM-32",
+      "label": "U3",
+      "symbol": "RF_Module:ESP32-WROOM-32",
+      "footprint": "RF_Module:ESP32-WROOM-32",
+      "pins": {
+        "1": "GND",
+        "2": "VCC33",
+        "3": "EN",
+        "4": "SENSOR_VP",
+        "5": "SENSOR_VN",
+        "6": "IO34",
+        "7": "IO35",
+        "8": "IO32",
+        "9": "IO33",
+        "10": "IO25",
+        "11": "IO26",
+        "12": "IO27",
+        "13": "IO14",
+        "14": "IO12",
+        "15": "GND",
+        "16": "IO13",
+        "17": "SHD/SD2",
+        "18": "SWP/SD3",
+        "19": "SCS/CMD",
+        "20": "SCK/CLK",
+        "21": "SDO/SD0",
+        "22": "SDI/SD1",
+        "23": "IO15",
+        "24": "IO2",
+        "25": "IO0",
+        "26": "IO4",
+        "27": "IO16",
+        "28": "IO17",
+        "29": "IO5",
+        "30": "IO18",
+        "31": "IO19",
+        "32": "NC_U3_32",
+        "33": "IO21",
+        "34": "U0RXD",
+        "35": "U0TXD",
+        "36": "IO22",
+        "37": "IO23",
+        "38": "GND",
+        "39": "GND_PAD"
+      }
+    },
+    {
+      "etype": "R",
+      "value": 10000,
+      "label": "R_EN",
+      "n1": "VCC33",
+      "n2": "EN"
+    },
+    {
+      "etype": "IC",
+      "value": "GPIO_HDR_L",
+      "label": "J1",
+      "symbol": "Connector_Generic:Conn_02x10_Odd_Even",
+      "pins": {
+        "1": "GPIO_0",
+        "2": "GPIO_1",
+        "3": "GPIO_2",
+        "4": "GPIO_3",
+        "5": "GPIO_4",
+        "6": "GPIO_5",
+        "7": "GPIO_6",
+        "8": "GPIO_7",
+        "9": "GPIO_8",
+        "10": "GPIO_9"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "GPIO_HDR_R",
+      "label": "J2",
+      "symbol": "Connector_Generic:Conn_02x10_Odd_Even",
+      "pins": {
+        "1": "GPIO_10",
+        "2": "GPIO_11",
+        "3": "GPIO_12",
+        "4": "GPIO_13",
+        "5": "GPIO_14",
+        "6": "GPIO_15",
+        "7": "GPIO_16",
+        "8": "GPIO_17",
+        "9": "GPIO_18",
+        "10": "GPIO_19"
+      }
+    },
+    {
+      "etype": "C",
+      "value": 1e-05,
+      "label": "C_VBUS",
+      "n1": "VUSB",
+      "n2": "GND"
+    },
+    {
+      "etype": "C",
+      "value": 1e-05,
+      "label": "C_ESP_H",
+      "n1": "VCC33",
+      "n2": "GND"
+    },
+    {
+      "etype": "C",
+      "value": 1e-07,
+      "label": "C_ESP_L",
+      "n1": "VCC33",
+      "n2": "GND"
+    },
+    {
+      "etype": "C",
+      "value": 1e-07,
+      "label": "C_CH340",
+      "n1": "VUSB",
+      "n2": "GND"
+    },
+    {
+      "etype": "GND",
+      "value": 0,
+      "label": "GND"
+    }
+  ],
+  "pin_coverage": {
+    "per_component": [
+      {
+        "label": "U2",
+        "value": "AMS1117-3.3",
+        "generated_pins": 3,
+        "total_pins": 3,
+        "coverage": 1.0,
+        "source": "kicad_symbols_index:Regulator_Linear"
+      },
+      {
+        "label": "U1",
+        "value": "CH340G",
+        "generated_pins": 9,
+        "total_pins": 16,
+        "coverage": 0.5625,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "U3",
+        "value": "ESP32-WROOM-32",
+        "generated_pins": 39,
+        "total_pins": 39,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      }
+    ],
+    "unmatched": [
+      {
+        "label": "J1",
+        "value": "GPIO_HDR_L"
+      },
+      {
+        "label": "J2",
+        "value": "GPIO_HDR_R"
+      }
+    ],
+    "average_coverage": 0.8542
+  },
+  "semantic_review": {
+    "issue_count": 4,
+    "critical_count": 2,
+    "issues": [
+      {
+        "msg": "Nodo flotante '0' presente en el netlist mientras existe GND; la regla de aislamiento se viola.",
+        "severity": "critical",
+        "proposal": "Eliminar la conexión a '0' o crear un alias '0'->GND si es necesario."
+      },
+      {
+        "msg": "Las pines TXD/RXD del CH340 no están conectadas a los pines U0RXD/U0TXD del ESP32, lo que impide la comunicación UART.",
+        "severity": "critical",
+        "proposal": "Conectar CH340 pin 2 (MCU_TX) a ESP32 U0RXD y CH340 pin 3 (MCU_RX) a ESP32 U0TXD en el netlist."
+      },
+      {
+        "msg": "GPIO0 (BOOT) del ESP32 no tiene conexión explícita a GND para modo flash.",
+        "severity": "warning",
+        "proposal": "Añadir una red 'GPIO_0' conectada a GND o asegurar que el pin ESP32 25 (IO0) esté conectado a GND según la definición de GPIO_HDR_L/R."
+      },
+      {
+        "msg": "Las redes USB_D+ y USB_D- no aparecen como nets de nivel superior, aunque están dentro del CH340.",
+        "severity": "warning",
+        "proposal": "Definir nets USB_D+ y USB_D- a nivel de circuito si se requieren para la ruta USB‑UART."
+      }
+    ]
+  }
+}

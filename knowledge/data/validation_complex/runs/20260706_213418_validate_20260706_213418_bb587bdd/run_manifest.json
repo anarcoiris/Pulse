@@ -1,0 +1,176 @@
+{
+  "run_session": "validate_20260706_213418_bb587bdd",
+  "started_at": "2026-07-06T21:34:20.678722+00:00",
+  "backend_pref": "auto",
+  "ab_variant": "a",
+  "backends": {
+    "primary": {
+      "label": "Ollama Qwythos 9B (reasoning)",
+      "available": true,
+      "base_url": "http://localhost:11431/v1",
+      "model": "qwythos-9b-96k",
+      "api": "auto",
+      "think": "low",
+      "roles": [
+        "reasoning",
+        "complex_synthesis",
+        "review"
+      ],
+      "limits": {
+        "num_ctx": 98304,
+        "max_tokens": 16384,
+        "prompt_max_chars": 48000,
+        "json_mode": false,
+        "think": "low",
+        "api": "auto"
+      }
+    },
+    "atomic": {
+      "label": "llama-server atomic lane (MCP execution)",
+      "available": true,
+      "base_url": "http://localhost:11439/v1",
+      "model": "qwen3-4b-instruct-48k",
+      "api": "openai",
+      "think": false,
+      "roles": [
+        "mcp_execution",
+        "fast_json",
+        "parallel_slots"
+      ],
+      "limits": {
+        "num_ctx": 49152,
+        "max_tokens": 16384,
+        "prompt_max_chars": 24000,
+        "json_mode": true,
+        "think": false,
+        "api": "openai"
+      },
+      "atomic": {
+        "available": true,
+        "port": 11439,
+        "base_url": "http://localhost:11439/v1",
+        "profile": "concurrent2",
+        "parallel": 2,
+        "slot_ctx": 49152,
+        "total_ctx": 98304,
+        "model": "qwen3-4b-instruct-48k",
+        "server_alias": "qwen3-4b-instruct-48k",
+        "pid": 27828,
+        "state_file": "C:\\Users\\soyko\\Documents\\Ollama\\docker\\llamacpp\\qwythos.state.json",
+        "api": "openai",
+        "think": "none",
+        "roles": [
+          "mcp_execution",
+          "fast_json",
+          "parallel_slots"
+        ],
+        "last_switch": {
+          "targetProfile": "concurrent2",
+          "requestedProfile": "concurrent2",
+          "previousProfile": "concurrent3",
+          "reason": "manual",
+          "noop": false,
+          "reloadSec": 9.29,
+          "switchedAt": "2026-07-06T21:44:44.4145512+02:00"
+        }
+      }
+    },
+    "routing": {
+      "default_backend": "primary",
+      "mcp_tool_backend": "atomic",
+      "complex_circuit_backend": "primary",
+      "review_backend": "primary",
+      "auto_fallback": true
+    }
+  },
+  "results": [
+    {
+      "name": "esp32_usb_devkit",
+      "elapsed_s": 826.4,
+      "session_id": "validate_20260706_213418_bb587bdd",
+      "ok": true,
+      "components": 12,
+      "backend": "primary",
+      "ab_variant": "a",
+      "output_file": "knowledge\\data\\validation_complex\\runs\\20260706_213418_validate_20260706_213418_bb587bdd\\esp32_usb_devkit.json",
+      "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_213418_bb587bdd",
+      "pin_coverage": {
+        "per_component": [
+          {
+            "label": "U2",
+            "value": "AMS1117-3.3",
+            "generated_pins": 3,
+            "total_pins": 3,
+            "coverage": 1.0,
+            "source": "kicad_symbols_index:Regulator_Linear"
+          },
+          {
+            "label": "U1",
+            "value": "ESP32-WROOM-32U",
+            "generated_pins": 39,
+            "total_pins": 39,
+            "coverage": 1.0,
+            "source": "kicad_symbols_index:RF_Module"
+          },
+          {
+            "label": "U1",
+            "value": "CH340G",
+            "generated_pins": 16,
+            "total_pins": 16,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          }
+        ],
+        "unmatched": [
+          {
+            "label": "J1",
+            "value": "GPIO_HDR_L"
+          },
+          {
+            "label": "J2",
+            "value": "GPIO_HDR_R"
+          }
+        ],
+        "average_coverage": 1.0
+      },
+      "semantic_review": {
+        "issue_count": 6,
+        "critical_count": 3,
+        "issues": [
+          {
+            "msg": "El regulador AMS1117-3.3 tiene el pin 1 conectado a 'GND' y el pin 3 a 'VUSB', pero no hay una conexión física explícita desde la red 'VUSB' a la tierra de simulación ('0'). Según las reglas de diseño, si 'VUSB' nunca se conecta a '0' o 'GND', el circuito estará aislado en SPICE. Se debe verificar que la red VUSB esté conectada a 0/GND.",
+            "severity": "critical",
+            "proposal": "Conectar la red 'VUSB' a 'GND' (o a un nodo aliaseado a '0') para completar el circuito del regulador y permitir la simulación."
+          },
+          {
+            "msg": "El terminal negativo de la fuente de voltaje (V) está conectado directamente a 'GND'. Para cumplir con la regla de que el terminal negativo debe ir a 0, se requiere un alias entre 'GND' y '0', ya que actualmente están definidos como nodos distintos sin conexión física.",
+            "severity": "warning",
+            "proposal": "Crear un alias para conectar 'GND' a '0'."
+          },
+          {
+            "msg": "El pin EN del ESP32 (pin 3) está conectado a una resistencia de 10kΩ que va a 'VCC33', pero falta una conexión pull-up desde EN hasta 'GND'. Esto dejaría el pin flotando o solo con un pull-up parcial, lo cual puede causar comportamiento indeterminado en la simulación.",
+            "severity": "warning",
+            "proposal": "Conectar el pin EN del ESP32 a 'GND' para completar el pull-up de 10kΩ."
+          },
+          {
+            "msg": "El pin GPIO0 (BOOT) del ESP32 corresponde al pin 25 según la lista, y está conectado directamente a 'VCC33'. Para el modo de flash, GPIO0 debe poder ir a GND. Además, el pin 10 del MCU está etiquetado como 'GND' pero no se ha conectado físicamente a '0', lo que viola la regla de conexión a tierra.",
+            "severity": "critical",
+            "proposal": "Conectar el pin 25 (GPIO0) del ESP32 a 'GND' y conectar el pin 10 del MCU a 'GND'."
+          },
+          {
+            "msg": "El condensador de desacople cerca de los pines VCC/GND del ESP32 (pines 1, 15, 38, 39) no tiene conexiones físicas explícitas a '0' o 'GND'. Los pines 1 y 15 están marcados como 'GND' y deben conectarse a la tierra de simulación.",
+            "severity": "warning",
+            "proposal": "Conectar los pines del ESP32 etiquetados como 'GND' (1, 15, 38, 39) a 'GND'."
+          },
+          {
+            "msg": "El chip CH340G tiene el pin 16 conectado a 'VUSB', pero no existe una conexión física desde 'VUSB' a la tierra de simulación ('0'). Esto dejaría el circuito aislado.",
+            "severity": "critical",
+            "proposal": "Conectar la red 'VUSB' a 'GND'."
+          }
+        ]
+      },
+      "review_elapsed_s": 114.8
+    }
+  ],
+  "finished_at": "2026-07-06T21:50:02.095475+00:00"
+}

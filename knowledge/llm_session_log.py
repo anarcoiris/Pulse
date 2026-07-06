@@ -78,11 +78,18 @@ def record_llm_exchange(
     log_dir.mkdir(parents=True, exist_ok=True)
 
     ts = datetime.now(timezone.utc).isoformat()
+    content = response.get("content", "") or ""
+    thinking = response.get("thinking", "") or ""
+    raw = response.get("raw") or {}
     output_block: dict[str, Any] = {
-        "content": response.get("content", ""),
-        "thinking": response.get("thinking", ""),
+        "content": content,
+        "thinking": thinking,
         "tokens": response.get("tokens", 0),
         "error": response.get("error"),
+        "done_reason": response.get("done_reason") or raw.get("done_reason") or raw.get("finish_reason") or "",
+        "content_len": len(content),
+        "thinking_len": len(thinking),
+        "eval_count": raw.get("eval_count"),
     }
     if response.get("raw") is not None:
         output_block["raw"] = response.get("raw")
@@ -100,6 +107,9 @@ def record_llm_exchange(
         "timestamp": ts,
         "duration_ms": round(duration_ms, 1),
         "attempt": attempt,
+        "done_reason": output_block["done_reason"],
+        "content_len": output_block["content_len"],
+        "thinking_len": output_block["thinking_len"],
         "input": {
             "system": system,
             "user": user,

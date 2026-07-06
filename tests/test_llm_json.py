@@ -3,7 +3,7 @@
 import json
 import pytest
 
-from knowledge.llm_json import extract_json_text, is_reasoning_model, parse_json_object
+from knowledge.llm_json import extract_json_text, is_reasoning_model, llm_output_truncated, parse_json_object, parse_llm_result
 
 
 def test_is_reasoning_model():
@@ -33,3 +33,16 @@ def test_parse_with_thinking_stripped():
 def test_empty_raises():
     with pytest.raises(json.JSONDecodeError):
         parse_json_object("")
+
+
+def test_parse_llm_result_falls_back_to_thinking():
+    obj = parse_llm_result("", '{"issues": [{"msg": "ok", "severity": "warning"}]}')
+    assert obj["issues"][0]["msg"] == "ok"
+
+
+def test_llm_output_truncated_length():
+    assert llm_output_truncated({"done_reason": "length", "content": ""})
+
+
+def test_llm_output_truncated_empty_stop():
+    assert llm_output_truncated({"done_reason": "stop", "content": "", "thinking": ""})

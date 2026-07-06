@@ -14,8 +14,9 @@ import json
 from typing import Dict, Any
 
 from knowledge.pulse_config import cfg
+from knowledge.llm_backends import get_backend_client, resolve_backend_name
 from knowledge.llm_client import get_llm_client
-from knowledge.llm_json import parse_json_object
+from knowledge.llm_json import llm_output_truncated, parse_llm_result
 from core.logger import logger
 
 
@@ -67,20 +68,14 @@ class SemanticAIAgent:
 
         logger.ai_review("semantic_reviewer", f"analyze_circuit() {len(graph.components)} componentes")
 
-        result = self.llm.chat(
-            system=self.system_prompt,
-            user=netlist_desc,
-            temperature=float(cfg("llm.agents.semantic_reviewer.temperature", 0.1)),
-            max_tokens=int(cfg("llm.agents.semantic_reviewer.max_tokens", 4096)),
-            caller="semantic_reviewer",
-        )
+        result = self._chat_review(netlist_desc, session_id=None, meta=None)
 
         if "error" in result:
             logger.error("semantic_reviewer", f"analyze_circuit() LLM error: {result['error']}")
             return result
 
         try:
-            data = parse_json_object(result["content"])
+            data = parse_llm_result(result.get("content", ""), result.get("thinking", ""))
             issues = data.get("issues", [])
             critical = sum(1 for i in issues if i.get("severity") == "critical")
             logger.ai_review(
@@ -97,12 +92,50 @@ class SemanticReviewer:
     """
     Variante que acepta un JSON string de netlist en lugar de un CircuitGraph.
     Usada desde el ForgeController donde el graph ya está serializado.
+
+    Session 4d: routes via `llm_backends.resolve_backend_name(task="review")`
+    instead of always using the primary client directly, so `Pulse_cfg.json`'s
+    `llm.routing.review_backend` (and `--review-backend` in the validation
+    harness) can send review traffic to `atomic` (fast JSON, think=off) while
+    synthesis stays on `primary` (long-context reasoning) — see
+    docs/calibration_forge/llm_output_pipeline.md §Session 4d.
     """
-    def __init__(self):
-        self.llm = get_llm_client()
+    def __init__(self, backend: str = "auto"):
+        self.backend_pref = backend
+        self.backend_name, self.llm = self._resolve_backend()
         self.system_prompt = _SYSTEM_PROMPT
 
-    def review_netlist(self, circuit_json: str) -> Dict[str, Any]:
+    def _resolve_backend(self) -> tuple[str, Any]:
+        name = resolve_backend_name(task="review", prefer=self.backend_pref)
+        return name, get_backend_client(name)
+
+    def _chat_review(
+        self,
+        netlist_desc: str,
+        *,
+        session_id: str | None = None,
+        meta: dict | None = None,
+    ) -> dict:
+        max_tokens = int(cfg("llm.agents.semantic_reviewer.max_tokens", 8192))
+        return self.llm.chat(
+            system=self.system_prompt,
+            user=netlist_desc,
+            temperature=float(cfg("llm.agents.semantic_reviewer.temperature", 0.1)),
+            max_tokens=max_tokens,
+            json_mode=True,
+            disable_thinking=True,
+            caller="semantic_reviewer",
+            session_id=session_id,
+            meta={**(meta or {}), "backend": self.backend_name},
+        )
+
+    def review_netlist(
+        self,
+        circuit_json: str,
+        *,
+        session_id: str | None = None,
+        meta: dict | None = None,
+    ) -> Dict[str, Any]:
         """Revisa un circuito a partir de su representación JSON serializada."""
         if not self.llm.available:
             return {"error": "Servicio LLM no disponible. ¿Está corriendo Ollama?"}
@@ -128,27 +161,32 @@ class SemanticReviewer:
 
         logger.ai_review("semantic_reviewer", f"review_netlist() {len(components)} componentes")
 
-        result = self.llm.chat(
-            system=self.system_prompt,
-            user=netlist_desc,
-            temperature=float(cfg("llm.agents.semantic_reviewer.temperature", 0.1)),
-            max_tokens=int(cfg("llm.agents.semantic_reviewer.max_tokens", 4096)),
-            caller="semantic_reviewer",
-        )
+        result = self._chat_review(netlist_desc, session_id=session_id, meta=meta)
 
         if "error" in result:
             logger.error("semantic_reviewer", f"review_netlist() LLM error: {result['error']}")
-            return result
+            return {**result, "backend": self.backend_name}
+
+        if llm_output_truncated(result):
+            reason = result.get("done_reason") or "unknown"
+            logger.error(
+                "semantic_reviewer",
+                f"review_netlist() truncado (done_reason={reason})",
+            )
+            return {"error": f"LLM truncado (done_reason={reason})", "backend": self.backend_name}
 
         try:
-            resp_data = parse_json_object(result["content"])
+            resp_data = parse_llm_result(result.get("content", ""), result.get("thinking", ""))
             issues = resp_data.get("issues", [])
             critical = sum(1 for i in issues if i.get("severity") == "critical")
             logger.ai_review(
                 "semantic_reviewer",
                 f"review_netlist() {len(issues)} issues ({critical} critical)",
             )
-            return {"status": "ok", "issues": issues}
+            return {"status": "ok", "issues": issues, "backend": self.backend_name}
         except json.JSONDecodeError:
             logger.error("semantic_reviewer", f"review_netlist() JSON invalido: {result['content'][:100]}")
-            return {"error": f"LLM devolvió JSON inválido: {result['content'][:200]}..."}
+            return {
+                "error": f"LLM devolvió JSON inválido: {result['content'][:200]}...",
+                "backend": self.backend_name,
+            }

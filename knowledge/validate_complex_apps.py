@@ -223,7 +223,12 @@ def main():
 
     parser = argparse.ArgumentParser(description="PulseLab complex circuit validation")
     parser.add_argument("--case", help="Run single test by name (e.g. esp32_sensors)")
-    parser.add_argument("--backend", default="auto", help="LLM backend: auto|primary|atomic")
+    parser.add_argument("--backend", default="auto", help="LLM backend for synthesis: auto|primary|atomic")
+    parser.add_argument(
+        "--review-backend",
+        default="auto",
+        help="LLM backend for semantic review: auto|primary|atomic (default: auto -> llm.routing.review_backend, Session 4d)",
+    )
     parser.add_argument("--variant", choices=("a", "b"), default="a", help="A/B variant: a=rules+rag_top_k=1, b=trimmed rules+richer RAG")
     parser.add_argument("--session", help="Reuse session id (default: new run session)")
     args = parser.parse_args()
@@ -247,7 +252,8 @@ def main():
     print(f"OK: Backends: primary={primary.get('available')} atomic={backends.get('atomic', {}).get('available')}")
     print(f"Variant: {args.variant}")
     synth = CircuitSynthesizer(backend=args.backend, ab_variant=args.variant)
-    reviewer = SemanticReviewer()
+    reviewer = SemanticReviewer(backend=args.review_backend)
+    print(f"Review backend: {reviewer.backend_name}")
 
     cases = TEST_CASES
     if args.case:
@@ -260,6 +266,8 @@ def main():
         "run_session": run_session,
         "started_at": datetime.now(timezone.utc).isoformat(),
         "backend_pref": args.backend,
+        "review_backend_pref": args.review_backend,
+        "review_backend_resolved": reviewer.backend_name,
         "ab_variant": args.variant,
         "backends": backends,
         "results": [],
@@ -286,7 +294,13 @@ def main():
         elapsed = time.time() - t0
         print(f"  ({elapsed:.0f}s)", flush=True)
 
-        entry = {"name": name, "elapsed_s": round(elapsed, 1), "session_id": run_session}
+        entry = {
+            "name": name,
+            "elapsed_s": round(elapsed, 1),
+            "session_id": run_session,
+            "generation_attempts": result.get("generation_attempts"),
+            "truncated": result.get("truncated"),
+        }
 
         if "error" in result:
             print(f"ERROR en generacion: {result['error']}")
@@ -304,7 +318,11 @@ def main():
 
         print("Revisando semantica (AI DRC)...", flush=True)
         t_review = time.time()
-        review_raw = reviewer.review_netlist(json.dumps({"components": components}, ensure_ascii=False))
+        review_raw = reviewer.review_netlist(
+            json.dumps({"components": components}, ensure_ascii=False),
+            session_id=run_session,
+            meta={"test": name, "ab_variant": args.variant},
+        )
         review_elapsed = time.time() - t_review
         semantic_review = _semantic_review_summary(review_raw)
         print(f"  ({review_elapsed:.0f}s)", flush=True)
@@ -316,6 +334,10 @@ def main():
             "prompt": case["prompt"],
             "ab_variant": args.variant,
             "backend": result.get("backend"),
+            "synthesis_backend": result.get("backend"),
+            "review_backend": review_raw.get("backend"),
+            "generation_attempts": result.get("generation_attempts"),
+            "truncated": result.get("truncated"),
             "llm_session_dir": result.get("session_dir"),
             "circuit": components,
             "pin_coverage": pin_coverage,
@@ -356,6 +378,8 @@ def main():
                 "ok": True,
                 "components": len(components),
                 "backend": result.get("backend"),
+                "synthesis_backend": result.get("backend"),
+                "review_backend": review_raw.get("backend"),
                 "ab_variant": args.variant,
                 "output_file": str(out_file),
                 "llm_session_dir": result.get("session_dir"),
@@ -367,6 +391,7 @@ def main():
         run_manifest["results"].append(entry)
 
     run_manifest["finished_at"] = datetime.now(timezone.utc).isoformat()
+    run_manifest["truncation_events"] = sum(1 for r in run_manifest["results"] if r.get("truncated"))
     manifest_path = run_dir / "run_manifest.json"
     manifest_path.write_text(json.dumps(run_manifest, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"\nRun manifest: {manifest_path}")

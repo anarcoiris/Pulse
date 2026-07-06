@@ -52,11 +52,15 @@ python mcp/server.py
 
 ---
 
-*Proyecto en constante evolución.* Consulte `FORGE_STATUS.md` para métricas técnicas, herramientas MCP expuestas al detalle y hoja de ruta actual.
+*Proyecto en constante evolución.* Consulte [`docs/README.md`](docs/README.md) para el mapa de documentación y [`docs/status/FORGE_STATUS.md`](docs/status/FORGE_STATUS.md) para métricas actuales.
 
-## Documentación y estado del proyecto
+## Documentación
 
-- [`docs/roadmap.md`](docs/roadmap.md) — hoja de ruta activa, fases futuras y enlaces a revisiones/investigación.
-- [`docs/reviews/pulselab_review_05072026.md`](docs/reviews/pulselab_review_05072026.md) — revisión técnica vigente (recap de estado + líneas de investigación abiertas).
-- [`docs/calibration_forge/index.md`](docs/calibration_forge/index.md) — índice de investigaciones del bucle de calibración/entrenamiento.
-- [`docs/architecture/APP_ARCHITECTURE.md`](docs/architecture/APP_ARCHITECTURE.md) — arquitectura del sistema.
+| Documento | Contenido |
+|-----------|-----------|
+| [`docs/README.md`](docs/README.md) | Mapa de toda la documentación |
+| [`docs/status/CURRENT_SPRINT.md`](docs/status/CURRENT_SPRINT.md) | Sprint activo, blockers, next actions |
+| [`docs/status/FORGE_STATUS.md`](docs/status/FORGE_STATUS.md) | Métricas (tests, RAG, MCP) |
+| [`docs/roadmap.md`](docs/roadmap.md) | Fases del producto |
+| [`docs/calibration_forge/index.md`](docs/calibration_forge/index.md) | Investigación Calibration Forge |
+| [`docs/architecture/APP_ARCHITECTURE.md`](docs/architecture/APP_ARCHITECTURE.md) | Arquitectura del sistema |
