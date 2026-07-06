@@ -7,7 +7,7 @@ todos:
     status: completed
   - id: rebuild-embeddings
     content: Rebuild vectors.npy via python -m knowledge.build_embed_index
-    status: in_progress
+    status: completed
   - id: regression-check-1
     content: Run pytest tests/ to confirm no regression after cfg fix
     status: completed
@@ -25,13 +25,13 @@ todos:
     status: completed
   - id: run-experiment
     content: Run the 5-case suite for variant a and variant b (10 LLM generations total)
-    status: in_progress
+    status: completed
   - id: compile-results
     content: Compile pin-coverage + semantic-review comparison table across both variants
-    status: pending
+    status: completed
   - id: handoff-docs
     content: Append results to prompt_vs_rag_balance.md and update CURENT_SPRINT.md / index.md / preflight verification doc, explicitly deferring the rule-trim decision
-    status: pending
+    status: completed
 isProject: false
 ---
 
