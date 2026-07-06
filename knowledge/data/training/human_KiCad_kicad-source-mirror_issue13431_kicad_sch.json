@@ -1,0 +1,202 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue13431.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue13431.kicad_sch",
+    "description": "",
+    "notes": [
+      "* Auxilary power supply input",
+      ".subckt OPAMP INon IInv out Vp Vm g=100k   bGain gain gnd v={g*v(INon, IInv)}   bOut out gnd v={v(gain)> v(Vp) ? v(Vp) : v(gain) < v(Vm) ? v(Vm) : v(gain)} .ends OPAMP   .subckt SG3525 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 \t* Voltage reference \t.param Vref = 5.1V \tbVref 16 12 v={Vref < v(15, 12) ? Vref : v(15) }  \t* Error amplifier (opamp) \txOpampError 2 1 9 15 12 OPAMP  \t* Measure Ct \taCtMeter 5 CtVal ctest \t.model ctest cmeter(gain=1.0)  \t* Measure Rt \tvRtMeasI 16 6 0 \tbRt 12 RtVal v={-Vref/i(vRtMeasI)}  \t* Triangular wave oscillator \t* f = 1/(Ct*0.7*Rt) \tbFreq freq 12 v={(1/(v(CtVal)*0.7*v(RtVal))) < 1 ? 1 : 1/(v(CtVal)*0.7*v(RtVal))} \taTriOsc freq carrier trigen \t.model trigen triangle(cntl_array = [10 500e3] \t\t+freq_array=[10 500e3] out_low = 0 \t\t+out_high = {Vref} duty_cycle = 0.999)  \t* Carrier debug (send it to OSC output) \tRtie carrier 4 0  \t* PWM \tbOutA 11 12 v={min(v(9), v(8)) > v(carrier)+v(12) ? v(doShutdown,12) < {Vref/2} ? v(13) : v(12) : v(12) } \tbOutB 14 12 v={min(v(9), v(8)) < v(carrier)+v(12) ? v(doShutdown,12) < {Vref/2} ? v(13) : v(12) : v(12) }  \t* Soft Start \t.param IssVal = 50u \tIss 12 8 {IssVal} \ta1 12 8 vclamp \t.model vclamp zener(v_breakdown={Vref} i_breakdown={IssVal}) \t*.model vclamp sidiode(Vrev={Vref})  \t* Shutdown \tbShutdown doShutdown 12 v={v(10,12) > 0.8 ? {Vref} : v(12) }; Threshold on pin 10 is around 0.8V \tsShutdownSwitch 8 12 doShutdown 12 sswitch ON \t.model sswitch SW(RON=3k VT={Vref/2})  .ends SG3525",
+      ".tran 10us 20ms uic .option INTERP",
+      "* RC oscillator for PWM carrier * f = 1/(0.7*Rt*Ct)",
+      "* Soft Start ramp * Tstart = Css*5.1/50\u00b5A"
+    ],
+    "net_labels": [
+      "pwm_to_driver",
+      "rt",
+      "ct",
+      "vref",
+      "opamp_buff_fb",
+      "soft_start"
+    ],
+    "components": [
+      {
+        "uid": "#PWR03",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR03",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C1",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C1",
+        "lib_id": "pspice:CAP"
+      },
+      {
+        "uid": "C3",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C3",
+        "lib_id": "pspice:CAP"
+      },
+      {
+        "uid": "V1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDC",
+        "label": "V1",
+        "lib_id": "Simulation_SPICE:VDC"
+      },
+      {
+        "uid": "J1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x03_Female",
+        "label": "J1",
+        "lib_id": "Connector:Conn_01x03_Female"
+      },
+      {
+        "uid": "#PWR04",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR04",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C2",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C2",
+        "lib_id": "pspice:CAP"
+      },
+      {
+        "uid": "#PWR06",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+15V",
+        "label": "#PWR06",
+        "lib_id": "power:+15V"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR02",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "V2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDC",
+        "label": "V2",
+        "lib_id": "Simulation_SPICE:VDC"
+      },
+      {
+        "uid": "V3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDC",
+        "label": "V3",
+        "lib_id": "Simulation_SPICE:VDC"
+      },
+      {
+        "uid": "R1",
+        "etype": "IC",
+        "value": 3220.0,
+        "value_raw": "3.22k",
+        "label": "R1",
+        "lib_id": "pspice:R"
+      },
+      {
+        "uid": "#PWR08",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR08",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR05",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR05",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C4",
+        "etype": "IC",
+        "value": 1.5000000000000002e-07,
+        "value_raw": "150nF",
+        "label": "C4",
+        "lib_id": "pspice:CAP"
+      },
+      {
+        "uid": "#PWR010",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR010",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "UC3525",
+        "label": "U1",
+        "lib_id": "Spice_power_electronics:UC3525"
+      },
+      {
+        "uid": "#PWR012",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR012",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR07",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "-15V",
+        "label": "#PWR07",
+        "lib_id": "power:-15V"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR09",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+15V",
+        "label": "#PWR09",
+        "lib_id": "power:+15V"
+      },
+      {
+        "uid": "#PWR011",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR011",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.1"
+  }
+}

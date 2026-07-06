@@ -1,0 +1,23 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_noconnects.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_noconnects.kicad_sch",
+    "description": "",
+    "notes": [],
+    "net_labels": [
+      "VS"
+    ],
+    "components": [
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "IR4301",
+        "label": "U1",
+        "lib_id": "Amplifier_Audio:IR4301"
+      }
+    ],
+    "version": "1.1"
+  }
+}

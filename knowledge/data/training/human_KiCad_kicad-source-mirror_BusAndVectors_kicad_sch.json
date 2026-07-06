@@ -1,0 +1,50 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_BusAndVectors.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_BusAndVectors.kicad_sch",
+    "description": "",
+    "notes": [
+      "Bus group to bus vector through hierarchical sheet pin members are mapped by declaration order"
+    ],
+    "net_labels": [
+      "CON_B_4",
+      "CON_A_1",
+      "CON_A_2",
+      "CON_A_3",
+      "CON_A_8",
+      "CON_B_2",
+      "CON_B_6",
+      "CON_A_6",
+      "CON_B_5",
+      "CON_B_3",
+      "CON_B_8",
+      "CON_A_4",
+      "CON_A_7",
+      "CON_B_1",
+      "CON_A_5",
+      "CON_B_7",
+      "CON_A_[1..8]",
+      "{CON_B_7 CON_B_8 CON_B_[1..3] CON_B_[4..6]}"
+    ],
+    "components": [
+      {
+        "uid": "J1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x08_Pin",
+        "label": "J1",
+        "lib_id": "Connector:Conn_01x08_Pin"
+      },
+      {
+        "uid": "J2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x08_Pin",
+        "label": "J2",
+        "lib_id": "Connector:Conn_01x08_Pin"
+      }
+    ],
+    "version": "1.1"
+  }
+}

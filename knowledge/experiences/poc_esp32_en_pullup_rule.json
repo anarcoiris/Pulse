@@ -1,0 +1,22 @@
+{
+  "board_id": "poc_esp32_en_pullup_rule",
+  "timestamp": "2026-07-06T00:00:00+00:00",
+  "mcu": "ESP32",
+  "mcu_package": "",
+  "board_size_mm": [
+    0,
+    0
+  ],
+  "component_count": 0,
+  "layer_count": 2,
+  "drc_violations": 0,
+  "routing_success_rate": 1.0,
+  "manufacturing_target": "generic",
+  "lessons_learned": [
+    "ESP32 EN pin requires a 10k pull-up resistor to 3.3V for reliable boot; without it the board may fail to leave reset. GPIO0 (BOOT) must also be able to reach GND to enter flash mode."
+  ],
+  "component_placement_rules": [],
+  "critical_nets": [],
+  "gerber_path": "",
+  "passed": true
+}

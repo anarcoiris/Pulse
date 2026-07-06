@@ -1,0 +1,15 @@
+pygame
+numpy
+scikit-learn
+mcp
+fastmcp
+skidl
+schemdraw
+matplotlib
+pytest
+openai
+python-dotenv
+peft
+trl
+bitsandbytes
+datasets

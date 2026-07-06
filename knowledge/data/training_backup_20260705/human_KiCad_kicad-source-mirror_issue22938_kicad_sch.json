@@ -1,0 +1,138 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue22938.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue22938.kicad_sch",
+    "components": [
+      {
+        "uid": "H10",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MountingHole",
+        "label": "H10",
+        "lib_id": "0IBF_Mechanik:MountingHole"
+      },
+      {
+        "uid": "H12",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MountingHole",
+        "label": "H12",
+        "lib_id": "0IBF_Mechanik:MountingHole"
+      },
+      {
+        "uid": "C13",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "C",
+        "label": "C13",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "H11",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MountingHole",
+        "label": "H11",
+        "lib_id": "0IBF_Mechanik:MountingHole"
+      },
+      {
+        "uid": "#PWR070",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR070",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C14",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "C",
+        "label": "C14",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "#PWR03",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12V",
+        "label": "#PWR03",
+        "lib_id": "IBF_supply:+12V"
+      },
+      {
+        "uid": "H7",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MountingHole",
+        "label": "H7",
+        "lib_id": "0IBF_Mechanik:MountingHole"
+      },
+      {
+        "uid": "#PWR06",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+7V",
+        "label": "#PWR06",
+        "lib_id": "IBF_supply:+7V"
+      },
+      {
+        "uid": "C8",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "C",
+        "label": "C8",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "H9",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MountingHole",
+        "label": "H9",
+        "lib_id": "0IBF_Mechanik:MountingHole"
+      },
+      {
+        "uid": "J4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x06",
+        "label": "J4",
+        "lib_id": "Connector_Generic:Conn_01x06"
+      },
+      {
+        "uid": "C37",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C37",
+        "lib_id": "0IBF_RCL:_C"
+      },
+      {
+        "uid": "#PWR0302",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+48V",
+        "label": "#PWR0302",
+        "lib_id": "0IBF_Supply:+48V"
+      },
+      {
+        "uid": "C7",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "C",
+        "label": "C7",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "H8",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MountingHole",
+        "label": "H8",
+        "lib_id": "0IBF_Mechanik:MountingHole"
+      }
+    ],
+    "version": "1.0"
+  }
+}

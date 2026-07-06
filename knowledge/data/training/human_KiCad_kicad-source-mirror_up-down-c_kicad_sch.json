@@ -1,0 +1,61 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_up-down-c.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_up-down-c.kicad_sch",
+    "description": "",
+    "notes": [
+      "Up-Down Counter"
+    ],
+    "net_labels": [
+      "q1",
+      "clk",
+      "ud",
+      "q2",
+      "q3"
+    ],
+    "components": [
+      {
+        "uid": "#PWR02",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR02",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "Vupd1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VPULSE",
+        "label": "Vupd1",
+        "lib_id": "Simulation_SPICE:VPULSE"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "up-down",
+        "label": "U1",
+        "lib_id": "up-down:Up-Down"
+      },
+      {
+        "uid": "Vclk1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VPULSE",
+        "label": "Vclk1",
+        "lib_id": "Simulation_SPICE:VPULSE"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.1"
+  }
+}

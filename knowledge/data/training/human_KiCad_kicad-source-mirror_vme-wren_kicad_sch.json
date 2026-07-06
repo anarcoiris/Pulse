@@ -1,0 +1,326 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_vme-wren.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_vme-wren.kicad_sch",
+    "description": "VME WR Timing Receiver - Top Level",
+    "notes": [
+      "Shield",
+      "Fiducials",
+      "ESD strips and FP mounting holes"
+    ],
+    "net_labels": [
+      "SFP0_MODABS",
+      "PP_ID0",
+      "{VMEF}",
+      "SFP1_MODABS",
+      "PP_OUT23",
+      "SFP0_SCL",
+      "IOEXP.GPIO_SCLK",
+      "SWITCH1_N",
+      "SFP0_RSSI",
+      "STRIP2_H",
+      "PP_LED1_DATA",
+      "VMEF.GA4",
+      "IOEXP.VME_SCLK",
+      "PP_OUT15",
+      "SFP1_TXDIS",
+      "IOEXP.ALL_RST_N",
+      "SFP0_SDA",
+      "SWITCH0_N",
+      "FP_IO[0..31]",
+      "PP_OUT2",
+      "SFP1_SDA",
+      "{IOEXP}",
+      "PP_OUT11",
+      "SFP1_RSSI",
+      "PP_OUT17",
+      "VMEF.NOGA_N1",
+      "{WRFLASH_I2C}",
+      "IOEXP.ALL_OE_N",
+      "IOEXP.FPIO_RCLK",
+      "FP_ID0",
+      "VMEF.GA2",
+      "PP_OUT10",
+      "IOEXP.HWBYTE1_RCLK",
+      "FP_ID2",
+      "PP_OUT12",
+      "VMEF.NOGA_N0",
+      "PP_OUT19",
+      "VMEF.GA0",
+      "PP_OUT21",
+      "PP_ID1",
+      "PP_OUT0",
+      "VMEF.GA3",
+      "PP_OUT16",
+      "PP_OE_N",
+      "IOEXP.HWBYTE1_D",
+      "VMEF.GA1",
+      "PP_OUT20",
+      "FP_ID1",
+      "PP_OUT5",
+      "{WR_CLK}",
+      "PP_OUT28",
+      "VMEF.USEGA_N",
+      "{PCIE}",
+      "PP_OUT24",
+      "SFP_LED_DATA",
+      "IOEXP.HWBYTE2_RCLK",
+      "PP_ID2",
+      "FP_LED1_DATA",
+      "PP_OUT13",
+      "{WR_DAC}"
+    ],
+    "components": [
+      {
+        "uid": "#PWR0712",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0712",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0420",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "CHASSIS",
+        "label": "#PWR0420",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R401",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0805_2M2_1%_0.125W_100PPM",
+        "label": "R401",
+        "lib_id": "Resistors SMD:R0805_2M2_1%_0.125W_100PPM"
+      },
+      {
+        "uid": "TP3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SMD_PAD_1.27X1.27MM",
+        "label": "TP3",
+        "lib_id": "Pads:SMD_PAD_1.27X1.27MM"
+      },
+      {
+        "uid": "TP5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SMD_PAD_1.27X1.27MM",
+        "label": "TP5",
+        "lib_id": "Pads:SMD_PAD_1.27X1.27MM"
+      },
+      {
+        "uid": "#PWR0711",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P5V_VME",
+        "label": "#PWR0711",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "Cage3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MOLEX_74737-0009",
+        "label": "Cage3",
+        "lib_id": "MOLEX:MOLEX_74737-0009"
+      },
+      {
+        "uid": "Cage1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TYCO_1761014-3",
+        "label": "Cage1",
+        "lib_id": "TYCO:TYCO_1761014-3"
+      },
+      {
+        "uid": "FTG1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "FIDUCIAL_TARGET_C100-200",
+        "label": "FTG1",
+        "lib_id": "Pads:FIDUCIAL_TARGET_C100-200"
+      },
+      {
+        "uid": "#PWR0419",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0419",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "TP4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SMD_PAD_1.27X1.27MM",
+        "label": "TP4",
+        "lib_id": "Pads:SMD_PAD_1.27X1.27MM"
+      },
+      {
+        "uid": "B3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PLATED_HOLE2.7_PAD5.0",
+        "label": "B3",
+        "lib_id": "Pads:PLATED_HOLE2.7_PAD5.0"
+      },
+      {
+        "uid": "J6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SAMTEC_LSHM-120-02.5-L-DV-A-S",
+        "label": "J6",
+        "lib_id": "SAMTEC:SAMTEC_LSHM-120-02.5-L-DV-A-S"
+      },
+      {
+        "uid": "#PWR01268",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01268",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0415",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0415",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0417",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "CHASSIS",
+        "label": "#PWR0417",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "TP2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SMD_PAD_1.27X1.27MM",
+        "label": "TP2",
+        "lib_id": "Pads:SMD_PAD_1.27X1.27MM"
+      },
+      {
+        "uid": "B1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PLATED_HOLE2.7_PAD5.0",
+        "label": "B1",
+        "lib_id": "Pads:PLATED_HOLE2.7_PAD5.0"
+      },
+      {
+        "uid": "F1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "FUSR_LITTELFUSE_0603L075SL",
+        "label": "F1",
+        "lib_id": "Fuses:FUSR_LITTELFUSE_0603L075SL"
+      },
+      {
+        "uid": "R400",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0805_2M2_1%_0.125W_100PPM",
+        "label": "R400",
+        "lib_id": "Resistors SMD:R0805_2M2_1%_0.125W_100PPM"
+      },
+      {
+        "uid": "#PWR0563",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0563",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R398",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0805_2M2_1%_0.125W_100PPM",
+        "label": "R398",
+        "lib_id": "Resistors SMD:R0805_2M2_1%_0.125W_100PPM"
+      },
+      {
+        "uid": "#PWR0709",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0709",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C369",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC1210_220UF_6.3V_20%_X5R",
+        "label": "C369",
+        "lib_id": "Capacitors SMD:CC1210_220UF_6.3V_20%_X5R"
+      },
+      {
+        "uid": "#PWR0223",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0223",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "TP6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SMD_PAD_1.27X1.27MM",
+        "label": "TP6",
+        "lib_id": "Pads:SMD_PAD_1.27X1.27MM"
+      },
+      {
+        "uid": "B2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PLATED_HOLE2.7_PAD5.0",
+        "label": "B2",
+        "lib_id": "Pads:PLATED_HOLE2.7_PAD5.0"
+      },
+      {
+        "uid": "#PWR0539",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "CHASSIS",
+        "label": "#PWR0539",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R397",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0805_2M2_1%_0.125W_100PPM",
+        "label": "R397",
+        "lib_id": "Resistors SMD:R0805_2M2_1%_0.125W_100PPM"
+      },
+      {
+        "uid": "#PWR0418",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "CHASSIS",
+        "label": "#PWR0418",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "TP1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SMD_PAD_1.27X1.27MM",
+        "label": "TP1",
+        "lib_id": "Pads:SMD_PAD_1.27X1.27MM"
+      }
+    ],
+    "version": "1.1"
+  }
+}

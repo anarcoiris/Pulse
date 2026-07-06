@@ -1,0 +1,275 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_ibis.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_ibis.kicad_sch",
+    "description": "KiCad IBIS Demo",
+    "notes": [
+      "RECT DRIVER",
+      "HIGH DRIVER",
+      "PRBS DRIVER",
+      "DEVICE",
+      "LOW DRIVER",
+      "HIGH Z DRIVER"
+    ],
+    "net_labels": [
+      "PULSE_INPUT",
+      "LOW_OUTPUT",
+      "RECT_OUTPUT",
+      "PRBS_OUTPUT",
+      "HIGHZ_OUTPUT",
+      "HIGH_OUTPUT"
+    ],
+    "components": [
+      {
+        "uid": "R7",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R7",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R10",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R10",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#PWR04",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR04",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "#PWR05",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR05",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "#PWR07",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR07",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "#PWR0111",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0111",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#PWR0105",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0105",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR02",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR06",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR06",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "R3",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R3",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#PWR0102",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0102",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R11",
+        "etype": "R",
+        "value": 50000.0,
+        "value_raw": "50k",
+        "label": "R11",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#PWR0106",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0106",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0108",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0108",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "U6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "IBIS_DEVICE",
+        "label": "U6",
+        "lib_id": "Simulation_SPICE:IBIS_DEVICE"
+      },
+      {
+        "uid": "#PWR0110",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0110",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R8",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R8",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R6",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R6",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#PWR0101",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0101",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R4",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R4",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR01",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "#PWR0112",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0112",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR03",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR03",
+        "lib_id": "power:VDD"
+      },
+      {
+        "uid": "#PWR0103",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0103",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0107",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0107",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0104",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0104",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R5",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R5",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R9",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R9",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#PWR0109",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0109",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.1"
+  }
+}

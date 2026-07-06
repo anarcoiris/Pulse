@@ -1,0 +1,170 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_pic_sockets.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_pic_sockets.kicad_sch",
+    "description": "JDM - COM84 PIC Programmer with 13V DC/DC converter \u2014 KiCad",
+    "notes": [],
+    "net_labels": [
+      "DATA-RB7",
+      "CLOCK-RB6",
+      "VCC_PIC",
+      "VPP-MCLR"
+    ],
+    "components": [
+      {
+        "uid": "U6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PIC_8_PINS",
+        "label": "U6",
+        "lib_id": "pic_programmer:PIC12C508A"
+      },
+      {
+        "uid": "U5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PIC_18_PINS",
+        "label": "U5",
+        "lib_id": "pic_programmer:PIC16F54"
+      },
+      {
+        "uid": "#PWR045",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR045",
+        "lib_id": "pic_programmer:GND"
+      },
+      {
+        "uid": "#PWR044",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR044",
+        "lib_id": "pic_programmer:GND"
+      },
+      {
+        "uid": "#PWR036",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR036",
+        "lib_id": "pic_programmer:GND"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "24Cxx",
+        "label": "U1",
+        "lib_id": "pic_programmer:24C16"
+      },
+      {
+        "uid": "#PWR043",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR043",
+        "lib_id": "pic_programmer:GND"
+      },
+      {
+        "uid": "P3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SUPP40",
+        "label": "P3",
+        "lib_id": "pic_programmer:SUPP40"
+      },
+      {
+        "uid": "#PWR042",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR042",
+        "lib_id": "pic_programmer:GND"
+      },
+      {
+        "uid": "C6",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C6",
+        "lib_id": "pic_programmer:C"
+      },
+      {
+        "uid": "#PWR041",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR041",
+        "lib_id": "pic_programmer:GND"
+      },
+      {
+        "uid": "C7",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C7",
+        "lib_id": "pic_programmer:C"
+      },
+      {
+        "uid": "#PWR040",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR040",
+        "lib_id": "pic_programmer:GND"
+      },
+      {
+        "uid": "P2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SUPP28",
+        "label": "P2",
+        "lib_id": "pic_programmer:SUPP28"
+      },
+      {
+        "uid": "#PWR039",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR039",
+        "lib_id": "pic_programmer:GND"
+      },
+      {
+        "uid": "#PWR038",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR038",
+        "lib_id": "pic_programmer:GND"
+      },
+      {
+        "uid": "#PWR037",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR037",
+        "lib_id": "pic_programmer:GND"
+      },
+      {
+        "uid": "#PWR046",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR046",
+        "lib_id": "pic_programmer:GND"
+      },
+      {
+        "uid": "#FLG047",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG047",
+        "lib_id": "pic_programmer:PWR_FLAG"
+      }
+    ],
+    "version": "1.1"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_ground_pin_test_mixed.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_ground_pin_test_mixed.kicad_sch",
+    "components": [
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#FLG02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG02",
+        "lib_id": "power:PWR_FLAG"
+      },
+      {
+        "uid": "#FLG01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG01",
+        "lib_id": "power:PWR_FLAG"
+      },
+      {
+        "uid": "#FLG03",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG03",
+        "lib_id": "power:PWR_FLAG"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Test_Symbol_Multiple_GND",
+        "label": "U1",
+        "lib_id": "Test:Test_Symbol_Multiple_GND"
+      }
+    ],
+    "version": "1.0"
+  }
+}

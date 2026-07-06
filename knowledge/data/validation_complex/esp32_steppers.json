@@ -1,0 +1,63 @@
+{
+  "test_case": "ESP32 + Controladores Stepper",
+  "prompt": "Diseña un circuito con un ESP32 que controle dos motores paso a paso NEMA17 utilizando dos drivers A4988. Conecta los pines STEP y DIR de los A4988 a pines GPIO del ESP32. Los drivers deben estar alimentados por una fuente externa de 12V para los motores (VMOT), e incluir condensadores electrolíticos grandes (ej: 100uF) cerca del pin VMOT. El ESP32 y la lógica de los A4988 (VDD) deben estar a 3.3V.",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 3.3,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "V1"
+    },
+    {
+      "etype": "V",
+      "value": 12,
+      "n1": "12V",
+      "n2": "GND",
+      "label": "V2"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-S3",
+      "symbol": "RF_Module:ESP32-WROOM-32",
+      "footprint": "RF_Module:ESP32-WROOM-32",
+      "pins": {
+        "2": "3.3V",
+        "1": "GND",
+        "33": "GPIO21 (STEP Motor 1)",
+        "34": "GPIO22 (DIR Motor 1)",
+        "35": "GPIO23 (STEP Motor 2)",
+        "36": "GPIO24 (DIR Motor 2)"
+      },
+      "label": "U1"
+    },
+    {
+      "etype": "IC",
+      "value": "A4988",
+      "symbol": "Driver_Motor:A4988_StepperMotorDriver",
+      "footprint": "Module:A4988_StepperMotorDriver",
+      "pins": {
+        "1": "GND (Logic)",
+        "2": "VDD (Logic)",
+        "3": "VMOT (Power)",
+        "4": "GND (Motor)",
+        "5": "1B (Motor)",
+        "6": "1A (Motor)",
+        "7": "2A (Motor)",
+        "8": "2B (Motor)"
+      },
+      "label": "U2"
+    },
+    {
+      "etype": "GND",
+      "label": "GND"
+    },
+    {
+      "etype": "C",
+      "value": 100.0,
+      "n1": "VMOT",
+      "n2": "GND",
+      "label": "C1"
+    }
+  ]
+}

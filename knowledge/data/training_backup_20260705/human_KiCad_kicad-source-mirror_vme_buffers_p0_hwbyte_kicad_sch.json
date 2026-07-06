@@ -1,0 +1,474 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_vme_buffers_p0_hwbyte.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_vme_buffers_p0_hwbyte.kicad_sch",
+    "components": [
+      {
+        "uid": "#PWR0693",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0693",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "IC123",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SN74LVCH16T245DGG",
+        "label": "IC123",
+        "lib_id": "Standard Logic:SN74LVCH16T245DGG"
+      },
+      {
+        "uid": "R116",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R116",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R249",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R249",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "C226",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C226",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "R221",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R221",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R243",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R243",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "#PWR0370",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR0370",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "R239",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R239",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R246",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R246",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R242",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R242",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R240",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R240",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R241",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R241",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R233",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R233",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R236",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R236",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "IC59",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SN74LVCH16T245DGG",
+        "label": "IC59",
+        "lib_id": "Standard Logic:SN74LVCH16T245DGG"
+      },
+      {
+        "uid": "R229",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R229",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R256",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R256",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R252",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R252",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R232",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R232",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R247",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R247",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "C373",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C373",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "R248",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R248",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R237",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R237",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R250",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R250",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R235",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R235",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R259",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R259",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R148",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_10K_1%_0.0625W_100PPM",
+        "label": "R148",
+        "lib_id": "Resistors SMD:R0402_10K_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R230",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R230",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "#PWR089",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR089",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "C371",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C371",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "R231",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R231",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "C370",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C370",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "R133",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_10K_1%_0.0625W_100PPM",
+        "label": "R133",
+        "lib_id": "Resistors SMD:R0402_10K_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R234",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R234",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R224",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R224",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R257",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R257",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R244",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R244",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "#PWR078",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR078",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0373",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR0373",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "C229",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C229",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "C228",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C228",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "R245",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R245",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R225",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R225",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "C227",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C227",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR0374",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR0374",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "R258",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R258",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "#PWR0359",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR0359",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "R228",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R228",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "C372",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C372",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR0360",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0360",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R238",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R238",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "#PWR090",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR090",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "R186",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_10K_1%_0.0625W_100PPM",
+        "label": "R186",
+        "lib_id": "Resistors SMD:R0402_10K_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "#PWR0371",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR0371",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "#PWR0372",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0372",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R171",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_10K_1%_0.0625W_100PPM",
+        "label": "R171",
+        "lib_id": "Resistors SMD:R0402_10K_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "#PWR079",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR079",
+        "lib_id": "vme-wren:P3V3"
+      }
+    ],
+    "version": "1.0"
+  }
+}

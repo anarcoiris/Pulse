@@ -1,0 +1,135 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_vme_p0.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_vme_p0.kicad_sch",
+    "description": "VME P0 connector fanout + mechanics",
+    "notes": [
+      "Shield",
+      "FIXME: row F is missing, importer fup?",
+      "VME P0"
+    ],
+    "net_labels": [
+      "LVDS_TURNCLK1_N",
+      "HWBYTE.L1_2",
+      "LVDS_BUNCHCLK1_N",
+      "HWBYTE.L2_3",
+      "HWBYTE.H2_4",
+      "HWBYTE.H2_7",
+      "HWBYTE.H2_0",
+      "HWBYTE.H1_3",
+      "{HWBYTE}",
+      "HWBYTE.H1_5",
+      "HWBYTE.L2_1",
+      "LVDS_TURNCLK1_P",
+      "LVDS_BUNCHCLK2_P",
+      "LVDS_BUNCHCLK1_P",
+      "HWBYTE.L2_6",
+      "HWBYTE.H2_5",
+      "TTL_TURNCLK2",
+      "HWBYTE.L1_6",
+      "HWBYTE.L1_4",
+      "HWBYTE.L1_1",
+      "HWBYTE.L1_0",
+      "HWBYTE.H2_3",
+      "HWBYTE.H2_6",
+      "HWBYTE.H1_2",
+      "HWBYTE.H2_2",
+      "HWBYTE.L2_7",
+      "HWBYTE.H1_1",
+      "HWBYTE.H1_6",
+      "LVDS_BUNCHCLK2_N",
+      "HWBYTE.H1_7",
+      "HWBYTE.H1_4",
+      "HWBYTE.L2_0",
+      "TTL_TURNCLK1",
+      "TTL_BUNCHCLK1",
+      "TTL_BUNCHCLK2",
+      "LVDS_TURNCLK2_P",
+      "LVDS_TURNCLK2_N",
+      "HWBYTE.H2_1",
+      "HWBYTE.L2_2",
+      "HWBYTE.L1_5",
+      "HWBYTE.L1_3",
+      "HWBYTE.H1_0",
+      "HWBYTE.L2_4",
+      "HWBYTE.L2_5",
+      "HWBYTE.L1_7"
+    ],
+    "components": [
+      {
+        "uid": "J15",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_17_25_095_2102",
+        "label": "J15",
+        "lib_id": "HARTING:HARTING_17_25_095_2102"
+      },
+      {
+        "uid": "J15",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_17_25_095_2102",
+        "label": "J15",
+        "lib_id": "HARTING:HARTING_17_25_095_2102"
+      },
+      {
+        "uid": "#PWR0689",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0689",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0688",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0688",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "J15",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_17_25_095_2102",
+        "label": "J15",
+        "lib_id": "HARTING:HARTING_17_25_095_2102"
+      },
+      {
+        "uid": "J15",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_17_25_095_2102",
+        "label": "J15",
+        "lib_id": "HARTING:HARTING_17_25_095_2102"
+      },
+      {
+        "uid": "J15",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_17_25_095_2102",
+        "label": "J15",
+        "lib_id": "HARTING:HARTING_17_25_095_2102"
+      },
+      {
+        "uid": "J15",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_17_25_095_2102",
+        "label": "J15",
+        "lib_id": "HARTING:HARTING_17_25_095_2102"
+      },
+      {
+        "uid": "#PWR01123",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01123",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.1"
+  }
+}

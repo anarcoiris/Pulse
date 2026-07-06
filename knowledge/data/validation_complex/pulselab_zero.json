@@ -1,0 +1,217 @@
+{
+  "test_case": "Proyecto Final: PulseLab Zero (Clon Flipper Zero)",
+  "prompt": "Diseña un dispositivo estilo Flipper Zero llamado PulseLab Zero. Debe tener un microcontrolador ESP32-S3 como núcleo, una pantalla OLED SSD1306 por I2C, un módulo NFC PN532 por SPI, un transceptor sub-GHz CC1101 por SPI, un D-Pad de 5 botones direccionales conectados a GPIOs con resistencias pull-up, y un conector de expansión de 8 pines (GPIOs libres, 3.3V y GND). Incluye condensadores de desacoplo para el ESP32.",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 3.3,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "VCC"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-S3",
+      "symbol": "RF_Module:ESP32-S3-WROOM-1",
+      "footprint": "RF_Module:ESP32-S3-WROOM-1",
+      "pins": {
+        "1": "GND",
+        "2": "3V3",
+        "3": "EN",
+        "4": "GPIO0",
+        "5": "GPIO1",
+        "6": "GPIO2",
+        "7": "GPIO3",
+        "8": "GPIO4",
+        "9": "GPIO5",
+        "10": "GPIO6",
+        "11": "GPIO7",
+        "12": "GPIO8",
+        "13": "GPIO9",
+        "14": "GPIO10",
+        "15": "GPIO11",
+        "16": "GPIO12",
+        "17": "GPIO13",
+        "18": "GPIO14",
+        "19": "GPIO15",
+        "20": "GPIO16",
+        "21": "GPIO17",
+        "22": "GPIO18",
+        "23": "GPIO19",
+        "24": "GPIO20",
+        "25": "GPIO21",
+        "26": "GPIO26",
+        "27": "GPIO27",
+        "28": "GPIO28",
+        "29": "GPIO29",
+        "30": "GPIO30",
+        "31": "GPIO31",
+        "32": "GPIO32",
+        "33": "GPIO33",
+        "34": "GPIO34",
+        "35": "GPIO35",
+        "36": "GPIO36",
+        "37": "GPIO37",
+        "38": "GPIO38",
+        "39": "GPIO39",
+        "40": "GPIO40",
+        "41": "GPIO41",
+        "42": "GPIO42",
+        "43": "GPIO43",
+        "44": "GPIO44",
+        "45": "GPIO45",
+        "46": "GPIO46",
+        "47": "GND",
+        "48": "GND_PAD"
+      },
+      "label": "U1"
+    },
+    {
+      "etype": "C",
+      "value": 1e-07,
+      "n1": "3V3",
+      "n2": "GND",
+      "label": "C_DEC_100NF"
+    },
+    {
+      "etype": "C",
+      "value": 1e-05,
+      "n1": "3V3",
+      "n2": "GND",
+      "label": "C_DEC_10UF"
+    },
+    {
+      "etype": "IC",
+      "value": "SSD1306",
+      "symbol": "Connector_Generic:Conn_01x04",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "VDD (3.3V)",
+        "3": "SCK / SCL",
+        "4": "SDA"
+      },
+      "label": "OLED"
+    },
+    {
+      "etype": "IC",
+      "value": "PN532",
+      "symbol": "Connector_Generic:Conn_01x07",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "VCC",
+        "3": "MOSI / SDA / TXD",
+        "4": "MISO / SCL / RXD",
+        "5": "SCK",
+        "6": "NSS / SCL / RXD",
+        "7": "IRQ"
+      },
+      "label": "NFC"
+    },
+    {
+      "etype": "IC",
+      "value": "CC1101",
+      "symbol": "Connector_Generic:Conn_01x08",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+      "pins": {
+        "1": "VCC",
+        "2": "GND",
+        "3": "MOSI",
+        "4": "SCLK",
+        "5": "MISO",
+        "6": "GDO2",
+        "7": "GDO0",
+        "8": "CSN"
+      },
+      "label": "RF"
+    },
+    {
+      "etype": "IC",
+      "value": "EXP8",
+      "symbol": "Connector_Generic:Conn_01x08",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+      "pins": {
+        "1": "GPIO39",
+        "2": "GPIO40",
+        "3": "GPIO41",
+        "4": "GPIO42",
+        "5": "GPIO43",
+        "6": "GPIO44",
+        "7": "3.3V",
+        "8": "GND"
+      },
+      "label": "EXP8"
+    },
+    {
+      "etype": "S",
+      "value": 1,
+      "n1": "GPIO40",
+      "n2": "3.3V",
+      "label": "BTN_UP"
+    },
+    {
+      "etype": "R",
+      "value": 4700.0,
+      "n1": "GPIO40",
+      "n2": "3.3V",
+      "label": "R_PULLUP_UP"
+    },
+    {
+      "etype": "S",
+      "value": 1,
+      "n1": "GPIO41",
+      "n2": "3.3V",
+      "label": "BTN_DOWN"
+    },
+    {
+      "etype": "R",
+      "value": 4700.0,
+      "n1": "GPIO41",
+      "n2": "3.3V",
+      "label": "R_PULLUP_DOWN"
+    },
+    {
+      "etype": "S",
+      "value": 1,
+      "n1": "GPIO42",
+      "n2": "3.3V",
+      "label": "BTN_LEFT"
+    },
+    {
+      "etype": "R",
+      "value": 4700.0,
+      "n1": "GPIO42",
+      "n2": "3.3V",
+      "label": "R_PULLUP_LEFT"
+    },
+    {
+      "etype": "S",
+      "value": 1,
+      "n1": "GPIO43",
+      "n2": "3.3V",
+      "label": "BTN_RIGHT"
+    },
+    {
+      "etype": "R",
+      "value": 4700.0,
+      "n1": "GPIO43",
+      "n2": "3.3V",
+      "label": "R_PULLUP_RIGHT"
+    },
+    {
+      "etype": "S",
+      "value": 1,
+      "n1": "GPIO44",
+      "n2": "3.3V",
+      "label": "BTN_CENTER"
+    },
+    {
+      "etype": "R",
+      "value": 4700.0,
+      "n1": "GPIO44",
+      "n2": "3.3V",
+      "label": "R_PULLUP_CENTER"
+    }
+  ]
+}

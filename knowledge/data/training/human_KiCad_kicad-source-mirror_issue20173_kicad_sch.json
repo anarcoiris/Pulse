@@ -1,0 +1,14 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue20173.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue20173.kicad_sch",
+    "description": "",
+    "notes": [
+      "- look into subsheet CH1 - find symbols R1, R2, R3, R4, D1, D2 - back to root sheet - copy/paste (CTRL+C, CTRL+V) the subsheet to get a second instance of that subsheet - look again into subsheet CH1 - still looks good - switch to subsheet CH2 - references R5...R8, D3, D4 - looks also good - no switch back to original subsheet CH1: suddenly we have there the same references as in subsheet CH2! - run ERC: get a ton of \\\"duplicate references\\\" errors"
+    ],
+    "net_labels": [],
+    "components": [],
+    "version": "1.1"
+  }
+}

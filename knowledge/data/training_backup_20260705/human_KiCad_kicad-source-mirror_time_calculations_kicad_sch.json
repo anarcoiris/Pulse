@@ -1,0 +1,138 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_time_calculations.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_time_calculations.kicad_sch",
+    "components": [
+      {
+        "uid": "R5",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R5",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R4",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R4",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R7",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R7",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R8",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R8",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R10",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R10",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R9",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R9",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R13",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R13",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R14",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R14",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R15",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R15",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R11",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R11",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R16",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R16",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R6",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R6",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R12",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R12",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R3",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R3",
+        "lib_id": "Device:R"
+      }
+    ],
+    "version": "1.0"
+  }
+}

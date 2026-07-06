@@ -1,0 +1,468 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_sfp.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_sfp.kicad_sch",
+    "description": "Antmicro Baseboard for Jetson AGX Thor \u2014 Antmicro Ltd \u2014 www.antmicro.com",
+    "notes": [
+      "SFP28",
+      "SFP28_Cage"
+    ],
+    "net_labels": [
+      "SFI.RX-",
+      "SCL_SFP",
+      "SFI.TX-",
+      "SFP_MOD_ABS",
+      "SFI.TX+",
+      "SDA_SFP",
+      "SFI.RX+",
+      "SFI_CONN_TX_P",
+      "SFI_CONN_RX_P",
+      "SH",
+      "I2C_{SFP}.SCL",
+      "I2C_{SFP}.SDA",
+      "SFI_CONN_TX_N",
+      "SFI_CONN_RX_N",
+      "MOD_ABS",
+      "SFP_LEDG",
+      "I2C_{SFP}{I2C}",
+      "SFP_LEDY",
+      "SFI{SFI}"
+    ],
+    "components": [
+      {
+        "uid": "R189",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_1k_0402",
+        "label": "R189",
+        "lib_id": "antmicroResistors0402:R_1k_0402"
+      },
+      {
+        "uid": "C168",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_22u_16V_0603",
+        "label": "C168",
+        "lib_id": "antmicroCapacitors0603:C_22u_16V_0603"
+      },
+      {
+        "uid": "C179",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C179",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "R197",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_1k_0402",
+        "label": "R197",
+        "lib_id": "antmicroResistors0402:R_1k_0402"
+      },
+      {
+        "uid": "#PWR0358",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0358",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "C171",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C171",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "#PWR0349",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0349",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "#PWR0355",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0355",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "U73",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TPD4E05U06QDQARQ1",
+        "label": "U73",
+        "lib_id": "antmicroTVSDiodes:TPD4E05U06QDQARQ1"
+      },
+      {
+        "uid": "#PWR0347",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0347",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "#PWR0352",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0352",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "#PWR0344",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0344",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "#PWR0343",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0343",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "R204",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_200R_0402",
+        "label": "R204",
+        "lib_id": "antmicroResistors0402:R_200R_0402"
+      },
+      {
+        "uid": "#PWR0648",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0648",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "C172",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C172",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "R199",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_0R_0402",
+        "label": "R199",
+        "lib_id": "antmicroResistors0402:R_0R_0402"
+      },
+      {
+        "uid": "C176",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C176",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "#PWR0339",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3V3",
+        "label": "#PWR0339",
+        "lib_id": "antmicropower:+3V3"
+      },
+      {
+        "uid": "TP29",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TP_0.75mm_SMD",
+        "label": "TP29",
+        "lib_id": "antmicroTestPoints:TP_0.75mm_SMD"
+      },
+      {
+        "uid": "TP30",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TP_0.75mm_SMD",
+        "label": "TP30",
+        "lib_id": "antmicroTestPoints:TP_0.75mm_SMD"
+      },
+      {
+        "uid": "C61",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C61",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "R205",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_200R_0402",
+        "label": "R205",
+        "lib_id": "antmicroResistors0402:R_200R_0402"
+      },
+      {
+        "uid": "R200",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_330R_0402",
+        "label": "R200",
+        "lib_id": "antmicroResistors0402:R_330R_0402"
+      },
+      {
+        "uid": "R187",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_0R_0402",
+        "label": "R187",
+        "lib_id": "antmicroResistors0402:R_0R_0402"
+      },
+      {
+        "uid": "#PWR0359",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0359",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "R186",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_0R_0402",
+        "label": "R186",
+        "lib_id": "antmicroResistors0402:R_0R_0402"
+      },
+      {
+        "uid": "D14",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LED_G_0603_LTST-C190GKT",
+        "label": "D14",
+        "lib_id": "antmicroLEDIndicationDiscrete:LED_G_0603_LTST-C190GKT"
+      },
+      {
+        "uid": "D30",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LED_Y_0603_LTST-C191KSKT",
+        "label": "D30",
+        "lib_id": "antmicroLEDIndicationDiscrete:LED_Y_0603_LTST-C191KSKT"
+      },
+      {
+        "uid": "J19",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Amphenol_SFP28_Cage_U773GC16382071",
+        "label": "J19",
+        "lib_id": "antmicroWire2BoardConnectors:Amphenol_SFP28_Cage_U773GC16382071"
+      },
+      {
+        "uid": "C178",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C178",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "C65",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C65",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "#PWR0353",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3V3",
+        "label": "#PWR0353",
+        "lib_id": "antmicropower:+3V3"
+      },
+      {
+        "uid": "C57",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C57",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "R188",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_1k_0402",
+        "label": "R188",
+        "lib_id": "antmicroResistors0402:R_1k_0402"
+      },
+      {
+        "uid": "#PWR0350",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0350",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "R192",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_1k_0402",
+        "label": "R192",
+        "lib_id": "antmicroResistors0402:R_1k_0402"
+      },
+      {
+        "uid": "#PWR0356",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3V3",
+        "label": "#PWR0356",
+        "lib_id": "antmicropower:+3V3"
+      },
+      {
+        "uid": "J12",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Amphenol_SFP28_1x20_UE763GA202600T",
+        "label": "J12",
+        "lib_id": "antmicroWire2BoardConnectors:Amphenol_SFP28_1x20_UE763GA202600T"
+      },
+      {
+        "uid": "#PWR0360",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0360",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "C58",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C58",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "C177",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C177",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "C175",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C175",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "#PWR0340",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0340",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "C174",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C174",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "C173",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C173",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "#PWR0357",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0357",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "C180",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C180",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      },
+      {
+        "uid": "#PWR0649",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+1V8",
+        "label": "#PWR0649",
+        "lib_id": "antmicropower:+1V8"
+      },
+      {
+        "uid": "R185",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_0R_0402",
+        "label": "R185",
+        "lib_id": "antmicroResistors0402:R_0R_0402"
+      },
+      {
+        "uid": "#PWR0351",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0351",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "#PWR0354",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0354",
+        "lib_id": "antmicropower:GND"
+      },
+      {
+        "uid": "R198",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R_0R_0402",
+        "label": "R198",
+        "lib_id": "antmicroResistors0402:R_0R_0402"
+      },
+      {
+        "uid": "C169",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "C_100n_0402",
+        "label": "C169",
+        "lib_id": "antmicroCapacitors0402:C_100n_0402"
+      }
+    ],
+    "version": "1.1"
+  }
+}

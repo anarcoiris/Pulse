@@ -1,0 +1,34 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue6588.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue6588.kicad_sch",
+    "components": [
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LP3982ILD-3.3",
+        "label": "U1",
+        "lib_id": "Regulator_Linear:LP3982ILD-3.3"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LP3982ILD-3.3",
+        "label": "U1",
+        "lib_id": "Regulator_Linear:LP3982ILD-3.3"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LP3982ILD-3.3",
+        "label": "U1",
+        "lib_id": "Regulator_Linear:LP3982ILD-3.3"
+      }
+    ],
+    "version": "1.0"
+  }
+}

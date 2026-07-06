@@ -1,0 +1,76 @@
+{
+  "run_session": "validate_20260705_192012_126038a8",
+  "test_case": "ESP32 + NFC + 433 MHz RF",
+  "prompt": "Diseña un sistema IoT con un ESP32. Conecta un lector NFC PN532 a través de I2C. Conecta un transceptor de radio 433 MHz CC1101 a través del bus SPI (MISO, MOSI, SCK, CS). Incluye alimentación de 3.3V para todos los módulos y condensadores de bypass.",
+  "backend": "primary",
+  "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260705_192012_126038a8",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 3.3,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "V1"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-S3",
+      "symbol": "RF_Module:ESP32-WROOM-32",
+      "footprint": "RF_Module:ESP32-WROOM-32",
+      "pins": {
+        "2": "3.3V",
+        "1": "GND",
+        "33": "I2C_SDA",
+        "36": "I2C_SCL"
+      },
+      "label": "U1"
+    },
+    {
+      "etype": "IC",
+      "value": "PN532",
+      "symbol": "Connector_Generic:Conn_01x07",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "3.3V",
+        "3": "I2C_SDA",
+        "4": "I2C_SCL"
+      },
+      "label": "NFC"
+    },
+    {
+      "etype": "IC",
+      "value": "CC1101",
+      "symbol": "Connector_Generic:Conn_01x08",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+      "pins": {
+        "1": "3.3V",
+        "2": "GND",
+        "3": "SPI_MOSI",
+        "4": "SPI_SCK",
+        "5": "SPI_MISO",
+        "8": "SPI_CS"
+      },
+      "label": "RF"
+    },
+    {
+      "etype": "C",
+      "value": 0.1,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "C_BYPASS_100nF"
+    },
+    {
+      "etype": "C",
+      "value": 10,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "C_BYPASS_10uF"
+    },
+    {
+      "etype": "GND",
+      "value": 0.0,
+      "label": "#PWR0211"
+    }
+  ]
+}

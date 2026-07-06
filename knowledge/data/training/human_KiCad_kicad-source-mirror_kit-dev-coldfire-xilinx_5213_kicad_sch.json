@@ -1,0 +1,1018 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_kit-dev-coldfire-xilinx_5213.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_kit-dev-coldfire-xilinx_5213.kicad_sch",
+    "description": "Dev kit coldfire 5213",
+    "notes": [],
+    "net_labels": [
+      "DSI",
+      "JTAG_EN",
+      "PWM3",
+      "GPT[0..3]",
+      "RCON-",
+      "DDAT2",
+      "PWM5",
+      "QSPI_CLK",
+      "UTXD0",
+      "QSPI_DIN",
+      "DTIN3",
+      "PST2",
+      "DSPI_DOUT",
+      "UTXD2",
+      "QSPI_CS2",
+      "IRQ-[1..7]",
+      "GPT1",
+      "AN[0..7]",
+      "IRQ-2",
+      "CANTX",
+      "IRQ-7",
+      "QSPI_CS[0..3]",
+      "AN2",
+      "GPT0",
+      "CLKIN/EXTAL",
+      "DTIN2",
+      "DDAT3",
+      "QSPI_CS1",
+      "GPT2",
+      "RSTI-",
+      "UCTS2",
+      "DTIN[0..3]",
+      "UCTS1",
+      "DDAT0",
+      "VRL",
+      "DSO",
+      "IRQ-1",
+      "URTS0",
+      "AN1",
+      "DDAT1",
+      "URTS1",
+      "PST0",
+      "DTIN0",
+      "VCCA",
+      "VRH",
+      "QSPI_CS3",
+      "CLKMOD0",
+      "PWM1",
+      "RSTO-",
+      "CLKMOD1",
+      "URXD0",
+      "DSCLK",
+      "AN0",
+      "PST3",
+      "XTAL",
+      "IRQ-3",
+      "AN4",
+      "TCLK",
+      "ALLPST",
+      "QSPI_CS0"
+    ],
+    "components": [
+      {
+        "uid": "U102",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MCF5213-LQFP100",
+        "label": "U102",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:MCF5213-LQFP100"
+      },
+      {
+        "uid": "C110",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C110",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "C111",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C111",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "C113",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C113",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "C114",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C114",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "C115",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C115",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "C116",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C116",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "C117",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C117",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "C118",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C118",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "#PWR0143",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR0143",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:+3.3V"
+      },
+      {
+        "uid": "C119",
+        "etype": "IC",
+        "value": 9.999999999999999e-05,
+        "value_raw": "100uF",
+        "label": "C119",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:CP"
+      },
+      {
+        "uid": "#PWR0146",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0146",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0144",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR0144",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:VDD"
+      },
+      {
+        "uid": "BDM_PORT101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_13X2",
+        "label": "BDM_PORT101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:CONN_13X2"
+      },
+      {
+        "uid": "#PWR0131",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0131",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0129",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0129",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "R111",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7K",
+        "label": "R111",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "#PWR0108",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0108",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0120",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR0120",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:VDD"
+      },
+      {
+        "uid": "C112",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C112",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "#PWR0109",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR0109",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:VDD"
+      },
+      {
+        "uid": "R101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7K",
+        "label": "R101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "#PWR0103",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR0103",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:VDD"
+      },
+      {
+        "uid": "R102",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7K",
+        "label": "R102",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "#PWR0104",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR0104",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:VDD"
+      },
+      {
+        "uid": "#PWR0114",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0114",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0123",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0123",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "R114",
+        "etype": "IC",
+        "value": 22.0,
+        "value_raw": "22",
+        "label": "R114",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R107",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7K",
+        "label": "R107",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R108",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7K",
+        "label": "R108",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R109",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7K",
+        "label": "R109",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R110",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7K",
+        "label": "R110",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "#PWR0119",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR0119",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:VDD"
+      },
+      {
+        "uid": "CLKOUT101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_1",
+        "label": "CLKOUT101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:CONN_1"
+      },
+      {
+        "uid": "R117",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R117",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "#PWR0134",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0134",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0130",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR0130",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:+3.3V"
+      },
+      {
+        "uid": "TA-101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_1",
+        "label": "TA-101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:CONN_1"
+      },
+      {
+        "uid": "R118",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R118",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R119",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R119",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R120",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R120",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R121",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R121",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R122",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R122",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R123",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R123",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R124",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R124",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "#PWR0132",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR0132",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:VDD"
+      },
+      {
+        "uid": "#PWR0133",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR0133",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:VDD"
+      },
+      {
+        "uid": "#PWR0115",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0115",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "R113",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "R113",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "#PWR0124",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0124",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0105",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR0105",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:+3.3V"
+      },
+      {
+        "uid": "L101",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uH",
+        "label": "L101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:INDUCTOR"
+      },
+      {
+        "uid": "C103",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C103",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "C102",
+        "etype": "IC",
+        "value": 1e-09,
+        "value_raw": "1nF",
+        "label": "C102",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "#PWR0111",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0111",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0112",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0112",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "R112",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7K",
+        "label": "R112",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "#PWR0122",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR0122",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:VDD"
+      },
+      {
+        "uid": "C101",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "#PWR0106",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0106",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0102",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR0102",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:+3.3V"
+      },
+      {
+        "uid": "R104",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R104",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R105",
+        "etype": "IC",
+        "value": 20000.0,
+        "value_raw": "20K",
+        "label": "R105",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "C104",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C104",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "R103",
+        "etype": "IC",
+        "value": 270.0,
+        "value_raw": "270",
+        "label": "R103",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "LEDABRT101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LED_RED",
+        "label": "LEDABRT101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:LED"
+      },
+      {
+        "uid": "#PWR0101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR0101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:+3.3V"
+      },
+      {
+        "uid": "#PWR0117",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0117",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0116",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0116",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "ABRT_SW101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SW_PUSH",
+        "label": "ABRT_SW101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:SW_PUSH"
+      },
+      {
+        "uid": "#PWR0110",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR0110",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:+3.3V"
+      },
+      {
+        "uid": "D101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BAT54",
+        "label": "D101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:DIODE"
+      },
+      {
+        "uid": "#PWR0141",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR0141",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:+3.3V"
+      },
+      {
+        "uid": "VDDA101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "JUMPER",
+        "label": "VDDA101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:JUMPER"
+      },
+      {
+        "uid": "L102",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uH",
+        "label": "L102",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:INDUCTOR"
+      },
+      {
+        "uid": "FB101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BEAD",
+        "label": "FB101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:INDUCTOR"
+      },
+      {
+        "uid": "#PWR0145",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0145",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0147",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GNDA",
+        "label": "#PWR0147",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GNDA"
+      },
+      {
+        "uid": "C109",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C109",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "#PWR0148",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GNDA",
+        "label": "#PWR0148",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GNDA"
+      },
+      {
+        "uid": "C108",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C108",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:CP"
+      },
+      {
+        "uid": "LV101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "DS1818",
+        "label": "LV101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:MC34064P"
+      },
+      {
+        "uid": "#PWR0125",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0125",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0121",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR0121",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:+3.3V"
+      },
+      {
+        "uid": "C105",
+        "etype": "IC",
+        "value": 1e-09,
+        "value_raw": "1nF",
+        "label": "C105",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "D102",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BAT54",
+        "label": "D102",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:DIODE"
+      },
+      {
+        "uid": "R106",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7K",
+        "label": "R106",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "#PWR0126",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0126",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0118",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR0118",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:+3.3V"
+      },
+      {
+        "uid": "Q101",
+        "etype": "IC",
+        "value": 3906.0,
+        "value_raw": "3906",
+        "label": "Q101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:PNP"
+      },
+      {
+        "uid": "#PWR0138",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0138",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0128",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VDD",
+        "label": "#PWR0128",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:VDD"
+      },
+      {
+        "uid": "R115",
+        "etype": "IC",
+        "value": 4700.0,
+        "value_raw": "4.7K",
+        "label": "R115",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "R116",
+        "etype": "IC",
+        "value": 270.0,
+        "value_raw": "270",
+        "label": "R116",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "LED_RST101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LED_RED",
+        "label": "LED_RST101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:LED"
+      },
+      {
+        "uid": "#PWR0135",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0135",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "ALLPST101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_1",
+        "label": "ALLPST101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:CONN_1"
+      },
+      {
+        "uid": "R125",
+        "etype": "IC",
+        "value": 1.0,
+        "value_raw": "1M",
+        "label": "R125",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:R"
+      },
+      {
+        "uid": "C107",
+        "etype": "IC",
+        "value": 1e-11,
+        "value_raw": "10pF",
+        "label": "C107",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "C106",
+        "etype": "IC",
+        "value": 1e-11,
+        "value_raw": "10pF",
+        "label": "C106",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:C"
+      },
+      {
+        "uid": "Y101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "8MHz",
+        "label": "Y101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:CRYSTAL"
+      },
+      {
+        "uid": "#PWR0139",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0139",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0140",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0140",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#FLG0102",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG0102",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:PWR_FLAG"
+      },
+      {
+        "uid": "#FLG0101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG0101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:PWR_FLAG"
+      },
+      {
+        "uid": "#PWR0142",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR0142",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:VCC"
+      },
+      {
+        "uid": "RST_SW101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SW_PUSH",
+        "label": "RST_SW101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:SW_PUSH"
+      },
+      {
+        "uid": "#PWR0127",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0127",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "CT101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "JUMPER",
+        "label": "CT101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:JUMPER"
+      },
+      {
+        "uid": "U101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "74AHC1G14",
+        "label": "U101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:74AHC1G14"
+      },
+      {
+        "uid": "#PWR0113",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0113",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GND"
+      },
+      {
+        "uid": "#PWR0107",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR0107",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:+3.3V"
+      },
+      {
+        "uid": "#PWR0137",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GNDA",
+        "label": "#PWR0137",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GNDA"
+      },
+      {
+        "uid": "GND101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_1",
+        "label": "GND101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:CONN_1"
+      },
+      {
+        "uid": "#PWR0136",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GNDA",
+        "label": "#PWR0136",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:GNDA"
+      },
+      {
+        "uid": "JP101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "JUMPER_TRIPLE",
+        "label": "JP101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:JUMPER_TRIPLE"
+      },
+      {
+        "uid": "JP101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "JUMPER_TRIPLE",
+        "label": "JP101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:JUMPER_TRIPLE"
+      },
+      {
+        "uid": "JP101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "JUMPER_TRIPLE",
+        "label": "JP101",
+        "lib_id": "kit-dev-coldfire-xilinx_5213:JUMPER_TRIPLE"
+      }
+    ],
+    "version": "1.1"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_fpga-ps-ddr.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_fpga-ps-ddr.kicad_sch",
+    "components": [
+      {
+        "uid": "IC14",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "XCZU4CG-1SFVC784E",
+        "label": "IC14",
+        "lib_id": "Logic:XCZU4CG-1SFVC784E"
+      },
+      {
+        "uid": "R1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_240R_1%_0.0625W_100PPM",
+        "label": "R1",
+        "lib_id": "Resistors SMD:R0402_240R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "#PWR0128",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0128",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.0"
+  }
+}

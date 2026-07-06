@@ -1,0 +1,247 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_io_driver_8x.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_io_driver_8x.kicad_sch",
+    "description": "Front/Patch Panel I/O driver - 8 channels",
+    "notes": [],
+    "net_labels": [
+      "F_IO3",
+      "F_IO6",
+      "F_IO0",
+      "IO2",
+      "IOEXP_RCLK",
+      "TERM_EN3",
+      "IO[0..7]",
+      "IO1",
+      "TERM_EN6",
+      "IOEXP_OE_N",
+      "EN5",
+      "F_IO7",
+      "EN2",
+      "EN0",
+      "EN6",
+      "OUT5",
+      "EN3",
+      "OUT1",
+      "TERM_EN1",
+      "EN1",
+      "F_IO1",
+      "IO0",
+      "TERM_EN0",
+      "OUT4",
+      "TERM_EN5",
+      "IO4",
+      "IOEXP_RST_N",
+      "OUT2",
+      "IO5",
+      "IO7",
+      "EN7",
+      "F_IO4",
+      "TERM_EN2",
+      "OUT3",
+      "TERM_EN7",
+      "OUT6",
+      "IOEXP_D",
+      "OUT0",
+      "IOEXP_SCLK",
+      "F_IO2",
+      "TERM_EN4",
+      "IO6",
+      "EN4",
+      "OUT7",
+      "IO3",
+      "F_IO5",
+      "F_IO[0..7]",
+      "IOEXP_D_IN",
+      "IOEXP_Q"
+    ],
+    "components": [
+      {
+        "uid": "#PWR0424",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V8",
+        "label": "#PWR0424",
+        "lib_id": "vme-wren:P1V8"
+      },
+      {
+        "uid": "IC2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SN74LXCH8T245PWR",
+        "label": "IC2",
+        "lib_id": "vme-wren:SN74LXCH8T245PWR"
+      },
+      {
+        "uid": "#PWR020",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR020",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "#PWR025",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR025",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "IC7",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SN74LV595ARGYR",
+        "label": "IC7",
+        "lib_id": "Standard Logic:SN74LV595ARGYR"
+      },
+      {
+        "uid": "#PWR0426",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0426",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C14",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C14",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR0428",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0428",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C24",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C24",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "C21",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C21",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR0431",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0431",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "IC6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SN74LV595ARGYR",
+        "label": "IC6",
+        "lib_id": "Standard Logic:SN74LV595ARGYR"
+      },
+      {
+        "uid": "#PWR0423",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0423",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0422",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR0422",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "#PWR0421",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V8",
+        "label": "#PWR0421",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "#PWR0427",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR0427",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "#PWR043",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V8",
+        "label": "#PWR043",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "C20",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_16V_10%_X7R",
+        "label": "C20",
+        "lib_id": "Capacitors SMD:CC0402_100NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR0430",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0430",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR022",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR022",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0429",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3",
+        "label": "#PWR0429",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "#PWR040",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR040",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0425",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0425",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.1"
+  }
+}

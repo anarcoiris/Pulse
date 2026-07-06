@@ -1,0 +1,90 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_video.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_video.kicad_sch",
+    "components": [
+      {
+        "uid": "#GND05",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND05",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND03",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND03",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND04",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND04",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND01",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND02",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "P1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BNC",
+        "label": "P1",
+        "lib_id": "video_schlib:BNC"
+      },
+      {
+        "uid": "P2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BNC",
+        "label": "P2",
+        "lib_id": "video_schlib:BNC"
+      },
+      {
+        "uid": "P3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BNC",
+        "label": "P3",
+        "lib_id": "video_schlib:BNC"
+      },
+      {
+        "uid": "P8",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BNC",
+        "label": "P8",
+        "lib_id": "video_schlib:BNC"
+      },
+      {
+        "uid": "J4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "DB9FEM",
+        "label": "J4",
+        "lib_id": "video_schlib:DB9"
+      }
+    ],
+    "version": "1.0"
+  }
+}

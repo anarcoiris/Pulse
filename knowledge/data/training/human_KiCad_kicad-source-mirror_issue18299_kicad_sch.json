@@ -1,0 +1,15 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue18299.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue18299.kicad_sch",
+    "description": "",
+    "notes": [],
+    "net_labels": [
+      "bbb",
+      "c{a}"
+    ],
+    "components": [],
+    "version": "1.1"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_fpga-mio.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_fpga-mio.kicad_sch",
+    "description": "SoC MIO Banks",
+    "notes": [
+      "BANK 43",
+      "BANK 44",
+      "BANK 45",
+      "BANK 46",
+      "BANK 64",
+      "BANK 65",
+      "BANK 66",
+      "BANK 224",
+      "BANK 500",
+      "BANK 501",
+      "BANK 502",
+      "BANK 505"
+    ],
+    "net_labels": [
+      "PS-QSPI.LWR_DQ1",
+      "PS-QSPI.LWR_DQ2",
+      "I2C.SDA",
+      "PS-QSPI.UWR_CLK",
+      "{I2C}",
+      "PS-QSPI.UWR_DQ2",
+      "PS-QSPI.LWR_DQ3",
+      "PS-QSPI.LWR_CSN",
+      "PS-QSPI.UWR_DQ3",
+      "PS-QSPI.UWR_CSN",
+      "PS-QSPI.UWR_DQ1",
+      "{PS-QSPI}",
+      "PS-QSPI.LWR_DQ0",
+      "PS-QSPI.UWR_DQ0",
+      "I2C.SCL",
+      "PS-QSPI.LWR_CLK",
+      "WR_CLK_RSTN",
+      "PS_UART_TXD",
+      "WR_CLK_SI5340_IRQ_N",
+      "PS_UART_RXD"
+    ],
+    "components": [
+      {
+        "uid": "IC14",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "XCZU4CG-1SFVC784E",
+        "label": "IC14",
+        "lib_id": "Logic:XCZU4CG-1SFVC784E"
+      }
+    ],
+    "version": "1.1"
+  }
+}

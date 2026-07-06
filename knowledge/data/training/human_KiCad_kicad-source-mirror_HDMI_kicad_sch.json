@@ -1,0 +1,141 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_HDMI.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_HDMI.kicad_sch",
+    "description": "CM5 MINIMA \u2014 Pierluigi Colangeli",
+    "notes": [
+      "[HDMI]"
+    ],
+    "net_labels": [
+      "HDMI_C.D0_N",
+      "HDMI_C.D1_N",
+      "HDMI_C.CEC",
+      "HDMI_C.D0_P",
+      "HDMI_C.D2_P",
+      "HDMI_C.SDA",
+      "HDMI_C.CK_N",
+      "HDMI_C.D1_P",
+      "HDMI_C.D2_N",
+      "HDMI_C.HOTPLUG",
+      "HDMI_C.CK_P",
+      "HDMI_C.SCL",
+      "HDMI_C{HDMI}"
+    ],
+    "components": [
+      {
+        "uid": "#PWR0402",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0402",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0410",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HDMI_+5V",
+        "label": "#PWR0410",
+        "lib_id": "power:+5V"
+      },
+      {
+        "uid": "#PWR0501",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0501",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0408",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR0408",
+        "lib_id": "power:+5V"
+      },
+      {
+        "uid": "#PWR0409",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HDMI_+5V",
+        "label": "#PWR0409",
+        "lib_id": "power:+5V"
+      },
+      {
+        "uid": "#PWR0504",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0504",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C501",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100n",
+        "label": "C501",
+        "lib_id": "CM5IO:C"
+      },
+      {
+        "uid": "#PWR0403",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0403",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0502",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0502",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "J501",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GT-HD001B-CNNG1",
+        "label": "J501",
+        "lib_id": "CM5IO:HDMI_A_1.4"
+      },
+      {
+        "uid": "U405",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "STMPS2151STR",
+        "label": "U405",
+        "lib_id": "CM5IO:STMPS2151STR"
+      },
+      {
+        "uid": "#PWR0503",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0503",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0401",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0401",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C502",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100n",
+        "label": "C502",
+        "lib_id": "CM5IO:C"
+      }
+    ],
+    "version": "1.1"
+  }
+}

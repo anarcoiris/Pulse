@@ -1,0 +1,98 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_opamp.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_opamp.kicad_sch",
+    "description": "",
+    "notes": [
+      ".tran 10u 10m"
+    ],
+    "net_labels": [
+      "out",
+      "in"
+    ],
+    "components": [
+      {
+        "uid": "#PWR04",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR04",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "VIN1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "${Sim.Device} ${Sim.Type}",
+        "label": "VIN1",
+        "lib_id": "Simulation_SPICE:VSIN"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "V2",
+        "etype": "IC",
+        "value": 5.0,
+        "value_raw": "5",
+        "label": "V2",
+        "lib_id": "Simulation_SPICE:VDC"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR02",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR03",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR03",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MCP6001-OT",
+        "label": "U1",
+        "lib_id": "Amplifier_Operational:MCP6001-OT"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "V3",
+        "etype": "IC",
+        "value": 5.0,
+        "value_raw": "5",
+        "label": "V3",
+        "lib_id": "Simulation_SPICE:VDC"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R1",
+        "lib_id": "Device:R"
+      }
+    ],
+    "version": "1.1"
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_power_supply.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_power_supply.kicad_sch",
+    "description": "",
+    "notes": [
+      "Set to compatiblity mode 'PSpice' for this simulation to work",
+      ".tran 1m 500m"
+    ],
+    "net_labels": [
+      "rect",
+      "out",
+      "adj"
+    ],
+    "components": [
+      {
+        "uid": "R3",
+        "etype": "R",
+        "value": 1000000000.0,
+        "value_raw": "1g",
+        "label": "R3",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "D1",
+        "etype": "S",
+        "value": 0.0,
+        "value_raw": "D_Bridge_+-AA",
+        "label": "D1",
+        "lib_id": "Device:D_Bridge_+-AA"
+      },
+      {
+        "uid": "C1",
+        "etype": "C",
+        "value": 0.0025,
+        "value_raw": "2500u",
+        "label": "C1",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR02",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "T1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Transformer_1P_1S",
+        "label": "T1",
+        "lib_id": "Device:Transformer_1P_1S"
+      },
+      {
+        "uid": "Rload1",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "~",
+        "label": "Rload1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "C2",
+        "etype": "C",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10u",
+        "label": "C2",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "Rmeas1",
+        "etype": "R",
+        "value": 1.0,
+        "value_raw": "1",
+        "label": "Rmeas1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "C3",
+        "etype": "C",
+        "value": 1e-06,
+        "value_raw": "1u",
+        "label": "C3",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "D3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "1N4002",
+        "label": "D3",
+        "lib_id": "Diode:1N4001"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 1500.0,
+        "value_raw": "1.5k",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LM317_TO-220",
+        "label": "U1",
+        "lib_id": "Regulator_Linear:LM317_TO-220"
+      },
+      {
+        "uid": "D2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "1N4002",
+        "label": "D2",
+        "lib_id": "Diode:1N4001"
+      },
+      {
+        "uid": "R4",
+        "etype": "R",
+        "value": 240.0,
+        "value_raw": "240",
+        "label": "R4",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "V1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VSIN",
+        "label": "V1",
+        "lib_id": "Simulation_SPICE:VSIN"
+      }
+    ],
+    "version": "1.1"
+  }
+}

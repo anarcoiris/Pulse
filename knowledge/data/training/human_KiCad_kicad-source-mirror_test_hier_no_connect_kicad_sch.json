@@ -1,0 +1,40 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_test_hier_no_connect.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_test_hier_no_connect.kicad_sch",
+    "description": "",
+    "notes": [
+      "PINS 1 AND 2 SHOULD HAVE no_connect ANNOTATION AS THEY ARE A STACKED PAIR CONNECTED TO A NC SYMBOL",
+      "PINS 1 AND 2 SHOULD NOT HAVE no_connect ANNOTATION DESPITE BEING CONNECTED TO NO NC IN PARENT SHEET AS THEY ARE NOT A STACKED PAIR. HOWEVER THIS IS AN ERC VIOLATION."
+    ],
+    "net_labels": [],
+    "components": [
+      {
+        "uid": "U4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "~",
+        "label": "U4",
+        "lib_id": "TEST_LIB:TEST_DOUBLE"
+      },
+      {
+        "uid": "U6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "~",
+        "label": "U6",
+        "lib_id": "TEST_LIB:TEST_STACKED"
+      },
+      {
+        "uid": "U2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "~",
+        "label": "U2",
+        "lib_id": "TEST_LIB:TEST_STACKED"
+      }
+    ],
+    "version": "1.1"
+  }
+}

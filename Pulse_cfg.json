@@ -1,0 +1,221 @@
+{
+  "llm": {
+    "ollama_base_url": "http://localhost:11431/v1",
+    "model": "qwythos-9b-96k",
+    "api": "auto",
+    "think": "low",
+    "num_ctx": 98304,
+    "max_tokens": 24576,
+    "num_predict": 12288,
+    "timeout_s": 900,
+    "max_retries": 2,
+    "retry_backoff_base_s": 1.0,
+    "health_check_timeout_s": 3,
+    "default_temperature": 0.3,
+    "log_io": true,
+    "log_dir": "knowledge/data/llm_sessions",
+    "embed": {
+      "model": "nomic-embed-text",
+      "timeout_s": 120,
+      "health_check_timeout_s": 3
+    },
+    "agents": {
+      "circuit_synthesizer": {
+        "temperature": 0.1,
+        "rag_top_k": 1,
+        "rag_max_components": 8,
+        "prompt_max_chars": 48000,
+        "max_pinout_entries": 2,
+        "max_pinout_pins": 14,
+        "description_meta_max_chars": 2000
+      },
+      "semantic_reviewer": {
+        "temperature": 0.1,
+        "max_tokens": 4096
+      },
+      "firmware_synthesizer": {
+        "temperature": 0.3,
+        "max_tokens": 8192
+      }
+    },
+    "backends": {
+      "primary": {
+        "label": "Ollama Qwythos 9B (reasoning)",
+        "base_url": "http://localhost:11431/v1",
+        "model": "qwythos-9b-96k",
+        "api": "auto",
+        "think": "low",
+        "num_ctx": 98304,
+        "max_tokens": 65536,
+        "num_predict": 16384,
+        "roles": ["reasoning", "complex_synthesis", "review"]
+      },
+      "atomic": {
+        "label": "llama-server atomic lane (MCP execution)",
+        "port": 11439,
+        "base_url": "http://localhost:11439/v1",
+        "model": "auto",
+        "api": "openai",
+        "think": "none",
+        "json_mode": true,
+        "num_ctx": 49152,
+        "max_tokens": 16384,
+        "num_predict": 16384,
+        "prompt_max_chars": 24000,
+        "roles": ["mcp_execution", "fast_json", "parallel_slots"],
+        "state_file": "C:/Users/soyko/Documents/Ollama/docker/llamacpp/qwythos.state.json",
+        "scripts_dir": "C:/Users/soyko/Documents/Ollama/docker/llamacpp",
+        "default_profile": "concurrent2",
+        "switch_idle_timeout_s": 90,
+        "switch_timeout_s": 600,
+        "profiles": {
+          "concurrent2": { "parallel": 2, "slot_ctx": 49152, "aliases": ["default"] },
+          "concurrent3": { "parallel": 3, "slot_ctx": 32768, "aliases": ["burst"] },
+          "longctx": { "parallel": 1, "slot_ctx": 98304, "aliases": ["solo", "heavy"] }
+        }
+      }
+    },
+    "routing": {
+      "default_backend": "primary",
+      "mcp_tool_backend": "atomic",
+      "complex_circuit_backend": "primary",
+      "review_backend": "primary",
+      "auto_fallback": true
+    }
+  },
+  "rag": {
+    "backend": "hybrid",
+    "default_top_k": 5,
+    "excerpt_max_chars": 300,
+    "search_prefetch_multiplier": 3,
+    "filename_hit_prefetch_multiplier": 8,
+    "component_search_multiplier": 2,
+    "hybrid": {
+      "dense_weight": 0.6,
+      "tfidf_weight": 0.4
+    },
+    "ingest": {
+      "chunk_words": 300,
+      "stride_words": 250
+    },
+    "tfidf": {
+      "max_df": 0.85,
+      "min_df": 1,
+      "ngram_range": [1, 2]
+    }
+  },
+  "mcp": {
+    "server": {
+      "host": "127.0.0.1",
+      "port": 8080,
+      "transport": "stdio"
+    },
+    "simulation": {
+      "duration_ms": 10.0,
+      "dt_us": 100.0,
+      "max_steps": 10000
+    },
+    "tools": {
+      "default_top_k": 5
+    },
+    "rf_defaults": {
+      "copper_thickness_mm": 0.035,
+      "frequency_ghz": 1.0,
+      "substrate_er": 4.4,
+      "substrate_height_mm": 1.6
+    }
+  },
+  "pcb": {
+    "project_name": "PulseLab Design",
+    "output_dir": "output",
+    "corner_radius_mm": 1.5,
+    "trace_width_mm": 0.25,
+    "clearance_mm": 0.2,
+    "layers": 2,
+    "mounting_holes": true,
+    "mounting_holes_min_components": 4,
+    "mounting_holes_margin_mm": 3.5,
+    "default_smd_package": "0805",
+    "board": {
+      "default_width_mm": 50,
+      "default_height_mm": 30,
+      "min_width_mm": 10,
+      "min_height_mm": 10,
+      "max_width_mm": 300,
+      "max_height_mm": 300
+    },
+    "auto_size": {
+      "min_width_mm": 30,
+      "min_height_mm": 20,
+      "col_width_mm": 15,
+      "row_height_mm": 12
+    },
+    "placement": {
+      "margin_x_mm": 8.0,
+      "margin_y_mm": 8.0,
+      "spacing_x_mm": 12.0,
+      "spacing_y_mm": 10.0
+    },
+    "ic_decoupling": {
+      "high_value": "10uF",
+      "low_value": "100nF"
+    },
+    "usb_diff_pair": {
+      "spacing_mm": 0.2,
+      "width_mm": 0.25
+    },
+    "copper_pour": {
+      "margin_mm": 1.0
+    },
+    "silkscreen": {
+      "text_size_mm": 0.8
+    },
+    "autoroute": {
+      "grid_size_mm": 0.25,
+      "pad_clearance_mm": 0.35,
+      "via_cost": 15,
+      "occupied_penalty": 1000,
+      "layer_switch_heuristic": 5
+    },
+    "via": {
+      "size_mm": 0.6,
+      "drill_mm": 0.3
+    },
+    "mounting_hole": {
+      "drill_mm": 3.2,
+      "pad_mm": 6.0
+    },
+    "zone": {
+      "thermal_gap_mm": 0.508,
+      "thermal_bridge_width_mm": 0.508
+    },
+    "export": {
+      "kicad_cli_timeout_s": 60
+    },
+    "drc": {
+      "edge_margin_mm": 2.0
+    }
+  },
+  "schematic": {
+    "grid_scale_mm": 5.08,
+    "offset_x_mm": 50.0,
+    "offset_y_mm": 50.0,
+    "paper": "A4",
+    "kicad_version": 20231120,
+    "generator_name": "PulseLab_Forge",
+    "font": {
+      "size_mm": 1.27
+    },
+    "symbol": {
+      "label_offset_mm": 2.54,
+      "pin_names_offset_mm": 1.016,
+      "horizontal_angle_deg": 90,
+      "led_value_threshold": 1
+    }
+  },
+  "ui": {
+    "ai_generator": {
+      "merge_offset_grid": [5, 5]
+    }
+  }
+}

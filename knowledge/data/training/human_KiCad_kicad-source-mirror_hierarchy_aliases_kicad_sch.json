@@ -1,0 +1,17 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_hierarchy_aliases.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_hierarchy_aliases.kicad_sch",
+    "description": "",
+    "notes": [],
+    "net_labels": [
+      "S0{ALIAS1}",
+      "S0.BOOT.SDA",
+      "S1.BOOT.SDA",
+      "S1{ALIAS1}"
+    ],
+    "components": [],
+    "version": "1.1"
+  }
+}

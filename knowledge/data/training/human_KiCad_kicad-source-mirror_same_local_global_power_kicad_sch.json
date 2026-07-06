@@ -1,0 +1,31 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_same_local_global_power.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_same_local_global_power.kicad_sch",
+    "description": "",
+    "notes": [
+      "ERC regression fixture: local and global power symbols with the same net name should trigger ERCE_SAME_LOCAL_GLOBAL_POWER exactly once"
+    ],
+    "net_labels": [],
+    "components": [
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "V",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR02",
+        "lib_id": "power:VCC"
+      }
+    ],
+    "version": "1.1"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "pulselab-forge": {
+      "command": "python",
+      "args": ["C:/Users/soyko/Documents/Pulse/mcp/server.py"],
+      "description": "PulseLab Forge — AI-assisted EDA platform (simulation, RF, KiCad, RAG)"
+    }
+  }
+}

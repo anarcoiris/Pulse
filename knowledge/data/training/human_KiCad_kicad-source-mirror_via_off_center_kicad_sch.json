@@ -1,0 +1,70 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_via_off_center.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_via_off_center.kicad_sch",
+    "description": "",
+    "notes": [
+      "Test board for off-center VIA endpoint length calculation.  Nets CENTERED has tracks with endpoints exactly at VIA centers. Nets OFF_CENTER has tracks with one endpoint offset inside the VIA pad."
+    ],
+    "net_labels": [
+      "NON_CENTERED_C",
+      "NON_CENTERED_A",
+      "CENTERED_A",
+      "CENTERED_C",
+      "CENTERED_B",
+      "NON_CENTERED_B"
+    ],
+    "components": [
+      {
+        "uid": "R4",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R4",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R3",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R3",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R5",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R5",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R6",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R6",
+        "lib_id": "Device:R"
+      }
+    ],
+    "version": "1.1"
+  }
+}

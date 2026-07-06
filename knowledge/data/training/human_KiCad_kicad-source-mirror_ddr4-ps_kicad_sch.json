@@ -1,0 +1,682 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_ddr4-ps.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_ddr4-ps.kicad_sch",
+    "description": "DDR4 Chips",
+    "notes": [],
+    "net_labels": [
+      "DDR4-PS.DM1",
+      "DDR4-PS.A4",
+      "DDR4-PS.A2",
+      "DDR4-PS.A10",
+      "DDR4-PS.DQS_P3",
+      "DDR4-PS.BA1",
+      "DDR4-PS.DM2",
+      "DDR4-PS.DQ5",
+      "DDR4-PS.DQS_P1",
+      "DDR4-PS.A6",
+      "DDR4-PS.PAR",
+      "DDR4-PS.A13",
+      "DDR4-PS.A0",
+      "DDR4-PS.DQ12",
+      "DDR4-PS.A7",
+      "DDR4-PS.DQS_N3",
+      "DDR4-PS.DQ2",
+      "DDR4-PS.DQ17",
+      "DDR4-PS.WEN",
+      "DDR4-PS.DQ20",
+      "DDR4-PS.A5",
+      "DDR4-PS.DQ8",
+      "DDR4-PS.DM3",
+      "DDR4-PS_ZQ0",
+      "DDR4-PS.DQ22",
+      "DDR4-PS.CSN",
+      "DDR4-PS.DQ0",
+      "DDR4-PS.DQ4",
+      "DDR4-PS.ACTN",
+      "DDR4-PS_VREF1",
+      "DDR4-PS.A8",
+      "DDR4-PS.ODT",
+      "DDR4-PS_ZQ1",
+      "DDR4-PS.DQS_N2",
+      "DDR4-PS.DQ31",
+      "DDR4-PS.DQS_P2",
+      "DDR4-PS.BA0",
+      "DDR4-PS.DQ10",
+      "DDR4-PS.A3",
+      "DDR4-PS.ALERTN",
+      "DDR4-PS.DQ19",
+      "DDR4-PS.A12",
+      "DDR4-PS.CASN",
+      "DDR4-PS.DQ24",
+      "DDR4-PS.DQ21",
+      "DDR4-PS.DQ28",
+      "DDR4-PS.DQ6",
+      "DDR4-PS.A1",
+      "DDR4-PS.RASN",
+      "DDR4-PS.DQS_N1",
+      "DDR4-PS.CK_P",
+      "DDR4-PS.RSTN",
+      "DDR4-PS.A9",
+      "DDR4-PS.BG0",
+      "DDR4-PS.DQS_N0",
+      "DDR4-PS.A11",
+      "DDR4-PS.DQ25",
+      "DDR4-PS.DQ27",
+      "DDR4-PS.DQ1",
+      "DDR4-PS_VREF0"
+    ],
+    "components": [
+      {
+        "uid": "C174",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_4.7UF_6.3V_20%_X5R",
+        "label": "C174",
+        "lib_id": "Capacitors SMD:CC0402_4.7UF_6.3V_20%_X5R"
+      },
+      {
+        "uid": "IC5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MT40A512M16LY-075-E",
+        "label": "IC5",
+        "lib_id": "Logic:MT40A512M16LY-075-E"
+      },
+      {
+        "uid": "#PWR0278",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0278",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "#PWR0292",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0292",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "#PWR0281",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0281",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "C131",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF",
+        "label": "C131",
+        "lib_id": "Capacitors SMD:CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF"
+      },
+      {
+        "uid": "IC13",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MT40A512M16LY-075-E",
+        "label": "IC13",
+        "lib_id": "Logic:MT40A512M16LY-075-E"
+      },
+      {
+        "uid": "C156",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF",
+        "label": "C156",
+        "lib_id": "Capacitors SMD:CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF"
+      },
+      {
+        "uid": "#PWR0303",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0303",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "C185",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_68NF_16V_10%_X7R",
+        "label": "C185",
+        "lib_id": "Capacitors SMD:CC0402_68NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR0276",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0276",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "C198",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_470NF_6.3V_10%_X5R",
+        "label": "C198",
+        "lib_id": "Capacitors SMD:CC0402_470NF_6.3V_10%_X5R"
+      },
+      {
+        "uid": "#PWR0294",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P2V5",
+        "label": "#PWR0294",
+        "lib_id": "pxie-wren-altium-import:P2V5"
+      },
+      {
+        "uid": "#PWR0293",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0293",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "#PWR0289",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0289",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "#PWR0283",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0283",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "#PWR0298",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0298",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "#PWR0277",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0277",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "#FLG024",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG024",
+        "lib_id": "power:PWR_FLAG"
+      },
+      {
+        "uid": "#PWR0302",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0302",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "#PWR0284",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0284",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "C127",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_4.7UF_6.3V_20%_X5R",
+        "label": "C127",
+        "lib_id": "Capacitors SMD:CC0402_4.7UF_6.3V_20%_X5R"
+      },
+      {
+        "uid": "C199",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_470NF_6.3V_10%_X5R",
+        "label": "C199",
+        "lib_id": "Capacitors SMD:CC0402_470NF_6.3V_10%_X5R"
+      },
+      {
+        "uid": "#PWR0286",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0286",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "C200",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_68NF_16V_10%_X7R",
+        "label": "C200",
+        "lib_id": "Capacitors SMD:CC0402_68NF_16V_10%_X7R"
+      },
+      {
+        "uid": "R113",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_4K7_1%_0.0625W_100PPM",
+        "label": "R113",
+        "lib_id": "Resistors SMD:R0402_4K7_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "C225",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF",
+        "label": "C225",
+        "lib_id": "Capacitors SMD:CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF"
+      },
+      {
+        "uid": "C180",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_68NF_16V_10%_X7R",
+        "label": "C180",
+        "lib_id": "Capacitors SMD:CC0402_68NF_16V_10%_X7R"
+      },
+      {
+        "uid": "R83",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_39R2_1%_0.063W_100PPM",
+        "label": "R83",
+        "lib_id": "Resistors SMD:R0402_39R2_1%_0.063W_100PPM"
+      },
+      {
+        "uid": "#PWR0299",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0299",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "C128",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF",
+        "label": "C128",
+        "lib_id": "Capacitors SMD:CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF"
+      },
+      {
+        "uid": "R111",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_36R_1%_0.0625W_100PPM",
+        "label": "R111",
+        "lib_id": "Resistors SMD:R0402_36R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "C153",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF",
+        "label": "C153",
+        "lib_id": "Capacitors SMD:CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF"
+      },
+      {
+        "uid": "R34",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_240R_1%_0.0625W_100PPM",
+        "label": "R34",
+        "lib_id": "Resistors SMD:R0402_240R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "#PWR0295",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0295",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "#PWR0307",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P2V5",
+        "label": "#PWR0307",
+        "lib_id": "pxie-wren-altium-import:P2V5"
+      },
+      {
+        "uid": "#PWR0291",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0291",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "#PWR0300",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0300",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "#PWR0305",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0305",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "#PWR0301",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0301",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "C194",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_4.7UF_6.3V_20%_X5R",
+        "label": "C194",
+        "lib_id": "Capacitors SMD:CC0402_4.7UF_6.3V_20%_X5R"
+      },
+      {
+        "uid": "#PWR0280",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0280",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "C175",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_4.7UF_6.3V_20%_X5R",
+        "label": "C175",
+        "lib_id": "Capacitors SMD:CC0402_4.7UF_6.3V_20%_X5R"
+      },
+      {
+        "uid": "C99",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_10NF_16V_10%_X7R",
+        "label": "C99",
+        "lib_id": "Capacitors SMD:CC0402_10NF_16V_10%_X7R"
+      },
+      {
+        "uid": "C150",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_4.7UF_6.3V_20%_X5R",
+        "label": "C150",
+        "lib_id": "Capacitors SMD:CC0402_4.7UF_6.3V_20%_X5R"
+      },
+      {
+        "uid": "C183",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_470NF_6.3V_10%_X5R",
+        "label": "C183",
+        "lib_id": "Capacitors SMD:CC0402_470NF_6.3V_10%_X5R"
+      },
+      {
+        "uid": "R194",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_100R_1%_0.0625W_100PPM",
+        "label": "R194",
+        "lib_id": "Resistors SMD:R0402_100R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "C112",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF",
+        "label": "C112",
+        "lib_id": "Capacitors SMD:CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF"
+      },
+      {
+        "uid": "#PWR0296",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0296",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "#FLG025",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG025",
+        "lib_id": "power:PWR_FLAG"
+      },
+      {
+        "uid": "C155",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_4.7UF_6.3V_20%_X5R",
+        "label": "C155",
+        "lib_id": "Capacitors SMD:CC0402_4.7UF_6.3V_20%_X5R"
+      },
+      {
+        "uid": "#PWR0290",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VTT_DDR4-PS",
+        "label": "#PWR0290",
+        "lib_id": "pxie-wren-altium-import:VTT_DDR4-PS"
+      },
+      {
+        "uid": "C182",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_470NF_6.3V_10%_X5R",
+        "label": "C182",
+        "lib_id": "Capacitors SMD:CC0402_470NF_6.3V_10%_X5R"
+      },
+      {
+        "uid": "#PWR0279",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0279",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "C113",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF",
+        "label": "C113",
+        "lib_id": "Capacitors SMD:CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF"
+      },
+      {
+        "uid": "C202",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_470NF_6.3V_10%_X5R",
+        "label": "C202",
+        "lib_id": "Capacitors SMD:CC0402_470NF_6.3V_10%_X5R"
+      },
+      {
+        "uid": "C130",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF",
+        "label": "C130",
+        "lib_id": "Capacitors SMD:CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF"
+      },
+      {
+        "uid": "C184",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_68NF_16V_10%_X7R",
+        "label": "C184",
+        "lib_id": "Capacitors SMD:CC0402_68NF_16V_10%_X7R"
+      },
+      {
+        "uid": "C146",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_4.7UF_6.3V_20%_X5R",
+        "label": "C146",
+        "lib_id": "Capacitors SMD:CC0402_4.7UF_6.3V_20%_X5R"
+      },
+      {
+        "uid": "#PWR0282",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P2V5",
+        "label": "#PWR0282",
+        "lib_id": "pxie-wren-altium-import:P2V5"
+      },
+      {
+        "uid": "C178",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_470NF_6.3V_10%_X5R",
+        "label": "C178",
+        "lib_id": "Capacitors SMD:CC0402_470NF_6.3V_10%_X5R"
+      },
+      {
+        "uid": "C181",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_68NF_16V_10%_X7R",
+        "label": "C181",
+        "lib_id": "Capacitors SMD:CC0402_68NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR0297",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0297",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "C179",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_470NF_6.3V_10%_X5R",
+        "label": "C179",
+        "lib_id": "Capacitors SMD:CC0402_470NF_6.3V_10%_X5R"
+      },
+      {
+        "uid": "#PWR0285",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0285",
+        "lib_id": "pxie-wren-altium-import:GND"
+      },
+      {
+        "uid": "C205",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_68NF_16V_10%_X7R",
+        "label": "C205",
+        "lib_id": "Capacitors SMD:CC0402_68NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR0288",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0288",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "C204",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_68NF_16V_10%_X7R",
+        "label": "C204",
+        "lib_id": "Capacitors SMD:CC0402_68NF_16V_10%_X7R"
+      },
+      {
+        "uid": "C195",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_4.7UF_6.3V_20%_X5R",
+        "label": "C195",
+        "lib_id": "Capacitors SMD:CC0402_4.7UF_6.3V_20%_X5R"
+      },
+      {
+        "uid": "C232",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF",
+        "label": "C232",
+        "lib_id": "Capacitors SMD:CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF"
+      },
+      {
+        "uid": "C203",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_470NF_6.3V_10%_X5R",
+        "label": "C203",
+        "lib_id": "Capacitors SMD:CC0402_470NF_6.3V_10%_X5R"
+      },
+      {
+        "uid": "#PWR0306",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P1V2",
+        "label": "#PWR0306",
+        "lib_id": "pxie-wren-altium-import:P1V2"
+      },
+      {
+        "uid": "C201",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_68NF_16V_10%_X7R",
+        "label": "C201",
+        "lib_id": "Capacitors SMD:CC0402_68NF_16V_10%_X7R"
+      },
+      {
+        "uid": "#PWR0304",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VTT_DDR4-PS",
+        "label": "#PWR0304",
+        "lib_id": "pxie-wren-altium-import:VTT_DDR4-PS"
+      },
+      {
+        "uid": "C224",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF",
+        "label": "C224",
+        "lib_id": "Capacitors SMD:CC0402_100NF_25V_10%_X7R_YUDEN_TMK105B7104KVHF"
+      },
+      {
+        "uid": "#PWR0287",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0287",
+        "lib_id": "pxie-wren-altium-import:GND"
+      }
+    ],
+    "version": "1.1"
+  }
+}

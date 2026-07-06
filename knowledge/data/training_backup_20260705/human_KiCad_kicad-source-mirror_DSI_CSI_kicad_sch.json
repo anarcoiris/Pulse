@@ -1,0 +1,34 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_DSI_CSI.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_DSI_CSI.kicad_sch",
+    "components": [
+      {
+        "uid": "#PWR0801",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3V3_PI",
+        "label": "#PWR0801",
+        "lib_id": "power:+3V3"
+      },
+      {
+        "uid": "#PWR0802",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0802",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "J802",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x22_Female",
+        "label": "J802",
+        "lib_id": "CM5IO:Conn_01x22_Socket"
+      }
+    ],
+    "version": "1.0"
+  }
+}

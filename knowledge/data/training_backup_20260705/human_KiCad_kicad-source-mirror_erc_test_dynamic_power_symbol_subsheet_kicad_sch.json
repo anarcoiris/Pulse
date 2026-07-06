@@ -1,0 +1,34 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_erc_test_dynamic_power_symbol_subsheet.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_erc_test_dynamic_power_symbol_subsheet.kicad_sch",
+    "components": [
+      {
+        "uid": "#FLG0201",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG0201",
+        "lib_id": "PCM_4ms_Power-symbol:PWR_FLAG"
+      },
+      {
+        "uid": "#PWR0201",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "REF${#}",
+        "label": "#PWR0201",
+        "lib_id": ".Project_Library:REF${#}"
+      },
+      {
+        "uid": "R201",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "0R",
+        "label": "R201",
+        "lib_id": "Device:R"
+      }
+    ],
+    "version": "1.0"
+  }
+}

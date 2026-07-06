@@ -1,0 +1,1028 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_bus_pci.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_bus_pci.kicad_sch",
+    "description": "Video \u2014 Kicad EDA \u2014 Interface Bus PCI",
+    "notes": [
+      "Decoupling for \\\"S5933\\\""
+    ],
+    "net_labels": [
+      "P_CLK",
+      "P_REQ#",
+      "P_AD31",
+      "P_AD29",
+      "P_AD27",
+      "P_AD25",
+      "P_C/BE3#",
+      "P_AD23",
+      "P_AD21",
+      "P_AD19",
+      "P_AD17",
+      "P_C/BE2#",
+      "P_IRDY#",
+      "P_DEVSEL#",
+      "P_LOCK#",
+      "P_PERR#",
+      "P_SERR#",
+      "P_C/BE1#",
+      "P_AD14",
+      "P_AD12",
+      "P_AD10",
+      "P_AD8",
+      "P_AD7",
+      "P_AD5",
+      "P_AD3",
+      "P_AD1",
+      "P_INTA#",
+      "P_RST#",
+      "P_GNT#",
+      "P_AD30",
+      "P_AD28",
+      "P_AD26",
+      "P_AD24",
+      "P_IDSEL",
+      "P_AD22",
+      "P_AD20",
+      "P_AD18",
+      "P_AD16",
+      "P_FRAME#",
+      "P_TRDY#",
+      "P_STOP#",
+      "P_PAR",
+      "P_AD15",
+      "P_AD13",
+      "P_AD11",
+      "P_AD9",
+      "P_C/BE0#",
+      "P_AD6",
+      "P_AD4",
+      "P_AD2",
+      "P_AD0",
+      "EA1",
+      "EA2",
+      "EA3",
+      "EA4",
+      "EA5",
+      "EA6",
+      "EA7",
+      "EA9",
+      "EA10"
+    ],
+    "components": [
+      {
+        "uid": "#+0131",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12V",
+        "label": "#+0131",
+        "lib_id": "video_schlib:+12V"
+      },
+      {
+        "uid": "#+0129",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0129",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#PWR081",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR081",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#+0119",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0119",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0123",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0123",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0146",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0146",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0147",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0147",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0148",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0148",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0120",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0120",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0124",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0124",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0121",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0121",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0125",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0125",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0122",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0122",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0126",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0126",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0157",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0157",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0158",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0158",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0159",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0159",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0153",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0153",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0130",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0130",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0161",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0161",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0118",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0118",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0155",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0155",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0156",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0156",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0154",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0154",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0132",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0132",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0133",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0133",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0134",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0134",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0135",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0135",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0136",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0136",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0137",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0137",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0138",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0138",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#+0139",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#+0139",
+        "lib_id": "video_schlib:+5V"
+      },
+      {
+        "uid": "#PWR082",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#PWR082",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0140",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0140",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0141",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0141",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0142",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0142",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0143",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0143",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0144",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0144",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0145",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0145",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0127",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0127",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0152",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0152",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0151",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0151",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0150",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0150",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0128",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0128",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#+0149",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3.3V",
+        "label": "#+0149",
+        "lib_id": "video_schlib:+3.3V"
+      },
+      {
+        "uid": "#GND084",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND084",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0117",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0117",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND083",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND083",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND085",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND085",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#PWR080",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VSS",
+        "label": "#PWR080",
+        "lib_id": "video_schlib:VSS"
+      },
+      {
+        "uid": "#GND0104",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0104",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0109",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0109",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0113",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0113",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND086",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND086",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND087",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND087",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND088",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND088",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND089",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND089",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND090",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND090",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND091",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND091",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND092",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND092",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND093",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND093",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND094",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND094",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND095",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND095",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0110",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0110",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0114",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0114",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0111",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0111",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0115",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0115",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0112",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0112",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0116",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0116",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0103",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0103",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0102",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0102",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0101",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0100",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0100",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND099",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND099",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND098",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND098",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND097",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND097",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND096",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND096",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0108",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0108",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#PWR0160",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0160",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0106",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0106",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0107",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0107",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND0105",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND0105",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#FLG077",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG077",
+        "lib_id": "video_schlib:PWR_FLAG"
+      },
+      {
+        "uid": "#FLG079",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG079",
+        "lib_id": "video_schlib:PWR_FLAG"
+      },
+      {
+        "uid": "#FLG076",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG076",
+        "lib_id": "video_schlib:PWR_FLAG"
+      },
+      {
+        "uid": "#FLG078",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG078",
+        "lib_id": "video_schlib:PWR_FLAG"
+      },
+      {
+        "uid": "W5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TEST",
+        "label": "W5",
+        "lib_id": "video_schlib:TEST"
+      },
+      {
+        "uid": "W4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TEST",
+        "label": "W4",
+        "lib_id": "video_schlib:TEST"
+      },
+      {
+        "uid": "W2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "FLOAT#",
+        "label": "W2",
+        "lib_id": "video_schlib:TEST"
+      },
+      {
+        "uid": "W3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SERNV",
+        "label": "W3",
+        "lib_id": "video_schlib:TEST"
+      },
+      {
+        "uid": "W1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "16/32",
+        "label": "W1",
+        "lib_id": "video_schlib:TEST"
+      },
+      {
+        "uid": "R28",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "2,2K",
+        "label": "R28",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R29",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "2,2K",
+        "label": "R29",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R6",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R6",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R7",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R7",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R5",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R5",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "C68",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7uF",
+        "label": "C68",
+        "lib_id": "video_schlib:CP"
+      },
+      {
+        "uid": "C38",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7uF",
+        "label": "C38",
+        "lib_id": "video_schlib:CP"
+      },
+      {
+        "uid": "C69",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7uF",
+        "label": "C69",
+        "lib_id": "video_schlib:CP"
+      },
+      {
+        "uid": "C67",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4,7uF",
+        "label": "C67",
+        "lib_id": "video_schlib:CP"
+      },
+      {
+        "uid": "C24",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C24",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C28",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C28",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C25",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C25",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C29",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C29",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C26",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C26",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C30",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C30",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C27",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C27",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C31",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C31",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "RR1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "8x10K",
+        "label": "RR1",
+        "lib_id": "video_schlib:RR8"
+      },
+      {
+        "uid": "RR2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "8x10K",
+        "label": "RR2",
+        "lib_id": "video_schlib:RR8"
+      },
+      {
+        "uid": "RR3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "8x10K",
+        "label": "RR3",
+        "lib_id": "video_schlib:RR8"
+      },
+      {
+        "uid": "RR4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "8x10K",
+        "label": "RR4",
+        "lib_id": "video_schlib:RR8"
+      },
+      {
+        "uid": "RR5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "8x10K",
+        "label": "RR5",
+        "lib_id": "video_schlib:RR8"
+      },
+      {
+        "uid": "RR6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "8x10K",
+        "label": "RR6",
+        "lib_id": "video_schlib:RR8"
+      },
+      {
+        "uid": "RR7",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "8x10K",
+        "label": "RR7",
+        "lib_id": "video_schlib:RR8"
+      },
+      {
+        "uid": "RR8",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "8x10K",
+        "label": "RR8",
+        "lib_id": "video_schlib:RR8"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "24C16",
+        "label": "U1",
+        "lib_id": "video_schlib:24C16"
+      },
+      {
+        "uid": "BUS1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BUSPCI_5V",
+        "label": "BUS1",
+        "lib_id": "video_schlib:BUSPCI-5V"
+      },
+      {
+        "uid": "U11",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "S5933_PQ160",
+        "label": "U11",
+        "lib_id": "video_schlib:S5933_PQ160"
+      }
+    ],
+    "version": "1.1"
+  }
+}

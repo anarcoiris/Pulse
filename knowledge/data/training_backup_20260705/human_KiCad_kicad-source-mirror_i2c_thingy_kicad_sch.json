@@ -1,0 +1,58 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_i2c_thingy.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_i2c_thingy.kicad_sch",
+    "components": [
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "#PWR0202",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3V3",
+        "label": "#PWR0202",
+        "lib_id": "power:+3V3"
+      },
+      {
+        "uid": "#PWR0203",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0203",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0201",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0201",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "MAX7325AEG+",
+        "label": "U1",
+        "lib_id": "Interface_Expansion:MAX7325AEG+"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3V3",
+        "label": "#PWR01",
+        "lib_id": "power:+3V3"
+      }
+    ],
+    "version": "1.0"
+  }
+}

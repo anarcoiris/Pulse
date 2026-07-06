@@ -1,0 +1,501 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_graphic.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_graphic.kicad_sch",
+    "description": "Video \u2014 Kicad EDA \u2014 Xilinxs",
+    "notes": [
+      "OSCILLATOR generates sample clock for DAC and ADC",
+      "Decoupling"
+    ],
+    "net_labels": [
+      "HDREFOUT",
+      "HDOUT",
+      "VOSC",
+      "PROG*",
+      "CCLK",
+      "PTBE-0",
+      "PTBE-1",
+      "PTBE-2",
+      "PTBE-3",
+      "DIN",
+      "DONE",
+      "BE-3",
+      "BE-2",
+      "BE-1",
+      "BE-0",
+      "ADR6",
+      "ADR5",
+      "ADR4",
+      "ADR3",
+      "DQ7",
+      "DQ6",
+      "DQ3",
+      "DQ5",
+      "DQ4",
+      "DQ2",
+      "DQ1",
+      "DQ0",
+      "14MHZOUT",
+      "LED",
+      "CLK10MHz",
+      "ADR2",
+      "X_CLK",
+      "X_DIN",
+      "X_PROG-",
+      "X_DONE",
+      "PCA0",
+      "PCA1",
+      "PCA2",
+      "RESERV1",
+      "XTAL_I",
+      "DQ8",
+      "DQ9",
+      "DQ10",
+      "DQ11",
+      "DQ12",
+      "DQ13",
+      "DQ15",
+      "DQ14",
+      "CSIO-",
+      "IRAS-",
+      "ICAS-",
+      "IWR-",
+      "IOE-",
+      "IA0",
+      "IA1",
+      "IA2",
+      "IA3",
+      "IA4",
+      "IA5",
+      "IA6"
+    ],
+    "components": [
+      {
+        "uid": "#PWR061",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR061",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#VCC073",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#VCC073",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#PWR062",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR062",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#VCC072",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#VCC072",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#VCC075",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#VCC075",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#PWR059",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR059",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#PWR064",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR064",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#VCC074",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#VCC074",
+        "lib_id": "video_schlib:VCC"
+      },
+      {
+        "uid": "#GND067",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND067",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND068",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND068",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND070",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND070",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND069",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND069",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#PWR058",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR058",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#PWR063",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR063",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND071",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND071",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#PWR060",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR060",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#PWR057",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR057",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND065",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND065",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "#GND066",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#GND066",
+        "lib_id": "video_schlib:GND"
+      },
+      {
+        "uid": "P12",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_1",
+        "label": "P12",
+        "lib_id": "video_schlib:CONN_1"
+      },
+      {
+        "uid": "P9",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_1",
+        "label": "P9",
+        "lib_id": "video_schlib:CONN_1"
+      },
+      {
+        "uid": "P10",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_1",
+        "label": "P10",
+        "lib_id": "video_schlib:CONN_1"
+      },
+      {
+        "uid": "P11",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_1",
+        "label": "P11",
+        "lib_id": "video_schlib:CONN_1"
+      },
+      {
+        "uid": "R1",
+        "etype": "IC",
+        "value": 10.0,
+        "value_raw": "10",
+        "label": "R1",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R48",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R48",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R21",
+        "etype": "IC",
+        "value": 220.0,
+        "value_raw": "220",
+        "label": "R21",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R26",
+        "etype": "IC",
+        "value": 220000.0,
+        "value_raw": "220K",
+        "label": "R26",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "R13",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R13",
+        "lib_id": "video_schlib:R"
+      },
+      {
+        "uid": "D6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LED",
+        "label": "D6",
+        "lib_id": "video_schlib:LED"
+      },
+      {
+        "uid": "C56",
+        "etype": "IC",
+        "value": 4.7e-06,
+        "value_raw": "4.7uF",
+        "label": "C56",
+        "lib_id": "video_schlib:CP"
+      },
+      {
+        "uid": "C57",
+        "etype": "IC",
+        "value": 4.7e-06,
+        "value_raw": "4.7uF",
+        "label": "C57",
+        "lib_id": "video_schlib:CP"
+      },
+      {
+        "uid": "C63",
+        "etype": "IC",
+        "value": 4.7e-05,
+        "value_raw": "47uF",
+        "label": "C63",
+        "lib_id": "video_schlib:CP"
+      },
+      {
+        "uid": "C20",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C20",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C23",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C23",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C19",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C19",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C17",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C17",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C18",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C18",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C22",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C22",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C21",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C21",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C70",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C70",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C71",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C71",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C72",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C72",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C73",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C73",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C49",
+        "etype": "IC",
+        "value": 2.1999999999999998e-11,
+        "value_raw": "22pF",
+        "label": "C49",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "C50",
+        "etype": "IC",
+        "value": 2.1999999999999998e-11,
+        "value_raw": "22pF",
+        "label": "C50",
+        "lib_id": "video_schlib:C"
+      },
+      {
+        "uid": "X1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "10MHz",
+        "label": "X1",
+        "lib_id": "video_schlib:CRYSTAL"
+      },
+      {
+        "uid": "P4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_2",
+        "label": "P4",
+        "lib_id": "video_schlib:CONN_2"
+      },
+      {
+        "uid": "P5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_5",
+        "label": "P5",
+        "lib_id": "video_schlib:CONN_5"
+      },
+      {
+        "uid": "U21",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "XC1736APD8",
+        "label": "U21",
+        "lib_id": "video_schlib:XC1736APD8"
+      },
+      {
+        "uid": "U7",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "AV9173",
+        "label": "U7",
+        "lib_id": "video_schlib:AV9173"
+      },
+      {
+        "uid": "U2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "4C4001",
+        "label": "U2",
+        "lib_id": "video_schlib:4C4001"
+      },
+      {
+        "uid": "U23",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "XC4003/PQ100",
+        "label": "U23",
+        "lib_id": "video_schlib:XC4005-PQ100"
+      },
+      {
+        "uid": "U24",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "XC4005-PQ160",
+        "label": "U24",
+        "lib_id": "video_schlib:XC4005-PQ160"
+      }
+    ],
+    "version": "1.1"
+  }
+}

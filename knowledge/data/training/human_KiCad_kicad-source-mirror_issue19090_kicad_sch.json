@@ -1,0 +1,31 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue19090.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue19090.kicad_sch",
+    "description": "",
+    "notes": [],
+    "net_labels": [
+      "net1"
+    ],
+    "components": [
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R2",
+        "lib_id": "Device:R"
+      }
+    ],
+    "version": "1.1"
+  }
+}

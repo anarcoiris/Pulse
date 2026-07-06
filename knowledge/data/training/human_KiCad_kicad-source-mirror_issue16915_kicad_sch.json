@@ -1,0 +1,56 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue16915.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue16915.kicad_sch",
+    "description": "",
+    "notes": [],
+    "net_labels": [
+      "IN3",
+      "IN7",
+      "OUT0",
+      "IN2",
+      "IN5",
+      "OUT5",
+      "OUT3",
+      "IN1",
+      "IN6",
+      "IN0",
+      "OUT6",
+      "OUT2",
+      "OUT1",
+      "IN[0..7]",
+      "OUT[0..7]",
+      "OUT4",
+      "OUT7",
+      "IN4"
+    ],
+    "components": [
+      {
+        "uid": "J?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x08",
+        "label": "J?",
+        "lib_id": "Connector_Generic:Conn_01x08"
+      },
+      {
+        "uid": "U?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "74LS573",
+        "label": "U?",
+        "lib_id": "74xx:74LS573"
+      },
+      {
+        "uid": "J?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x08",
+        "label": "J?",
+        "lib_id": "Connector_Generic:Conn_01x08"
+      }
+    ],
+    "version": "1.1"
+  }
+}

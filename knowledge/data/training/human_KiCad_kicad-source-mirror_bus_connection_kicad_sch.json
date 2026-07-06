@@ -1,0 +1,14 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_bus_connection.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_bus_connection.kicad_sch",
+    "description": "",
+    "notes": [],
+    "net_labels": [
+      "top{a_xyz}"
+    ],
+    "components": [],
+    "version": "1.1"
+  }
+}

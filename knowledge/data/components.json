@@ -1,0 +1,368 @@
+[
+  {
+    "id": "ATmega328P",
+    "category": "MCU",
+    "family": "AVR",
+    "manufacturer": "Microchip",
+    "kicad_symbol": "MCU_Microchip_ATmega:ATmega328P-AU",
+    "kicad_footprint": "Package_QFP:TQFP-32_7x7mm_P0.8mm",
+    "footprint_alt": "Package_DIP:DIP-28_W7.62mm",
+    "params": {
+      "vcc_min_v": 1.8,
+      "vcc_max_v": 5.5,
+      "typical_vcc_v": 5.0,
+      "flash_kb": 32,
+      "sram_kb": 2,
+      "eeprom_kb": 1,
+      "max_freq_mhz": 20,
+      "adc_channels": 8,
+      "adc_bits": 10,
+      "adc_vref_internal_v": 1.1,
+      "uart": 1,
+      "spi": 1,
+      "i2c": 1,
+      "timers_8bit": 2,
+      "timers_16bit": 1,
+      "pwm_channels": 6,
+      "gpio_pins": 23,
+      "isp": true,
+      "jtag": false,
+      "current_max_ma": 200,
+      "pin_current_max_ma": 40
+    },
+    "pins": {
+      "VCC":  {"numbers": [7, 20], "type": "power_in"},
+      "AVCC": {"numbers": [18],    "type": "power_in", "note": "ADC supply, bypass with 100nF + 10µH inductor"},
+      "GND":  {"numbers": [8, 22], "type": "power_in"},
+      "AREF": {"numbers": [21],    "type": "analog",   "note": "ADC voltage reference, bypass 100nF to GND"},
+      "RESET":{"numbers": [1],     "type": "input",    "note": "Active LOW, 10kΩ pull-up required"},
+      "PB0":  {"numbers": [14],    "alt": ["ICP1","CLKO"], "type": "gpio"},
+      "PB1":  {"numbers": [15],    "alt": ["OC1A"],         "type": "gpio"},
+      "PB2":  {"numbers": [16],    "alt": ["SS","OC1B"],    "type": "gpio"},
+      "PB3":  {"numbers": [17],    "alt": ["MOSI","OC2A"],  "type": "gpio"},
+      "PB4":  {"numbers": [18],    "alt": ["MISO"],          "type": "gpio"},
+      "PB5":  {"numbers": [19],    "alt": ["SCK"],           "type": "gpio"},
+      "PD0":  {"numbers": [2],     "alt": ["RXD"],           "type": "gpio"},
+      "PD1":  {"numbers": [3],     "alt": ["TXD"],           "type": "gpio"},
+      "PD2":  {"numbers": [4],     "alt": ["INT0"],          "type": "gpio"},
+      "PD3":  {"numbers": [5],     "alt": ["INT1","OC2B"],   "type": "gpio"},
+      "PD4":  {"numbers": [6],     "alt": ["XCK","T0"],      "type": "gpio"},
+      "PD5":  {"numbers": [11],    "alt": ["T1","OC0B"],     "type": "gpio"},
+      "PD6":  {"numbers": [12],    "alt": ["AIN0","OC0A"],   "type": "gpio"},
+      "PD7":  {"numbers": [13],    "alt": ["AIN1"],          "type": "gpio"},
+      "PC0":  {"numbers": [23],    "alt": ["ADC0"],          "type": "analog"},
+      "PC1":  {"numbers": [24],    "alt": ["ADC1"],          "type": "analog"},
+      "PC2":  {"numbers": [25],    "alt": ["ADC2"],          "type": "analog"},
+      "PC3":  {"numbers": [26],    "alt": ["ADC3"],          "type": "analog"},
+      "PC4":  {"numbers": [27],    "alt": ["ADC4","SDA"],    "type": "analog"},
+      "PC5":  {"numbers": [28],    "alt": ["ADC5","SCL"],    "type": "analog"}
+    },
+    "support_circuits": {
+      "decoupling":  "100nF + 10µF ceramic en cada pin VCC/AVCC",
+      "crystal":     "16MHz + 2× 22pF C_load entre XTAL1/XTAL2 a GND",
+      "reset":       "10kΩ pull-up de RESET a VCC + 100nF a GND",
+      "programming": "Header ICSP 2×3, 2.54mm: MISO-VCC-SCK-MOSI-RESET-GND"
+    },
+    "typical_applications": ["Arduino compatible", "Sensor nodes", "Motor control", "Prototype MCU boards"],
+    "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega328P-DS.pdf",
+    "notes": "El MCU preferido para proyectos Arduino. 5V-compatible, amplia comunidad."
+  },
+
+  {
+    "id": "ESP32-WROOM-32",
+    "category": "MCU",
+    "family": "ESP32",
+    "manufacturer": "Espressif",
+    "kicad_symbol": "RF_Module:ESP32-WROOM-32",
+    "kicad_footprint": "RF_Module:ESP32-WROOM-32",
+    "params": {
+      "vcc_min_v": 3.0,
+      "vcc_max_v": 3.6,
+      "typical_vcc_v": 3.3,
+      "flash_kb": 4096,
+      "sram_kb": 520,
+      "max_freq_mhz": 240,
+      "adc_channels": 18,
+      "adc_bits": 12,
+      "wifi": true,
+      "wifi_std": "802.11 b/g/n 2.4GHz",
+      "bluetooth": true,
+      "bt_version": "4.2 BR/EDR + BLE",
+      "uart": 3,
+      "spi": 4,
+      "i2c": 2,
+      "i2s": 2,
+      "can": 1,
+      "ethernet_mac": true,
+      "timers_64bit": 4,
+      "pwm_channels": 16,
+      "gpio_pins": 34,
+      "dac_channels": 2,
+      "dac_bits": 8,
+      "touch_pins": 10,
+      "hall_sensor": true,
+      "current_max_ma": 500,
+      "current_sleep_ua": 10,
+      "cpu_cores": 2
+    },
+    "support_circuits": {
+      "decoupling":  "100nF + 10µF en VCC (3.3V), 100nF cerca del módulo",
+      "regulator":   "AMS1117-3.3 o similar LDO desde 5V, mínimo 500mA",
+      "en_pin":      "10kΩ pull-up a VCC en pin EN (reset)",
+      "boot":        "GPIO0 floating = normal; LOW = flash mode",
+      "usb_uart":    "CH340 o CP2102 para programación por USB"
+    },
+    "typical_applications": ["IoT", "WiFi/BT nodes", "Smart home", "Wearables", "Industrial wireless"],
+    "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+    "notes": "Módulo con antena integrada y 4MB flash mínimo. 3.3V únicamente — use level shifters con periféricos 5V."
+  },
+
+  {
+    "id": "ESP8266-ESP-12F",
+    "category": "MCU",
+    "family": "ESP8266",
+    "manufacturer": "Espressif",
+    "kicad_symbol": "RF_Module:ESP-12F",
+    "kicad_footprint": "RF_Module:ESP-12F",
+    "params": {
+      "vcc_min_v": 3.0,
+      "vcc_max_v": 3.6,
+      "typical_vcc_v": 3.3,
+      "flash_kb": 4096,
+      "sram_kb": 80,
+      "max_freq_mhz": 80,
+      "adc_channels": 1,
+      "adc_bits": 10,
+      "wifi": true,
+      "wifi_std": "802.11 b/g/n 2.4GHz",
+      "bluetooth": false,
+      "uart": 2,
+      "spi": 1,
+      "i2c": 1,
+      "gpio_pins": 11,
+      "pwm_channels": 4,
+      "current_max_ma": 300,
+      "current_sleep_ua": 10,
+      "cpu_cores": 1
+    },
+    "support_circuits": {
+      "decoupling":  "100nF + 10µF en VCC (3.3V)",
+      "regulator":   "AMS1117-3.3 o AP2112K desde 5V, min 300mA LDO",
+      "en_pin":      "CH_PD (EN) con 10kΩ pull-up a VCC",
+      "boot":        "GPIO0 + GPIO2 HIGH, GPIO15 LOW para arranque normal",
+      "usb_uart":    "CH340 o CP2102 conectado a TX0/RX0"
+    },
+    "typical_applications": ["WiFi IoT low-cost", "Actuadores remotos", "Gateways baratos"],
+    "datasheet": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
+    "notes": "El predecesor del ESP32. Un solo core, 1 canal ADC, ideal para proyectos WiFi simples y de bajo coste."
+  },
+
+  {
+    "id": "STM32F103C8T6",
+    "category": "MCU",
+    "family": "STM32F1",
+    "manufacturer": "STMicroelectronics",
+    "kicad_symbol": "MCU_ST_STM32F1:STM32F103C8Tx",
+    "kicad_footprint": "Package_QFP:LQFP-48_7x7mm_P0.5mm",
+    "params": {
+      "vcc_min_v": 2.0,
+      "vcc_max_v": 3.6,
+      "typical_vcc_v": 3.3,
+      "flash_kb": 64,
+      "sram_kb": 20,
+      "max_freq_mhz": 72,
+      "adc_channels": 10,
+      "adc_bits": 12,
+      "uart": 3,
+      "spi": 2,
+      "i2c": 2,
+      "can": 1,
+      "usb": true,
+      "timers_16bit": 7,
+      "timers_advanced": 1,
+      "pwm_channels": 15,
+      "gpio_pins": 37,
+      "dma_channels": 7,
+      "current_max_ma": 150,
+      "jtag": true,
+      "swd": true
+    },
+    "support_circuits": {
+      "decoupling":  "100nF en cada pin VDD/VDDA, 4.7µF bulk en VCC",
+      "crystal":     "8MHz + 2× 10pF entre OSC_IN/OSC_OUT a GND",
+      "nrst":        "100nF a GND en pin NRST",
+      "boot":        "BOOT0=GND (RUN), BOOT0=VCC + BOOT1=GND (system bootloader USB/UART)",
+      "swd":         "Header 4-pin: SWDIO-SWCLK-GND-VCC (SWD programming)"
+    },
+    "typical_applications": ["Blue Pill board", "Motor control", "USB devices", "Industrial control"],
+    "datasheet": "https://www.st.com/resource/en/datasheet/stm32f103c8.pdf",
+    "notes": "El famoso 'Blue Pill'. ARM Cortex-M3 @ 72MHz. Amplia comunidad, compatible con Arduino/STM32Duino."
+  },
+
+  {
+    "id": "RP2040",
+    "category": "MCU",
+    "family": "RP2040",
+    "manufacturer": "Raspberry Pi",
+    "kicad_symbol": "MCU_RaspberryPi:RP2040",
+    "kicad_footprint": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+    "params": {
+      "vcc_min_v": 1.8,
+      "vcc_max_v": 3.3,
+      "typical_vcc_v": 3.3,
+      "flash_kb": 0,
+      "flash_note": "Externo SPI — QSPI Flash requerido (W25Q16 o similar)",
+      "sram_kb": 264,
+      "max_freq_mhz": 133,
+      "adc_channels": 4,
+      "adc_bits": 12,
+      "uart": 2,
+      "spi": 2,
+      "i2c": 2,
+      "pio_state_machines": 8,
+      "usb": true,
+      "gpio_pins": 26,
+      "pwm_channels": 16,
+      "dma_channels": 12,
+      "cpu_cores": 2,
+      "current_max_ma": 300
+    },
+    "support_circuits": {
+      "decoupling":  "100nF en cada pin VDD/IOVDD/ADC_AVDD/DAC_AVDD, 10µF bulk",
+      "flash":       "W25Q16JV SPI Flash: QSPI_CLK, QSPI_D0-D3, QSPI_SS# + 100nF bypass",
+      "crystal":     "12MHz XTAL en XIN/XOUT (o uso interno si no precisión)",
+      "usb":         "USB DP/DM con 27Ω serie en cada línea",
+      "regulator":   "RT6150 o TPS62828 para 3.3V SMPS (el Pico usa RT6150)"
+    },
+    "typical_applications": ["Raspberry Pi Pico", "USB HID", "Audio DSP", "PIO state machine tricks"],
+    "datasheet": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+    "notes": "Arquitectura dual-core Cortex-M0+ única. Las PIO (Programmable I/O) permiten emular protocolos de hardware a alta velocidad. Sin flash interna — siempre añadir QSPI flash externa."
+  },
+
+  {
+    "id": "LM2596S-5.0",
+    "category": "PMIC",
+    "subcategory": "buck_regulator",
+    "manufacturer": "Texas Instruments / NSS",
+    "kicad_symbol": "Regulator_Switching:LM2596S-5.0",
+    "kicad_footprint": "Package_TO_SOT_SMD:TO-263-5_TabPin3",
+    "params": {
+      "topology": "buck",
+      "vin_min_v": 7.0,
+      "vin_max_v": 40.0,
+      "vout_v": 5.0,
+      "vout_adj": false,
+      "iout_max_a": 3.0,
+      "freq_khz": 150,
+      "eff_typ_pct": 75,
+      "dropout_v": 1.0,
+      "quiescent_ua": 5000
+    },
+    "support_circuits": {
+      "input_cap":  "10µF electrolytic + 100nF ceramic near VIN",
+      "output_cap": "100µF electrolytic (low ESR) + 100nF ceramic",
+      "inductor":   "68µH, Isat > 3A (e.g. SRR1260-680Y)",
+      "diode":      "Schottky 3A 40V (e.g. 1N5822, MBR340)",
+      "layout":     "Minimize loop: Cin-IC-L-Cout. Schottky close to IC."
+    },
+    "datasheet": "https://www.ti.com/lit/ds/symlink/lm2596.pdf"
+  },
+
+  {
+    "id": "AMS1117-3.3",
+    "category": "PMIC",
+    "subcategory": "ldo_regulator",
+    "manufacturer": "Advanced Monolithic Systems",
+    "kicad_symbol": "Regulator_Linear:AMS1117-3.3",
+    "kicad_footprint": "Package_TO_SOT_SMD:SOT-223-3_TabPin2",
+    "params": {
+      "topology": "LDO",
+      "vin_min_v": 4.5,
+      "vin_max_v": 15.0,
+      "vout_v": 3.3,
+      "vout_adj": false,
+      "iout_max_a": 1.0,
+      "dropout_v": 1.1,
+      "quiescent_ma": 5
+    },
+    "support_circuits": {
+      "input_cap":  "10µF electrolytic (necesario para estabilidad)",
+      "output_cap": "10µF electrolytic (necesario) + 100nF ceramic"
+    },
+    "datasheet": "https://www.alldatasheet.com/datasheet-pdf/pdf/204682/ADMOS/AMS1117-3.3.html",
+    "notes": "LDO mínimo para ESP32/STM32. Dropout de 1.1V: VIN debe ser > 4.4V. Max 1A — actualizar a AMS1117-1.0A si hay riesgo térmico."
+  },
+
+  {
+    "id": "CH340G",
+    "category": "Interface",
+    "subcategory": "usb_uart",
+    "manufacturer": "WCH",
+    "kicad_symbol": "Interface_USB:CH340G",
+    "kicad_footprint": "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm",
+    "params": {
+      "interface_host": "USB 2.0 Full Speed",
+      "interface_device": "UART (TX/RX/RTS/CTS/DTR/DSR/DCD/RI)",
+      "baud_max": 2000000,
+      "vcc_v": 3.3,
+      "vcc_min_v": 3.3,
+      "vcc_max_v": 5.0
+    },
+    "support_circuits": {
+      "crystal":    "12MHz crystal entre X1/X2 + 2× 22pF",
+      "decoupling": "100nF + 10µF en VCC, 100nF en V3",
+      "usb":        "ESD protection (USBLC6-2) en DP/DM",
+      "dtr_rts":    "Conectar DTR→RST, RTS→BOOT/GPIO0 para auto-reset en ESP/AVR"
+    },
+    "datasheet": "http://www.wch-ic.com/downloads/file/5.html",
+    "notes": "Driver más común en clones Arduino. Puede requerir driver instalado en Windows < 10. Alternativa: CP2102 (FTDI-compatible, driverless en modern OS)."
+  },
+
+  {
+    "id": "NE555P",
+    "category": "Timer",
+    "manufacturer": "Texas Instruments",
+    "kicad_symbol": "Timer:NE555",
+    "kicad_footprint": "Package_DIP:DIP-8_W7.62mm",
+    "params": {
+      "vcc_min_v": 5.0,
+      "vcc_max_v": 15.0,
+      "freq_max_mhz": 0.5,
+      "current_out_ma": 200,
+      "modes": ["astable", "monostable"]
+    },
+    "formulas": {
+      "astable_freq":   "f = 1.44 / ((R1 + 2*R2) * C)",
+      "astable_duty":   "duty = (R1 + R2) / (R1 + 2*R2)",
+      "monostable_t":   "t = 1.1 * R * C"
+    },
+    "support_circuits": {
+      "decoupling": "100nF entre VCC y GND cerca del IC",
+      "control_v":  "100nF entre pin 5 (CV) y GND para inmunidad a ruido"
+    },
+    "datasheet": "https://www.ti.com/lit/ds/symlink/ne555.pdf"
+  },
+
+  {
+    "id": "LM358",
+    "category": "Amplifier",
+    "subcategory": "op_amp",
+    "manufacturer": "Texas Instruments",
+    "kicad_symbol": "Amplifier_Operational:LM358",
+    "kicad_footprint": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
+    "params": {
+      "vcc_min_v": 3.0,
+      "vcc_max_v": 32.0,
+      "vcc_split_v": "±1.5V to ±16V",
+      "gbw_mhz": 1.1,
+      "slew_rate_vus": 0.6,
+      "Vos_max_mv": 7.0,
+      "Ib_max_na": 500,
+      "channels": 2,
+      "rail_to_rail": false,
+      "input_common_mode": "0 to VCC-1.5V"
+    },
+    "datasheet": "https://www.ti.com/lit/ds/symlink/lm358.pdf",
+    "notes": "Op-amp de propósito general. No rail-to-rail. Para aplicaciones de precisión usar TLV2372 o MCP6002."
+  }
+]

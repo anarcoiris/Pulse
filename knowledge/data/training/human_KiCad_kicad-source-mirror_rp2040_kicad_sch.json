@@ -1,0 +1,438 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_rp2040.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_rp2040.kicad_sch",
+    "description": "RP2040 Basic Support \u2014 Psychogenic Technologies \u2014 See LICENSE.txt for details \u2014 Licensed under Apache 2.0 \u2014 (C) 2023 Pat Deegan",
+    "notes": [
+      "async reset",
+      "RP2040 Basic Support",
+      "Flash",
+      "Short to hold in reset",
+      "VREG_VOUT: int core regulator, 1.1V Can supply DVDD Place 1uF in/out  bypass near pin.",
+      "When held low on powerup, flash SS determines boot mode  (HIGH == flash boot, LOW == USB  device)",
+      "WE 830108206909:  CFPX-180 model  10 ppm tol, 20ppm stab  CL 8pF",
+      "1v1",
+      "USB_VDD supplies USB PHY, nominal 3v3. If IOVDD is 3v3, can share supply.  In fact, in this and many applications, IOVDD, USB_VDD and ADC_AVDD are all powered directly from a single 3v3 supply, with the 1v1 digital  core being handle by on-board regulator.",
+      "Flash program header Note: should we replace 3v3 with RUN, to be able to reset/hold while updating flash?",
+      "Supply bypass, place near 1, 10, 22, 33, 42, 49",
+      "Quad SPI requires QE bit in  status register-2 to be set. In this case, ~{WP} becomes  IO2 and ~{HOLD} becomes IO3.",
+      "Factory test mode: GND",
+      "Rule of thumb  C1, C2 = 2 * CL - 2 * Cstray Using a stray cap of 5pF, gives Cn = 6pF  Into:  CL = (C1 * C2) / (C1 + C2) + Cstray These Cn = 6p give CL = 8pF -- just what we need.",
+      "Logic supply, nominally 3v3.",
+      "Supply bypass, near 23, 50",
+      "Note: SS pulled-up externally, from  bootmode switch"
+    ],
+    "net_labels": [
+      "QSPI_SS",
+      "QSPI_SD2",
+      "QSPI_SD1",
+      "RUN",
+      "DVDD",
+      "IOVDD",
+      "QSPI_CLK",
+      "QSPI_SD0",
+      "QSPI_SD3",
+      "GPIO26{slash}AD0",
+      "GPIO0",
+      "GPIO4",
+      "GPIO25",
+      "BOOT_MODE",
+      "GPIO15",
+      "ADC_AVDD",
+      "GPIO10",
+      "GPIO13",
+      "GPIO14",
+      "GPIO18",
+      "GPIO24",
+      "SWDIO",
+      "USB_D+",
+      "GPIO16",
+      "SWCLK",
+      "GPIO27{slash}AD1",
+      "GPIO5",
+      "GPIO28{slash}AD2",
+      "USB_D-",
+      "USB_VDD",
+      "GPIO6",
+      "GPIO22",
+      "GPIO2",
+      "GPIO21",
+      "GPIO29{slash}AD3",
+      "GPIO20",
+      "GPIO19",
+      "GPIO23",
+      "GPIO8",
+      "GPIO17",
+      "GPIO11",
+      "GPIO9",
+      "GPIO1",
+      "GPIO7",
+      "GPIO12",
+      "GPIO3"
+    ],
+    "components": [
+      {
+        "uid": "#PWR0108",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0108",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR096",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR096",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "C30",
+        "etype": "IC",
+        "value": 6e-12,
+        "value_raw": "6pF",
+        "label": "C30",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR0101",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0101",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "R39",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R39",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "C36",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C36",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "U6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "RP2040",
+        "label": "U6",
+        "lib_id": "TinyTapeout:RP2040"
+      },
+      {
+        "uid": "C35",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C35",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR090",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR090",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR0109",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0109",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "C39",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C39",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR0105",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0105",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "C41",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C41",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "R37",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1k",
+        "label": "R37",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "R34",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R34",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "#PWR093",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR093",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "J11",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x06",
+        "label": "J11",
+        "lib_id": "TinyTapeout:Conn_01x06"
+      },
+      {
+        "uid": "#PWR0104",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0104",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR095",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR095",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "R36",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R36",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "C38",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C38",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR099",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR099",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "C33",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C33",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "Y1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "12.0MHz",
+        "label": "Y1",
+        "lib_id": "TinyTapeout:Crystal_GND24"
+      },
+      {
+        "uid": "C32",
+        "etype": "IC",
+        "value": 1e-06,
+        "value_raw": "1uF",
+        "label": "C32",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "C29",
+        "etype": "IC",
+        "value": 6e-12,
+        "value_raw": "6pF",
+        "label": "C29",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR0106",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0106",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "U5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "W25Q32JVSS",
+        "label": "U5",
+        "lib_id": "TinyTapeout:W25Q32JVSS"
+      },
+      {
+        "uid": "C37",
+        "etype": "IC",
+        "value": 1e-06,
+        "value_raw": "1uF",
+        "label": "C37",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "R38",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R38",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "C34",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C34",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR092",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3V3",
+        "label": "#PWR092",
+        "lib_id": "TinyTapeout:+3V3"
+      },
+      {
+        "uid": "#PWR0100",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0100",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR098",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR098",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "J10",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x02",
+        "label": "J10",
+        "lib_id": "TinyTapeout:Conn_01x02"
+      },
+      {
+        "uid": "#PWR0102",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0102",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR091",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR091",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR0107",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0107",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "#PWR094",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR094",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "R40",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R40",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "C31",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C31",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR0103",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0103",
+        "lib_id": "TinyTapeout:GND"
+      },
+      {
+        "uid": "R35",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R35",
+        "lib_id": "TinyTapeout:R_Small"
+      },
+      {
+        "uid": "C40",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C40",
+        "lib_id": "TinyTapeout:C_Small"
+      },
+      {
+        "uid": "#PWR097",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR097",
+        "lib_id": "TinyTapeout:GND"
+      }
+    ],
+    "version": "1.1"
+  }
+}

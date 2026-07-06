@@ -1,0 +1,15 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue11926.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue11926.kicad_sch",
+    "description": "",
+    "notes": [
+      "Stacked pins on top should not trigger Connected Pins have No-Connect error here",
+      "Stacked pins on top should not prevent ERC from logging Pin not connected Error here"
+    ],
+    "net_labels": [],
+    "components": [],
+    "version": "1.1"
+  }
+}

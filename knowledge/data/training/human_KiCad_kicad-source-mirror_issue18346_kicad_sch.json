@@ -1,0 +1,32 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue18346.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue18346.kicad_sch",
+    "description": "",
+    "notes": [],
+    "net_labels": [
+      "BAR",
+      "FOO"
+    ],
+    "components": [
+      {
+        "uid": "J1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x02_Pin",
+        "label": "J1",
+        "lib_id": "Connector:Conn_01x02_Pin"
+      },
+      {
+        "uid": "J2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x02_Pin",
+        "label": "J2",
+        "lib_id": "Connector:Conn_01x02_Pin"
+      }
+    ],
+    "version": "1.1"
+  }
+}

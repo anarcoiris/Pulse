@@ -1,0 +1,121 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_multinetclasses.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_multinetclasses.kicad_sch",
+    "description": "",
+    "notes": [
+      "Netclasses should resolve as:  /BUS.SIGNAL -> CLASS2,CLASS1,Default /BUS.A0     -> CLASS1,CLASS3,Default /BUS.A1     -> CLASS1,Default /BUS.A2     -> CLASS1,CLASS4,Default /NET_1      -> CLASS2,CLASS3,Default /NET_2      -> CLASS_COMPLETE"
+    ],
+    "net_labels": [
+      "BUS.A1",
+      "BUS.SIGNAL",
+      "BUS{SIGNAL A[0..2]}",
+      "NET_4",
+      "NET_1",
+      "NET_2",
+      "BUS.A0",
+      "BUS.A2",
+      "NET_3"
+    ],
+    "components": [
+      {
+        "uid": "R7",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R7",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R12",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R12",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R10",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R10",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R4",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R4",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R3",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R3",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R2",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R2",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R9",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R9",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R11",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R11",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R5",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R5",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R8",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R8",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R6",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R6",
+        "lib_id": "Device:R"
+      }
+    ],
+    "version": "1.1"
+  }
+}

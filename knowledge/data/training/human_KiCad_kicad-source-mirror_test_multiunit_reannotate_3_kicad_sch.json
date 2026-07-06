@@ -1,0 +1,65 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_test_multiunit_reannotate_3.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_test_multiunit_reannotate_3.kicad_sch",
+    "description": "",
+    "notes": [
+      "TO BE REANNOTATED",
+      "Same Libref, different Value",
+      "U2B missing"
+    ],
+    "net_labels": [],
+    "components": [
+      {
+        "uid": "U2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LM2903",
+        "label": "U2",
+        "lib_id": "Comparator:LM2903"
+      },
+      {
+        "uid": "U99",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LM2903",
+        "label": "U99",
+        "lib_id": "Comparator:LM2903"
+      },
+      {
+        "uid": "U2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LM2903",
+        "label": "U2",
+        "lib_id": "Comparator:LM2903"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LM2903",
+        "label": "U1",
+        "lib_id": "Comparator:LM2903"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LM2903",
+        "label": "U1",
+        "lib_id": "Comparator:LM2903"
+      },
+      {
+        "uid": "U99",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LM2903",
+        "label": "U99",
+        "lib_id": "Comparator:LM2903"
+      }
+    ],
+    "version": "1.1"
+  }
+}

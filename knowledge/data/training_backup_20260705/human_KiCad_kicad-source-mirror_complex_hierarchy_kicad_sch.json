@@ -1,0 +1,234 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_complex_hierarchy.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_complex_hierarchy.kicad_sch",
+    "components": [
+      {
+        "uid": "P2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_2",
+        "label": "P2",
+        "lib_id": "complex_hierarchy_schlib:CONN_2"
+      },
+      {
+        "uid": "#PWR012",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR012",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "D1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "1N4007",
+        "label": "D1",
+        "lib_id": "complex_hierarchy_schlib:D_Small"
+      },
+      {
+        "uid": "C4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "47uF/20V",
+        "label": "C4",
+        "lib_id": "complex_hierarchy_schlib:CP"
+      },
+      {
+        "uid": "#PWR013",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR013",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "#U04",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12V",
+        "label": "#U04",
+        "lib_id": "complex_hierarchy_schlib:+12V"
+      },
+      {
+        "uid": "#U02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#U02",
+        "lib_id": "complex_hierarchy_schlib:PWR_FLAG"
+      },
+      {
+        "uid": "#PWR010",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12C",
+        "label": "#PWR010",
+        "lib_id": "complex_hierarchy_schlib:+12C"
+      },
+      {
+        "uid": "#U03",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#U03",
+        "lib_id": "complex_hierarchy_schlib:PWR_FLAG"
+      },
+      {
+        "uid": "#U01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#U01",
+        "lib_id": "complex_hierarchy_schlib:PWR_FLAG"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12C",
+        "label": "#PWR02",
+        "lib_id": "complex_hierarchy_schlib:+12C"
+      },
+      {
+        "uid": "#PWR04",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR04",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "#PWR07",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR07",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "C2",
+        "etype": "IC",
+        "value": 4.7e-05,
+        "value_raw": "47uF",
+        "label": "C2",
+        "lib_id": "complex_hierarchy_schlib:CP"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HT",
+        "label": "#PWR01",
+        "lib_id": "complex_hierarchy_schlib:HT"
+      },
+      {
+        "uid": "P1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "CONN_2",
+        "label": "P1",
+        "lib_id": "complex_hierarchy_schlib:CONN_2"
+      },
+      {
+        "uid": "#PWR06",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR06",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "#PWR05",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR05",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "C1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "47uF/63V",
+        "label": "C1",
+        "lib_id": "complex_hierarchy_schlib:CP"
+      },
+      {
+        "uid": "U2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "ICL7660",
+        "label": "U2",
+        "lib_id": "complex_hierarchy_schlib:ICL7660"
+      },
+      {
+        "uid": "#PWR014",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR014",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "#PWR03",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR03",
+        "lib_id": "complex_hierarchy_schlib:VCC"
+      },
+      {
+        "uid": "#PWR08",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "VCC",
+        "label": "#PWR08",
+        "lib_id": "complex_hierarchy_schlib:VCC"
+      },
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "78L05",
+        "label": "U1",
+        "lib_id": "complex_hierarchy_schlib:7805"
+      },
+      {
+        "uid": "#PWR011",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "-VAA",
+        "label": "#PWR011",
+        "lib_id": "complex_hierarchy_schlib:-VAA"
+      },
+      {
+        "uid": "C3",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C3",
+        "lib_id": "complex_hierarchy_schlib:CP"
+      },
+      {
+        "uid": "#PWR09",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR09",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "C5",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C5",
+        "lib_id": "complex_hierarchy_schlib:CP"
+      }
+    ],
+    "version": "1.0"
+  }
+}

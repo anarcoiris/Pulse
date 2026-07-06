@@ -1,0 +1,43 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue7203.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue7203.kicad_sch",
+    "description": "",
+    "notes": [
+      "This test should result in 3 ERC errors centered on the labels"
+    ],
+    "net_labels": [
+      "test1",
+      "test3",
+      "test2"
+    ],
+    "components": [
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R1",
+        "lib_id": "Device:R"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R1",
+        "lib_id": "Device:R"
+      }
+    ],
+    "version": "1.1"
+  }
+}

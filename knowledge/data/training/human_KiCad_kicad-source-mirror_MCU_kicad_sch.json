@@ -1,0 +1,38 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_MCU.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_MCU.kicad_sch",
+    "description": "Author: Luciano Vittori",
+    "notes": [
+      "${SHEETNAME}"
+    ],
+    "net_labels": [
+      "RES.EXC",
+      "RES.PWM",
+      "RES.SIN",
+      "RES.COS",
+      "RES.EN",
+      "RES{RESOLVER}"
+    ],
+    "components": [
+      {
+        "uid": "U4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "F28P659DK8PTPQ1",
+        "label": "U4",
+        "lib_id": "Library:F28P659DK8PTPQ1"
+      },
+      {
+        "uid": "U4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "F28P659DK8PTPQ1",
+        "label": "U4",
+        "lib_id": "Library:F28P659DK8PTPQ1"
+      }
+    ],
+    "version": "1.1"
+  }
+}

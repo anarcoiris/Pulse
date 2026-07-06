@@ -1,0 +1,178 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_CM5.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_CM5.kicad_sch",
+    "description": "CM5 MINIMA \u2014 Pierluigi Colangeli",
+    "notes": [
+      "GPIO",
+      "600mA Max",
+      "NB SD signals are only available",
+      "on modules without eMMC",
+      "High Speed Serial",
+      "CM mechanicals",
+      "[CM5]"
+    ],
+    "net_labels": [
+      "GPIO12",
+      "ETH_PI.TRD0_N",
+      "HDMI1_CEC",
+      "PCIE_PI.nWAKE",
+      "HDMI_PI.SDA",
+      "GPIO10",
+      "HDMI1_CK_P",
+      "ETH_PI.TRD3_N",
+      "GPIO5",
+      "USB3-1-TX_P",
+      "GPIO22",
+      "ETH_PI.TRD2_P",
+      "DPHY0_P.C_P",
+      "GPIO8",
+      "GPIO4",
+      "HDMI1_D1_P",
+      "GPIO16",
+      "PCIE_PI.PWR_EN",
+      "USB_PI.D_P",
+      "DPHY1_P.D1_P",
+      "DPHY0_P.C_N",
+      "GPIO9",
+      "DPHY0_P.D1_N",
+      "GPIO11",
+      "DPHY0_P.D0_N",
+      "PCIE_PI.TX_P",
+      "HDMI_PI.CEC",
+      "HDMI_PI.D2_N",
+      "HDMI_PI.D0_P",
+      "USB2P.D_P",
+      "DPHY1_P.D3_P",
+      "PCIE_PI.nCLKREQ",
+      "USB3-1-RX_N",
+      "HDMI_PI.D0_N",
+      "DPHY0_P.D3_P",
+      "WL_nDis",
+      "DPHY1_P.D0_P",
+      "GPIO13",
+      "ETH_PI.TRD1_N",
+      "USB3-0-RX_N",
+      "SD_DAT3",
+      "USB3-1-D_N",
+      "USB3-1-TX_N",
+      "GPIO26",
+      "HDMI_PI.CK_N",
+      "HDMI1_D0_P",
+      "GPIO6",
+      "SYNC_OUT",
+      "HDMI_PI.SCL",
+      "PCIE_PI.RX_N",
+      "PCIE_PI.RX_P",
+      "HDMI_PI.CK_P",
+      "USB3-0-TX_P",
+      "HDMI_PI.D1_P",
+      "DPHY0_P.D1_P",
+      "HDMI_PI.D1_N",
+      "USB3-0-TX_N",
+      "ETH_PI.TRD3_P",
+      "USB3-1-D_P",
+      "USB3-1-RX_P"
+    ],
+    "components": [
+      {
+        "uid": "#PWR0311",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0311",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "Module302",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "ComputeModule5-CM5",
+        "label": "Module302",
+        "lib_id": "CM5IO:ComputeModule5-CM5_HSS"
+      },
+      {
+        "uid": "#PWR0306",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0306",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0307",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0307",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0305",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0305",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "CN1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SM02B-SRSS-TB (LF)(SN)",
+        "label": "CN1",
+        "lib_id": "CM5IO:SM02B-SRSS-TB(LF)(SN)"
+      },
+      {
+        "uid": "#FLG01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG01",
+        "lib_id": "power:PWR_FLAG"
+      },
+      {
+        "uid": "Module301",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "ComputeModule5-CM5",
+        "label": "Module301",
+        "lib_id": "CM5IO:ComputeModule5-CM5_GPIO"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+BATT",
+        "label": "#PWR01",
+        "lib_id": "power:+BATT"
+      },
+      {
+        "uid": "#PWR0308",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0308",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+BATT",
+        "label": "#PWR02",
+        "lib_id": "power:+BATT"
+      },
+      {
+        "uid": "M303",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Compute-Module-4_H1.5mm",
+        "label": "M303",
+        "lib_id": "CM5IO:Compute-Module-4_H1.5mm"
+      }
+    ],
+    "version": "1.1"
+  }
+}

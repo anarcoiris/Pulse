@@ -1,0 +1,106 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_filter.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_filter.kicad_sch",
+    "description": "",
+    "notes": [
+      "Filter: Fc =1000Hz"
+    ],
+    "net_labels": [
+      "IN",
+      "OUT"
+    ],
+    "components": [
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 1000.0,
+        "value_raw": "1K",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "U?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "LM358N",
+        "label": "U?",
+        "lib_id": "complex_hierarchy_schlib:LM358N"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 22000.0,
+        "value_raw": "22K",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      },
+      {
+        "uid": "C?",
+        "etype": "IC",
+        "value": 4.700000000000001e-09,
+        "value_raw": "4.7nF",
+        "label": "C?",
+        "lib_id": "complex_hierarchy_schlib:C"
+      },
+      {
+        "uid": "#U?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12V",
+        "label": "#U?",
+        "lib_id": "complex_hierarchy_schlib:+12V"
+      },
+      {
+        "uid": "C?",
+        "etype": "IC",
+        "value": 1.5000000000000002e-08,
+        "value_raw": "15nF",
+        "label": "C?",
+        "lib_id": "complex_hierarchy_schlib:C"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "-VAA",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:-VAA"
+      },
+      {
+        "uid": "C?",
+        "etype": "IC",
+        "value": 1.5000000000000002e-07,
+        "value_raw": "150nF",
+        "label": "C?",
+        "lib_id": "complex_hierarchy_schlib:C"
+      },
+      {
+        "uid": "#PWR?",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR?",
+        "lib_id": "complex_hierarchy_schlib:GND"
+      },
+      {
+        "uid": "R?",
+        "etype": "IC",
+        "value": 22000.0,
+        "value_raw": "22K",
+        "label": "R?",
+        "lib_id": "complex_hierarchy_schlib:R"
+      }
+    ],
+    "version": "1.1"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_api_kitchen_sink.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_api_kitchen_sink.kicad_sch",
+    "description": "",
+    "notes": [
+      "Some text",
+      "A link"
+    ],
+    "net_labels": [
+      "B0",
+      "B1",
+      "B[3..0]",
+      "HL",
+      "G"
+    ],
+    "components": [
+      {
+        "uid": "U1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "STM32C011J_4-6_Mx",
+        "label": "U1",
+        "lib_id": "MCU_ST_STM32C0:STM32C011J_4-6_Mx"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R1",
+        "lib_id": "Device:R"
+      }
+    ],
+    "version": "1.1"
+  }
+}

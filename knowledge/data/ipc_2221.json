@@ -1,0 +1,190 @@
+{
+  "_meta": {
+    "standard": "IPC-2221B",
+    "title": "Generic Standard on Printed Board Design",
+    "revision": "2012",
+    "source": "IPC International, Inc.",
+    "note": "Values extracted from IPC-2221B tables. Always verify with the authoritative standard for production designs."
+  },
+
+  "conductor_spacing_internal": {
+    "description": "Minimum conductor spacing for internal layers (B2 class), IPC-2221B Table 6-1",
+    "unit": "mm",
+    "voltage_range": {
+      "0-15":  0.05,
+      "16-30": 0.05,
+      "31-50": 0.10,
+      "51-100": 0.10,
+      "101-150": 0.20,
+      "151-170": 0.25,
+      "171-250": 0.40,
+      "251-500": 0.80,
+      "501-900": 1.50,
+      "901-1500": 2.50
+    }
+  },
+
+  "conductor_spacing_external_coated": {
+    "description": "Minimum conductor spacing for external layers, with conformal coating, IPC-2221B Table 6-1",
+    "unit": "mm",
+    "voltage_range": {
+      "0-15":  0.05,
+      "16-30": 0.05,
+      "31-50": 0.13,
+      "51-100": 0.13,
+      "101-150": 0.40,
+      "151-170": 0.40,
+      "171-250": 0.80,
+      "251-500": 1.50,
+      "501-900": 2.50,
+      "901-1500": 4.00
+    }
+  },
+
+  "conductor_spacing_external_uncoated": {
+    "description": "Minimum conductor spacing for external layers, no conformal coating (sea level to 3050m), IPC-2221B Table 6-1",
+    "unit": "mm",
+    "voltage_range": {
+      "0-15":  0.10,
+      "16-30": 0.10,
+      "31-50": 0.60,
+      "51-100": 0.60,
+      "101-150": 1.00,
+      "151-170": 1.25,
+      "171-250": 2.50,
+      "251-500": 5.00,
+      "501-900": 10.0,
+      "901-1500": 15.0
+    }
+  },
+
+  "trace_width_external_1oz": {
+    "description": "Minimum trace width for external layers, 1oz Cu (35µm), 10°C temperature rise, IPC-2221B Chart 6-2",
+    "unit": "mm",
+    "copper_thickness_um": 35,
+    "temp_rise_c": 10,
+    "current_a": {
+      "0.5":  0.254,
+      "1.0":  0.381,
+      "2.0":  0.762,
+      "3.0":  1.143,
+      "4.0":  1.651,
+      "5.0":  2.032,
+      "6.0":  2.540,
+      "7.0":  3.048,
+      "8.0":  3.556,
+      "10.0": 5.588
+    }
+  },
+
+  "trace_width_internal_1oz": {
+    "description": "Minimum trace width for internal layers, 1oz Cu, 10°C temperature rise, IPC-2221B Chart 6-2",
+    "unit": "mm",
+    "copper_thickness_um": 35,
+    "temp_rise_c": 10,
+    "current_a": {
+      "0.5":  0.381,
+      "1.0":  0.762,
+      "2.0":  1.524,
+      "3.0":  2.286,
+      "4.0":  3.302,
+      "5.0":  4.064,
+      "7.0":  6.096,
+      "10.0": 11.176
+    }
+  },
+
+  "annular_ring_minimums": {
+    "description": "Minimum annular ring (pad to hole edge), IPC-2221B §9.1",
+    "unit": "mm",
+    "class_A_external": 0.050,
+    "class_B_external": 0.130,
+    "class_C_external": 0.180,
+    "class_A_internal": 0.025,
+    "class_B_internal": 0.100,
+    "class_C_internal": 0.130,
+    "note": "Class A=Consumer, B=Industrial, C=Military/Medical"
+  },
+
+  "hole_sizes": {
+    "description": "Hole diameter tolerances and drill-to-copper clearances, IPC-2221B §9",
+    "unit": "mm",
+    "min_drilled_hole": 0.20,
+    "min_drilled_hole_recommended": 0.30,
+    "drill_to_copper_clearance": 0.25,
+    "min_slot_width": 0.40,
+    "note": "Most fab houses impose min 0.20mm drill, 0.10mm annular ring"
+  },
+
+  "via_rules": {
+    "description": "Via design rules, common fab constraints",
+    "unit": "mm",
+    "min_via_drill": 0.20,
+    "min_via_pad": 0.40,
+    "min_via_annular_ring": 0.10,
+    "tented_via_soldermask_expansion": 0.05,
+    "via_in_pad": "allowed only with filled/capped vias",
+    "aspect_ratio_max": 10,
+    "note": "Aspect ratio = board_thickness / drill_diameter. Values > 10 unreliable."
+  },
+
+  "board_edge_clearance": {
+    "description": "Minimum clearance from copper to board edge",
+    "unit": "mm",
+    "class_A": 0.254,
+    "class_B": 0.381,
+    "class_C": 0.508,
+    "typical_jlcpcb": 0.200
+  },
+
+  "thermal_relief": {
+    "description": "Thermal relief spoke parameters for through-hole components in copper planes",
+    "spoke_width_mm": 0.30,
+    "air_gap_mm": 0.25,
+    "num_spokes_recommended": 4
+  },
+
+  "copper_weights": {
+    "description": "Copper weight to thickness mapping",
+    "unit_oz_to_um": {
+      "0.5": 17.5,
+      "1.0": 35.0,
+      "2.0": 70.0,
+      "3.0": 105.0,
+      "4.0": 140.0
+    }
+  },
+
+  "common_substrates": {
+    "FR4": {
+      "er": 4.4,
+      "er_range": [4.2, 4.7],
+      "loss_tangent": 0.020,
+      "Tg_c": 130,
+      "thickness_standard_mm": [0.8, 1.0, 1.2, 1.6, 2.0, 2.4]
+    },
+    "Rogers4003C": {
+      "er": 3.55,
+      "er_range": [3.50, 3.60],
+      "loss_tangent": 0.0027,
+      "Tg_c": 280,
+      "note": "High-frequency laminate, low loss"
+    },
+    "Rogers4350B": {
+      "er": 3.66,
+      "er_range": [3.62, 3.70],
+      "loss_tangent": 0.0037,
+      "Tg_c": 280
+    },
+    "PTFE_Teflon": {
+      "er": 2.2,
+      "loss_tangent": 0.001,
+      "note": "Excellent RF performance, expensive, difficult to process"
+    }
+  },
+
+  "spacing_voltage_lookup": {
+    "description": "Function to find minimum spacing from voltage",
+    "usage": "Use get_design_rules() from rag_engine.py or call ipc_clearance(voltage, layer, coated)"
+  }
+}

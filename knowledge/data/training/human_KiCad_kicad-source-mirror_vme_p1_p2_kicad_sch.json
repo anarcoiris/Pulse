@@ -1,0 +1,443 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_vme_p1_p2.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_vme_p1_p2.kicad_sch",
+    "description": "VME P1/P2 connector fanout + mechanics",
+    "notes": [
+      "Mounting",
+      "Holes",
+      "Row D",
+      "Row B",
+      "Front panel mounting holes",
+      "Row A",
+      "VMEPX.BG1OUT",
+      "BG3IN/OUT and BR3 -> FPGA",
+      "Row Z",
+      "VMEPX.BG0OUT",
+      "VMEPX.BG2OUT",
+      "JTAG not used.",
+      "VME P1",
+      "Row C",
+      "Fixing for P1 & P2",
+      "VME P2"
+    ],
+    "net_labels": [
+      "VMEPX.BR2",
+      "VMEPX.D24",
+      "VMEPX.GAP",
+      "VMEPX.A31",
+      "VMEPX.A14",
+      "VMEPX.D20",
+      "VMEPX_USERIO_A.IO24",
+      "VMEPX.D18",
+      "VMEPX_USERIO_A.IO0",
+      "VMEPX.A15",
+      "VMEPX.GA0",
+      "VMEPX.SYSFAIL",
+      "VMEPX.D15",
+      "VMEPX.D6",
+      "VMEPX.AM5",
+      "VMEPX.TCK",
+      "RS485_DATA0_N",
+      "VMEPX.SERA",
+      "VMEPX.A11",
+      "VMEPX.AM1",
+      "VMEPX.IACKIN_N",
+      "VMEPX.A18",
+      "VMEPX.TDO",
+      "VMEPX.D19",
+      "VMEPX.BG3OUT",
+      "VMEPX_USERIO_A.IO13",
+      "VMEPX.IRQ_N3",
+      "VMEPX.A12",
+      "VMEPX.GA3",
+      "VMEPX.D4",
+      "VMEPX.D25",
+      "VMEPX.A6",
+      "VMEPX.BCLR",
+      "VMEPX.D5",
+      "VMEPX.A3",
+      "VMEPX_USERIO_A.IO18",
+      "VMEPX_USERIO_A.IO30",
+      "VMEPX.ACFAIL",
+      "VMEPX.DS1_N",
+      "VMEPX.D31",
+      "VMEPX.SERB",
+      "VMEPX.D14",
+      "VMEPX.D2",
+      "VMEPX.BR3",
+      "VMEPX.A19",
+      "VMEPX.AM3",
+      "VMEPX_USERIO_A.IO14",
+      "VMEPX.D11",
+      "VMEPX.A23",
+      "VMEPX.BR0",
+      "VMEPX_USERIO_A.IO31",
+      "VMEPX.SYSRESET",
+      "VMEPX.D26",
+      "VMEPX.D10",
+      "VMEPX.D1",
+      "{VMEPX}",
+      "VMEPX.D8",
+      "VMEPX.D12",
+      "VMEPX.A25",
+      "VMEPX.TRST"
+    ],
+    "components": [
+      {
+        "uid": "SCREW1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN5687-3061600_v",
+        "label": "SCREW1",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN5687-3061600_v"
+      },
+      {
+        "uid": "#PWR0673",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P5V_VME",
+        "label": "#PWR0673",
+        "lib_id": "vme-wren:P5V_VME"
+      },
+      {
+        "uid": "#PWR0670",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0670",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0687",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0687",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0664",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0664",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0671",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P5V_STDBY_VME",
+        "label": "#PWR0671",
+        "lib_id": "vme-wren:P5V_STDBY_VME"
+      },
+      {
+        "uid": "#PWR0665",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0665",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0674",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P5V_VME",
+        "label": "#PWR0674",
+        "lib_id": "vme-wren:P5V_VME"
+      },
+      {
+        "uid": "P1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P1",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "P2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P2",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "P1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P1",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "P2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P2",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "WASHER3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN678-8303525_v",
+        "label": "WASHER3",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN678-8303525_v"
+      },
+      {
+        "uid": "P1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P1",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "NUT5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN628-1241427_v",
+        "label": "NUT5",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN628-1241427_v"
+      },
+      {
+        "uid": "P2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P2",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "NUT6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN628-1241427_v",
+        "label": "NUT6",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN628-1241427_v"
+      },
+      {
+        "uid": "#PWR0675",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P5V_VME",
+        "label": "#PWR0675",
+        "lib_id": "vme-wren:P5V_VME"
+      },
+      {
+        "uid": "P1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P1",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "NUT7",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN628-1241427_v",
+        "label": "NUT7",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN628-1241427_v"
+      },
+      {
+        "uid": "#PWR0686",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P3V3_VME",
+        "label": "#PWR0686",
+        "lib_id": "vme-wren:P3V3"
+      },
+      {
+        "uid": "P1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P1",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "P1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P1",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "#PWR0678",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P12V",
+        "label": "#PWR0678",
+        "lib_id": "vme-wren:P12V"
+      },
+      {
+        "uid": "SCREW4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN5687-3061600_v",
+        "label": "SCREW4",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN5687-3061600_v"
+      },
+      {
+        "uid": "#PWR0672",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P5V_VME",
+        "label": "#PWR0672",
+        "lib_id": "vme-wren:P5V_VME"
+      },
+      {
+        "uid": "#PWR0669",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0669",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "NUT8",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN628-1241427_v",
+        "label": "NUT8",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN628-1241427_v"
+      },
+      {
+        "uid": "P2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P2",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "#PWR0676",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0676",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0679",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P5V_VME",
+        "label": "#PWR0679",
+        "lib_id": "vme-wren:P5V_VME"
+      },
+      {
+        "uid": "#PWR0680",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0680",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "WASHER1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN678-8303525_v",
+        "label": "WASHER1",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN678-8303525_v"
+      },
+      {
+        "uid": "WASHER4",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN678-8303525_v",
+        "label": "WASHER4",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN678-8303525_v"
+      },
+      {
+        "uid": "WASHER2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN678-8303525_v",
+        "label": "WASHER2",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN678-8303525_v"
+      },
+      {
+        "uid": "SCREW3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN5687-3061600_v",
+        "label": "SCREW3",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN5687-3061600_v"
+      },
+      {
+        "uid": "P2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P2",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "#PWR0663",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0663",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0668",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "P5V_VME",
+        "label": "#PWR0668",
+        "lib_id": "vme-wren:P5V_VME"
+      },
+      {
+        "uid": "#PWR0667",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "M12V_VME",
+        "label": "#PWR0667",
+        "lib_id": "vme-wren:M12V_VME"
+      },
+      {
+        "uid": "SCREW2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BOSSARD_BN5687-3061600_v",
+        "label": "SCREW2",
+        "lib_id": "Fasteners & Fixings:BOSSARD_BN5687-3061600_v"
+      },
+      {
+        "uid": "P2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "HARTING_02_01_160_2101",
+        "label": "P2",
+        "lib_id": "HARTING:HARTING_02_01_160_2101"
+      },
+      {
+        "uid": "#PWR0666",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0666",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR088",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR088",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.1"
+  }
+}

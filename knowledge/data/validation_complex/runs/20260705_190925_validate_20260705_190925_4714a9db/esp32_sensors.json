@@ -1,0 +1,83 @@
+{
+  "run_session": "validate_20260705_190925_4714a9db",
+  "test_case": "ESP32 Devboard + Sensores",
+  "prompt": "Diseña un circuito basado en un microcontrolador ESP32. Conecta una pantalla OLED SSD1306 al bus I2C (pines SDA, SCL). Conecta también un sensor ambiental BME280 al mismo bus I2C. Asegúrate de incluir resistencias pull-up en las líneas I2C y condensadores de desacoplo para la alimentación del ESP32.",
+  "backend": "primary",
+  "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260705_190925_4714a9db",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 3.3,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "V1"
+    },
+    {
+      "etype": "C",
+      "value": 1e-07,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "C_DEC_100nF"
+    },
+    {
+      "etype": "C",
+      "value": 1e-05,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "C_DEC_10uF"
+    },
+    {
+      "etype": "R",
+      "value": 10000,
+      "n1": "3.3V",
+      "n2": "I2C_SDA",
+      "label": "R_PULLUP_SDA"
+    },
+    {
+      "etype": "R",
+      "value": 10000,
+      "n1": "3.3V",
+      "n2": "I2C_SCL",
+      "label": "R_PULLUP_SCL"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-S3",
+      "symbol": "RF_Module:ESP32-WROOM-32",
+      "footprint": "RF_Module:ESP32-WROOM-32",
+      "pins": {
+        "2": "3.3V",
+        "1": "GND",
+        "33": "I2C_SDA",
+        "36": "I2C_SCL"
+      },
+      "label": "U1"
+    },
+    {
+      "etype": "IC",
+      "value": "SSD1306",
+      "symbol": "Connector_Generic:Conn_01x04",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "VDD (3.3V)",
+        "3": "SCK / SCL",
+        "4": "SDA"
+      },
+      "label": "OLED"
+    },
+    {
+      "etype": "IC",
+      "value": "BME280",
+      "symbol": "Connector_Generic:Conn_01x04",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+      "pins": {
+        "1": "VCC",
+        "2": "GND",
+        "3": "SCL",
+        "4": "SDA"
+      },
+      "label": "SENSOR"
+    }
+  ]
+}

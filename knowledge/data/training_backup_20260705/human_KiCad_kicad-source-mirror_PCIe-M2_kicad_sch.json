@@ -1,0 +1,354 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_PCIe-M2.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_PCIe-M2.kicad_sch",
+    "components": [
+      {
+        "uid": "#PWR0724",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0724",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C711",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10u",
+        "label": "C711",
+        "lib_id": "CM5IO:C"
+      },
+      {
+        "uid": "#PWR0729",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "M2_3V3",
+        "label": "#PWR0729",
+        "lib_id": "power:+5V"
+      },
+      {
+        "uid": "C707",
+        "etype": "IC",
+        "value": 4.700000000000001e-09,
+        "value_raw": "4.7nF",
+        "label": "C707",
+        "lib_id": "CM5IO:C"
+      },
+      {
+        "uid": "#PWR0720",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0720",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C706",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100n",
+        "label": "C706",
+        "lib_id": "CM5IO:C"
+      },
+      {
+        "uid": "#PWR0728",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "M2_3V3",
+        "label": "#PWR0728",
+        "lib_id": "power:+5V"
+      },
+      {
+        "uid": "R705",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10k",
+        "label": "R705",
+        "lib_id": "CM5IO:R"
+      },
+      {
+        "uid": "#PWR0716",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0716",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0731",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "M2_3V3",
+        "label": "#PWR0731",
+        "lib_id": "power:+5V"
+      },
+      {
+        "uid": "U703",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "ASEK-32.768KHZ-L-R-T",
+        "label": "U703",
+        "lib_id": "CM5IO:ASEK-32.768KHZ-L-R-T"
+      },
+      {
+        "uid": "C704",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10u",
+        "label": "C704",
+        "lib_id": "CM5IO:C"
+      },
+      {
+        "uid": "L701",
+        "etype": "IC",
+        "value": 2.2e-06,
+        "value_raw": "2.2uH",
+        "label": "L701",
+        "lib_id": "CM5IO:L"
+      },
+      {
+        "uid": "C712",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100n",
+        "label": "C712",
+        "lib_id": "CM5IO:C"
+      },
+      {
+        "uid": "#PWR0715",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0715",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R704",
+        "etype": "IC",
+        "value": 100000.0,
+        "value_raw": "100k",
+        "label": "R704",
+        "lib_id": "CM5IO:R"
+      },
+      {
+        "uid": "#PWR0714",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0714",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0717",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0717",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "D702",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "GREEN",
+        "label": "D702",
+        "lib_id": "CM5IO:LED"
+      },
+      {
+        "uid": "C708",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10u",
+        "label": "C708",
+        "lib_id": "CM5IO:C"
+      },
+      {
+        "uid": "U702",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "AP3441SHE-7B",
+        "label": "U702",
+        "lib_id": "CM5IO:AP3441SHE-7B"
+      },
+      {
+        "uid": "#PWR0712",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0712",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "M701",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "M.2 Solder Nut",
+        "label": "M701",
+        "lib_id": "CM5IO:SolderNut"
+      },
+      {
+        "uid": "C710",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10u",
+        "label": "C710",
+        "lib_id": "CM5IO:C"
+      },
+      {
+        "uid": "J701",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Bus_M.2_Socket_M",
+        "label": "J701",
+        "lib_id": "CM5IO:Bus_M.2_Socket_M"
+      },
+      {
+        "uid": "#PWR0726",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0726",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "M702",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "M.2 Solder Nut",
+        "label": "M702",
+        "lib_id": "CM5IO:SolderNut"
+      },
+      {
+        "uid": "#PWR0730",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "M2_3V3",
+        "label": "#PWR0730",
+        "lib_id": "power:+5V"
+      },
+      {
+        "uid": "TP701",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TestPoint",
+        "label": "TP701",
+        "lib_id": "CM5IO:TestPoint"
+      },
+      {
+        "uid": "#PWR0727",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+5V",
+        "label": "#PWR0727",
+        "lib_id": "power:+5V"
+      },
+      {
+        "uid": "R707",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "2k2",
+        "label": "R707",
+        "lib_id": "CM5IO:R"
+      },
+      {
+        "uid": "R706",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "2k2",
+        "label": "R706",
+        "lib_id": "CM5IO:R"
+      },
+      {
+        "uid": "#PWR0721",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0721",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0718",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0718",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0722",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0722",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0725",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0725",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0713",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0713",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "M705",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "M.2 Screw",
+        "label": "M705",
+        "lib_id": "CM5IO:M.2_Screw"
+      },
+      {
+        "uid": "C709",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10u",
+        "label": "C709",
+        "lib_id": "CM5IO:C"
+      },
+      {
+        "uid": "#PWR0719",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0719",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C705",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10u",
+        "label": "C705",
+        "lib_id": "CM5IO:C"
+      },
+      {
+        "uid": "#FLG0701",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PWR_FLAG",
+        "label": "#FLG0701",
+        "lib_id": "power:PWR_FLAG"
+      },
+      {
+        "uid": "#PWR0723",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0723",
+        "lib_id": "power:GND"
+      }
+    ],
+    "version": "1.0"
+  }
+}

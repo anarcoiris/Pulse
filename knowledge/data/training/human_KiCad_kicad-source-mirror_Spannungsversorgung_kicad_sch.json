@@ -1,0 +1,125 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_Spannungsversorgung.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_Spannungsversorgung.kicad_sch",
+    "description": "Pumpenmodul v06",
+    "notes": [],
+    "net_labels": [],
+    "components": [
+      {
+        "uid": "#PWR0303",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+48V",
+        "label": "#PWR0303",
+        "lib_id": "0IBF_Supply:+48V"
+      },
+      {
+        "uid": "#PWR04",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+12V",
+        "label": "#PWR04",
+        "lib_id": "IBF_supply:+12V"
+      },
+      {
+        "uid": "#PWR071",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR071",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "J66",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x06",
+        "label": "J66",
+        "lib_id": "Connector_Generic:Conn_01x06"
+      },
+      {
+        "uid": "C11",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "C",
+        "label": "C11",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "C9",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "C",
+        "label": "C9",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "C34",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C34",
+        "lib_id": "0IBF_RCL:_C"
+      },
+      {
+        "uid": "#PWR05",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+7V",
+        "label": "#PWR05",
+        "lib_id": "IBF_supply:+7V"
+      },
+      {
+        "uid": "C12",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "C",
+        "label": "C12",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "#PWR02",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+48V",
+        "label": "#PWR02",
+        "lib_id": "0IBF_Supply:+48V"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C10",
+        "etype": "C",
+        "value": 0.0,
+        "value_raw": "C",
+        "label": "C10",
+        "lib_id": "Device:C"
+      },
+      {
+        "uid": "C38",
+        "etype": "IC",
+        "value": 1.0000000000000001e-07,
+        "value_raw": "100nF",
+        "label": "C38",
+        "lib_id": "0IBF_RCL:_C"
+      },
+      {
+        "uid": "J5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x06",
+        "label": "J5",
+        "lib_id": "Connector_Generic:Conn_01x06"
+      }
+    ],
+    "version": "1.1"
+  }
+}

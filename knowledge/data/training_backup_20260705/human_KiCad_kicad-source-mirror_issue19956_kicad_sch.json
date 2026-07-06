@@ -1,0 +1,34 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_issue19956.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_issue19956.kicad_sch",
+    "components": [
+      {
+        "uid": "JP1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Jumper_3_Bridged12",
+        "label": "JP1",
+        "lib_id": "Jumper:Jumper_3_Bridged12"
+      },
+      {
+        "uid": "#PWR01",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR01",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R1",
+        "etype": "R",
+        "value": 0.0,
+        "value_raw": "R",
+        "label": "R1",
+        "lib_id": "Device:R"
+      }
+    ],
+    "version": "1.0"
+  }
+}

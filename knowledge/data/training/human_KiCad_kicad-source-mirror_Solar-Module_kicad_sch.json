@@ -1,0 +1,769 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_Solar-Module.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_Solar-Module.kicad_sch",
+    "description": "Open Air Max \u2014 Airgradient \u2014 CC-BY-SA",
+    "notes": [
+      "R39(200K), R40(27K), R41(0R) = 5V",
+      "127K for 1.5A charging 255K for 0.5A charging"
+    ],
+    "net_labels": [
+      "BTST1",
+      "Solar+",
+      "SW1",
+      "ILIM_HIZ",
+      "SDA",
+      "SW2",
+      "SYS",
+      "VBAT",
+      "BTST2",
+      "PROG",
+      "SCL",
+      "FB{slash}VSET",
+      "REGN",
+      "GND",
+      "5V_OUT",
+      "VBAT-"
+    ],
+    "components": [
+      {
+        "uid": "R40",
+        "etype": "IC",
+        "value": 27000.0,
+        "value_raw": "27K",
+        "label": "R40",
+        "lib_id": "easyeda2kicad:RC0603FR-0727KL"
+      },
+      {
+        "uid": "C27",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C27",
+        "lib_id": "easyeda2kicad:CC1206KKX7R7BB106"
+      },
+      {
+        "uid": "#PWR091",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR091",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "TP8",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "T_PG",
+        "label": "TP8",
+        "lib_id": "Connector:TestPoint"
+      },
+      {
+        "uid": "U6",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "TPS62903QRYTRQ1_C20345985",
+        "label": "U6",
+        "lib_id": "easyeda2kicad:TPS62903QRYTRQ1_C20345985"
+      },
+      {
+        "uid": "#PWR066",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR066",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR084",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR084",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C42",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C42",
+        "lib_id": "easyeda2kicad:CL05B104KO5NNNC"
+      },
+      {
+        "uid": "R29",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R29",
+        "lib_id": "easyeda2kicad:RC0402FR-0710KL"
+      },
+      {
+        "uid": "#PWR083",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR083",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "L2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "XGL4020-102MEC",
+        "label": "L2",
+        "lib_id": "easyeda2kicad:XGL4020-102MEC"
+      },
+      {
+        "uid": "R36",
+        "etype": "IC",
+        "value": 100.0,
+        "value_raw": "100",
+        "label": "R36",
+        "lib_id": "easyeda2kicad:RC0402FR-7W100RL"
+      },
+      {
+        "uid": "R42",
+        "etype": "IC",
+        "value": 7150.0,
+        "value_raw": "7.15K",
+        "label": "R42",
+        "lib_id": "easyeda2kicad:RT0603BRD077K15L"
+      },
+      {
+        "uid": "R35",
+        "etype": "IC",
+        "value": 255000.0,
+        "value_raw": "255K",
+        "label": "R35",
+        "lib_id": "easyeda2kicad:RC0603FR-07255KL_C295887"
+      },
+      {
+        "uid": "C47",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C47",
+        "lib_id": "easyeda2kicad:CL05B104KO5NNNC"
+      },
+      {
+        "uid": "C46",
+        "etype": "IC",
+        "value": 2.2e-05,
+        "value_raw": "22uF",
+        "label": "C46",
+        "lib_id": "easyeda2kicad:GRM21BZ71A226ME15L"
+      },
+      {
+        "uid": "L1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SPM6530T-1R0M120",
+        "label": "L1",
+        "lib_id": "easyeda2kicad:SPM6530T-1R0M120"
+      },
+      {
+        "uid": "C43",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C43",
+        "lib_id": "easyeda2kicad:CC1206KKX7R7BB106"
+      },
+      {
+        "uid": "TP2",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "T_PG",
+        "label": "TP2",
+        "lib_id": "Connector:TestPoint"
+      },
+      {
+        "uid": "R39",
+        "etype": "IC",
+        "value": 200000.0,
+        "value_raw": "200K",
+        "label": "R39",
+        "lib_id": "easyeda2kicad:RC0402FR-7W200KL"
+      },
+      {
+        "uid": "C48",
+        "etype": "IC",
+        "value": 2.2e-05,
+        "value_raw": "22uF",
+        "label": "C48",
+        "lib_id": "easyeda2kicad:GRM21BZ71A226ME15L"
+      },
+      {
+        "uid": "C45",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C45",
+        "lib_id": "easyeda2kicad:CC1206KKX7R7BB106"
+      },
+      {
+        "uid": "C44",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C44",
+        "lib_id": "easyeda2kicad:CL05B104KO5NNNC"
+      },
+      {
+        "uid": "U5",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "BQ25672RQMR",
+        "label": "U5",
+        "lib_id": "easyeda2kicad:BQ25672RQMR"
+      },
+      {
+        "uid": "#PWR085",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR085",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R37",
+        "etype": "IC",
+        "value": 100000.0,
+        "value_raw": "100K",
+        "label": "R37",
+        "lib_id": "easyeda2kicad:RC0402FR-07100KL"
+      },
+      {
+        "uid": "#PWR069",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR069",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR076",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR076",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0100",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR0100",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR072",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3V3",
+        "label": "#PWR072",
+        "lib_id": "power:+3V3"
+      },
+      {
+        "uid": "C37",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C37",
+        "lib_id": "easyeda2kicad:CL05B104KO5NNNC"
+      },
+      {
+        "uid": "#PWR082",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR082",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR090",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR090",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R38",
+        "etype": "IC",
+        "value": 30100.0,
+        "value_raw": "30.1K",
+        "label": "R38",
+        "lib_id": "easyeda2kicad:RC0603FR-0730K1L"
+      },
+      {
+        "uid": "R72",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "R72",
+        "lib_id": "easyeda2kicad:RC0603FR-070RL"
+      },
+      {
+        "uid": "#PWR088",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR088",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C40",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C40",
+        "lib_id": "easyeda2kicad:CC1206KKX7R7BB106"
+      },
+      {
+        "uid": "R28",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R28",
+        "lib_id": "easyeda2kicad:RC0402FR-0710KL"
+      },
+      {
+        "uid": "C39",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C39",
+        "lib_id": "easyeda2kicad:CL05B104KO5NNNC"
+      },
+      {
+        "uid": "#PWR074",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR074",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR070",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR070",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R30",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R30",
+        "lib_id": "easyeda2kicad:RC0402FR-0710KL"
+      },
+      {
+        "uid": "#PWR093",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR093",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR079",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR079",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C41",
+        "etype": "IC",
+        "value": 1e-09,
+        "value_raw": "1nF",
+        "label": "C41",
+        "lib_id": "easyeda2kicad:CC0402KRX7R7BB102"
+      },
+      {
+        "uid": "C30",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C30",
+        "lib_id": "easyeda2kicad:CC1206KKX7R7BB106"
+      },
+      {
+        "uid": "#PWR080",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR080",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR056",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR056",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR07",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR07",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R31",
+        "etype": "IC",
+        "value": 100000.0,
+        "value_raw": "100K",
+        "label": "R31",
+        "lib_id": "easyeda2kicad:RC0402FR-07100KL"
+      },
+      {
+        "uid": "#PWR077",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR077",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "TP7",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "T_PG",
+        "label": "TP7",
+        "lib_id": "Connector:TestPoint"
+      },
+      {
+        "uid": "TP1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "T_PG",
+        "label": "TP1",
+        "lib_id": "Connector:TestPoint"
+      },
+      {
+        "uid": "Solarpower1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "ZX-PM2.54-1-2PY",
+        "label": "Solarpower1",
+        "lib_id": "Library:ZX-PM2.54-1-2PY"
+      },
+      {
+        "uid": "C26",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C26",
+        "lib_id": "easyeda2kicad:CL05B104KO5NNNC"
+      },
+      {
+        "uid": "#PWR0101",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR0101",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR071",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3V3",
+        "label": "#PWR071",
+        "lib_id": "power:+3V3"
+      },
+      {
+        "uid": "#PWR098",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR098",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR097",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR097",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR0134",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR0134",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R33",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "R33",
+        "lib_id": "easyeda2kicad:RC0603FR-070RL"
+      },
+      {
+        "uid": "LED3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "FC-DA1608HRK-620D",
+        "label": "LED3",
+        "lib_id": "easyeda2kicad-old:FC-DA1608HRK-620D"
+      },
+      {
+        "uid": "C49",
+        "etype": "IC",
+        "value": 3.3e-09,
+        "value_raw": "3.3nF",
+        "label": "C49",
+        "lib_id": "easyeda2kicad:CC0402KRX7R7BB332"
+      },
+      {
+        "uid": "R34",
+        "etype": "IC",
+        "value": 5230.0,
+        "value_raw": "5.23K",
+        "label": "R34",
+        "lib_id": "easyeda2kicad:RC0603FR-075K23L"
+      },
+      {
+        "uid": "#PWR099",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR099",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR086",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR086",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C31",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C31",
+        "lib_id": "easyeda2kicad:CL05B104KO5NNNC"
+      },
+      {
+        "uid": "#PWR095",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR095",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR092",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR092",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "Battery1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "ZX-PM2.54-1-2PY",
+        "label": "Battery1",
+        "lib_id": "Library:ZX-PM2.54-1-2PY"
+      },
+      {
+        "uid": "C38",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C38",
+        "lib_id": "easyeda2kicad:CC1206KKX7R7BB106"
+      },
+      {
+        "uid": "#PWR068",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR068",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "FB1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "PBY201209T-601Y-N",
+        "label": "FB1",
+        "lib_id": "easyeda2kicad:PBY201209T-601Y-N"
+      },
+      {
+        "uid": "#PWR094",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR094",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R16",
+        "etype": "IC",
+        "value": 10500.0,
+        "value_raw": "10.5K",
+        "label": "R16",
+        "lib_id": "easyeda2kicad:RC0603FR-0710K5L"
+      },
+      {
+        "uid": "C35",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C35",
+        "lib_id": "easyeda2kicad:CC1206KKX7R7BB106"
+      },
+      {
+        "uid": "#PWR081",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR081",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C34",
+        "etype": "IC",
+        "value": 1e-07,
+        "value_raw": "0.1uF",
+        "label": "C34",
+        "lib_id": "easyeda2kicad:CL05B104KO5NNNC"
+      },
+      {
+        "uid": "C29",
+        "etype": "IC",
+        "value": 4.7000000000000004e-08,
+        "value_raw": "47nF",
+        "label": "C29",
+        "lib_id": "easyeda2kicad:CL05B473KO5NNNC"
+      },
+      {
+        "uid": "#PWR078",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR078",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR096",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR096",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "C23",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C23",
+        "lib_id": "easyeda2kicad:CC1206KKX7R7BB106"
+      },
+      {
+        "uid": "#PWR0142",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR0142",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "#PWR087",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR087",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "DC1",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "DC-045A-13A",
+        "label": "DC1",
+        "lib_id": "easyeda2kicad:DC-045A-13A"
+      },
+      {
+        "uid": "C33",
+        "etype": "IC",
+        "value": 9.999999999999999e-06,
+        "value_raw": "10uF",
+        "label": "C33",
+        "lib_id": "easyeda2kicad:CC1206KKX7R7BB106"
+      },
+      {
+        "uid": "#PWR054",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "PGND",
+        "label": "#PWR054",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "R50",
+        "etype": "IC",
+        "value": 10000.0,
+        "value_raw": "10K",
+        "label": "R50",
+        "lib_id": "easyeda2kicad:RC0402FR-0710KL"
+      },
+      {
+        "uid": "C36",
+        "etype": "IC",
+        "value": 4.7e-06,
+        "value_raw": "4.7uF",
+        "label": "C36",
+        "lib_id": "easyeda2kicad:CGA0603X7R475K160JT"
+      },
+      {
+        "uid": "D3",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "SMBJ24A_C908801",
+        "label": "D3",
+        "lib_id": "easyeda2kicad:SMBJ24A_C908801"
+      },
+      {
+        "uid": "R73",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "0",
+        "label": "R73",
+        "lib_id": "easyeda2kicad:RC0603FR-070RL"
+      },
+      {
+        "uid": "C28",
+        "etype": "IC",
+        "value": 4.7000000000000004e-08,
+        "value_raw": "47nF",
+        "label": "C28",
+        "lib_id": "easyeda2kicad:CL05B473KO5NNNC"
+      }
+    ],
+    "version": "1.1"
+  }
+}

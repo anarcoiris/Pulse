@@ -1,0 +1,55 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_DSI_CSI.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_DSI_CSI.kicad_sch",
+    "description": "CM5 MINIMA \u2014 Pierluigi Colangeli",
+    "notes": [
+      "[DSI_CSI]"
+    ],
+    "net_labels": [
+      "DPHY0_C.D1_N",
+      "DPHY0_C.D0_P",
+      "DPHY0_C.C_P",
+      "DPHY0_C.D3_N",
+      "DPHY0_C.D1_P",
+      "DPHY0_C.D2_P",
+      "DPHY0_C.C_N",
+      "DPHY0_C.D0_N",
+      "DPHY0_C.D3_P",
+      "DPHY0_C.D2_N",
+      "SDA",
+      "CAM_GPIO1",
+      "CAM_GPIO0",
+      "SCL",
+      "DPHY0_C{DPHY}"
+    ],
+    "components": [
+      {
+        "uid": "#PWR0801",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "+3V3_PI",
+        "label": "#PWR0801",
+        "lib_id": "power:+3V3"
+      },
+      {
+        "uid": "#PWR0802",
+        "etype": "GND",
+        "value": 0.0,
+        "value_raw": "GND",
+        "label": "#PWR0802",
+        "lib_id": "power:GND"
+      },
+      {
+        "uid": "J802",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "Conn_01x22_Female",
+        "label": "J802",
+        "lib_id": "CM5IO:Conn_01x22_Socket"
+      }
+    ],
+    "version": "1.1"
+  }
+}

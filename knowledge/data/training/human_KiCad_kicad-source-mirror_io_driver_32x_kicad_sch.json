@@ -1,0 +1,56 @@
+{
+  "source": "Human_KiCad_SCH",
+  "original_file": "KiCad_kicad-source-mirror_io_driver_32x.kicad_sch",
+  "circuit": {
+    "source": "KiCad_kicad-source-mirror_io_driver_32x.kicad_sch",
+    "description": "Front/Patch panel I/O driver (32 channels)",
+    "notes": [],
+    "net_labels": [
+      "F_IO[16..23]",
+      "IOEXP_RST_N",
+      "I_IOEXP_SCLK",
+      "I_IOEXP_D_IN",
+      "IOEXP_OE_N",
+      "F_IO[8..15]",
+      "I_IOEXP_RCLK",
+      "F_IO[0..7]",
+      "IO[8..15]",
+      "IO[0..7]",
+      "IO[24..31]",
+      "IO[0..31]",
+      "IO[16..23]",
+      "F_IO[0..31]",
+      "F_IO[24..31]",
+      "IOEXP_D_IN",
+      "IOEXP_RCLK",
+      "IOEXP_SCLK"
+    ],
+    "components": [
+      {
+        "uid": "R452",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R452",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R449",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R449",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      },
+      {
+        "uid": "R450",
+        "etype": "IC",
+        "value": 0.0,
+        "value_raw": "R0402_33R_1%_0.0625W_100PPM",
+        "label": "R450",
+        "lib_id": "Resistors SMD:R0402_33R_1%_0.0625W_100PPM"
+      }
+    ],
+    "version": "1.1"
+  }
+}
