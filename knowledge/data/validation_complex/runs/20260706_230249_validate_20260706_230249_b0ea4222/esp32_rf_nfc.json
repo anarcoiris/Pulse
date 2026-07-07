@@ -1,0 +1,175 @@
+{
+  "run_session": "validate_20260706_230249_b0ea4222",
+  "test_case": "ESP32 + NFC + 433 MHz RF",
+  "prompt": "Diseña un sistema IoT con un ESP32. Conecta un lector NFC PN532 a través de I2C. Conecta un transceptor de radio 433 MHz CC1101 a través del bus SPI (MISO, MOSI, SCK, CS). Incluye alimentación de 3.3V para todos los módulos y condensadores de bypass.",
+  "ab_variant": "a",
+  "backend": "primary",
+  "synthesis_backend": "primary",
+  "review_backend": "atomic",
+  "generation_attempts": 1,
+  "truncated": false,
+  "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_230249_b0ea4222",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 3.3,
+      "label": "VIN33",
+      "n1": "VCC33",
+      "n2": "GND"
+    },
+    {
+      "etype": "IC",
+      "value": "AMS1117-3.3",
+      "label": "U1",
+      "symbol": "Regulator_Linear:AMS1117-3.3",
+      "footprint": "Package_SO:SOT-223-5",
+      "pins": {
+        "1": "GND",
+        "2": "VCC33",
+        "3": "VIN"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "PN532",
+      "label": "U2",
+      "symbol": "Connector_Generic:Conn_01x07",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "VCC",
+        "3": "I2C_SDA",
+        "4": "I2C_SCL",
+        "5": "NC_U2_5",
+        "6": "NC_U2_6",
+        "7": "NC_U2_7"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "CC1101",
+      "label": "U3",
+      "symbol": "Connector_Generic:Conn_01x08",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+      "pins": {
+        "1": "VCC",
+        "2": "GND",
+        "3": "MOSI",
+        "4": "SCLK",
+        "5": "MISO",
+        "6": "NC_U3_6",
+        "7": "NC_U3_7",
+        "8": "CSN"
+      }
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-WROOM-32",
+      "label": "U4",
+      "symbol": "RF_Module:ESP32-WROOM-32",
+      "footprint": "RF_Module:ESP32-WROOM-32",
+      "pins": {
+        "1": "GND",
+        "2": "VCC33"
+      }
+    },
+    {
+      "etype": "C",
+      "value": 1e-05,
+      "label": "C_VCC33_10uF",
+      "n1": "VCC33",
+      "n2": "GND"
+    },
+    {
+      "etype": "C",
+      "value": 1e-07,
+      "label": "C_VCC33_100nF",
+      "n1": "VCC33",
+      "n2": "GND"
+    },
+    {
+      "etype": "GND",
+      "value": 0,
+      "label": "GND"
+    }
+  ],
+  "pin_coverage": {
+    "per_component": [
+      {
+        "label": "U1",
+        "value": "AMS1117-3.3",
+        "generated_pins": 3,
+        "total_pins": 3,
+        "coverage": 1.0,
+        "source": "kicad_symbols_index:Regulator_Linear"
+      },
+      {
+        "label": "U2",
+        "value": "PN532",
+        "generated_pins": 7,
+        "total_pins": 7,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "U3",
+        "value": "CC1101",
+        "generated_pins": 8,
+        "total_pins": 8,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "U4",
+        "value": "ESP32-WROOM-32",
+        "generated_pins": 2,
+        "total_pins": 39,
+        "coverage": 0.0513,
+        "source": "pinouts_library"
+      }
+    ],
+    "unmatched": [],
+    "average_coverage": 0.7628
+  },
+  "semantic_review": {
+    "issue_count": 7,
+    "critical_count": 3,
+    "issues": [
+      {
+        "msg": "El pin VCC del IC CC1101 está conectado directamente a VCC33, pero no se especifica un condensador de desacople de 100nF entre VCC y GND cerca del pin de entrada. Esto puede causar ruido o inestabilidad en el funcionamiento del CC1101.",
+        "severity": "warning",
+        "proposal": "Agregar un condensador de 100nF entre VCC33 y GND cercano al pin VCC del CC1101."
+      },
+      {
+        "msg": "El pin VCC del IC PN532 está conectado a VCC33, pero no se especifica un condensador de desacople de 100nF entre VCC y GND cerca del pin de entrada. Esto puede causar ruido o inestabilidad en el funcionamiento del PN532.",
+        "severity": "warning",
+        "proposal": "Agregar un condensador de 100nF entre VCC33 y GND cercano al pin VCC del PN532."
+      },
+      {
+        "msg": "El pin VCC del MCU ESP32-WROOM-32 está conectado a VCC33, pero no se especifica un condensador de desacople de 100nF entre VCC33 y GND cerca del pin de entrada. Esto puede causar inestabilidad en el funcionamiento del MCU.",
+        "severity": "warning",
+        "proposal": "Agregar un condensador de 100nF entre VCC33 y GND cercano al pin VCC del ESP32-WROOM-32."
+      },
+      {
+        "msg": "El terminal negativo de la fuente de voltaje (GND) está conectado a '0', pero no se especifica que este nodo esté alíase con la malla física GND en KiCad. Esto puede causar un problema de conexión física si el diseño se importa a KiCad.",
+        "severity": "critical",
+        "proposal": "Asegurar que el nodo '0' (GND) esté alíase con la malla física GND en KiCad para garantizar una conexión física correcta."
+      },
+      {
+        "msg": "El pin EN del ESP32 no está especificado. El pin EN debe tener un pull-up de 10kΩ a 3.3V para mantener el dispositivo encendido por defecto.",
+        "severity": "critical",
+        "proposal": "Agregar un resistor de 10kΩ desde el pin EN del ESP32 a 3.3V (GND no está conectado directamente al pin EN)."
+      },
+      {
+        "msg": "El pin GPIO0 del ESP32 no está especificado. Este pin debe poder ser conectado a GND para entrar en modo de arranque de flash, lo que requiere una conexión física directa o un diseño que permita su acceso a GND.",
+        "severity": "critical",
+        "proposal": "Conectar el pin GPIO0 del ESP32 a GND para permitir el modo de arranque de flash (boot mode)."
+      },
+      {
+        "msg": "El componente CC1101 tiene pines MOSI, SCLK, MISO y CSN, pero no se especifica ningún componente de desacople o protección. Se recomienda incluir un condensador de 100nF entre VCC y GND cerca del CC1101 para estabilidad.",
+        "severity": "warning",
+        "proposal": "Agregar un condensador de 100nF entre VCC33 y GND cercano al CC1101."
+      }
+    ]
+  }
+}

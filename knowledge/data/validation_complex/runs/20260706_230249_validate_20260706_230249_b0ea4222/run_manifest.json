@@ -1,0 +1,458 @@
+{
+  "run_session": "validate_20260706_230249_b0ea4222",
+  "started_at": "2026-07-06T23:02:51.066897+00:00",
+  "backend_pref": "auto",
+  "review_backend_pref": "auto",
+  "review_backend_resolved": "atomic",
+  "ab_variant": "a",
+  "backends": {
+    "primary": {
+      "label": "Ollama Qwythos 9B (reasoning)",
+      "available": true,
+      "base_url": "http://localhost:11431/v1",
+      "model": "qwythos-9b-96k",
+      "api": "auto",
+      "think": "low",
+      "roles": [
+        "reasoning",
+        "complex_synthesis",
+        "review"
+      ],
+      "limits": {
+        "num_ctx": 98304,
+        "max_tokens": 16384,
+        "prompt_max_chars": 48000,
+        "json_mode": false,
+        "think": "low",
+        "api": "auto"
+      }
+    },
+    "atomic": {
+      "label": "llama-server atomic lane (MCP execution)",
+      "available": true,
+      "base_url": "http://localhost:11439/v1",
+      "model": "qwen3-4b-instruct-48k",
+      "api": "openai",
+      "think": false,
+      "roles": [
+        "mcp_execution",
+        "fast_json",
+        "parallel_slots"
+      ],
+      "limits": {
+        "num_ctx": 49152,
+        "max_tokens": 16384,
+        "prompt_max_chars": 24000,
+        "json_mode": true,
+        "think": false,
+        "api": "openai"
+      },
+      "atomic": {
+        "available": true,
+        "port": 11439,
+        "base_url": "http://localhost:11439/v1",
+        "profile": "concurrent2",
+        "parallel": 2,
+        "slot_ctx": 49152,
+        "total_ctx": 98304,
+        "model": "qwen3-4b-instruct-48k",
+        "server_alias": "qwen3-4b-instruct-48k",
+        "pid": 27828,
+        "state_file": "C:\\Users\\soyko\\Documents\\Ollama\\docker\\llamacpp\\qwythos.state.json",
+        "api": "openai",
+        "think": "none",
+        "roles": [
+          "mcp_execution",
+          "fast_json",
+          "parallel_slots"
+        ],
+        "last_switch": {
+          "targetProfile": "concurrent2",
+          "requestedProfile": "concurrent2",
+          "previousProfile": "concurrent3",
+          "reason": "manual",
+          "noop": false,
+          "reloadSec": 9.29,
+          "switchedAt": "2026-07-06T21:44:44.4145512+02:00"
+        }
+      }
+    },
+    "routing": {
+      "default_backend": "primary",
+      "mcp_tool_backend": "atomic",
+      "complex_circuit_backend": "primary",
+      "review_backend": "atomic",
+      "auto_fallback": true
+    }
+  },
+  "results": [
+    {
+      "name": "esp32_sensors",
+      "elapsed_s": 359.6,
+      "session_id": "validate_20260706_230249_b0ea4222",
+      "generation_attempts": 1,
+      "truncated": false,
+      "ok": true,
+      "components": 8,
+      "backend": "primary",
+      "synthesis_backend": "primary",
+      "review_backend": "atomic",
+      "ab_variant": "a",
+      "output_file": "knowledge\\data\\validation_complex\\runs\\20260706_230249_validate_20260706_230249_b0ea4222\\esp32_sensors.json",
+      "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_230249_b0ea4222",
+      "pin_coverage": {
+        "per_component": [
+          {
+            "label": "U1",
+            "value": "ESP32-WROOM-32",
+            "generated_pins": 4,
+            "total_pins": 39,
+            "coverage": 0.1026,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U2",
+            "value": "BME280",
+            "generated_pins": 4,
+            "total_pins": 4,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U3",
+            "value": "SSD1306",
+            "generated_pins": 4,
+            "total_pins": 4,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          }
+        ],
+        "unmatched": [],
+        "average_coverage": 0.7009
+      },
+      "semantic_review": {
+        "issue_count": 4,
+        "critical_count": 3,
+        "issues": [
+          {
+            "msg": "El ESP32-WROOM-32 no tiene un condensador de desacople de 100nF cerca de los pines VCC/GND, lo cual puede causar inestabilidad en el circuito o fallas en la alimentación del MCU. Se recomienda colocar un condensador de 100nF entre VCC (pin 2) y GND (pin 1).",
+            "severity": "critical",
+            "proposal": "Agregar un condensador de 100nF conectado entre el pin 2 (3.3V) y el pin 1 (GND) del ESP32-WROOM-32."
+          },
+          {
+            "msg": "El pin GPIO0 del ESP32 (pin 33) está conectado a I2C_SDA, pero no se especifica que pueda ser conectado directamente a GND para entrar en modo de flash. Esto puede impedir el acceso al modo de actualización de firmware. Además, no se menciona un pull-up de 10kΩ a 3.3V en el pin EN del ESP32, lo cual es requerido para su funcionamiento correcto.",
+            "severity": "critical",
+            "proposal": "Conectar el pin GPIO0 (pin 33) directamente a GND para permitir el modo de flash. Además, agregar un pull-up de 10kΩ desde el pin EN del ESP32 (no especificado) hasta 3.3V."
+          },
+          {
+            "msg": "El BME280 y el SSD1306 están conectados por pines I2C, pero no se especifica que los condensadores de desacople estén presentes en las salidas de alimentación de ambos sensores. Aunque no se menciona explícitamente, es una práctica común colocar un condensador de 100nF entre VCC y GND cerca de cada sensor para estabilidad.",
+            "severity": "warning",
+            "proposal": "Agregar condensadores de 100nF entre VCC y GND cerca del BME280 (pin 1) y del SSD1306 (pin 2)."
+          },
+          {
+            "msg": "La fuente de voltaje (3.3V) tiene su terminal negativo conectado a GND, lo cual es correcto para cerrar el circuito. Sin embargo, en el netlist se indica que '0' es la tierra de simulación SPICE y 'GND' es la malla de masa física. Si no hay un alias entre '0' y 'GND', el componente conectado a '0' quedará aisladamente de la masa física, lo cual puede causar problemas de alimentación.",
+            "severity": "critical",
+            "proposal": "Asegurar que el nodo '0' (tierra de simulación) esté alíaseado con el nodo 'GND' (malla de masa física) para permitir una conexión física continua entre el circuito de simulación y la masa real."
+          }
+        ]
+      },
+      "review_elapsed_s": 16.5
+    },
+    {
+      "name": "esp32_steppers",
+      "elapsed_s": 2041.2,
+      "session_id": "validate_20260706_230249_b0ea4222",
+      "generation_attempts": 1,
+      "truncated": false,
+      "error": "LLM native error tras 2 intentos: Ollama native error: timed out"
+    },
+    {
+      "name": "esp32_rf_nfc",
+      "elapsed_s": 1123.1,
+      "session_id": "validate_20260706_230249_b0ea4222",
+      "generation_attempts": 1,
+      "truncated": false,
+      "ok": true,
+      "components": 8,
+      "backend": "primary",
+      "synthesis_backend": "primary",
+      "review_backend": "atomic",
+      "ab_variant": "a",
+      "output_file": "knowledge\\data\\validation_complex\\runs\\20260706_230249_validate_20260706_230249_b0ea4222\\esp32_rf_nfc.json",
+      "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_230249_b0ea4222",
+      "pin_coverage": {
+        "per_component": [
+          {
+            "label": "U1",
+            "value": "AMS1117-3.3",
+            "generated_pins": 3,
+            "total_pins": 3,
+            "coverage": 1.0,
+            "source": "kicad_symbols_index:Regulator_Linear"
+          },
+          {
+            "label": "U2",
+            "value": "PN532",
+            "generated_pins": 7,
+            "total_pins": 7,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U3",
+            "value": "CC1101",
+            "generated_pins": 8,
+            "total_pins": 8,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U4",
+            "value": "ESP32-WROOM-32",
+            "generated_pins": 2,
+            "total_pins": 39,
+            "coverage": 0.0513,
+            "source": "pinouts_library"
+          }
+        ],
+        "unmatched": [],
+        "average_coverage": 0.7628
+      },
+      "semantic_review": {
+        "issue_count": 7,
+        "critical_count": 3,
+        "issues": [
+          {
+            "msg": "El pin VCC del IC CC1101 está conectado directamente a VCC33, pero no se especifica un condensador de desacople de 100nF entre VCC y GND cerca del pin de entrada. Esto puede causar ruido o inestabilidad en el funcionamiento del CC1101.",
+            "severity": "warning",
+            "proposal": "Agregar un condensador de 100nF entre VCC33 y GND cercano al pin VCC del CC1101."
+          },
+          {
+            "msg": "El pin VCC del IC PN532 está conectado a VCC33, pero no se especifica un condensador de desacople de 100nF entre VCC y GND cerca del pin de entrada. Esto puede causar ruido o inestabilidad en el funcionamiento del PN532.",
+            "severity": "warning",
+            "proposal": "Agregar un condensador de 100nF entre VCC33 y GND cercano al pin VCC del PN532."
+          },
+          {
+            "msg": "El pin VCC del MCU ESP32-WROOM-32 está conectado a VCC33, pero no se especifica un condensador de desacople de 100nF entre VCC33 y GND cerca del pin de entrada. Esto puede causar inestabilidad en el funcionamiento del MCU.",
+            "severity": "warning",
+            "proposal": "Agregar un condensador de 100nF entre VCC33 y GND cercano al pin VCC del ESP32-WROOM-32."
+          },
+          {
+            "msg": "El terminal negativo de la fuente de voltaje (GND) está conectado a '0', pero no se especifica que este nodo esté alíase con la malla física GND en KiCad. Esto puede causar un problema de conexión física si el diseño se importa a KiCad.",
+            "severity": "critical",
+            "proposal": "Asegurar que el nodo '0' (GND) esté alíase con la malla física GND en KiCad para garantizar una conexión física correcta."
+          },
+          {
+            "msg": "El pin EN del ESP32 no está especificado. El pin EN debe tener un pull-up de 10kΩ a 3.3V para mantener el dispositivo encendido por defecto.",
+            "severity": "critical",
+            "proposal": "Agregar un resistor de 10kΩ desde el pin EN del ESP32 a 3.3V (GND no está conectado directamente al pin EN)."
+          },
+          {
+            "msg": "El pin GPIO0 del ESP32 no está especificado. Este pin debe poder ser conectado a GND para entrar en modo de arranque de flash, lo que requiere una conexión física directa o un diseño que permita su acceso a GND.",
+            "severity": "critical",
+            "proposal": "Conectar el pin GPIO0 del ESP32 a GND para permitir el modo de arranque de flash (boot mode)."
+          },
+          {
+            "msg": "El componente CC1101 tiene pines MOSI, SCLK, MISO y CSN, pero no se especifica ningún componente de desacople o protección. Se recomienda incluir un condensador de 100nF entre VCC y GND cerca del CC1101 para estabilidad.",
+            "severity": "warning",
+            "proposal": "Agregar un condensador de 100nF entre VCC33 y GND cercano al CC1101."
+          }
+        ]
+      },
+      "review_elapsed_s": 16.5
+    },
+    {
+      "name": "esp32_usb_devkit",
+      "elapsed_s": 959.0,
+      "session_id": "validate_20260706_230249_b0ea4222",
+      "generation_attempts": 1,
+      "truncated": false,
+      "ok": true,
+      "components": 12,
+      "backend": "primary",
+      "synthesis_backend": "primary",
+      "review_backend": "atomic",
+      "ab_variant": "a",
+      "output_file": "knowledge\\data\\validation_complex\\runs\\20260706_230249_validate_20260706_230249_b0ea4222\\esp32_usb_devkit.json",
+      "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_230249_b0ea4222",
+      "pin_coverage": {
+        "per_component": [
+          {
+            "label": "U2",
+            "value": "AMS1117-3.3",
+            "generated_pins": 3,
+            "total_pins": 3,
+            "coverage": 1.0,
+            "source": "kicad_symbols_index:Regulator_Linear"
+          },
+          {
+            "label": "U1",
+            "value": "CH340G",
+            "generated_pins": 9,
+            "total_pins": 16,
+            "coverage": 0.5625,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U3",
+            "value": "ESP32-WROOM-32",
+            "generated_pins": 39,
+            "total_pins": 39,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          }
+        ],
+        "unmatched": [
+          {
+            "label": "J1",
+            "value": "GPIO_HDR_L"
+          },
+          {
+            "label": "J2",
+            "value": "GPIO_HDR_R"
+          }
+        ],
+        "average_coverage": 0.8542
+      },
+      "semantic_review": {
+        "issue_count": 6,
+        "critical_count": 2,
+        "issues": [
+          {
+            "msg": "El pin EN del ESP32 no tiene un pull-up resistente a 3.3V; debe tener un resistor de 10kΩ conectado a 3.3V para mantenerlo activo en modo normal, según especificaciones del ESP32.",
+            "severity": "critical",
+            "proposal": "Añadir un resistor de 10kΩ entre VCC33 y el pin EN del ESP32-WROOM-32 para asegurar el funcionamiento en modo normal."
+          },
+          {
+            "msg": "El pin GPIO0 del ESP32 no está conectado a GND, lo que impide el acceso al modo de arranque de flash (boot mode). Para permitir el flash mediante GPIO0, debe estar conectado directamente a GND.",
+            "severity": "critical",
+            "proposal": "Conectar el pin GPIO0 del ESP32 a GND para permitir el modo de arranque por flash."
+          },
+          {
+            "msg": "El pin USB_D+ y USB_D- están conectados al CH340G, pero no se especifica que el terminal negativo de la fuente USB (GND) esté correctamente cerrado. La fuente VUSB debe tener su n2 conectado a GND para formar un circuito cerrado.",
+            "severity": "warning",
+            "proposal": "Asegurar que el pin GND de la fuente VUSB esté conectado directamente a GND (0V) para completar el circuito de alimentación USB."
+          },
+          {
+            "msg": "El CH340G tiene pines USB_D+ y USB_D- conectados, pero no se especifica que el MCU tenga un desacople adecuado en VCC33. Se requiere un condensador de 100nF entre VCC33 y GND cerca del MCU.",
+            "severity": "warning",
+            "proposal": "Añadir un condensador de 100nF entre VCC33 y GND cerca del ESP32 para estabilizar el voltaje de alimentación."
+          },
+          {
+            "msg": "El pin VUSB del AMS1117-3.3 está conectado a VUSB, pero no hay un condensador de desacople de 100nF entre VUSB y GND, lo cual puede causar ruido o inestabilidad en la alimentación USB.",
+            "severity": "warning",
+            "proposal": "Añadir un condensador de 100nF entre VUSB y GND para mejorar la estabilidad del voltaje USB."
+          },
+          {
+            "msg": "El pin EN del ESP32 está conectado a VCC33 mediante un resistor de 10kΩ, pero el circuito no especifica que este pin sea activo por defecto. Debe tener un pull-up externo para mantenerlo en estado activo.",
+            "severity": "warning",
+            "proposal": "Añadir un pull-up de 10kΩ desde VCC33 a EN del ESP32 para asegurar que esté activo cuando no se controle directamente."
+          }
+        ]
+      },
+      "review_elapsed_s": 16.7
+    },
+    {
+      "name": "pulselab_zero",
+      "elapsed_s": 1098.3,
+      "session_id": "validate_20260706_230249_b0ea4222",
+      "generation_attempts": 1,
+      "truncated": false,
+      "ok": true,
+      "components": 20,
+      "backend": "primary",
+      "synthesis_backend": "primary",
+      "review_backend": "atomic",
+      "ab_variant": "a",
+      "output_file": "knowledge\\data\\validation_complex\\runs\\20260706_230249_validate_20260706_230249_b0ea4222\\pulselab_zero.json",
+      "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_230249_b0ea4222",
+      "pin_coverage": {
+        "per_component": [
+          {
+            "label": "U1",
+            "value": "ESP32-S3",
+            "generated_pins": 0,
+            "total_pins": 48,
+            "coverage": 0.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "OLED",
+            "value": "SSD1306",
+            "generated_pins": 4,
+            "total_pins": 4,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "NFC",
+            "value": "PN532",
+            "generated_pins": 0,
+            "total_pins": 7,
+            "coverage": 0.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "RF",
+            "value": "CC1101",
+            "generated_pins": 0,
+            "total_pins": 8,
+            "coverage": 0.0,
+            "source": "pinouts_library"
+          }
+        ],
+        "unmatched": [
+          {
+            "label": "EXP8",
+            "value": "GPIO_HDR_8"
+          }
+        ],
+        "average_coverage": 0.25
+      },
+      "semantic_review": {
+        "issue_count": 7,
+        "critical_count": 3,
+        "issues": [
+          {
+            "msg": "El ESP32-S3 no tiene condensador de desacople de 100nF cerca de sus pines VCC/GND. Se requiere un capacitor de 100nF entre VCC33 y GND para estabilizar la alimentación del MCU.",
+            "severity": "critical",
+            "proposal": "Añadir un capacitor de 100nF entre el pin VCC33 y GND cercano al ESP32-S3."
+          },
+          {
+            "msg": "El pin GPIO0 del ESP32-S3 debe poder estar conectado a GND para entrar en modo de flash. Actualmente no se especifica la conexión, lo que podría impedir el modo de arranque por software.",
+            "severity": "warning",
+            "proposal": "Conectar el pin GPIO0 al GND mediante un resistor de 10kΩ o directamente (con control manual) para permitir el acceso al modo de flash."
+          },
+          {
+            "msg": "El pin EN del ESP32-S3 no está definido en la netlist. Si se usa un módulo con EN, debe estar conectado a 3.3V con un pull-up para activar el módulo.",
+            "severity": "warning",
+            "proposal": "Verificar si el ESP32-S3 requiere un pin EN y conectarlo a 3.3V con un pull-up de 10kΩ si es necesario."
+          },
+          {
+            "msg": "El SSD1306 está conectado a VCC33 y GND, pero no se especifica el uso de pines I2C_SCL e I2C_SDA. No hay indicación de que estén conectados a otros componentes o que tengan pull-ups adecuados.",
+            "severity": "warning",
+            "proposal": "Asegurarse de que los pines I2C_SCL y I2C_SDA del SSD1306 estén conectados a pines correspondientes del MCU con pull-ups internos o externos (por ejemplo, 4.7kΩ en serie) para garantizar comunicación I2C estable."
+          },
+          {
+            "msg": "El pin VUSB de la fuente de voltaje no está conectado a un nodo físico, y no se especifica cómo se alimenta el sistema USB. Se requiere que el terminal negativo (GND) esté conectado a GND para cerrar el circuito.",
+            "severity": "critical",
+            "proposal": "Conectar el terminal negativo de la fuente VUSB (n2=GND) directamente al nodo GND (0) para formar un circuito cerrado y asegurar funcionamiento correcto del sistema USB."
+          },
+          {
+            "msg": "No se menciona conexión entre MCU y los pines USB_D+ y USB_D-; se requiere que el diseño incluya estos pines para soporte USB-UART si se usa un módulo de conversión como CH340.",
+            "severity": "warning",
+            "proposal": "Añadir conexiones para USB_D+ y USB_D- conectados a los pines adecuados del MCU o al módulo CH340, y asegurarse de que el CH340 tenga TXD conectado a MCU_RX y RXD conectado a MCU_TX (crossover)."
+          },
+          {
+            "msg": "El módulo CH340 se menciona como componente, pero no se especifican sus conexiones. Se requiere que TXD del CH340 se conecte al RX del MCU y RXD al TX del MCU (crossover).",
+            "severity": "critical",
+            "proposal": "Conectar el pin TXD del CH340 al pin RX del MCU y el pin RXD del CH340 al pin TX del MCU, con un crossover adecuado para funcionamiento UART."
+          }
+        ]
+      },
+      "review_elapsed_s": 36.6
+    }
+  ],
+  "finished_at": "2026-07-07T00:37:19.117295+00:00",
+  "truncation_events": 0
+}

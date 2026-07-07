@@ -25,11 +25,13 @@
 
 ## How to run things
 
-| Task | Document |
-|------|----------|
+| Task | Document / command |
+|------|-------------------|
+| **Forge Studio** (streaming LLM debug shell) | [`calibration_forge/forge_studio.md`](./calibration_forge/forge_studio.md) — `python -m studio` |
 | Fab export + DRC gate | [`workflows/howto/fabrication_pipeline.md`](./workflows/howto/fabrication_pipeline.md) |
 | MCP ESP32 devboard workflow | [`workflows/howto/esp32_devboard_mcp.md`](./workflows/howto/esp32_devboard_mcp.md) |
 | Component / footprint management | [`workflows/howto/component_management.md`](./workflows/howto/component_management.md) |
+| Batch LLM validation | `python -m knowledge.validate_complex_apps --case esp32_sensors` |
 
 ## Reference & architecture
 

@@ -21,6 +21,7 @@
 | 4c — LLM guardrails | ✅ P0 live | [`pipelines/llm_output_pipeline.md`](../calibration_forge/pipelines/llm_output_pipeline.md) §Resultado |
 | 4d — Dual-backend orchestration | ~ code landed | same — **pending live verify** review on `atomic` |
 | 4b — Prompt vs RAG A/B | ⏳ clean re-run | [`prompt_vs_rag_balance.md`](../calibration_forge/prompt_vs_rag_balance.md) |
+| 4e — Forge Studio CLI | ✅ | [`forge_studio.md`](../calibration_forge/forge_studio.md) §Resultado |
 | 5 — Repo hygiene | ✅ | [`verification/session_4b_preflight.md`](../calibration_forge/verification/session_4b_preflight.md) §Session 5 |
 
 ## Next actions
@@ -46,5 +47,6 @@ Handoff discipline: update the relevant finding doc §Resultado, then sync [`../
 ## Key numbers (see FORGE_STATUS for refresh ritual)
 
 - RAG: **5685** chunks (5326 `pinout`, 326 `circuit_example`)
-- Tests: **102** collected (`pytest tests/ --co -q`)
+- Tests: **110** collected (`pytest tests/ --co -q`); Forge Studio: **10** unit tests
 - MCP tools: **31** (`mcp_server/server.py`)
+- Forge Studio: `python -m studio` — see [`forge_studio.md`](../calibration_forge/forge_studio.md)

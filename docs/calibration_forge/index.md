@@ -37,6 +37,7 @@ Este documento orquesta las líneas de investigación para el bucle de entrenami
 | 7 | KB ingestion fidelity | [`knowledge_base_fidelity.md`](./knowledge_base_fidelity.md) |
 | 9 | Dormant features (PulseLogger, design experience) | [`dormant_features_audit.md`](./dormant_features_audit.md) |
 | 10 | KiCad symbol KB / pinout RAG | [`kicad_symbol_kb.md`](./kicad_symbol_kb.md) |
+| 11 | Forge Studio CLI (headless LLM debug) | [`forge_studio.md`](./forge_studio.md) |
 
 ---
 
@@ -47,7 +48,7 @@ Este documento orquesta las líneas de investigación para el bucle de entrenami
 | Evaluation metrics | [`evaluation_metrics.md`](./evaluation_metrics.md) |
 | Logging / AI context buffer | [`logging_strategy.md`](./logging_strategy.md) |
 | GND vs `0` unification | [`gnd_unification.md`](./gnd_unification.md) |
-| LLM pipeline (master) | [`pipelines/llm_output_pipeline.md`](./pipelines/llm_output_pipeline.md) |
+| Forge Studio (headless LLM debug) | [`forge_studio.md`](./forge_studio.md) |
 
 ---
 
@@ -74,15 +75,15 @@ Este documento orquesta las líneas de investigación para el bucle de entrenami
 - **Undo/Redo Fix** — snapshot-first timing
 - **Modelo Multipin** — Editor + netlist + esquemáticos (ver [`pin_model_coverage.md`](./pin_model_coverage.md))
 - **Interactividad AI** — popup revisión semántica
-- **Headless Mode** — desacoplar Pygame para CI/racks
+- **Headless Mode** — CLI v1 shipped as **Forge Studio** (`python -m studio`) — see [`forge_studio.md`](./forge_studio.md); web canvas deferred
 
 ---
 
 ## Milestones
 
-- [x] Sessions 1–3, 4a, 4c P0, 5 — ver §Resultado en docs citados
+- [x] Sessions 1–3, 4a, 4c P0, 4e, 5 — ver §Resultado en docs citados
 - [~] Session 4d — code landed; live atomic review verify pending
 - [ ] **Session 4b clean A/B** — [`prompt_vs_rag_balance.md`](./prompt_vs_rag_balance.md)
 
 ---
-*Última actualización: 07-jul-2026 (doc reorg + status split)*
+*Última actualización: 07-jul-2026 (Session 4e Forge Studio CLI — README + docs sync)*

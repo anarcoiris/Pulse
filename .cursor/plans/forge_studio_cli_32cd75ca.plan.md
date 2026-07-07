@@ -4,22 +4,22 @@ overview: "Introduce a headless, decoupled **Forge Studio** domain: a Windows-sa
 todos:
   - id: phase-0-arch-doc
     content: Write docs/calibration_forge/forge_studio.md (domain, layers, Windows reqs, non-goals); link from index.md + CURENT_SPRINT.md Session 4e
-    status: pending
+    status: completed
   - id: phase-1-transport
     content: Implement knowledge/llm_types.py, chat_native_stream(), LLMClient.chat_stream() + messages param + done_reason normalization (align with 4c P0)
-    status: pending
+    status: completed
   - id: phase-1-tests
     content: Add tests/test_ollama_native_stream.py with NDJSON fixtures; no live Ollama in CI
-    status: pending
+    status: completed
   - id: phase-2-session
     content: Create studio/session.py + commands.py — ForgeSession orchestrating CircuitSynthesizer, SemanticReviewer, forge_api
-    status: pending
+    status: completed
   - id: phase-3-cli
     content: Create studio/__main__.py + stream_ui.py — Rich REPL with Windows utf-8 bootstrap and ASCII stream tags
-    status: pending
+    status: completed
   - id: phase-4-handoff
     content: Update forge_studio.md Resultado, index.md, roadmap.md, CURENT_SPRINT.md; add rich to requirements.txt
-    status: pending
+    status: completed
 isProject: false
 ---
 

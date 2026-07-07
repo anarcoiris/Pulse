@@ -19,25 +19,66 @@ Permite ir desde el esquema conceptual, pasando por simulación física rigurosa
    - Generador de pistas (traces) automatizado.
    - Exportación nativa e independiente mediante `kicad-cli` a Gerbers listos para producción (ej. PCBWay).
 
-3. **Inteligencia y RAG (`rag_engine.py`, `mcp/server.py`)**
-   - Sistema de agentes LLM interoperables gracias a un servidor local **MCP** con 23 herramientas expuestas.
+3. **Inteligencia y RAG (`knowledge/`, `mcp_server/`)**
+   - Sistema de agentes LLM interoperables gracias a un servidor local **MCP** con **31** herramientas expuestas.
    - Puede diseñar un circuito entero, elegir huellas para los componentes, hacer el ruteo algorítmicamente y exportarlo a Gerber de forma autónoma.
-   - Integra motor RAG local (TF-IDF) para consultar normativas IPC-2221 (Reglas de diseño de PCB, separaciones, capacidades de corriente de pistas) y buscar los MCUs idóneos en la base de datos interna.
+   - Integra motor RAG híbrido (TF-IDF + embeddings) para consultar normativas IPC-2221 y pinouts KiCad indexados.
+   - Modelo local por defecto: **qwythos-9b-96k** vía Ollama (`Pulse_cfg.json`).
+
+4. **Forge Studio (`studio/`) — depuración LLM headless**
+   - REPL Rich con streaming en vivo de `thinking` + `content` durante generación y revisión semántica.
+   - Sin pygame: proceso separado para calibrar el pipeline Calibration Forge.
+   - Comandos: `/generate`, `/review`, `/backends`, `/save`, `/load`, `/schematic`, `/session`, `/quit`.
+   - Ver [`docs/calibration_forge/forge_studio.md`](docs/calibration_forge/forge_studio.md).
 
 ## Requisitos
 
 - **Python 3.10+**
-- **Dependencias:** `pygame`, `numpy`, `skidl`, `mcp` ... (Ver `requirements.txt` o dependencias estándar).
-- **Herramientas externas:** KiCad 8.0+ para la exportación de Gerbers. Debe estar en el PATH del sistema o instalado en los directorios estándares (`C:\Program Files`, `D:\Program Files`). 
+- **Dependencias:** ver [`requirements.txt`](requirements.txt) (`pygame`, `numpy`, `openai`, `rich`, `mcp`, …).
+- **Herramientas externas:**
+  - **KiCad 8+** para exportación Gerber/SVG (PATH o instalación estándar).
+  - **Ollama** en `:11431` con `qwythos-9b-96k` para generación/revisión LLM (Forge Studio y Forge GUI).
 
 ## Uso
 
-```bash
-# Iniciar el Editor Principal:
-python pulse_lab.py
+### Editor principal (pygame)
 
-# Iniciar servidor MCP para Claude Desktop u otros agentes:
-python mcp/server.py
+```bash
+python pulse_lab.py
+```
+
+### Forge Studio — shell LLM con streaming (Windows Terminal recomendado)
+
+```powershell
+$env:PYTHONIOENCODING='utf-8'
+pip install -r requirements.txt
+python -m studio
+python -m studio --backend primary   # qwythos-9b-96k (default auto)
+```
+
+Ejemplo de sesión:
+
+```
+studio> /backends
+studio> Diseña un ESP32 con BME280 en I2C
+studio> /review
+studio> /schematic
+studio> /save output/studio_circuit.json
+studio> /quit
+```
+
+Requisitos: Ollama activo, modelo cargado. Los logs LLM van a `knowledge/data/llm_sessions/sessions/{session_id}/`.
+
+### Servidor MCP (Claude Desktop u otros agentes)
+
+```bash
+python -m mcp_server.server
+```
+
+### Validación batch (Calibration Forge)
+
+```bash
+python -m knowledge.validate_complex_apps --case esp32_sensors
 ```
 
 ## Arquitectura
@@ -47,8 +88,9 @@ python mcp/server.py
   - `pcb_layout.py`: Nuestro potente motor procedural de `.kicad_pcb`.
   - `kicad_bridge.py`: Localizador de binarios e interoperabilidad general con SKiDL/KiCad.
   - `gerber_export.py`: Orquestador de CLI para extraer archivos de fabricación.
-- **`knowledge/`**: Motor de búsqueda RAG y conocimiento de diseño electrónico.
-- **`ui/`**: Los componentes de interfaz de usuario para el editor gráfico.
+- **`knowledge/`**: Motor RAG, agentes LLM (`circuit_synthesizer`, `semantic_reviewer`), logs de sesión.
+- **`studio/`**: Forge Studio — REPL headless para depuración LLM con streaming (`python -m studio`).
+- **`ui/`**: Componentes de interfaz pygame para el editor gráfico.
 
 ---
 
@@ -63,4 +105,5 @@ python mcp/server.py
 | [`docs/status/FORGE_STATUS.md`](docs/status/FORGE_STATUS.md) | Métricas (tests, RAG, MCP) |
 | [`docs/roadmap.md`](docs/roadmap.md) | Fases del producto |
 | [`docs/calibration_forge/index.md`](docs/calibration_forge/index.md) | Investigación Calibration Forge |
+| [`docs/calibration_forge/forge_studio.md`](docs/calibration_forge/forge_studio.md) | Forge Studio CLI (streaming LLM debug) |
 | [`docs/architecture/APP_ARCHITECTURE.md`](docs/architecture/APP_ARCHITECTURE.md) | Arquitectura del sistema |

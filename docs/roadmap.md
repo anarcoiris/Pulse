@@ -29,6 +29,8 @@
 ## Future Goals
 
 ### Phase 3: Premium UI/UX (Aesthetics)
+- [x] **Forge Studio CLI** — headless Rich REPL for streaming LLM debug (`python -m studio`); see [`calibration_forge/forge_studio.md`](./calibration_forge/forge_studio.md)
+- [ ] **Forge Studio web canvas** — live schematic/PCB viewer (deferred; CLI v1 done)
 - [ ] "Cyber Night" theme implementation.
 - [ ] Simulation-responsive Wire Glow (Glow proportional to Voltage).
 - [ ] Animated background particles and glassmorphism panels.

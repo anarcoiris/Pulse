@@ -31,7 +31,8 @@ DRC gate before Gerber export — see [`../workflows/howto/fabrication_pipeline.
 
 | Metric | Value (2026-07-07) |
 |--------|---------------------|
-| Tests collected | **102** (`pytest tests/ --co -q`) |
+| Tests collected | **110** (`pytest tests/ --co -q`) |
+| Forge Studio unit tests | **10** (`test_ollama_native_stream`, `test_studio_session`) |
 | Last full run | Run `python -m pytest tests/ -q` locally (suite includes optional KiCad / LLM skips) |
 
 Historical note: pre-Session-3 baseline was 8/8 in `test_forge.py` only — see [`../archive/baseline_report_20260705.md`](../archive/baseline_report_20260705.md).
@@ -67,6 +68,20 @@ Harness: `python -m knowledge.validate_complex_apps --case esp32_sensors`
 
 ---
 
+## Forge Studio (Session 4e)
+
+| Item | Value |
+|------|-------|
+| Entry point | `python -m studio` |
+| Package | `studio/` (headless; no pygame) |
+| Streaming transport | `knowledge/llm_client.py::chat_stream`, `ollama_native.py::chat_native_stream` |
+| Docs | [`../calibration_forge/forge_studio.md`](../calibration_forge/forge_studio.md) |
+| Dependency | `rich>=13,<14` |
+
+Windows: `$env:PYTHONIOENCODING='utf-8'` + Windows Terminal. Requires Ollama `:11431` + `qwythos-9b-96k` for live runs.
+
+---
+
 ## MCP
 
 | Metric | Value |
@@ -92,6 +107,7 @@ Categories unchanged from April review — see tool list in [`../reviews/pulsela
 Tracked in [`../roadmap.md`](../roadmap.md) and [`../calibration_forge/index.md`](../calibration_forge/index.md):
 
 - **4b clean A/B** — prompt rules vs richer RAG (decision deferred)
+- **Forge Studio web canvas** — CLI v1 done; React viewer deferred (see [`forge_studio.md`](../calibration_forge/forge_studio.md))
 - **Modelo Multipin** — Editor + netlist + schematic unification (cross-cutting, not a numbered session)
 - Copper pours, scikit-rf, PDF datasheet ingestion — backlog
 

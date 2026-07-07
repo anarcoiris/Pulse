@@ -1,0 +1,252 @@
+{
+  "run_session": "validate_20260706_230249_b0ea4222",
+  "test_case": "ESP32-WROOM-32 USB Devboard",
+  "prompt": "Diseña una placa estilo devkit con ESP32-WROOM-32, alimentación 5V USB regulada a 3.3V con AMS1117, puente USB-UART CH340G con pares USB_D+ y USB_D-, pull-up EN 10k, condensadores de desacople, y headers GPIO. UART: CH340 TXD a RX del ESP32 (GPIO3), CH340 RXD a TX del ESP32 (GPIO1).",
+  "ab_variant": "a",
+  "backend": "primary",
+  "synthesis_backend": "primary",
+  "review_backend": "atomic",
+  "generation_attempts": 1,
+  "truncated": false,
+  "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260706_230249_b0ea4222",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 5.0,
+      "label": "VUSB",
+      "n1": "VUSB",
+      "n2": "GND"
+    },
+    {
+      "etype": "IC",
+      "value": "AMS1117-3.3",
+      "label": "U2",
+      "symbol": "Regulator_Linear:AMS1117-3.3",
+      "footprint": "Regulator_Linear:AMS1117-3.3",
+      "pins": {
+        "1": "GND",
+        "2": "VCC33",
+        "3": "VUSB"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "CH340G",
+      "label": "U1",
+      "symbol": "Interface_USB:CH340G",
+      "pins": {
+        "1": "GND",
+        "2": "MCU_TX",
+        "3": "MCU_RX",
+        "4": "VCC33",
+        "5": "USB_D+",
+        "6": "USB_D-",
+        "13": "DTR",
+        "14": "RTS",
+        "16": "VUSB"
+      },
+      "footprint": "Package_SO:SOP-16_3.9x9.9mm_P1.27mm"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-WROOM-32",
+      "symbol": "RF_Module:ESP32-WROOM-32U",
+      "footprint": "RF_Module:ESP32-WROOM-32U",
+      "pins": {
+        "1": "GND",
+        "2": "VCC33",
+        "3": "EN",
+        "4": "NC_U3_4",
+        "5": "NC_U3_5",
+        "6": "NC_U3_6",
+        "7": "NC_U3_7",
+        "8": "NC_U3_8",
+        "9": "NC_U3_9",
+        "10": "NC_U3_10",
+        "11": "NC_U3_11",
+        "12": "NC_U3_12",
+        "13": "NC_U3_13",
+        "14": "NC_U3_14",
+        "15": "GND",
+        "16": "NC_U3_16",
+        "17": "NC_U3_17",
+        "18": "NC_U3_18",
+        "19": "NC_U3_19",
+        "20": "NC_U3_20",
+        "21": "NC_U3_21",
+        "22": "NC_U3_22",
+        "23": "NC_U3_23",
+        "24": "NC_U3_24",
+        "25": "NC_U3_25",
+        "26": "NC_U3_26",
+        "27": "NC_U3_27",
+        "28": "NC_U3_28",
+        "29": "NC_U3_29",
+        "30": "NC_U3_30",
+        "31": "NC_U3_31",
+        "32": "NC_U3_32",
+        "33": "NC_U3_33",
+        "34": "MCU_TX",
+        "35": "MCU_RX",
+        "36": "NC_U3_36",
+        "37": "NC_U3_37",
+        "38": "GND",
+        "39": "GND"
+      },
+      "label": "U3"
+    },
+    {
+      "etype": "IC",
+      "value": "GPIO_HDR_L",
+      "label": "J1",
+      "symbol": "Connector_Generic:Conn_02x10_Odd_Even",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x10_P2.54mm_Vertical",
+      "pins": {
+        "1": "GPIO_1",
+        "2": "GPIO_2",
+        "3": "GPIO_3",
+        "4": "GPIO_4",
+        "5": "GPIO_5",
+        "6": "GPIO_6",
+        "7": "GPIO_7",
+        "8": "GPIO_8",
+        "9": "GPIO_9",
+        "10": "GPIO_10"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "GPIO_HDR_R",
+      "label": "J2",
+      "symbol": "Connector_Generic:Conn_02x10_Odd_Even",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x10_P2.54mm_Vertical",
+      "pins": {
+        "1": "GPIO_11",
+        "2": "GPIO_12",
+        "3": "GPIO_13",
+        "4": "GPIO_14",
+        "5": "GPIO_15",
+        "6": "GPIO_16",
+        "7": "GPIO_17",
+        "8": "GPIO_18",
+        "9": "GPIO_19",
+        "10": "GPIO_20"
+      }
+    },
+    {
+      "etype": "R",
+      "value": 10000,
+      "label": "R_EN",
+      "n1": "VCC33",
+      "n2": "EN"
+    },
+    {
+      "etype": "C",
+      "value": 1e-05,
+      "label": "C_VBUS",
+      "n1": "VUSB",
+      "n2": "GND"
+    },
+    {
+      "etype": "C",
+      "value": 1e-05,
+      "label": "C_ESP_H",
+      "n1": "VCC33",
+      "n2": "GND"
+    },
+    {
+      "etype": "C",
+      "value": 1e-07,
+      "label": "C_ESP_L",
+      "n1": "VCC33",
+      "n2": "GND"
+    },
+    {
+      "etype": "C",
+      "value": 1e-07,
+      "label": "C_CH340",
+      "n1": "VUSB",
+      "n2": "GND"
+    },
+    {
+      "etype": "GND",
+      "value": 0,
+      "label": "GND"
+    }
+  ],
+  "pin_coverage": {
+    "per_component": [
+      {
+        "label": "U2",
+        "value": "AMS1117-3.3",
+        "generated_pins": 3,
+        "total_pins": 3,
+        "coverage": 1.0,
+        "source": "kicad_symbols_index:Regulator_Linear"
+      },
+      {
+        "label": "U1",
+        "value": "CH340G",
+        "generated_pins": 9,
+        "total_pins": 16,
+        "coverage": 0.5625,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "U3",
+        "value": "ESP32-WROOM-32",
+        "generated_pins": 39,
+        "total_pins": 39,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      }
+    ],
+    "unmatched": [
+      {
+        "label": "J1",
+        "value": "GPIO_HDR_L"
+      },
+      {
+        "label": "J2",
+        "value": "GPIO_HDR_R"
+      }
+    ],
+    "average_coverage": 0.8542
+  },
+  "semantic_review": {
+    "issue_count": 6,
+    "critical_count": 2,
+    "issues": [
+      {
+        "msg": "El pin EN del ESP32 no tiene un pull-up resistente a 3.3V; debe tener un resistor de 10kΩ conectado a 3.3V para mantenerlo activo en modo normal, según especificaciones del ESP32.",
+        "severity": "critical",
+        "proposal": "Añadir un resistor de 10kΩ entre VCC33 y el pin EN del ESP32-WROOM-32 para asegurar el funcionamiento en modo normal."
+      },
+      {
+        "msg": "El pin GPIO0 del ESP32 no está conectado a GND, lo que impide el acceso al modo de arranque de flash (boot mode). Para permitir el flash mediante GPIO0, debe estar conectado directamente a GND.",
+        "severity": "critical",
+        "proposal": "Conectar el pin GPIO0 del ESP32 a GND para permitir el modo de arranque por flash."
+      },
+      {
+        "msg": "El pin USB_D+ y USB_D- están conectados al CH340G, pero no se especifica que el terminal negativo de la fuente USB (GND) esté correctamente cerrado. La fuente VUSB debe tener su n2 conectado a GND para formar un circuito cerrado.",
+        "severity": "warning",
+        "proposal": "Asegurar que el pin GND de la fuente VUSB esté conectado directamente a GND (0V) para completar el circuito de alimentación USB."
+      },
+      {
+        "msg": "El CH340G tiene pines USB_D+ y USB_D- conectados, pero no se especifica que el MCU tenga un desacople adecuado en VCC33. Se requiere un condensador de 100nF entre VCC33 y GND cerca del MCU.",
+        "severity": "warning",
+        "proposal": "Añadir un condensador de 100nF entre VCC33 y GND cerca del ESP32 para estabilizar el voltaje de alimentación."
+      },
+      {
+        "msg": "El pin VUSB del AMS1117-3.3 está conectado a VUSB, pero no hay un condensador de desacople de 100nF entre VUSB y GND, lo cual puede causar ruido o inestabilidad en la alimentación USB.",
+        "severity": "warning",
+        "proposal": "Añadir un condensador de 100nF entre VUSB y GND para mejorar la estabilidad del voltaje USB."
+      },
+      {
+        "msg": "El pin EN del ESP32 está conectado a VCC33 mediante un resistor de 10kΩ, pero el circuito no especifica que este pin sea activo por defecto. Debe tener un pull-up externo para mantenerlo en estado activo.",
+        "severity": "warning",
+        "proposal": "Añadir un pull-up de 10kΩ desde VCC33 a EN del ESP32 para asegurar que esté activo cuando no se controle directamente."
+      }
+    ]
+  }
+}
