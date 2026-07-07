@@ -8,12 +8,13 @@ que PulseLab Forge puede renderizar y simular.
 
 import json
 import re
-from typing import Any
+from typing import Any, Callable
 
 from knowledge.llm_backends import backend_limits, get_backend_client, resolve_backend_name
 from knowledge.llm_json import extract_json_text, llm_output_truncated, parse_llm_result
 from knowledge.llm_prompt_format import chat_options_for_backend, format_system_prompt, format_user_prompt
 from knowledge.llm_session_log import new_call_id
+from knowledge.llm_types import StreamChunk
 from knowledge.ollama_native import normalize_think
 from knowledge.pulse_config import cfg, PULSE_LLM_THINK
 from knowledge.rag_engine import ElectronicsKnowledgeBase, normalize_part_name
@@ -404,9 +405,10 @@ de cobertura completa a continuación para eso."""
         session_id: str,
         meta: dict | None = None,
         attempt: int = 1,
+        on_chunk: Callable[[StreamChunk], None] | None = None,
     ) -> dict:
         opts = chat_options_for_backend(backend)
-        return llm.chat(
+        common = dict(
             system=system,
             user=user_msg,
             temperature=float(cfg("llm.agents.circuit_synthesizer.temperature", 0.1)),
@@ -417,6 +419,9 @@ de cobertura completa a continuación para eso."""
             session_id=session_id,
             meta={**(meta or {}), "attempt": attempt, "backend": backend},
         )
+        if on_chunk:
+            return llm.chat_stream(on_chunk=on_chunk, **common)
+        return llm.chat(**common)
 
     def _components_from_llm_result(
         self,
@@ -600,6 +605,7 @@ de cobertura completa a continuación para eso."""
         session_id: str | None = None,
         meta: dict | None = None,
         backend: str | None = None,
+        on_chunk: Callable[[StreamChunk], None] | None = None,
     ) -> dict:
         if backend:
             self.backend_pref = backend
@@ -632,6 +638,7 @@ de cobertura completa a continuación para eso."""
             system_prompt, user_msg,
             backend=backend_name, llm=llm,
             session_id=session_id, meta=run_meta, attempt=1,
+            on_chunk=on_chunk,
         )
 
         if "error" in result:

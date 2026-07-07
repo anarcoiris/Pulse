@@ -11,12 +11,13 @@ Exports:
 """
 
 import json
-from typing import Dict, Any
+from typing import Callable, Dict, Any
 
 from knowledge.pulse_config import cfg
 from knowledge.llm_backends import get_backend_client, resolve_backend_name
 from knowledge.llm_client import get_llm_client
 from knowledge.llm_json import llm_output_truncated, parse_llm_result
+from knowledge.llm_types import StreamChunk
 from core.logger import logger
 
 
@@ -115,9 +116,10 @@ class SemanticReviewer:
         *,
         session_id: str | None = None,
         meta: dict | None = None,
+        on_chunk: Callable[[StreamChunk], None] | None = None,
     ) -> dict:
         max_tokens = int(cfg("llm.agents.semantic_reviewer.max_tokens", 8192))
-        return self.llm.chat(
+        common = dict(
             system=self.system_prompt,
             user=netlist_desc,
             temperature=float(cfg("llm.agents.semantic_reviewer.temperature", 0.1)),
@@ -128,6 +130,9 @@ class SemanticReviewer:
             session_id=session_id,
             meta={**(meta or {}), "backend": self.backend_name},
         )
+        if on_chunk:
+            return self.llm.chat_stream(on_chunk=on_chunk, **common)
+        return self.llm.chat(**common)
 
     def review_netlist(
         self,
@@ -135,6 +140,7 @@ class SemanticReviewer:
         *,
         session_id: str | None = None,
         meta: dict | None = None,
+        on_chunk: Callable[[StreamChunk], None] | None = None,
     ) -> Dict[str, Any]:
         """Revisa un circuito a partir de su representación JSON serializada."""
         if not self.llm.available:
@@ -161,7 +167,7 @@ class SemanticReviewer:
 
         logger.ai_review("semantic_reviewer", f"review_netlist() {len(components)} componentes")
 
-        result = self._chat_review(netlist_desc, session_id=session_id, meta=meta)
+        result = self._chat_review(netlist_desc, session_id=session_id, meta=meta, on_chunk=on_chunk)
 
         if "error" in result:
             logger.error("semantic_reviewer", f"review_netlist() LLM error: {result['error']}")

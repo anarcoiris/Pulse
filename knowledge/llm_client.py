@@ -7,10 +7,11 @@ All chat() calls are recorded to knowledge/data/llm_sessions/ when PULSE_LLM_LOG
 
 from __future__ import annotations
 import time
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 from knowledge.llm_session_log import new_call_id, record_llm_exchange
-from knowledge.ollama_native import chat_native, normalize_think, ollama_native_url
+from knowledge.llm_types import StreamAccumulator, StreamChunk
+from knowledge.ollama_native import chat_native, chat_native_stream, normalize_think, ollama_native_url
 from knowledge.pulse_config import (
     PULSE_OLLAMA_BASE_URL,
     PULSE_LLM_MODEL,
@@ -163,6 +164,121 @@ class LLMClient:
             duration_ms=duration_ms,
             attempt=attempt_no,
             meta=meta,
+            backend_id=self.backend_id,
+            max_tokens=max_tokens,
+            num_ctx=self.num_ctx,
+        )
+        if log_path:
+            result["log_path"] = str(log_path)
+            result["call_id"] = call_id
+            result["session_id"] = session_id
+            result["session_dir"] = str(log_path.parent)
+
+        if "done_reason" not in result:
+            raw = result.get("raw") or {}
+            result["done_reason"] = raw.get("done_reason") or raw.get("finish_reason") or ""
+
+        return result
+
+    def chat_stream(
+        self,
+        system: str,
+        user: str,
+        on_chunk: Callable[[StreamChunk], None] | None = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
+        json_mode: bool = False,
+        disable_thinking: bool = False,
+        think: str | bool | None = None,
+        history: list[dict[str, str]] | None = None,
+        **kwargs,
+    ) -> dict:
+        """
+        Streaming chat — native Ollama path streams tokens; OpenAI path
+        degrades to a single blocking chat() with one terminal chunk.
+        """
+        if max_tokens is None:
+            max_tokens = self.DEFAULT_NUM_PREDICT
+        if temperature is None:
+            temperature = float(cfg("llm.default_temperature", 0.3))
+
+        think_level = normalize_think(think if think is not None else self.think)
+        if disable_thinking:
+            think_level = False
+
+        caller = str(kwargs.pop("caller", "unknown"))
+        session_id = str(kwargs.pop("session_id", new_call_id()))
+        meta: dict[str, Any] = dict(kwargs.pop("meta", {}) or {})
+
+        messages = [{"role": "system", "content": system}]
+        if history:
+            messages.extend(history)
+        messages.append({"role": "user", "content": user})
+
+        api = "native" if self._use_native(disable_thinking) else "openai"
+        t0 = time.perf_counter()
+        acc = StreamAccumulator()
+
+        if api == "native":
+            for chunk in chat_native_stream(
+                api_url=self.native_url,
+                model=self.model,
+                messages=messages,
+                think=think_level,
+                temperature=temperature,
+                num_predict=max_tokens,
+                num_ctx=self.num_ctx,
+                timeout=self.timeout,
+            ):
+                acc.consume(chunk)
+                if on_chunk:
+                    on_chunk(chunk)
+                if chunk.is_terminal:
+                    break
+            result = acc.to_result()
+            if not result.get("error") and not result.get("model"):
+                result["model"] = self.model
+        else:
+            result = self._chat_openai(
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                json_mode=json_mode,
+                disable_thinking=disable_thinking,
+                num_ctx=self.num_ctx,
+                **kwargs,
+            )
+            if "error" not in result:
+                content = result.get("content") or ""
+                thinking = result.get("thinking") or ""
+                if thinking and on_chunk:
+                    on_chunk(StreamChunk(kind="thinking", text=thinking))
+                if content and on_chunk:
+                    on_chunk(StreamChunk(kind="content", text=content))
+                if on_chunk:
+                    on_chunk(StreamChunk(
+                        kind="done",
+                        done_reason=result.get("done_reason") or "",
+                        tokens=int(result.get("tokens") or 0),
+                        model=result.get("model") or self.model,
+                    ))
+
+        duration_ms = (time.perf_counter() - t0) * 1000
+        call_id = new_call_id()
+        attempt_no = int(meta.get("attempt", 0) or 0)
+        log_path = record_llm_exchange(
+            call_id=call_id,
+            session_id=session_id,
+            caller=caller,
+            api=api,
+            model=self.model,
+            think=think_level,
+            system=system,
+            user=user,
+            response=result,
+            duration_ms=duration_ms,
+            attempt=attempt_no,
+            meta={**(meta or {}), "stream": True},
             backend_id=self.backend_id,
             max_tokens=max_tokens,
             num_ctx=self.num_ctx,

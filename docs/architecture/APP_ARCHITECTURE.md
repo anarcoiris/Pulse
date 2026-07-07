@@ -17,11 +17,9 @@ Unlike standard web/mobile applications, PulseLab operates in a strict, continuo
 
 ## System Layers
 
-### 1. Presentation Layer (`ui/`)
-- `pulse_lab.py`: The single entry point and main loop coordinator.
-- `editor.py`: Canvas interactions, wire routing, and grid snapping.
-- `toolbar.py` & `properties.py`: UI panels.
-- `theme.py`: Global constants, fonts, and the "Cyber Night" design system values.
+### 1. Presentation Layer
+- **`ui/`** — pygame editor (`pulse_lab.py`, canvas, toolbar, modals).
+- **`studio/`** — Forge Studio headless REPL (`python -m studio`); streams LLM thinking/content for Calibration Forge debug. Must not import `ui/` or pygame.
 
 ### 2. Core Physics (`core/` & Root)
 - `circuit_engine.py`: Modifed Nodal Analysis (MNA) solver handling inductors, capacitors, voltage sources, and non-linear diodes.
@@ -36,11 +34,13 @@ Unlike standard web/mobile applications, PulseLab operates in a strict, continuo
 - `semantic_reviewer.py`: AI-based DRC checks for logical flaws (e.g., missing decouple caps).
 - `circuit_synthesizer.py`: NLP to Netlist generator.
 - `firmware_synthesizer.py`: Automatic MicroPython boilerplate generation.
+- `llm_client.py` / `ollama_native.py`: Unified LLM transport; `chat_stream()` for Forge Studio.
 
 ## Dependencies & Communication
 - **UI → Engine:** UI triggers `runner.load(graph)`, which freezes the graph to extract mathematical matrices.
 - **UI → Bridge:** UI sends `CircuitGraph` to `forge_api.generate_pcb(graph)`.
-- **Knowledge → UI:** AI threads update `_ai_popup` or `_ai_gen_popup` state dictionaries dynamically, which the main loop renders safely.
+- **Knowledge → UI:** AI threads update modal state; the main loop renders safely (non-blocking).
+- **Studio → Knowledge:** `ForgeSession` delegates to synthesizer/reviewer with shared `session_id`; logs under `knowledge/data/llm_sessions/`.
 
 ---
 
