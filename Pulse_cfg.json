@@ -5,8 +5,8 @@
     "api": "auto",
     "think": "low",
     "num_ctx": 98304,
-    "max_tokens": 24576,
-    "num_predict": 8192,
+    "max_tokens": 32600,
+    "num_predict": 16300,
     "timeout_s": 900,
     "max_retries": 2,
     "retry_backoff_base_s": 1.0,
@@ -29,28 +29,32 @@
         "prompt_max_chars": 48000,
         "max_pinout_entries": 2,
         "max_pinout_pins": 14,
-        "description_meta_max_chars": 2000
+        "description_meta_max_chars": 8000
       },
       "semantic_reviewer": {
         "temperature": 0.6,
-        "max_tokens": 8192
+        "max_tokens": 16384
       },
       "firmware_synthesizer": {
         "temperature": 0.6,
-        "max_tokens": 8192
+        "max_tokens": 16384
       }
     },
     "backends": {
       "primary": {
-        "label": "Ollama Qwythos 9B (reasoning)",
-        "base_url": "http://localhost:11431/v1",
+        "label": "llamacpp Qwythos 9B (reasoning)",
+        "base_url": "http://localhost:11440/v1",
         "model": "qwythos-9b-96k",
-        "api": "auto",
+        "api": "openai",
         "think": "low",
         "num_ctx": 98304,
-        "max_tokens": 65536,
+        "max_tokens": 32768,
         "num_predict": 16384,
-        "roles": ["reasoning", "complex_synthesis", "review"]
+        "roles": [
+          "reasoning",
+          "complex_synthesis",
+          "review"
+        ]
       },
       "atomic": {
         "label": "llama-server atomic lane (MCP execution)",
@@ -60,20 +64,43 @@
         "api": "openai",
         "think": "none",
         "json_mode": true,
-        "num_ctx": 49152,
-        "max_tokens": 16384,
-        "num_predict": 16384,
+        "num_ctx": 98304,
+        "max_tokens": 32768,
+        "num_predict": 8192,
         "prompt_max_chars": 24000,
-        "roles": ["mcp_execution", "fast_json", "parallel_slots"],
+        "roles": [
+          "mcp_execution",
+          "fast_json",
+          "parallel_slots"
+        ],
         "state_file": "C:/Users/soyko/Documents/Ollama/docker/llamacpp/qwythos.state.json",
         "scripts_dir": "C:/Users/soyko/Documents/Ollama/docker/llamacpp",
         "default_profile": "concurrent2",
         "switch_idle_timeout_s": 90,
         "switch_timeout_s": 600,
         "profiles": {
-          "concurrent2": { "parallel": 2, "slot_ctx": 49152, "aliases": ["default"] },
-          "concurrent3": { "parallel": 3, "slot_ctx": 32768, "aliases": ["burst"] },
-          "longctx": { "parallel": 1, "slot_ctx": 98304, "aliases": ["solo", "heavy"] }
+          "concurrent2": {
+            "parallel": 2,
+            "slot_ctx": 49152,
+            "aliases": [
+              "default"
+            ]
+          },
+          "concurrent3": {
+            "parallel": 3,
+            "slot_ctx": 32768,
+            "aliases": [
+              "burst"
+            ]
+          },
+          "longctx": {
+            "parallel": 1,
+            "slot_ctx": 98304,
+            "aliases": [
+              "solo",
+              "heavy"
+            ]
+          }
         }
       }
     },
@@ -103,7 +130,10 @@
     "tfidf": {
       "max_df": 0.85,
       "min_df": 1,
-      "ngram_range": [1, 2]
+      "ngram_range": [
+        1,
+        2
+      ]
     }
   },
   "mcp": {
@@ -217,7 +247,10 @@
   },
   "ui": {
     "ai_generator": {
-      "merge_offset_grid": [5, 5]
+      "merge_offset_grid": [
+        5,
+        5
+      ]
     }
   }
 }

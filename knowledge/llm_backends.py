@@ -41,8 +41,7 @@ def resolve_backend_name(task: str = "default", prefer: str | None = None) -> st
         if routing.get("auto_fallback", True):
             return "primary"
     if chosen == "primary":
-        from knowledge.llm_client import get_llm_client
-        if not get_llm_client().available and atomic_lane.health_ok():
+        if not get_backend_client("primary").available and atomic_lane.health_ok():
             if routing.get("auto_fallback", True):
                 return "atomic"
     return chosen

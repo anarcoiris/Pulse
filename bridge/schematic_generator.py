@@ -30,18 +30,7 @@ def _offset_x() -> float:
 def _offset_y() -> float:
     return float(_sch("offset_y_mm", 50.0))
 
-VALUE_SYMBOL_MAP = {
-    "CH340": "Interface_USB:CH340G",
-    "CH340C": "Interface_USB:CH340G",
-    "CH340G": "Interface_USB:CH340G",
-    "CP2102": "Interface_USB:CP2102N-A02-GQFN28",
-    "AMS1117": "Regulator_Linear:AMS1117-3.3",
-    "ESP32": "RF_Module:ESP32-WROOM-32",
-    "ESP8266": "RF_Module:ESP-12F",
-    "ESP32-S2": "MCU_Espressif:ESP32-S2",
-    "ESP32-S3": "RF_Module:ESP32-WROOM-32",
-    "ESP32-WROOM-32": "RF_Module:ESP32-WROOM-32",
-}
+from core.component_types import VALUE_SYMBOL_MAP
 
 
 class SchematicGenerator:

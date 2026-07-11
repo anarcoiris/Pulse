@@ -1,0 +1,293 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\geometry{
+ a4paper,
+ left=20mm,
+ right=20mm,
+ top=20mm,
+ bottom=20mm
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Lista de Componentes para Prototipo EMP},
+    pdfpagemode=FullScreen,
+}
+
+\title{\textbf{Lista de Componentes para Prototipo EMP}}
+\author{Santiago Javier Espino Heredero}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Fuente de Alimentación de Alta Tensión (HV)}
+
+Este es el subsistema que carga el banco de condensadores de forma segura y controlada.
+
+\begin{longtable}{|p{3.5cm}|p{4.5cm}|p{6cm}|}
+\hline
+\rowcolor[gray]{0.9}
+\textbf{Componente} & \textbf{Especificación} & \textbf{Notas de Compra / Alternativas} \\
+\hline
+\endhead
+
+\textbf{Módulo Fuente HV DC-DC} & 
+\textbf{Entrada:} 12V o 24V DC \\
+\textbf{Salida:} 0-5 kV DC ajustable \\
+\textbf{Corriente:} 5-20 mA \\
+\textbf{Control:} Potenciómetro para ajuste de V y limitación de corriente & 
+Busca "HV DC-DC converter module" o "high voltage power supply module" en tiendas de electrónica especializada (como EMCO, XP Power, o en Amazon/AliExpress para módulos genéricos). Asegúrate de que tenga control de corriente. \\
+\hline
+
+\textbf{Resistencia de Límite de Carga (R\textsubscript{limite})} & 
+\textbf{Valor:} 100 k$\Omega$ \\
+\textbf{Potencia:} 5W \\
+\textbf{Tensión Máxima:} 6 kV & 
+Resistencia de película de metal (metal film) o de composición de alto voltaje. Es crucial que soporte la tensión completa. \\
+\hline
+
+\textbf{Interruptor de Potencia (S1)} & 
+\textbf{Tensión:} 6 kV DC \\
+\textbf{Corriente:} 30 mA \\
+\textbf{Tipo:} Palanca grande y robusta, con carcasa de plástico. & 
+Un interruptor de seguridad de alta tensión. No uses un interruptor estándar de 250V. \\
+\hline
+
+\textbf{Divisor de Tensión (para V\textsubscript{medición})} & 
+\textbf{Relación:} 1000:1 (ej. 1 M$\Omega$ / 1 k$\Omega$) \\
+\textbf{Potencia:} 2W (para la resistencia de 1 M$\Omega$) \\
+\textbf{Tensión:} 6 kV & 
+Para medir el voltaje del condensador con un multímetro seguro (que medirá 0-5V en lugar de 0-5000V). \\
+\hline
+
+\end{longtable}
+
+\newpage
+\section{Banco de Almacenamiento y Red Formadora de Pulso (PFN)}
+
+Esta sección almacena la energía y le da forma al pulso antes de la conmutación.
+
+\begin{longtable}{|p{3.5cm}|p{4.5cm}|p{6cm}|}
+\hline
+\rowcolor[gray]{0.9}
+\textbf{Componente} & \textbf{Especificación} & \textbf{Notas de Compra / Alternativas} \\
+\hline
+\endhead
+
+\textbf{Condensadores de Pulso (C1-C6)} & 
+\textbf{Capacidad:} 0.1 $\mu$F cada uno \\
+\textbf{Tensión:} 5 kV DC o más \\
+\textbf{Tipo:} Polipropileno metalizado (MKP) o Mica. \\
+\textbf{ESL/ESR:} Lo más bajo posible. & 
+Busca "pulse capacitor", "polypropylene film capacitor" o "mica capacitor" con las especificaciones de HV. Son los componentes más críticos y costosos. \\
+\hline
+
+\textbf{Inductores de la PFN (L\textsubscript{k})} & 
+\textbf{Inductancia:} 125 nH cada uno \\
+\textbf{Corriente de Pico:} > 1 kA \\
+\textbf{Tipo:} Aire (bobina plana) o toroide de ferrita saturada. & 
+\textbf{Difíciles de comprar.} Es muy probable que tengas que \textbf{devanarlos tú mismo}. Para bobinas de aire: usa alambre de cobre esmaltado grueso (ej. AWG 14-12) y calcula el número de espiras con una calculadora de inductancia online. \\
+\hline
+
+\textbf{Placa de Montaje PFN} & 
+\textbf{Material:} FR-4 de 1.5mm o más, o G10/FR-5. \\
+\textbf{Cobre:} Grueso (2 oz o más). & 
+La disposición física es crítica. Debes montar los condensadores e inductores en una disposición física que minimice las conexiones y los bucles, siguiendo el esquema de una PFN Guillemin. \\
+\hline
+
+\end{longtable}
+
+\newpage
+\section{Sistema de Conmutación de Estado Sólido}
+
+El corazón del sistema, que reemplaza al spark gap para un control preciso.
+
+\begin{longtable}{|p{3.5cm}|p{4.5cm}|p{6cm}|}
+\hline
+\rowcolor[gray]{0.9}
+\textbf{Componente} & \textbf{Especificación} & \textbf{Notas de Compra / Alternativas} \\
+\hline
+\endhead
+
+\textbf{Conmutador Principal (SCR o IGBT)} & 
+\textbf{Opción A (SCR):} \\
+- Tensión de Bloqueo: > 5 kV \\
+- Corriente de Pico (I\textsubscript{TSM}): > 5 kA \\
+- Tiempo de Apagado: < 5 $\mu$s \\
+\textbf{Opción B (IGBT):} \\
+- V\textsubscript{ces}: > 2.5 kV (se pueden poner 2 en serie) \\
+- Corriente de Pico: > 2 kA \\
+- Tipo: "Punch Through" o "Field Stop" para alta velocidad & 
+Busca "pulse rated thyristor", "solid state switch" o "high power IGBT". Marcas como \textbf{ABB, Infineon, Semikron, Vishay} fabrican estos dispositivos. Son componentes especializados y caros. \\
+\hline
+
+\textbf{Circuito Disparador (Gate Driver)} & 
+\textbf{Para SCR:} Pulso de 5-15V, >100 mA, ancho configurable (ej. 10 $\mu$s). \\
+\textbf{Para IGBT:} Driver专用的 (ej. Avago ACPL-332J, Texas Instruments UCC21520). & 
+Un circuito simple con un transistor y un condensador puede funcionar para un SCR, pero un driver dedicado es mucho mejor. Para un IGBT, un driver dedicado es \textbf{obligatorio}. \\
+\hline
+
+\textbf{Fuente Aislada para Disparador} & 
+\textbf{Tensión:} 12-15V DC \\
+\textbf{Aislamiento:} > 6 kV (galvánica) & 
+Crucial para que el circuito de control de bajo voltaje no se destruya. Un pequeño convertidor DC-DC aislado es ideal. \\
+\hline
+
+\end{longtable}
+
+\newpage
+\section{Salida y Antena}
+
+Esta sección acopla la energía del pulso al espacio libre.
+
+\begin{longtable}{|p{3.5cm}|p{4.5cm}|p{6cm}|}
+\hline
+\rowcolor[gray]{0.9}
+\textbf{Componente} & \textbf{Especificación} & \textbf{Notas de Compra / Alternativas} \\
+\hline
+\endhead
+
+\textbf{Inductor de Aislamiento} & 
+\textbf{Inductancia:} 10-50 $\mu$H \\
+\textbf{Corriente de Pico:} > 5 kA \\
+\textbf{Tipo:} Aire o núcleo saturado. & 
+Similar a los de la PFN, es muy probable que tengas que devanarlo. Su función es evitar que cualquier reflejo desde la antena dañe el conmutador. \\
+\hline
+
+\textbf{Conector Coaxial} & 
+\textbf{Tipo:} N o UHF (hembra) \\
+\textbf{Impedancia:} 50 $\Omega$ & 
+Para conectar la PFN a la antena de forma robusta. \\
+\hline
+
+\textbf{Antena TEM Horn} & 
+\textbf{Ancho de Banda:} 500 MHz - 3 GHz \\
+\textbf{Ganancia:} 10-12 dBi \\
+\textbf{Impedancia:} 50 $\Omega$ & 
+\textbf{Debes construirla tú mismo}. Se fabrica con dos planchas de cobre (o PCB de cobre doble cara) formando una transición gradual (la "bocina"). Hay muchos tutoriales online para construir antenas TEM Horn para pulsos. \\
+\hline
+
+\end{longtable}
+
+\newpage
+\section{Sistema de Control y Seguridad}
+
+Para operar el dispositivo de forma segura y repetible.
+
+\begin{longtable}{|p{3.5cm}|p{4.5cm}|p{6cm}|}
+\hline
+\rowcolor[gray]{0.9}
+\textbf{Componente} & \textbf{Especificación} & \textbf{Notas de Compra / Alternativas} \\
+\hline
+\endhead
+
+\textbf{Microcontrolador (Opcional)} & 
+\textbf{Ejemplos:} Arduino Nano, ESP32, PIC18F. \\
+\textbf{Función:} Generar la señal de disparo, leer voltaje (a través del divisor), controlar LEDs de estado. & 
+Un simple circuito temporizador con un 555 también puede funcionar para generar el pulso de disparo. El microcontrolador ofrece más flexibilidad y control. \\
+\hline
+
+\textbf{Caja de Encapsulado} & 
+\textbf{Material:} Plástico (ABS, Pol carbonato) o metal (con aislamiento interno). \\
+\textbf{Tamaño:} Lo suficientemente grande para separar las partes de HV de las de control. & 
+La seguridad es lo primero. La caja debe tener \textbf{interlocks} (interruptores de seguridad) que impidan el acceso a las partes de alta tensión cuando está encendida. \\
+\hline
+
+\textbf{Cables y Terminales} & 
+\textbf{Alta Tensión:} Cable de silicona de 10 kV. \\
+\textbf{Conexiones:} Terminales de presión (faston) o soldadura directa. & 
+No uses cables estándar. El aislamiento es fundamental. \\
+\hline
+
+\textbf{Herramientas de Seguridad} & 
+\textbf{Guantes:} Dieléctricos, Clase 00 (500V) o Clase 0 (1000V) como mínimo. \\
+\textbf{Varilla de descarga:} Varilla con resistencia de alto voltaje en la punta. \\
+\textbf{Gafas de Seguridad:} Para protección contra posibles arcos o fragmentos. & 
+\textbf{INDISPENSABLES.} Nunca trabajes con este circuito sin el equipo de protección personal adecuado. La varilla de descarga se usa para asegurar que los condensadores están completamente descargados después de apagar el sistema. \\
+\hline
+
+\textbf{LEDs de Estado} & 
+\textbf{Color:} Rojo (HV ON), Verde (Listo/Armado), Ámbar (Disparo). \\
+\textbf{Tipo:} Estándar de 5mm. & 
+Para proporcionar una retroalimentación visual clara del estado del sistema. \\
+\hline
+
+\textbf{Resistencias de Descarga} & 
+\textbf{Valor:} 1 M$\Omega$ \\
+\textbf{Potencia:} 5W \\
+\textbf{Tensión:} 6 kV & 
+Conectadas en paralelo con el banco de condensadores a través de un interruptor de seguridad. Permiten descargar la energía de forma segura y controlada cuando no se está usando el sistema. \\
+\hline
+
+\end{longtable}
+
+\newpage
+\section{Herramientas de Construcción y Medición}
+
+Para construir y diagnosticar el prototipo.
+
+\begin{longtable}{|p{3.5cm}|p{4.5cm}|p{6cm}|}
+\hline
+\rowcolor[gray]{0.9}
+\textbf{Componente} & \textbf{Especificación} & \textbf{Notas de Compra / Alternativas} \\
+\hline
+\endhead
+
+\textbf{Multímetro de True RMS} & 
+\textbf{Tensión:} Capaz de medir hasta 1000V AC/DC. \\
+\textbf{Opcional:} Sonda de alta tensión (ej. 1000:1) & 
+Para medir el voltaje de la fuente de alimentación y el voltaje en el divisor de tensión. \textbf{NUNCA intentes medir directamente los 5kV.} \\
+\hline
+
+\textbf{Osciloscopio (Muy Recomendado)} & 
+\textbf{Ancho de Banda:} > 100 MHz \\
+\textbf{Sondas:} Sondas de alto voltaje (100X) & 
+Es casi imposible depurar un sistema de pulso sin un osciloscopio. Te permite ver la forma del pulso en la PFN y en la antena. \\
+\hline
+
+\textbf{Pinza Amperimétrica DC} & 
+\textbf{Corriente de Pico:} Capaz de medir pulsos de alta corriente (> 100A). & 
+Para verificar la corriente de descarga. \\
+\hline
+
+\textbf{Herramientas Manuales} & 
+\textbf{Básicas:} Alicates, cutters, soldador (de buena potencia), estaña. & 
+Para el montaje y cableado. \\
+\hline
+
+\textbf{Material para la Caja} & 
+\textbf{Placas:} Plástico o metálicas para fabricar el chasis. \\
+\textbf{Soportes:} Separadores plásticos, tornillería de acero inoxidable. & 
+Para construir una caja robusta y segura que contenga todo el sistema. \\
+\hline
+
+\end{longtable}
+
+\newpage
+\section*{Notas Finales y Advertencias de Compra}
+
+\begin{enumerate}
+    \item \textbf{Coste y Disponibilidad:} Muchos de estos componentes, especialmente los de alta tensión y alta potencia (condensadores, SCR/IGBT), son \textbf{especializados y caros}. No los encontrarás en una tienda de electrónica de barrio. Tendrás que buscar en distribuidores especializados (Digi-Key, Mouser, Farnell) o en el mercado de componentes industriales.
+    \item \textbf{Seguridad Primero:} No escatimes en componentes de seguridad (caja, interlocks, resistencias de descarga, herramientas de protección). La energía almacenada es letal.
+    \item \textbf{Construcción vs. Compra:} Prepárate para tener que fabricar tú mismo algunas piezas, como los inductores de la PFN y la antena. La calidad de esta construcción casera determinará en gran medida el rendimiento del sistema.
+    \item \textbf{Legalidad:} Recuerda la advertencia sobre la interferencia electromagnética. Este tipo de dispositivo puede infringir regulaciones de RF en muchas jurisdultudes. Su uso debe limitarse a un entorno de laboratorio o jaula de Faraday.
+\end{enumerate}
+
+Con esta lista, tienes una base sólida para empezar a buscar los componentes y planificar la construcción de un prototipo mucho más seguro, controlado y predecible que el diseño inicial.
+
+\end{document}

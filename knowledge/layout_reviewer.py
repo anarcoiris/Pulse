@@ -18,8 +18,8 @@ class LayoutReviewer:
         self.issues = []
         self.proposals = []
 
-    def audit(self) -> Dict[str, Any]:
-        """Ejecuta todos los chequeos de DRC y estéticos."""
+    def audit(self, run_semantic: bool = False, backend: str = "auto") -> Dict[str, Any]:
+        """Ejecuta todos los chequeos de DRC, estéticos, y opcionalmente semánticos con IA."""
         self.issues.clear()
         self.proposals.clear()
         
@@ -29,12 +29,90 @@ class LayoutReviewer:
         criticals = [iss['msg'] for iss in self.issues if iss['severity'] == 'critical']
         warnings = [iss['msg'] for iss in self.issues if iss['severity'] == 'warning']
         
-        return {
+        result = {
             "critical_issues": criticals,
             "warnings": warnings,
-            "proposals": self.proposals,
+            "proposals": [p for p in self.proposals],
             "passed": len(criticals) == 0
         }
+        
+        if run_semantic:
+            try:
+                import json
+                from knowledge.semantic_reviewer import SemanticReviewer
+                
+                # Convert layout to netlist JSON
+                components = []
+                for fp in self.pcb._footprints:
+                    ref = fp.ref
+                    value = fp.value
+                    
+                    # Heuristics for etype
+                    etype = "IC"
+                    ref_upper = ref.upper()
+                    if ref_upper.startswith("R"):
+                        etype = "R"
+                    elif ref_upper.startswith("C"):
+                        etype = "C"
+                    elif ref_upper.startswith("L"):
+                        etype = "L"
+                    elif ref_upper.startswith("D") or ref_upper.startswith("LED"):
+                        etype = "S"
+                    elif ref_upper.startswith("V") or ref_upper.startswith("BT") or ref_upper.startswith("BAT"):
+                        etype = "V"
+                    elif ref_upper.startswith("GND"):
+                        etype = "GND"
+                    elif ref_upper.startswith("U"):
+                        if "ESP" in value.upper():
+                            etype = "MCU"
+                        else:
+                            etype = "IC"
+                    
+                    pins = {}
+                    for p in fp.pads:
+                        pins[p.number] = p.net_name if p.net_name else "NC"
+                        
+                    comp_entry = {
+                        "uid": ref,
+                        "etype": etype,
+                        "value": value,
+                        "label": ref,
+                        "symbol": fp.lib_id,
+                        "footprint": fp.lib_id,
+                    }
+                    
+                    if etype in ("IC", "MCU"):
+                        comp_entry["pins"] = pins
+                    else:
+                        pad_1 = next((p for p in fp.pads if p.number == "1"), None)
+                        pad_2 = next((p for p in fp.pads if p.number == "2"), None)
+                        comp_entry["n1"] = pad_1.net_name if pad_1 else "NC"
+                        comp_entry["n2"] = pad_2.net_name if pad_2 else "NC"
+                        
+                    components.append(comp_entry)
+                    
+                netlist_json = json.dumps({"components": components}, ensure_ascii=False)
+                
+                # Run semantic reviewer
+                sem_reviewer = SemanticReviewer(backend=backend)
+                sem_res = sem_reviewer.review_netlist(netlist_json)
+                
+                if "error" in sem_res:
+                    result["warnings"].append(f"AI Semantic Review Error: {sem_res['error']}")
+                else:
+                    for iss in sem_res.get("issues", []):
+                        msg = f"AI Semantic ({iss.get('severity', 'warning')}): {iss.get('msg')}"
+                        if iss.get("severity") == "critical":
+                            result["critical_issues"].append(msg)
+                            result["passed"] = False
+                        else:
+                            result["warnings"].append(msg)
+                        if iss.get("proposal"):
+                            result["proposals"].append(f"AI Proposal: {iss.get('proposal')}")
+            except Exception as e:
+                result["warnings"].append(f"AI Semantic Review failed to run: {str(e)}")
+                
+        return result
 
     def _add_issue(self, msg: str, severity: str = 'warning', ref: str = ''):
         self.issues.append({"msg": msg, "severity": severity, "ref": ref})
@@ -110,9 +188,9 @@ class LayoutReviewer:
         proj_y = y1 + t * (y2 - y1)
         return math.hypot(px - proj_x, py - proj_y)
 
-    def generate_report(self) -> str:
+    def generate_report(self, run_semantic: bool = False, backend: str = "auto") -> str:
         """Formatea el resultado de la auditoría en un string Markdown amigable."""
-        res = self.audit()
+        res = self.audit(run_semantic=run_semantic, backend=backend)
         
         lines = [
             f"# AI Design Review (DRC) — {self.pcb.project_name}",

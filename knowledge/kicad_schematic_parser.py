@@ -12,17 +12,8 @@ class KiCadSchematicParser:
     """
     
     def __init__(self):
-        # Mapeo de librerías comunes a tipos lógicos
-        self.type_patterns = {
-            r'Device:R': 'R',
-            r'Device:C': 'C',
-            r'Device:L': 'L',
-            r'Device:LED': 'S',
-            r'Device:D': 'S',
-            r'Device:Battery': 'V',
-            r'power:VCC': 'V',
-            r'power:GND': 'GND'
-        }
+        from core.component_types import SYMBOL_TO_ETYPE_PATTERNS
+        self.type_patterns = SYMBOL_TO_ETYPE_PATTERNS
 
     def parse_schematic(self, file_path: str) -> dict:
         content = Path(file_path).read_text(encoding="utf-8")

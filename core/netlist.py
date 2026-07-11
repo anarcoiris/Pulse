@@ -21,33 +21,11 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from core.circuit_graph import CircuitGraph, PlacedComponent
 
-# Mapeado de etypes de PulseLab → símbolo KiCad y valor
-_KICAD_SYMBOLS: dict[str, str] = {
-    "R":   "Device:R",
-    "C":   "Device:C",
-    "L":   "Device:L",
-    "V":   "Device:Battery",
-    "S":   "Device:SW_SPST",
-    "GND": "power:GND",
-}
-
-_DEFAULT_FOOTPRINTS: dict[str, str] = {
-    "R":   "Resistor_SMD:R_0805_2012Metric",
-    "C":   "Capacitor_SMD:C_0805_2012Metric",
-    "L":   "Inductor_SMD:L_0805_2012Metric",
-    "V":   "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical",
-    "S":   "Button_Switch_THT:SW_PUSH_6mm",
-    "GND": "TestPoint:TestPoint_Pad_D1.0mm",
-}
-
-_VALUE_FMT: dict[str, str] = {
-    "R": "{:.4g}Ω",
-    "C": "{:.4g}F",
-    "L": "{:.4g}H",
-    "V": "{:.4g}V",
-    "S": "SW",
-    "GND": "GND",
-}
+from core.component_types import (
+    KICAD_SYMBOLS as _KICAD_SYMBOLS,
+    DEFAULT_FOOTPRINTS as _DEFAULT_FOOTPRINTS,
+    VALUE_FMT as _VALUE_FMT,
+)
 
 
 def _fmt_value(etype: str, value: float) -> str:

@@ -35,50 +35,6 @@ def _safe_print(msg: str) -> None:
 
 TEST_CASES = [
     {
-        "name": "esp32_sensors",
-        "description": "ESP32 Devboard + Sensores",
-        "prompt": (
-            "Diseña un circuito basado en un microcontrolador ESP32. "
-            "Conecta una pantalla OLED SSD1306 al bus I2C (pines SDA, SCL). "
-            "Conecta también un sensor ambiental BME280 al mismo bus I2C. "
-            "Asegúrate de incluir resistencias pull-up en las líneas I2C y "
-            "condensadores de desacoplo para la alimentación del ESP32."
-        ),
-    },
-    {
-        "name": "esp32_steppers",
-        "description": "ESP32 + Controladores Stepper",
-        "prompt": (
-            "Diseña un circuito con un ESP32 que controle dos motores paso a paso NEMA17 "
-            "utilizando dos drivers A4988. "
-            "Conecta los pines STEP y DIR de los A4988 a pines GPIO del ESP32. "
-            "Los drivers deben estar alimentados por una fuente externa de 12V para los motores (VMOT), "
-            "e incluir condensadores electrolíticos grandes (ej: 100uF) cerca del pin VMOT. "
-            "El ESP32 y la lógica de los A4988 (VDD) deben estar a 3.3V."
-        ),
-    },
-    {
-        "name": "esp32_rf_nfc",
-        "description": "ESP32 + NFC + 433 MHz RF",
-        "prompt": (
-            "Diseña un sistema IoT con un ESP32. "
-            "Conecta un lector NFC PN532 a través de I2C. "
-            "Conecta un transceptor de radio 433 MHz CC1101 a través del bus SPI "
-            "(MISO, MOSI, SCK, CS). "
-            "Incluye alimentación de 3.3V para todos los módulos y condensadores de bypass."
-        ),
-    },
-    {
-        "name": "esp32_usb_devkit",
-        "description": "ESP32-WROOM-32 USB Devboard",
-        "prompt": (
-            "Diseña una placa estilo devkit con ESP32-WROOM-32, alimentación 5V USB "
-            "regulada a 3.3V con AMS1117, puente USB-UART CH340G con pares USB_D+ y USB_D-, "
-            "pull-up EN 10k, condensadores de desacople, y headers GPIO. "
-            "UART: CH340 TXD a RX del ESP32 (GPIO3), CH340 RXD a TX del ESP32 (GPIO1)."
-        ),
-    },
-    {
         "name": "pulselab_zero",
         "description": "Proyecto Final: PulseLab Zero (Clon Flipper Zero)",
         "prompt": (

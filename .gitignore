@@ -47,7 +47,11 @@ fp-info-cache
 *.gbr
 *.drl
 *.pdf
-docs/archive/
+# Doc archive: track markdown/tex sources; skip LaTeX build artifacts and binaries
+docs/archive/**/*.aux
+docs/archive/**/*.out
+docs/archive/**/*.toc
+docs/archive/**/*.png
 
 # Webapp
 node_modules/

@@ -5,6 +5,10 @@ from datetime import datetime
 
 class LayoutAI:
     """
+    DEPRECATED/TEMPORARY: Este módulo de recolección de datos y colocación heurística
+    es temporal y está acoplado al andamiaje de PyGame. Será reemplazado por la Phase 3
+    (arquitectura web-first y el flujo unificado en `knowledge/design_experience.py`).
+    
     Sistema de inteligencia para el layout de PCBs.
     Fase 1: Recolección de datos (Dataset generation).
     Fase 2: Heurísticas de colocación.

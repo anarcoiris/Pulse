@@ -9,17 +9,8 @@ class KiCadLayoutParser:
     """
     
     def __init__(self):
-        # Mapeo de footprints comunes a tipos PulseLab
-        self.type_patterns = {
-            r'Resistor': 'R',
-            r'Capacitor': 'C',
-            r'Inductor': 'L',
-            r'LED': 'S',
-            r'Diode': 'S',
-            r'Battery': 'V',
-            r'VCC': 'V',
-            r'GND': 'GND'
-        }
+        from core.component_types import FOOTPRINT_TO_ETYPE_PATTERNS
+        self.type_patterns = FOOTPRINT_TO_ETYPE_PATTERNS
 
     def parse_pcb(self, file_path: str) -> dict:
         content = Path(file_path).read_text(encoding="utf-8")

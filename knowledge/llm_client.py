@@ -86,7 +86,10 @@ class LLMClient:
             return health_ok()
         try:
             import urllib.request
-            health_url = self.base_url.replace("/v1", "/api/tags")
+            if self.api_mode == "openai":
+                health_url = self.base_url.rstrip("/") + "/models"
+            else:
+                health_url = self.base_url.replace("/v1", "/api/tags")
             req = urllib.request.Request(health_url, method="GET")
             with urllib.request.urlopen(req, timeout=3) as resp:
                 return resp.status == 200
