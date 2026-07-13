@@ -30,25 +30,13 @@ def _offset_x() -> float:
 def _offset_y() -> float:
     return float(_sch("offset_y_mm", 50.0))
 
-from core.component_types import VALUE_SYMBOL_MAP
-
+from core.component_types import VALUE_SYMBOL_MAP, KICAD_SYMBOLS
 
 class SchematicGenerator:
     def __init__(self, graph: "CircuitGraph"):
         self.graph = graph
         self.wires = []
         self._used_lib_ids: set[str] = set()
-
-        self.comp_map = {
-            "R": "Device:R",
-            "C": "Device:C",
-            "L": "Device:L",
-            "V": "Device:Battery_Cell",
-            "S": "Switch:SW_Push",
-            "GND": "power:GND",
-            "IC": "Interface_USB:CH340G",
-            "MCU": "RF_Module:ESP32-WROOM-32",
-        }
 
     def _get_uuid(self):
         return str(uuid.uuid4())
@@ -81,7 +69,7 @@ class SchematicGenerator:
         elif comp.etype == "L" and isinstance(comp.value, (int, float)) and comp.value < 1:
             lib_id = "Device:LED"
         else:
-            lib_id = self.comp_map.get(comp.etype, "Device:R")
+            lib_id = KICAD_SYMBOLS.get(comp.etype, "Device:R")
         self._used_lib_ids.add(lib_id)
         return lib_id
 
@@ -138,7 +126,7 @@ class SchematicGenerator:
                 f'  )'
             )
 
-        all_libs = self._used_lib_ids | set(self.comp_map.values())
+        all_libs = self._used_lib_ids
         s.append("  (lib_symbols")
         for lib_id in sorted(all_libs):
             s.append(

@@ -19,6 +19,7 @@ from knowledge.llm_session_log import default_log_dir, new_session_id
 from knowledge.llm_types import StreamChunk
 from knowledge.semantic_reviewer import SemanticReviewer
 from knowledge.validate_complex_apps import _pin_coverage
+from knowledge.circuit_agent import CircuitStewardAgent
 from studio.preview import export_schematic_preview
 
 
@@ -29,6 +30,7 @@ class ForgeSession:
         self.session_id = new_session_id(prefix="studio")
         self.backend = backend
         self.graph = CircuitGraph()
+        self.messages: list[dict] = []
         self._synth = CircuitSynthesizer(backend=backend)
         self._reviewer = SemanticReviewer(backend=backend)
 
@@ -55,6 +57,40 @@ class ForgeSession:
             meta={"source": "forge_studio"},
             on_chunk=on_chunk,
         )
+        if result.get("status") != "ok":
+            return result
+
+        components = result.get("components") or []
+        self.graph = CircuitGraph.from_component_dicts(components)
+        pin_cov = _pin_coverage(components, self._synth.pinouts_db)
+        result["pin_coverage"] = pin_cov
+        result["component_count"] = len(components)
+        return result
+
+    def steward(
+        self,
+        prompt: str,
+        on_chunk: Callable[[StreamChunk], None] | None = None,
+        on_turn_end: Callable[[int, str], None] | None = None,
+    ) -> dict:
+        agent = CircuitStewardAgent(self._synth)
+        result = agent.run_agent_loop(
+            prompt,
+            session_id=self.session_id,
+            history=self.messages,
+            on_chunk=on_chunk,
+            on_turn_end=on_turn_end
+        )
+        
+        # Save checkpoints
+        log_dir = default_log_dir() / "sessions" / self.session_id
+        log_dir.mkdir(parents=True, exist_ok=True)
+        checkpoint_file = log_dir / "checkpoints.jsonl"
+        
+        with open(checkpoint_file, "w", encoding="utf-8") as f:
+            for msg in self.messages:
+                f.write(json.dumps(msg, ensure_ascii=False) + "\n")
+
         if result.get("status") != "ok":
             return result
 

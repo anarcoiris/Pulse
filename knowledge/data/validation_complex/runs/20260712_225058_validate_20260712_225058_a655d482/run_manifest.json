@@ -1,0 +1,100 @@
+{
+  "run_session": "validate_20260712_225058_a655d482",
+  "started_at": "2026-07-12T22:51:02.432588+00:00",
+  "backend_pref": "auto",
+  "review_backend_pref": "auto",
+  "review_backend_resolved": "atomic",
+  "ab_variant": "a",
+  "backends": {
+    "primary": {
+      "label": "llamacpp Qwythos 9B (reasoning)",
+      "available": true,
+      "base_url": "http://localhost:11440/v1",
+      "model": "qwythos-9b-96k",
+      "api": "openai",
+      "think": "low",
+      "roles": [
+        "reasoning",
+        "complex_synthesis",
+        "review"
+      ],
+      "limits": {
+        "num_ctx": 98304,
+        "max_tokens": 16384,
+        "prompt_max_chars": 48000,
+        "json_mode": false,
+        "think": "low",
+        "api": "openai"
+      }
+    },
+    "atomic": {
+      "label": "llama-server atomic lane (MCP execution)",
+      "available": true,
+      "base_url": "http://localhost:11439/v1",
+      "model": "qwen3-4b-instruct-96k",
+      "api": "openai",
+      "think": false,
+      "roles": [
+        "mcp_execution",
+        "fast_json",
+        "parallel_slots"
+      ],
+      "limits": {
+        "num_ctx": 98304,
+        "max_tokens": 8192,
+        "prompt_max_chars": 24000,
+        "json_mode": true,
+        "think": false,
+        "api": "openai"
+      },
+      "atomic": {
+        "available": true,
+        "port": 11439,
+        "base_url": "http://localhost:11439/v1",
+        "profile": "concurrent2",
+        "parallel": 1,
+        "slot_ctx": 98304,
+        "total_ctx": 98304,
+        "model": "qwen3-4b-instruct-96k",
+        "server_alias": "qwen3-4b-instruct-96k",
+        "pid": 44160,
+        "state_file": "C:\\Users\\soyko\\Documents\\Ollama\\docker\\llamacpp\\qwythos.state.json",
+        "api": "openai",
+        "think": "none",
+        "roles": [
+          "mcp_execution",
+          "fast_json",
+          "parallel_slots"
+        ],
+        "last_switch": {}
+      }
+    },
+    "routing": {
+      "default_backend": "primary",
+      "mcp_tool_backend": "atomic",
+      "complex_circuit_backend": "primary",
+      "review_backend": "atomic",
+      "auto_fallback": true
+    }
+  },
+  "results": [
+    {
+      "name": "esp32_sensors",
+      "elapsed_s": 279.9,
+      "session_id": "validate_20260712_225058_a655d482",
+      "generation_attempts": 1,
+      "truncated": false,
+      "error": "LLM error tras 2 intentos: Connection error."
+    },
+    {
+      "name": "pulselab_zero",
+      "elapsed_s": 10.2,
+      "session_id": "validate_20260712_225058_a655d482",
+      "generation_attempts": null,
+      "truncated": null,
+      "error": "LLM backend 'primary' no disponible."
+    }
+  ],
+  "finished_at": "2026-07-12T22:55:52.500795+00:00",
+  "truncation_events": 0
+}

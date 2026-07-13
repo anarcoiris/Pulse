@@ -1,0 +1,205 @@
+{
+  "run_session": "validate_20260713_003837_9f03979b",
+  "started_at": "2026-07-13T00:38:46.778340+00:00",
+  "backend_pref": "auto",
+  "review_backend_pref": "auto",
+  "review_backend_resolved": "primary",
+  "ab_variant": "a",
+  "backends": {
+    "primary": {
+      "label": "llamacpp Qwythos 9B (reasoning)",
+      "available": true,
+      "base_url": "http://localhost:11440/v1",
+      "model": "qwythos-9b-96k",
+      "api": "openai",
+      "think": "low",
+      "roles": [
+        "reasoning",
+        "complex_synthesis",
+        "review"
+      ],
+      "limits": {
+        "num_ctx": 98304,
+        "max_tokens": 16384,
+        "prompt_max_chars": 48000,
+        "json_mode": false,
+        "think": "low",
+        "api": "openai"
+      }
+    },
+    "atomic": {
+      "label": "llama-server atomic lane (MCP execution)",
+      "available": true,
+      "base_url": "http://localhost:11439/v1",
+      "model": "qwen3-4b-instruct-48k",
+      "api": "openai",
+      "think": false,
+      "roles": [
+        "mcp_execution",
+        "fast_json",
+        "parallel_slots"
+      ],
+      "limits": {
+        "num_ctx": 49152,
+        "max_tokens": 8192,
+        "prompt_max_chars": 24000,
+        "json_mode": true,
+        "think": false,
+        "api": "openai"
+      },
+      "atomic": {
+        "available": false,
+        "port": 11439,
+        "base_url": "http://localhost:11439/v1",
+        "profile": "unknown",
+        "parallel": 0,
+        "slot_ctx": 49152,
+        "total_ctx": 98304,
+        "model": "auto",
+        "server_alias": null,
+        "pid": null,
+        "state_file": "C:\\Users\\soyko\\Documents\\Ollama\\docker\\llamacpp\\qwythos.state.json",
+        "api": "openai",
+        "think": "none",
+        "roles": [
+          "mcp_execution",
+          "fast_json",
+          "parallel_slots"
+        ],
+        "last_switch": {}
+      }
+    },
+    "routing": {
+      "default_backend": "primary",
+      "mcp_tool_backend": "atomic",
+      "complex_circuit_backend": "primary",
+      "review_backend": "atomic",
+      "auto_fallback": true
+    }
+  },
+  "results": [
+    {
+      "name": "esp32_sensors",
+      "elapsed_s": 160.1,
+      "session_id": "validate_20260713_003837_9f03979b",
+      "generation_attempts": 4,
+      "truncated": false,
+      "ok": true,
+      "components": 8,
+      "backend": null,
+      "synthesis_backend": null,
+      "review_backend": "primary",
+      "ab_variant": "a",
+      "output_file": "knowledge\\data\\validation_complex\\runs\\20260713_003837_validate_20260713_003837_9f03979b\\esp32_sensors.json",
+      "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260713_003837_9f03979b",
+      "pin_coverage": {
+        "per_component": [
+          {
+            "label": "U1",
+            "value": "ESP32-WROOM-32",
+            "generated_pins": 7,
+            "total_pins": 39,
+            "coverage": 0.1795,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U2",
+            "value": "BME280",
+            "generated_pins": 4,
+            "total_pins": 4,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "OLED1",
+            "value": "SSD1306",
+            "generated_pins": 4,
+            "total_pins": 4,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          }
+        ],
+        "unmatched": [],
+        "average_coverage": 0.7265
+      },
+      "semantic_review": {
+        "issue_count": 1,
+        "critical_count": 1,
+        "issues": [
+          {
+            "msg": "El pin EN (pin 3) del ESP32 estÃ¡ en unconnected_pins y no tiene una resistencia de pull-up a 3.3V.",
+            "severity": "critical",
+            "proposal": "Conecta el pin 3 (EN) del ESP32 a la red de 3.3V mediante una resistencia de pull-up de 10k."
+          }
+        ]
+      },
+      "review_elapsed_s": 39.4
+    },
+    {
+      "name": "pulselab_zero",
+      "elapsed_s": 6339.4,
+      "session_id": "validate_20260713_003837_9f03979b",
+      "generation_attempts": 5,
+      "truncated": false,
+      "ok": true,
+      "components": 21,
+      "backend": null,
+      "synthesis_backend": null,
+      "review_backend": "primary",
+      "ab_variant": "a",
+      "output_file": "knowledge\\data\\validation_complex\\runs\\20260713_003837_validate_20260713_003837_9f03979b\\pulselab_zero.json",
+      "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260713_003837_9f03979b",
+      "pin_coverage": {
+        "per_component": [
+          {
+            "label": "U1",
+            "value": "ESP32-S3",
+            "generated_pins": 26,
+            "total_pins": 48,
+            "coverage": 0.5417,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U2",
+            "value": "SSD1306",
+            "generated_pins": 4,
+            "total_pins": 4,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U3",
+            "value": "PN532",
+            "generated_pins": 7,
+            "total_pins": 7,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U4",
+            "value": "CC1101",
+            "generated_pins": 8,
+            "total_pins": 8,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          }
+        ],
+        "unmatched": [
+          {
+            "label": "J1",
+            "value": "Header_8"
+          }
+        ],
+        "average_coverage": 0.8854
+      },
+      "semantic_review": {
+        "issue_count": 0,
+        "critical_count": 0,
+        "issues": []
+      },
+      "review_elapsed_s": 25.7
+    }
+  ],
+  "finished_at": "2026-07-13T02:28:11.448272+00:00",
+  "truncation_events": 0
+}

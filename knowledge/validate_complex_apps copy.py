@@ -20,7 +20,6 @@ from knowledge.circuit_synthesizer import CircuitSynthesizer
 from knowledge.llm_backends import list_backends
 from knowledge.llm_session_log import new_session_id
 from knowledge.semantic_reviewer import SemanticReviewer
-from knowledge.circuit_agent import CircuitStewardAgent
 
 OUT_DIR = Path("knowledge/data/validation_complex")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -44,6 +43,39 @@ TEST_CASES = [
             "Conecta también un sensor ambiental BME280 al mismo bus I2C. "
             "Asegúrate de incluir resistencias pull-up en las líneas I2C y "
             "condensadores de desacoplo para la alimentación del ESP32."
+        ),
+    },
+    {
+        "name": "esp32_steppers",
+        "description": "ESP32 + Controladores Stepper",
+        "prompt": (
+            "Diseña un circuito con un ESP32 que controle dos motores paso a paso NEMA17 "
+            "utilizando dos drivers A4988. "
+            "Conecta los pines STEP y DIR de los A4988 a pines GPIO del ESP32. "
+            "Los drivers deben estar alimentados por una fuente externa de 12V para los motores (VMOT), "
+            "e incluir condensadores electrolíticos grandes (ej: 100uF) cerca del pin VMOT. "
+            "El ESP32 y la lógica de los A4988 (VDD) deben estar a 3.3V."
+        ),
+    },
+    {
+        "name": "esp32_rf_nfc",
+        "description": "ESP32 + NFC + 433 MHz RF",
+        "prompt": (
+            "Diseña un sistema IoT con un ESP32. "
+            "Conecta un lector NFC PN532 a través de I2C. "
+            "Conecta un transceptor de radio 433 MHz CC1101 a través del bus SPI "
+            "(MISO, MOSI, SCK, CS). "
+            "Incluye alimentación de 3.3V para todos los módulos y condensadores de bypass."
+        ),
+    },
+    {
+        "name": "esp32_usb_devkit",
+        "description": "ESP32-WROOM-32 USB Devboard",
+        "prompt": (
+            "Diseña una placa estilo devkit con ESP32-WROOM-32, alimentación 5V USB "
+            "regulada a 3.3V con AMS1117, puente USB-UART CH340G con pares USB_D+ y USB_D-, "
+            "pull-up EN 10k, condensadores de desacople, y headers GPIO. "
+            "UART: CH340 TXD a RX del ESP32 (GPIO3), CH340 RXD a TX del ESP32 (GPIO1)."
         ),
     },
     {
@@ -247,22 +279,19 @@ def main():
         print(f"Test: {case['description']}")
         print(f"-----------------------------------------------------")
 
-        print("Generando circuito (Agente Multi-Turno)...", flush=True)
+        print("Generando circuito...", flush=True)
         t0 = time.time()
-        steward = CircuitStewardAgent(synth)
-        history = []
-        result = steward.run_agent_loop(
-            prompt=case["prompt"],
+        result = synth.generate_circuit_json(
+            case["prompt"],
             session_id=run_session,
-            history=history,
-            on_turn_end=lambda t, status: _safe_print(f"  [Turno {t}] {status}")
+            meta={
+                "test": name,
+                "description": case["description"],
+                "run_dir": str(run_dir),
+                "ab_variant": args.variant,
+            },
         )
         elapsed = time.time() - t0
-        
-        # Compatibility with the rest of the script
-        result["session_dir"] = str(_ROOT / "knowledge" / "data" / "llm_sessions" / "sessions" / run_session)
-        result["generation_attempts"] = result.get("turns", 1)
-        result["truncated"] = False
         print(f"  ({elapsed:.0f}s)", flush=True)
 
         entry = {

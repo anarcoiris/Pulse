@@ -1,0 +1,187 @@
+{
+  "run_session": "validate_20260710_174224_a865986d",
+  "started_at": "2026-07-10T17:42:28.101245+00:00",
+  "backend_pref": "auto",
+  "review_backend_pref": "auto",
+  "review_backend_resolved": "atomic",
+  "ab_variant": "b",
+  "backends": {
+    "primary": {
+      "label": "llamacpp Qwythos 9B (reasoning)",
+      "available": true,
+      "base_url": "http://localhost:11440/v1",
+      "model": "qwythos-9b-96k",
+      "api": "openai",
+      "think": "low",
+      "roles": [
+        "reasoning",
+        "complex_synthesis",
+        "review"
+      ],
+      "limits": {
+        "num_ctx": 98304,
+        "max_tokens": 16384,
+        "prompt_max_chars": 48000,
+        "json_mode": false,
+        "think": "low",
+        "api": "openai"
+      }
+    },
+    "atomic": {
+      "label": "llama-server atomic lane (MCP execution)",
+      "available": true,
+      "base_url": "http://localhost:11439/v1",
+      "model": "qwen3-4b-instruct-96k",
+      "api": "openai",
+      "think": false,
+      "roles": [
+        "mcp_execution",
+        "fast_json",
+        "parallel_slots"
+      ],
+      "limits": {
+        "num_ctx": 98304,
+        "max_tokens": 8192,
+        "prompt_max_chars": 24000,
+        "json_mode": true,
+        "think": false,
+        "api": "openai"
+      },
+      "atomic": {
+        "available": true,
+        "port": 11439,
+        "base_url": "http://localhost:11439/v1",
+        "profile": "concurrent2",
+        "parallel": 1,
+        "slot_ctx": 98304,
+        "total_ctx": 98304,
+        "model": "qwen3-4b-instruct-96k",
+        "server_alias": "qwen3-4b-instruct-96k",
+        "pid": 26584,
+        "state_file": "C:\\Users\\soyko\\Documents\\Ollama\\docker\\llamacpp\\qwythos.state.json",
+        "api": "openai",
+        "think": "none",
+        "roles": [
+          "mcp_execution",
+          "fast_json",
+          "parallel_slots"
+        ],
+        "last_switch": {}
+      }
+    },
+    "routing": {
+      "default_backend": "primary",
+      "mcp_tool_backend": "atomic",
+      "complex_circuit_backend": "primary",
+      "review_backend": "atomic",
+      "auto_fallback": true
+    }
+  },
+  "results": [
+    {
+      "name": "pulselab_zero",
+      "elapsed_s": 612.1,
+      "session_id": "validate_20260710_174224_a865986d",
+      "generation_attempts": 1,
+      "truncated": false,
+      "ok": true,
+      "components": 18,
+      "backend": "primary",
+      "synthesis_backend": "primary",
+      "review_backend": "atomic",
+      "ab_variant": "b",
+      "output_file": "knowledge\\data\\validation_complex\\runs\\20260710_174224_validate_20260710_174224_a865986d\\pulselab_zero.json",
+      "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260710_174224_a865986d",
+      "pin_coverage": {
+        "per_component": [
+          {
+            "label": "U_REG",
+            "value": "AMS1117-3.3",
+            "generated_pins": 3,
+            "total_pins": 3,
+            "coverage": 1.0,
+            "source": "kicad_symbols_index:Regulator_Linear"
+          },
+          {
+            "label": "U3",
+            "value": "ESP32-S3",
+            "generated_pins": 2,
+            "total_pins": 48,
+            "coverage": 0.0417,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "OLED",
+            "value": "SSD1306",
+            "generated_pins": 4,
+            "total_pins": 4,
+            "coverage": 1.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U_NFC",
+            "value": "PN532",
+            "generated_pins": 0,
+            "total_pins": 7,
+            "coverage": 0.0,
+            "source": "pinouts_library"
+          },
+          {
+            "label": "U_SUBG",
+            "value": "CC1101",
+            "generated_pins": 0,
+            "total_pins": 8,
+            "coverage": 0.0,
+            "source": "pinouts_library"
+          }
+        ],
+        "unmatched": [
+          {
+            "label": "J_EXP",
+            "value": "GPIO_HDR_L"
+          }
+        ],
+        "average_coverage": 0.4083
+      },
+      "semantic_review": {
+        "issue_count": 6,
+        "critical_count": 3,
+        "issues": [
+          {
+            "msg": "El pin GPIO0 del ESP32-S3 está conectado a un pull-up de 10kΩ desde VCC33, lo que impide que el pin pueda ser puesto a GND para entrar en modo de flash. Esto viola la regla de diseño que requiere que GPIO0 pueda ir a GND para el modo de arranque del ESP32-S3.",
+            "severity": "critical",
+            "proposal": "Eliminar el pull-up de 10kΩ desde VCC33 a GPIO0 y conectar directamente GPIO0 a GND (físico o simbólico) para permitir el modo de flash."
+          },
+          {
+            "msg": "El pin EN del ESP32-S3 no está definido. Se requiere un pull-up de 10kΩ desde 3.3V a EN para activar el módulo. El pin EN debe estar conectado a 3.3V con un pull-up para evitar flotación.",
+            "severity": "critical",
+            "proposal": "Añadir un resistor de 10kΩ entre 3.3V y el pin EN del ESP32-S3 para activar correctamente el módulo."
+          },
+          {
+            "msg": "El pin VUSB del AMS1117 está conectado directamente a VUSB, pero no se especifica la conexión de GND. El terminal GND del AMS1117 debe estar conectado al GND físico (nodo 0) para formar un circuito cerrado y garantizar estabilidad de voltaje.",
+            "severity": "warning",
+            "proposal": "Conectar explícitamente el pin GND del AMS1117 al nodo GND (0) para asegurar que el regulador funcione correctamente."
+          },
+          {
+            "msg": "El pin SDA y SCK del SSD1306 no están conectados a los pines adecuados de la fuente de voltaje o al sistema de referencia. Se requiere una conexión directa a VDD (3.3V) y GND para operar correctamente.",
+            "severity": "warning",
+            "proposal": "Conectar el pin SDA del SSD1306 a un pino de GND (0) y SCK a un pino de VDD (3.3V), asegurando que el módulo tenga una referencia clara."
+          },
+          {
+            "msg": "Los pines VCC33 del AMS1117 y del GPIO_HDR_L no están conectados a un nodo común de 3.3V. Se requiere una conexión clara entre todos los componentes que operan a 3.3V para evitar flotaciones o problemas de voltaje.",
+            "severity": "warning",
+            "proposal": "Crear un nodo común de 3.3V (VCC33) y conectar explícitamente todos los pines VCC33 a este nodo para garantizar estabilidad del voltaje en el circuito."
+          },
+          {
+            "msg": "Los pines n1 y n2 del PN532 y CC1101 no están definidos. Se requieren conexiones claras a GND y VDD para operar correctamente estos módulos, que dependen de una referencia de voltaje estable.",
+            "severity": "critical",
+            "proposal": "Conectar explícitamente los pines n1 y n2 del PN532 y CC1101 a GND y VDD (3.3V) respectivamente para asegurar su funcionamiento correcto."
+          }
+        ]
+      },
+      "review_elapsed_s": 19.8
+    }
+  ],
+  "finished_at": "2026-07-10T17:53:00.088474+00:00",
+  "truncation_events": 0
+}

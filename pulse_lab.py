@@ -168,8 +168,10 @@ class PulseLabApp:
     # ── Undo / Redo ───────────────────────────────────────────
 
     def _snapshot(self) -> None:
-        """Guarda estado actual del grafo en la pila de deshacer."""
+        """Guarda estado actual del grafo en la pila de deshacer si hubo cambios."""
         state = _json.dumps(self.graph.to_json())
+        if self._undo_stack and self._undo_stack[-1] == state:
+            return  # No registrar cambios vacíos
         self._undo_stack.append(state)
         if len(self._undo_stack) > self._MAX_HISTORY:
             self._undo_stack.pop(0)

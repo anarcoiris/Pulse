@@ -1,0 +1,291 @@
+{
+  "run_session": "validate_20260713_003837_9f03979b",
+  "test_case": "Proyecto Final: PulseLab Zero (Clon Flipper Zero)",
+  "prompt": "Diseña un dispositivo estilo Flipper Zero llamado PulseLab Zero. Debe tener un microcontrolador ESP32-S3 como núcleo, una pantalla OLED SSD1306 por I2C, un módulo NFC PN532 por SPI, un transceptor sub-GHz CC1101 por SPI, un D-Pad de 5 botones direccionales conectados a GPIOs con resistencias pull-up, y un conector de expansión de 8 pines (GPIOs libres, 3.3V y GND). Incluye condensadores de desacoplo para el ESP32.",
+  "ab_variant": "a",
+  "backend": null,
+  "synthesis_backend": null,
+  "review_backend": "primary",
+  "generation_attempts": 5,
+  "truncated": false,
+  "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260713_003837_9f03979b",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 3.3,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "V1"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-S3",
+      "symbol": "RF_Module:ESP32-S3-WROOM-1",
+      "footprint": "RF_Module:ESP32-S3-WROOM-1",
+      "pins": {
+        "1": "GND",
+        "2": "3.3V",
+        "3": "EN",
+        "5": "BTN_UP",
+        "6": "BTN_DOWN",
+        "7": "BTN_LEFT",
+        "8": "BTN_RIGHT",
+        "9": "BTN_SELECT",
+        "12": "I2C_SDA",
+        "13": "I2C_SCL",
+        "14": "NSS_NFC",
+        "15": "SPI_MOSI",
+        "16": "SPI_SCK",
+        "17": "SPI_MISO",
+        "18": "CSN_CC1101",
+        "19": "NFC_IRQ",
+        "20": "CC1101_GDO2",
+        "21": "CC1101_GDO0",
+        "22": "EXP_IO18",
+        "25": "EXP_IO21",
+        "26": "EXP_IO26",
+        "27": "EXP_IO27",
+        "28": "EXP_IO28",
+        "29": "EXP_IO29",
+        "47": "GND",
+        "48": "GND"
+      },
+      "unconnected_pins": [
+        "4",
+        "10",
+        "11",
+        "23",
+        "24",
+        "30",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "44",
+        "45",
+        "46"
+      ],
+      "label": "U1"
+    },
+    {
+      "etype": "IC",
+      "value": "SSD1306",
+      "symbol": "Connector_Generic:Conn_01x04",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "3.3V",
+        "3": "I2C_SCL",
+        "4": "I2C_SDA"
+      },
+      "label": "U2"
+    },
+    {
+      "etype": "IC",
+      "value": "PN532",
+      "symbol": "Connector_Generic:Conn_01x07",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x07_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "3.3V",
+        "3": "SPI_MOSI",
+        "4": "SPI_MISO",
+        "5": "SPI_SCK",
+        "6": "NSS_NFC",
+        "7": "NFC_IRQ"
+      },
+      "label": "U3"
+    },
+    {
+      "etype": "IC",
+      "value": "CC1101",
+      "symbol": "Connector_Generic:Conn_01x08",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+      "pins": {
+        "1": "3.3V",
+        "2": "GND",
+        "3": "SPI_MOSI",
+        "4": "SPI_SCK",
+        "5": "SPI_MISO",
+        "6": "CC1101_GDO2",
+        "7": "CC1101_GDO0",
+        "8": "CSN_CC1101"
+      },
+      "label": "U4"
+    },
+    {
+      "etype": "IC",
+      "value": "Header_8",
+      "symbol": "Connector_Generic:Conn_01x08",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "3.3V",
+        "3": "EXP_IO18",
+        "4": "EXP_IO21",
+        "5": "EXP_IO26",
+        "6": "EXP_IO27",
+        "7": "EXP_IO28",
+        "8": "EXP_IO29"
+      },
+      "label": "J1"
+    },
+    {
+      "etype": "S",
+      "n1": "BTN_UP",
+      "n2": "GND",
+      "label": "S_UP"
+    },
+    {
+      "etype": "S",
+      "n1": "BTN_DOWN",
+      "n2": "GND",
+      "label": "S_DOWN"
+    },
+    {
+      "etype": "S",
+      "n1": "BTN_LEFT",
+      "n2": "GND",
+      "label": "S_LEFT"
+    },
+    {
+      "etype": "S",
+      "n1": "BTN_RIGHT",
+      "n2": "GND",
+      "label": "S_RIGHT"
+    },
+    {
+      "etype": "S",
+      "n1": "BTN_SELECT",
+      "n2": "GND",
+      "label": "S_SELECT"
+    },
+    {
+      "etype": "R",
+      "value": 10000.0,
+      "n1": "3.3V",
+      "n2": "BTN_UP",
+      "label": "R_UP"
+    },
+    {
+      "etype": "R",
+      "value": 10000.0,
+      "n1": "3.3V",
+      "n2": "BTN_DOWN",
+      "label": "R_DOWN"
+    },
+    {
+      "etype": "R",
+      "value": 10000.0,
+      "n1": "3.3V",
+      "n2": "BTN_LEFT",
+      "label": "R_LEFT"
+    },
+    {
+      "etype": "R",
+      "value": 10000.0,
+      "n1": "3.3V",
+      "n2": "BTN_RIGHT",
+      "label": "R_RIGHT"
+    },
+    {
+      "etype": "R",
+      "value": 10000.0,
+      "n1": "3.3V",
+      "n2": "BTN_SELECT",
+      "label": "R_SELECT"
+    },
+    {
+      "etype": "R",
+      "value": 10000.0,
+      "n1": "3.3V",
+      "n2": "EN",
+      "label": "R_EN"
+    },
+    {
+      "etype": "R",
+      "value": 4700.0,
+      "n1": "3.3V",
+      "n2": "I2C_SDA",
+      "label": "R_SDA"
+    },
+    {
+      "etype": "R",
+      "value": 4700.0,
+      "n1": "3.3V",
+      "n2": "I2C_SCL",
+      "label": "R_SCL"
+    },
+    {
+      "etype": "C",
+      "value": 1e-07,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "C1"
+    },
+    {
+      "etype": "C",
+      "value": 1e-05,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "C2"
+    }
+  ],
+  "pin_coverage": {
+    "per_component": [
+      {
+        "label": "U1",
+        "value": "ESP32-S3",
+        "generated_pins": 26,
+        "total_pins": 48,
+        "coverage": 0.5417,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "U2",
+        "value": "SSD1306",
+        "generated_pins": 4,
+        "total_pins": 4,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "U3",
+        "value": "PN532",
+        "generated_pins": 7,
+        "total_pins": 7,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "U4",
+        "value": "CC1101",
+        "generated_pins": 8,
+        "total_pins": 8,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      }
+    ],
+    "unmatched": [
+      {
+        "label": "J1",
+        "value": "Header_8"
+      }
+    ],
+    "average_coverage": 0.8854
+  },
+  "semantic_review": {
+    "issue_count": 0,
+    "critical_count": 0,
+    "issues": []
+  }
+}

@@ -91,7 +91,7 @@ El roadmap menciona "Modelo Multipin — Editor + netlist + esquemáticos" como 
 **El conflicto real** no es de modelo de datos (eso ya está), sino de **UI**: el editor PyGame ([ui/editor.py](file:///c:/Users/soyko/Documents/Pulse-main/ui/editor.py), 43KB) dibuja todos los componentes como cajas de 2 pines con la misma renderización. Hacer "Modelo Multipin" sin resolver la UI es incompleto, pero resolver la UI lleva a la pregunta: ¿se sigue invirtiendo en el editor PyGame, o se migra al "Forge Studio web canvas"?
 
 > [!CAUTION]
-> **Riesgo de trabajo perdido:** Si el roadmap Phase 3 incluye "Forge Studio web canvas" como reemplazo de la UI PyGame, invertir en features PyGame (Cyber Night theme, Wire Glow, Multipin UI, Footprint selection UI, particles/glassmorphism) sería **trabajo desechable**. Necesitas decidir si PyGame es el futuro o es transitorio.
+> **Riesgo de trabajo perdido:** Si el roadmap Phase 3 incluye "Forge Studio web canvas" como reemplazo de la UI PyGame, invertir en features PyGame (Cyber Night theme, Wire Glow, Multipin UI, Footprint selection UI, particles/glassmorphism) sería **trabajo desechable**. Se decide que PyGame es transitorio.
 
 ---
 
@@ -192,11 +192,11 @@ graph TD
 ### Epic 2: Limpieza de deuda técnica (1-2 días)
 | # | Tarea | Esfuerzo | Bloqueado por |
 |---|-------|----------|---------------|
-| 2.1 | Eliminar `knowledge/kicad_importer.py` (dead code) | 15min | — |
-| 2.2 | Evaluar deprecación de `knowledge/layout_ai.py` | 30min | — |
-| 2.3 | Centralizar mapeos `etype ↔ KiCad symbol ↔ footprint` en 1 módulo | 2-3h | 2.1 |
-| 2.4 | Unificar `LayoutReviewer` + `SemanticReviewer` bajo API `audit()` | 3-4h | — |
-| 2.5 | Undo/Redo snapshot-first fix | 2-3h | — |
+| 2.1 | Eliminar `knowledge/kicad_importer.py` (dead code) | 15min | — (x) Completado |
+| 2.2 | Evaluar deprecación de `knowledge/layout_ai.py` | 30min | — (x) Completado |
+| 2.3 | Centralizar mapeos `etype ↔ KiCad symbol ↔ footprint` en 1 módulo | 2-3h | 2.1 (x) Completado |
+| 2.4 | Unificar `LayoutReviewer` + `SemanticReviewer` bajo API `audit()` | 3-4h | — (x) Completado |
+| 2.5 | Undo/Redo snapshot-first fix | 2-3h | — (x) Completado |
 
 ### Epic 3: Decisión estratégica de UI (⚡ decisión clave)
 
@@ -208,6 +208,9 @@ graph TD
 | **A: PyGame es el futuro** | Ya funciona, todo el editor está ahí (43KB), no hay migración | PyGame es limitado para UX moderna, no soporta glassmorphism/web, difícil de distribuir |
 | **B: Web canvas es el futuro** | Estética premium posible, distribuible como URL, React/Canvas ya arrancado en `webapp/` | Requiere reescribir todo el editor, comunicación con backend Python, el `webapp/` actual es solo un simulador EMP |
 | **C: Híbrido** | PyGame funcional + web para visualización/revisión, Forge Studio CLI como puente | Doble mantenimiento, complejidad |
+
+> [!TIP]
+> **Acelerador para el Web Canvas:** El repositorio abierto `buildwithflux/kicad-module-parser` (basado en PegJS) permite parsear `.kicad_pcb`, `.kicad_mod` y `.kicad_sym` directamente en TypeScript/JavaScript. Esto reduce enormemente el esfuerzo de la Opción B, ya que el frontend React podría ingerir los archivos nativos de KiCad para renderizar layouts y footprints sin requerir un puente complejo de serialización JSON en el backend Python.
 
 Mi recomendación: **Opción C a corto plazo, transición a B a largo plazo.** No inviertas en estética PyGame. El Forge Studio CLI ya funciona como puente headless. Cuando hagas el web canvas, construye sobre `webapp/` con React + Canvas2D/WebGL.
 
@@ -229,6 +232,21 @@ Mi recomendación: **Opción C a corto plazo, transición a B a largo plazo.** N
 | 5.5 | Coaxial transmission line model | 3-5 días | 5.1 |
 | 5.6 | RF keep-out zone auto-generation | 2-3 días | 5.4, 5.5 |
 
+### Epic 6: Multi-Turn Agent Loop (Tiny Steward Architecture)
+| # | Tarea | Esfuerzo | Bloqueado por |
+|---|-------|----------|---------------|
+| 6.1 | Implementar `CircuitStewardAgent` (XML tags) | 1 día | — (x) Completado |
+| 6.2 | Integrar interfaz `/steward` interactiva en `python -m studio` | 1 día | 6.1 (x) Completado |
+| 6.3 | Migración de XML a **Native API (OpenAI Tool Calling)** para `qwythos` | 1 día | 6.2 |
+| 6.4 | Añadir skill `validate_drc` bajo demanda | 2-3 días | 6.3 |
+| 6.5 | Añadir skill `search_library` para no inventar símbolos KiCad | 1 día | 6.3 |
+
+#### Epic 6 - Migration Plan Notes (Native API Tool Calling)
+*Deferred for a future sprint (Changes one at a time)*
+1. **`knowledge/circuit_agent.py`**: Refactor `run_agent_loop` to remove XML regex parsing. Update `_STEWARD_SYSTEM_PROMPT` to use JSON schema tool calling format. Pass `tools` array to LLM via `llm_client.py`.
+2. **`knowledge/llm_client.py`**: Verify that `_chat_openai` supports passing the `tools` kwarg directly to the OpenAI client (via `**call_kwargs`).
+3. **Skills**: Add `search_library` to let LLM query KiCad symbols dynamically, and `validate_drc` to let it evaluate draft netlists before finishing.
+
 ---
 
 ## 6. Resumen de acciones inmediatas
@@ -241,6 +259,7 @@ Acción inmediata                            Tipo          Impacto
 3. Decidir PyGame vs Web (Epic 3)           Estrategia    🔴 Alto  
 4. Centralizar mapeos KiCad (DUP-5)        Deuda técnica 🟡 Medio
 5. Unificar pipeline DRC (DUP-3)           Arquitectura  🟠 Medio
+6. Migrar Tool Calling a Native API (6.3)  Estabilización🟢 Medio
 ```
 
 > [!TIP]

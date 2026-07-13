@@ -88,6 +88,23 @@ def _handle_command(session: ForgeSession, ui: StreamRenderer, cmd: ParsedComman
             ui.print_ok(_format_pin_coverage(result))
         return True
 
+    if name == "steward":
+        if not cmd.args.strip():
+            ui.print_error("Uso: /steward <descripcion del circuito>")
+            return True
+            
+        def on_turn_end(turn: int, status: str):
+            ui.print_info(f"\n[Turno {turn}] -> {status}")
+            
+        renderer = ui.on_chunk_callback()
+        result = session.steward(cmd.args.strip(), on_chunk=renderer, on_turn_end=on_turn_end)
+        
+        if "error" in result and result.get("status") != "ok":
+            ui.print_error(str(result.get("error")))
+        elif result.get("status") == "ok":
+            ui.print_ok(f"[{result.get('turns')} turnos] " + _format_pin_coverage(result))
+        return True
+
     if name == "review":
         renderer = ui.on_chunk_callback()
         result = session.review(on_chunk=renderer)
@@ -138,7 +155,7 @@ def _handle_command(session: ForgeSession, ui: StreamRenderer, cmd: ParsedComman
 
     if name == "help":
         ui.print_info(
-            "Comandos: /generate /review /backends /save /load /schematic "
+            "Comandos: /steward /generate /review /backends /save /load /schematic "
             "/session /help /quit  |  texto libre = generar circuito"
         )
         return True

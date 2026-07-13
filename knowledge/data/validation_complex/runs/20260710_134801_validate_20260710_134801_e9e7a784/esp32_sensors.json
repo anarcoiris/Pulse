@@ -1,0 +1,193 @@
+{
+  "run_session": "validate_20260710_134801_e9e7a784",
+  "test_case": "ESP32 Devboard + Sensores",
+  "prompt": "Diseña un circuito basado en un microcontrolador ESP32. Conecta una pantalla OLED SSD1306 al bus I2C (pines SDA, SCL). Conecta también un sensor ambiental BME280 al mismo bus I2C. Asegúrate de incluir resistencias pull-up en las líneas I2C y condensadores de desacoplo para la alimentación del ESP32.",
+  "ab_variant": "a",
+  "backend": "atomic",
+  "synthesis_backend": "atomic",
+  "review_backend": "atomic",
+  "generation_attempts": 1,
+  "truncated": false,
+  "llm_session_dir": "C:\\Users\\soyko\\Documents\\Pulse-main\\knowledge\\data\\llm_sessions\\sessions\\validate_20260710_134801_e9e7a784",
+  "circuit": [
+    {
+      "etype": "V",
+      "value": 3.3,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "V3_3"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-WROOM-32",
+      "label": "U1",
+      "symbol": "RF_Module:ESP32-WROOM-32",
+      "footprint": "RF_Module:ESP32-WROOM-32",
+      "pins": {
+        "1": "GND",
+        "2": "3.3V",
+        "33": "I2C_SDA",
+        "36": "I2C_SCL",
+        "4": "NC_U1_4",
+        "5": "NC_U1_5",
+        "6": "NC_U1_6",
+        "7": "NC_U1_7",
+        "8": "NC_U1_8",
+        "9": "NC_U1_9",
+        "10": "NC_U1_10",
+        "11": "NC_U1_11",
+        "12": "NC_U1_12",
+        "13": "NC_U1_13",
+        "14": "NC_U1_14",
+        "15": "NC_U1_15",
+        "16": "NC_U1_16",
+        "17": "NC_U1_17",
+        "18": "NC_U1_18",
+        "19": "NC_U1_19",
+        "20": "NC_U1_20",
+        "21": "NC_U1_21",
+        "22": "NC_U1_22",
+        "23": "NC_U1_23",
+        "24": "NC_U1_24",
+        "25": "NC_U1_25",
+        "26": "NC_U1_26",
+        "27": "NC_U1_27",
+        "28": "NC_U1_28",
+        "29": "NC_U1_29",
+        "30": "NC_U1_30",
+        "31": "NC_U1_31",
+        "32": "NC_U1_32",
+        "34": "NC_U1_34",
+        "35": "NC_U1_35",
+        "37": "NC_U1_37",
+        "38": "NC_U1_38",
+        "39": "NC_U1_39"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "SSD1306",
+      "label": "OLED",
+      "symbol": "Connector_Generic:Conn_01x04",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "3.3V",
+        "3": "I2C_SCL",
+        "4": "I2C_SDA"
+      }
+    },
+    {
+      "etype": "IC",
+      "value": "BME280",
+      "label": "BME280",
+      "symbol": "Connector_Generic:Conn_01x04",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+      "pins": {
+        "1": "GND",
+        "2": "VCC",
+        "3": "SCL",
+        "4": "SDA"
+      }
+    },
+    {
+      "etype": "R",
+      "value": 4700.0,
+      "n1": "3.3V",
+      "n2": "I2C_SDA",
+      "label": "R_PULLUP_SDA"
+    },
+    {
+      "etype": "R",
+      "value": 4700.0,
+      "n1": "3.3V",
+      "n2": "I2C_SCL",
+      "label": "R_PULLUP_SCL"
+    },
+    {
+      "etype": "C",
+      "value": 1e-06,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "C_DECAP_1"
+    },
+    {
+      "etype": "C",
+      "value": 1e-05,
+      "n1": "3.3V",
+      "n2": "GND",
+      "label": "C_DECAP_2"
+    },
+    {
+      "etype": "GND",
+      "value": 0,
+      "label": "GND"
+    }
+  ],
+  "pin_coverage": {
+    "per_component": [
+      {
+        "label": "U1",
+        "value": "ESP32-WROOM-32",
+        "generated_pins": 38,
+        "total_pins": 39,
+        "coverage": 0.9744,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "OLED",
+        "value": "SSD1306",
+        "generated_pins": 4,
+        "total_pins": 4,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      },
+      {
+        "label": "BME280",
+        "value": "BME280",
+        "generated_pins": 4,
+        "total_pins": 4,
+        "coverage": 1.0,
+        "source": "pinouts_library"
+      }
+    ],
+    "unmatched": [],
+    "average_coverage": 0.9915
+  },
+  "semantic_review": {
+    "issue_count": 6,
+    "critical_count": 2,
+    "issues": [
+      {
+        "msg": "El pin ESP32 GPIO0 (BOOT) está conectado a un pin NC, lo que impide el modo de arranque de flash. Debe poder conectarse a GND para activar el modo de flash.",
+        "severity": "critical",
+        "proposal": "Conectar el pin ESP32 GPIO0 (pin 19) directamente a GND para permitir el modo de flash del MCU."
+      },
+      {
+        "msg": "El ESP32 EN no está conectado. El pin EN del ESP32 debe tener un pull-up de 10kΩ a 3.3V para activar el módulo.",
+        "severity": "critical",
+        "proposal": "Añadir un resistor de 10kΩ de valor pull-up entre el pin EN (pin 18) del ESP32 y 3.3V."
+      },
+      {
+        "msg": "Falta un condensador de desacople de 100nF entre VCC y GND cerca del ESP32 para estabilidad de voltaje.",
+        "severity": "warning",
+        "proposal": "Añadir un condensador de 100nF entre el pin VCC (pin 2) y GND del ESP32."
+      },
+      {
+        "msg": "El BME280 tiene pines SCL y SDA conectados a I2C_SCL e I2C_SDA, pero no se han incluido condensadores de desacople en los pines VCC/GND. Se requieren para estabilidad.",
+        "severity": "warning",
+        "proposal": "Añadir condensadores de 100nF entre VCC y GND del BME280 (pin 2 y GND) cercanos a sus pines."
+      },
+      {
+        "msg": "El pin VCC del BME280 está conectado a 3.3V, pero no se especifica que este sea un terminal de voltaje con retorno a GND. Se requiere una conexión directa a GND para cerrar el circuito.",
+        "severity": "warning",
+        "proposal": "Asegurarse de que el pin VCC del BME280 esté conectado a 3.3V y que el terminal negativo (GND) esté correctamente conectado a la masa física (GND)."
+      },
+      {
+        "msg": "Los pines NC_U1_4 a NC_U1_39 del ESP32 están conectados a nodos sin definición, lo que puede causar flotación de señales y comportamientos no predecibles.",
+        "severity": "warning",
+        "proposal": "Asegurarse de que todos los pines NC estén correctamente aislados o conectados a GND si son pines de funcionamiento específico (por ejemplo, NC en pines no usados)."
+      }
+    ]
+  }
+}

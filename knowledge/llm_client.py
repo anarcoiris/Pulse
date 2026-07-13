@@ -81,6 +81,9 @@ class LLMClient:
 
     @property
     def available(self) -> bool:
+        import os
+        if os.environ.get("PULSE_MOCK_CLOUD_LLM", "").strip() == "1":
+            return True
         if self.backend_id == "atomic":
             from knowledge.atomic_lane import health_ok
             return health_ok()
@@ -108,6 +111,18 @@ class LLMClient:
         history: list[dict[str, str]] | None = None,
         **kwargs,
     ) -> dict:
+        import os
+        if os.environ.get("PULSE_MOCK_CLOUD_LLM", "").strip() == "1":
+            import sys
+            import json
+            req = {"system": system, "user": user, "history": history, "json_mode": json_mode}
+            print(f"MOCK_LLM_REQUEST:{json.dumps(req)}", flush=True)
+            res_line = sys.stdin.readline()
+            try:
+                return json.loads(res_line)
+            except Exception as e:
+                return {"error": f"Mock parse error: {e}"}
+
         """history: optional prior turns (e.g. [{"role": "user", ...},
         {"role": "assistant", ...}]) inserted between system and the final user
         message — used for continuation turns on truncated output (see
