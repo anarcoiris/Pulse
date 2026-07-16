@@ -1,0 +1,46 @@
+rule_id: ee_fundamentals.decoupling.per_ic_100nf
+domain: ee_fundamentals
+skill_ref: ee-fundamentals/skills/decoupling-per-ic.md
+description: >
+  Todo componente con al menos un pin power_in debe tener un condensador
+  de desacoplo entre esa red de alimentación y GND. Se evalúa una vez por
+  COMPONENTE, nunca una vez por cada pin de señal que exponga.
+
+applies_when:
+  component_has_pin_role: power_in
+
+checks:
+  - id: decoupling_cap_present
+    scope: per_component          # explícito: no per_pin_de_senal
+    condition: >
+      exists capacitor C such that
+        C connects this_component.power_pin.net to a net with role == ground
+    on_fail:
+      severity: warning
+      severity_override:
+        when: this_component.kind == "mcu"
+        severity: critical
+      message_template: >
+        {component.ref} ({component.part_value}) no tiene condensador de
+        desacoplo entre su pin de alimentación y GND.
+      suggested_fix:
+        action: add_component
+        details:
+          etype: C
+          value: 1e-7
+          n1: "{component.power_pin.net}"
+          n2: GND
+          near_ref: "{component.ref}"
+
+notes: >
+  No emitir un finding por cada pin SPI/I2C del mismo componente cuando la
+  causa raíz es la falta de desacoplo en el pin de alimentación — un
+  finding por componente. Deduplicar en el checker antes de emitir, no
+  depender de que el LLM revisor no repita el hallazgo.
+
+observed_cases:
+  - run_session: validate_20260714_151243_a4d4c864
+    finding: >
+      7 issues equivalentes (ESP32-S3, SSD1306, CC1101 x3, PN532 x3)
+      redactados como problemas de bus de datos en vez de como una única
+      causa por componente sin desacoplo.

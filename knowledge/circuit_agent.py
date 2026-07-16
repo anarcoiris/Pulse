@@ -121,7 +121,7 @@ class CircuitStewardAgent:
                             on_turn_end(turn, "DONE")
                         return {"status": "ok", "components": data["circuit"], "backend": result.get("backend"), "turns": turn}
                 except Exception as e:
-                    history.append({"role": "system", "content": f"El JSON generado es inválido: {e}. Por favor, corrígelo y devuelve sólo el JSON estricto."})
+                    history.append({"role": "user", "content": f"El JSON generado es inválido: {e}. Por favor, corrígelo y devuelve sólo el JSON estricto."})
                     continue
 
             # 2. Check if the model called a skill
@@ -151,9 +151,9 @@ class CircuitStewardAgent:
                             compact = self.synth._compact_pinout(entry, full=(i==0))
                             resp_text += f"--- {key} ---\n{json.dumps(compact, indent=2, ensure_ascii=False)}\n"
                     
-                    history.append({"role": "system", "content": f"SYSTEM_SKILL_RESPONSE:\n{resp_text}\n\n(Puedes hacer otra llamada a skill o generar el JSON final si ya tienes todo lo necesario)."})
+                    history.append({"role": "user", "content": f"SYSTEM_SKILL_RESPONSE:\n{resp_text}\n\n(Puedes hacer otra llamada a skill o generar el JSON final si ya tienes todo lo necesario)."})
                 else:
-                    history.append({"role": "system", "content": f"SYSTEM_SKILL_ERROR: Habilidad desconocida '{skill_name}'"})
+                    history.append({"role": "user", "content": f"SYSTEM_SKILL_ERROR: Habilidad desconocida '{skill_name}'"})
                 
                 continue
 

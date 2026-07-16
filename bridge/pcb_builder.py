@@ -130,17 +130,12 @@ class PCBBuilder:
         comps = graph.components
         n = len(comps)
 
-        # Auto-size
-        cols = max(2, int(n ** 0.5) + 1)
-        auto = _pcb("auto_size", {})
-        w = self.board_width or max(
-            float(auto.get("min_width_mm", 30)),
-            cols * float(auto.get("col_width_mm", 15)),
-        )
-        h = self.board_height or max(
-            float(auto.get("min_height_mm", 20)),
-            (n // cols + 2) * float(auto.get("row_height_mm", 12)),
-        )
+        # Calculate island-based spatial layout
+        from bridge.island_layout import compute_layout
+        positions, total_w, total_h = compute_layout(comps, mode='pcb')
+
+        w = self.board_width or total_w
+        h = self.board_height or total_h
 
         pcb = PCBLayout(
             board_width=w, board_height=h,
@@ -148,18 +143,17 @@ class PCBBuilder:
             trace_width=self.trace_width,
             project_name=self.project_name,
         )
-
-        # Place components in grid
-        row, col = 0, 0
-        placement = _pcb("placement", {})
-        margin_x = float(placement.get("margin_x_mm", 8.0))
-        margin_y = float(placement.get("margin_y_mm", 8.0))
-        spacing_x = float(placement.get("spacing_x_mm", 12.0))
-        spacing_y = float(placement.get("spacing_y_mm", 10.0))
+        
+        # Center the board on an A4 sheet (297x210mm)
+        offset_x = (297.0 - w) / 2.0
+        offset_y = (210.0 - h) / 2.0
+        pcb.board.origin_x = offset_x
+        pcb.board.origin_y = offset_y
 
         for c in comps:
-            x = margin_x + col * spacing_x
-            y = margin_y + row * spacing_y
+            x, y = positions.get(c.uid, (10.0, 10.0))
+            x += offset_x
+            y += offset_y
             etype = c.etype
             ref = c.uid
             val = f"{c.value:.6g}" if isinstance(c.value, float) else str(c.value)
@@ -194,11 +188,6 @@ class PCBBuilder:
                     self._place_ic(pcb, c, ref, val, x, y)
                 else:
                     pcb.add_pin_header(ref, 2, x, y, value=etype)
-
-            col += 1
-            if col >= cols:
-                col = 0
-                row += 1
 
         # Post-processing
         self._finalize(pcb, graph.all_nodes, n)
@@ -318,6 +307,12 @@ class PCBBuilder:
             trace_width=self.trace_width,
             project_name=self.project_name,
         )
+        
+        # Center the board on an A4 sheet (297x210mm)
+        offset_x = (297.0 - w) / 2.0
+        offset_y = (210.0 - h) / 2.0
+        pcb.board.origin_x = offset_x
+        pcb.board.origin_y = offset_y
 
         fp_map = {}
         all_nets: set[str] = set()
@@ -326,8 +321,8 @@ class PCBBuilder:
             ctype = c.get("type", "resistor")
             ref   = c.get("ref", "X1")
             value = c.get("value", "?")
-            x     = float(c.get("x", 0))
-            y     = float(c.get("y", 0))
+            x     = float(c.get("x", 0)) + offset_x
+            y     = float(c.get("y", 0)) + offset_y
             rot   = float(c.get("rotation", 0))
             net1  = c.get("net1", "")
             net2  = c.get("net2", "")

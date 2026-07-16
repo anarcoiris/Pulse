@@ -196,3 +196,20 @@ class SemanticReviewer:
                 "error": f"LLM devolvió JSON inválido: {result['content'][:200]}...",
                 "backend": self.backend_name,
             }
+
+def generate_markdown_report(issues_list: list) -> str:
+    """Convierte la lista de issues del SemanticReviewer a Markdown checklist para review.md"""
+    if not issues_list:
+        return "# Semantic Review\n\n✅ Ningún problema detectado (0 issues).\n\n## Notas del humano\n\n(Añade aquí las modificaciones que necesites...)\n"
+    
+    report = ["# Semantic Review\n\nSe encontraron los siguientes problemas:\n"]
+    for issue in issues_list:
+        severity = issue.get("severity", "warning").upper()
+        msg = issue.get("msg", "Problema desconocido")
+        prop = issue.get("proposal", "")
+        report.append(f"- [ ] **{severity}**: {msg}")
+        if prop:
+            report.append(f"  - *Propuesta*: {prop}")
+    
+    report.append("\n## Notas del humano\n\n(Añade aquí las modificaciones que necesites...)\n")
+    return "\n".join(report)

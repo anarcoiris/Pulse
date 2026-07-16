@@ -128,34 +128,30 @@ class RawFootprint(Footprint):
         if not self.raw_sexpr:
             return super().to_sexpr()
             
-        lines = self.raw_sexpr.splitlines()
-        new_lines = []
-        for line in lines:
-            trimmed = line.strip()
-            # Ignorar propiedades de Reference/Value/Footprint/Datasheet/Description originales
-            if any(trimmed.startswith(f'(property "{p}"') for p in ["Reference", "Value", "Footprint", "Datasheet", "Description"]):
-                continue
-            # Ignorar el (at ...) de la raíz
-            if trimmed.startswith('(at ') and line.count('(') == 1:
-                continue
-            new_lines.append(line)
-            
+        import re
+        body = self.raw_sexpr
+        
+        # Replace Reference property
+        body = re.sub(r'\(property\s+"Reference"\s+"[^"]+"', f'(property "Reference" "{self.ref}"', body, count=1)
+        # Replace Value property
+        body = re.sub(r'\(property\s+"Value"\s+"[^"]+"', f'(property "Value" "{self.value}"', body, count=1)
+        
+        # Replace root (at ...) with new at
         rotation_str = f" {self.rotation:.1f}" if self.rotation != 0 else ""
-        silk = self.layer.replace('Cu', 'SilkS')
+        body = re.sub(r'\n\s*\(at [^\)]+\)', f'\n  (at {self.x:.4f} {self.y:.4f}{rotation_str})', body, count=1)
         
-        header = [
-            f'  (footprint "{self.lib_id}"',
-            f'    (layer "{self.layer}")',
-            f'    (uuid "{self.uuid_str}")',
-            f'    (at {self.x:.4f} {self.y:.4f}{rotation_str})',
-            f'    (property "Reference" "{self.ref}" (at 0 -2.5{rotation_str}) (layer "{silk}") (uuid "{uuid.uuid4()}") (effects (font (size 1 1) (thickness 0.15))))',
-            f'    (property "Value" "{self.value}" (at 0 2.5{rotation_str}) (layer "{silk}") (uuid "{uuid.uuid4()}") (effects (font (size 1 1) (thickness 0.15))))'
-        ]
-        
-        # Omitimos la primera línea del original '(footprint "..." ' y cerramos al final
-        # Pero cuidado, new_lines[0] es la primera línea.
-        body = "\n".join(new_lines[1:])
-        return "\n".join(header) + "\n" + body
+        # Add indentation for the root footprint body to match the layout
+        lines = body.splitlines()
+        if lines and lines[0].startswith('(footprint'):
+            lines[0] = '  ' + lines[0]
+            for i in range(1, len(lines)):
+                if lines[i].startswith(')'):
+                    lines[i] = '  )'
+                else:
+                    lines[i] = '  ' + lines[i]
+            body = "\n".join(lines)
+            
+        return body
 
 
 @dataclass
@@ -885,8 +881,10 @@ class PCBLayout:
             g_score = {start_g: 0}
             directions = [(0, 1, 0), (1, 0, 0), (0, -1, 0), (-1, 0, 0), (0, 0, 1)]
             
-            max_x = int(self.board.width_mm / grid_size)
-            max_y = int(self.board.height_mm / grid_size)
+            min_x = int(self.board.origin_x / grid_size)
+            min_y = int(self.board.origin_y / grid_size)
+            max_x = int((self.board.origin_x + self.board.width_mm) / grid_size)
+            max_y = int((self.board.origin_y + self.board.height_mm) / grid_size)
             
             nodes_explored = 0
             while open_set:
@@ -911,7 +909,7 @@ class PCBLayout:
                     nb_x, nb_y = cx + dx, cy + dy
                     nb = (nb_l, nb_x, nb_y)
                     
-                    if nb_x < 0 or nb_x > max_x or nb_y < 0 or nb_y > max_y:
+                    if nb_x < min_x or nb_x > max_x or nb_y < min_y or nb_y > max_y:
                         continue
                         
                     is_occupied = False

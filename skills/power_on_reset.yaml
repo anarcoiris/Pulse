@@ -1,0 +1,57 @@
+rule_id: schematic.power_on_reset.en_pullup
+domain: schematic
+skill_ref: schematic-rules/skills/power-on-reset-esp32.md
+description: >
+  Todo pin con rol reset_enable debe estar unido, mediante una única
+  resistencia, a una red con rol power_rail. Si en cambio está unido
+  (directa o resistivamente) a una red con rol ground, es un fallo crítico:
+  el dispositivo queda permanentemente en reset.
+
+applies_when:
+  pin_role: reset_enable
+
+checks:
+  - id: en_must_reach_power_rail
+    condition: >
+      exists resistor R such that
+        (R.pin_a.net == this_pin.net and R.pin_b.net.role == power_rail)
+        or (R.pin_b.net == this_pin.net and R.pin_a.net.role == power_rail)
+    on_fail:
+      severity: critical
+      message_template: >
+        El pin {pin.number} ({component.ref}, rol reset_enable) no llega a
+        una red de alimentación mediante pull-up. El chip permanecerá en
+        reset permanente.
+      suggested_fix:
+        action: rewire_pin
+        details:
+          hint: >
+            Verificar que el extremo no-EN de la resistencia de pull-up
+            esté unido a la red de 3.3V, no a GND.
+
+  - id: en_not_tied_to_ground
+    condition: >
+      exists component C such that
+        C.kind in [resistor, wire, net_tie]
+        and (C connects this_pin.net directly to a net with role == ground)
+    on_fail:
+      severity: critical
+      message_template: >
+        El pin {pin.number} ({component.ref}, rol reset_enable) está unido
+        a una red de GND. Esto mantiene el chip en reset y le impide
+        arrancar bajo cualquier condición.
+      suggested_fix:
+        action: rewire_pin
+        details:
+          hint: "Cambiar el extremo GND de la resistencia por la red de 3.3V."
+
+notes: >
+  No depender del orden n1/n2 del netlist propio para determinar polaridad:
+  resolver siempre por el rol de la red en el modelo intermedio
+  (ver tool-adapter/netlist-propio/SKILL.md).
+
+observed_cases:
+  - run_session: validate_20260713_003837_9f03979b
+    finding: "R_EN conecta 3.3V-EN pero el revisor detecta EN afectivamente en reset"
+  - run_session: validate_20260714_151243_a4d4c864
+    finding: "Mismo patrón, R_EN 10k a EN, marcado critical de nuevo por el revisor"

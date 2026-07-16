@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pulselab/schemas/finding.schema.json",
+  "title": "Finding",
+  "description": "Un hallazgo individual devuelto por un checker (ERC, DRC, cobertura, DFM). Sustituye al texto libre de 'semantic_review.issues' por un contrato estable ligado a rule_id.",
+  "type": "object",
+  "required": ["rule_id", "domain", "severity", "refs", "message"],
+  "properties": {
+    "rule_id": {
+      "type": "string",
+      "description": "Identificador estable de la regla que originó el hallazgo, p.ej. 'schematic.power_on_reset.en_pullup'. Debe existir un YAML de regla y, opcionalmente, un SKILL.md con este mismo id.",
+      "pattern": "^[a-z_]+\\.[a-z0-9_]+(\\.[a-z0-9_]+)*$"
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["ee_fundamentals", "schematic", "pcb", "component_library", "dfm", "coverage"]
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "warning", "info"],
+      "description": "critical = el diseño no puede fabricarse/funcionar así. warning = funciona pero degrada fiabilidad/cumplimiento. info = mejora sugerida, no bloqueante."
+    },
+    "refs": {
+      "type": "array",
+      "description": "Referencias exactas a componentes/pines/redes del modelo intermedio afectados. Nunca texto libre tipo 'el pin VCC del ESP32'.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "component_ref": {"type": "string", "description": "p.ej. 'U1'"},
+          "pin": {"type": "string", "description": "p.ej. '3' o 'EN', opcional"},
+          "net": {"type": "string", "description": "p.ej. '3.3V', opcional"}
+        },
+        "required": ["component_ref"]
+      },
+      "minItems": 1
+    },
+    "message": {
+      "type": "string",
+      "description": "Explicación en lenguaje natural, generada por plantilla a partir de la regla — no redactada libremente por un LLM revisor."
+    },
+    "suggested_fix": {
+      "type": "object",
+      "description": "Fix estructurado y aplicable por el agente sin reinterpretación, no una propuesta en prosa.",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["add_component", "remove_component", "rewire_pin", "change_value", "add_net_tie"]
+        },
+        "details": {
+          "type": "object",
+          "description": "Payload específico de la acción, p.ej. para add_component: {etype, value, n1, n2}"
+        }
+      },
+      "required": ["action", "details"]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "default": 1.0,
+      "description": "1.0 para checks deterministas (ERC/DRC). <1.0 reservado para heurísticas futuras basadas en LLM."
+    }
+  }
+}

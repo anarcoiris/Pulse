@@ -45,7 +45,7 @@ VALUE_SYMBOL_MAP: dict[str, str] = {
     "ESP32": "RF_Module:ESP32-WROOM-32",
     "ESP8266": "RF_Module:ESP-12F",
     "ESP32-S2": "MCU_Espressif:ESP32-S2",
-    "ESP32-S3": "RF_Module:ESP32-WROOM-32",
+    "ESP32-S3": "RF_Module:ESP32-S3-WROOM-1",
     "ESP32-WROOM-32": "RF_Module:ESP32-WROOM-32",
 }
 

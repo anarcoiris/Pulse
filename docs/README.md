@@ -48,6 +48,14 @@
 | One-off refactor tickets | [`workflows/plans/`](./workflows/plans/) |
 | Verification / incident logs | [`calibration_forge/verification/`](./calibration_forge/verification/) |
 
+## Independent research (outside Forge sprints)
+
+| Project | Location |
+|---------|----------|
+| Cristales Solares — transparent TE windows | [`../documents/Cristales_Solares/`](../documents/Cristales_Solares/) |
+
+See [`../documents/README.md`](../documents/README.md) for the research-projects map.
+
 ## Doc roles (convention)
 
 Each doc under `docs/` should declare one primary role in front matter:

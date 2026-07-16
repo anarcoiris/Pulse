@@ -19,7 +19,7 @@ if str(_ROOT) not in sys.path:
 from knowledge.circuit_synthesizer import CircuitSynthesizer
 from knowledge.llm_backends import list_backends
 from knowledge.llm_session_log import new_session_id
-from knowledge.semantic_reviewer import SemanticReviewer
+from knowledge.semantic_reviewer import SemanticReviewer, generate_markdown_report
 from knowledge.circuit_agent import CircuitStewardAgent
 
 OUT_DIR = Path("knowledge/data/validation_complex")
@@ -199,6 +199,8 @@ def main():
     )
     parser.add_argument("--variant", choices=("a", "b"), default="a", help="A/B variant: a=rules+rag_top_k=1, b=trimmed rules+richer RAG")
     parser.add_argument("--session", help="Reuse session id (default: new run session)")
+    parser.add_argument("--base-circuit", help="Path to a base circuit JSON file to build upon (Follow-up)")
+    parser.add_argument("--follow-up-prompt", help="A prompt providing instructions for modifications on the base circuit")
     args = parser.parse_args()
 
     run_session = args.session or new_session_id("validate")
@@ -241,18 +243,32 @@ def main():
         "results": [],
     }
 
+    base_circuit_data = None
+    if args.base_circuit:
+        try:
+            with open(args.base_circuit, "r", encoding="utf-8") as f:
+                base_circuit_data = json.load(f)
+        except Exception as e:
+            print(f"ERROR al cargar base-circuit: {e}")
+            return
+
     for case in cases:
         name = case["name"]
         print(f"\n-----------------------------------------------------")
         print(f"Test: {case['description']}")
         print(f"-----------------------------------------------------")
 
+        prompt = case["prompt"]
+        if args.base_circuit and args.follow_up_prompt:
+            base_wrapped = {"circuit": base_circuit_data.get("circuit", base_circuit_data)}
+            prompt = args.follow_up_prompt + f"\n\nCIRCUITO BASE A MODIFICAR:\n```json\n{json.dumps(base_wrapped, indent=2)}\n```\n(Por favor, aplica las modificaciones del prompt anterior sobre este circuito preservando los componentes existentes a menos que se te pida explícitamente eliminarlos. Asegúrate de devolver el JSON envuelto en la clave 'circuit' tal como se muestra en el circuito base.)"
+
         print("Generando circuito (Agente Multi-Turno)...", flush=True)
         t0 = time.time()
         steward = CircuitStewardAgent(synth)
         history = []
         result = steward.run_agent_loop(
-            prompt=case["prompt"],
+            prompt=prompt,
             session_id=run_session,
             history=history,
             on_turn_end=lambda t, status: _safe_print(f"  [Turno {t}] {status}")
@@ -302,7 +318,7 @@ def main():
         output_data = {
             "run_session": run_session,
             "test_case": case["description"],
-            "prompt": case["prompt"],
+            "prompt": prompt,
             "ab_variant": args.variant,
             "backend": result.get("backend"),
             "synthesis_backend": result.get("backend"),
@@ -317,6 +333,11 @@ def main():
         with open(out_file, "w", encoding="utf-8") as f:
             json.dump(output_data, f, indent=2, ensure_ascii=False)
         print(f"Guardado en: {out_file}")
+
+        review_file = run_dir / "review.md"
+        with open(review_file, "w", encoding="utf-8") as f:
+            f.write(generate_markdown_report(semantic_review.get("issues", [])))
+        print(f"Revisión generada en: {review_file}")
 
         etypes = {}
         for comp in components:

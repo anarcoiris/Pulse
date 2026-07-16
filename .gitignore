@@ -31,13 +31,21 @@ Thumbs.db
 # IDEs
 .vscode/
 .idea/
+.cursor/
+
+# Test caches
+.pytest_cache/
+
+# Office temp files
+~$*
 
 # PulseLab Forge Artifacts
 outputs/
 output/
 manufacturing/
 reports/
-
+knowledge/data/llm_sessions/
+knowledge/data/validation_complex/
 *_drc.json
 *.kicad_pcb
 *.kicad_prl
