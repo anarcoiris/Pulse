@@ -3,7 +3,7 @@
 > **Role:** entry / map  
 > **Status:** active  
 > **Source of truth for:** where to find every class of documentation in this repo  
-> **Last verified:** 2026-07-07  
+> **Last verified:** 2026-07-18  
 
 ## Start here
 
@@ -73,8 +73,8 @@ Each doc under `docs/` should declare one primary role in front matter:
 
 Living docs link **down** to research §Resultado. Research docs link **up** to `CURRENT_SPRINT` for session ordering.
 
-## Root-level stubs
+## Other top-level entries
 
 - [`../README.md`](../README.md) — install & run
-- [`../CURENT_SPRINT.md`](../CURENT_SPRINT.md) → `status/CURRENT_SPRINT.md`
-- [`../FORGE_STATUS.md`](../FORGE_STATUS.md) → `status/FORGE_STATUS.md`
+- [`../skills/`](../skills/) — structured knowledge base for agent evaluation (domain rules, finding schemas, case studies)
+- [`reviews/`](./reviews/) — chronological technical reviews (latest: [`pulselab_review_18072026.md`](./reviews/pulselab_review_18072026.md))

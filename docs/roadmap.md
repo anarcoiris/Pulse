@@ -3,7 +3,7 @@
 > **Role:** living  
 > **Status:** active  
 > **Source of truth for:** product phases and long-term themes (not day-to-day sprint blockers)  
-> **Last verified:** 2026-07-07  
+> **Last verified:** 2026-07-18  
 > **See also:** [`status/CURRENT_SPRINT.md`](./status/CURRENT_SPRINT.md) · [`calibration_forge/index.md`](./calibration_forge/index.md)
 
 ## Currently Active: Phase 1 & 2 (Stability & Professionalism)
@@ -57,12 +57,13 @@
 ## Reviews & Research
 
 Technical reviews (chronological, latest first):
-- [`pulselab_review_05072026.md`](./reviews/pulselab_review_05072026.md) — current state recap, corrections to the April review, and 3 open research lines (see below).
+- [`pulselab_review_18072026.md`](./reviews/pulselab_review_18072026.md) — supervisor review: sprint discipline, structural hygiene, KPI progress, 12 action items.
+- [`pulselab_review_05072026.md`](./reviews/pulselab_review_05072026.md) — state recap, corrections to April review, 3 open research lines.
 - [`pulselab_review_23042026.md`](./reviews/pulselab_review_23042026.md) — superseded; kept as historical record.
 
 Active research lines (Calibration Forge, see [`calibration_forge/index.md`](./calibration_forge/index.md) for the full index):
 - [`pin_model_coverage.md`](./calibration_forge/pin_model_coverage.md) — ~~MCU pin tables truncated before LLM~~ **resuelto y re-confirmado sin regresión** (Session 3 fix + Session 4a migration to RAG, both 100% on `esp32_sensors`).
 - [`kicad_symbol_kb.md`](./calibration_forge/kicad_symbol_kb.md) — ~~hand-maintain `pinouts_library.json`~~ **resuelto** (Session 4a): pinouts now sourced from a real KiCad install (5320 symbols / 29 libraries indexed) via RAG `chunk_type="pinout"`.
 - [`knowledge_base_fidelity.md`](./calibration_forge/knowledge_base_fidelity.md) — ~~natural-language design intent dropped during RAG ingestion~~ **resuelto** (Session 1).
-- [`prompt_vs_rag_balance.md`](./calibration_forge/prompt_vs_rag_balance.md) — Session 4b parte 1 (A/B confundido) recorded 06-jul; clean re-run pending after 4d verify. See [`calibration_forge/pipelines/llm_output_pipeline.md`](./calibration_forge/pipelines/llm_output_pipeline.md) §Resultado.
+- [`prompt_vs_rag_balance.md`](./calibration_forge/prompt_vs_rag_balance.md) — Session 4b clean re-run pending (**4d blocker resolved** 16-jul). See [`calibration_forge/pipelines/llm_output_pipeline.md`](./calibration_forge/pipelines/llm_output_pipeline.md) §Resultado.
 - [`dormant_features_audit.md`](./calibration_forge/dormant_features_audit.md) — ~~PulseLogger and design_experience loop not integrated~~ **resuelto** (Session 2).

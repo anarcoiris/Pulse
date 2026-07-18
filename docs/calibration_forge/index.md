@@ -3,8 +3,8 @@
 > **Role:** entry (research hub)  
 > **Status:** active  
 > **Source of truth for:** catalog of findings, references, and verification logs  
-> **Last verified:** 2026-07-07  
-> **See also:** [`../status/CURRENT_SPRINT.md`](../status/CURRENT_SPRINT.md) · [`../implementation_plan.md`](../implementation_plan.md)
+> **Last verified:** 2026-07-18  
+> **See also:** [`../status/CURRENT_SPRINT.md`](../status/CURRENT_SPRINT.md) · [`../implementation_plan.md`](../implementation_plan.md) · [`../../skills/`](../../skills/) (knowledge base)
 
 Este documento orquesta las líneas de investigación para el bucle de entrenamiento y validación de PulseLab Forge.
 
@@ -16,7 +16,8 @@ Este documento orquesta las líneas de investigación para el bucle de entrenami
 
 ## Revisiones técnicas (históricas)
 
-- [`pulselab_review_05072026.md`](../reviews/pulselab_review_05072026.md) — revisión vigente (05-jul-2026)
+- [`pulselab_review_18072026.md`](../reviews/pulselab_review_18072026.md) — revisión vigente (18-jul-2026)
+- [`pulselab_review_05072026.md`](../reviews/pulselab_review_05072026.md) — anterior (05-jul-2026)
 - [`pulselab_review_23042026.md`](../reviews/pulselab_review_23042026.md) — superada
 
 ---
@@ -57,6 +58,7 @@ Este documento orquesta las líneas de investigación para el bucle de entrenami
 | Doc | Notes |
 |-----|-------|
 | [`verification/session_4b_preflight.md`](./verification/session_4b_preflight.md) | Independent code/config audit before 4b |
+| [`verification/pcie_instability_postmortem.md`](./verification/pcie_instability_postmortem.md) | PCIe hardware instability during validation runs |
 | [`verification/llm_truncation_review_06072026.md`](./verification/llm_truncation_review_06072026.md) | Evidence for Session 4c — links to pipeline doc |
 
 ---
@@ -81,9 +83,8 @@ Este documento orquesta las líneas de investigación para el bucle de entrenami
 
 ## Milestones
 
-- [x] Sessions 1–3, 4a, 4c P0, 4e, 5 — ver §Resultado en docs citados
-- [~] Session 4d — code landed; live atomic review verify pending
-- [ ] **Session 4b clean A/B** — [`prompt_vs_rag_balance.md`](./prompt_vs_rag_balance.md)
+- [x] Sessions 1–3, 4a, 4c P0, 4d, 4e, 5 — ver §Resultado en docs citados
+- [ ] **Session 4b clean A/B** — [`prompt_vs_rag_balance.md`](./prompt_vs_rag_balance.md) (4d blocker resolved 16-jul)
 
 ---
-*Última actualización: 07-jul-2026 (Session 4e Forge Studio CLI — README + docs sync)*
+*Última actualización: 18-jul-2026 (weekly review sync — 4d verified, dead code removed, skills/ created)*

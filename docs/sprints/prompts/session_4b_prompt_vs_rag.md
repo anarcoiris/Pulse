@@ -1,10 +1,12 @@
-### Session 4b — Prompt vs. RAG rebalancing (depends on 4a ✅, **4c P0 ✅**, **4d verify pending**)
+### Session 4b — Prompt vs. RAG rebalancing (depends on 4a ✅, **4c P0 ✅**, **4d verified live ✅**)
 
-**Prerequisites (07-jul-2026):**
+**Prerequisites (18-jul-2026):**
 - [`docs/calibration_forge/llm_output_pipeline.md`](docs/calibration_forge/llm_output_pipeline.md) — **Session 4c P0 complete + verified live** (runs `212059`, `213418`)
-- Session 4d — **code landed**; confirm one live run with `review_backend: atomic` before clean A/B (or document fallback in §Resultado)
+- Session 4d — **verified live** (run `20260716_004628` successfully offloaded reviews to the atomic backend)
+- PCIe Instability Mitigation — **CRITICAL**: The Qwythos LLM server must launch with `--cache-ram 0` and dynamic VRAM tensor splitting to avoid physical PCIe reset failures (Lost GPU) on GPU1. See [Post-Mortem](../calibration_forge/verification/pcie_instability_postmortem.md).
 - [`llm_truncation_review_06072026.md`](docs/calibration_forge/llm_truncation_review_06072026.md) — P0 mitigations verified on `esp32_rf_nfc` + `esp32_usb_devkit`
 - **Parte 1 (confundido) already recorded** — [`prompt_vs_rag_balance.md`](docs/calibration_forge/prompt_vs_rag_balance.md) §Resultado A/B; do **not** use for trimming decisions
+
 
 ```
 You are working on PulseLab Forge at C:\Users\soyko\Documents\Pulse-main.
