@@ -32,6 +32,12 @@ Thumbs.db
 .vscode/
 .idea/
 .cursor/
+# Keep shared Cursor rules/skills if you choose to track them later:
+# !.cursor/rules/
+# !.cursor/skills/
+
+# Understand-Anything knowledge graphs (large; commit intentionally if sharing)
+.understand-anything/
 
 # Test caches
 .pytest_cache/
