@@ -14,7 +14,8 @@
 
 </div>
 
-You can buy me a coffee... or help me update my Pascal GPUs!
+> ☕ You can **buy me a coffee**... or help me update my Pascal GPUs!
+
 ΧΜΡ: bc1qdwd85m7va6zetwjat9un3agxvvxg65tsld9v8j
 BTC: 8BdiSxgPtYTXaG8MB8WehKBQkQYpxxYcBcVSTGqh4s3jdYqDNuHL2KnFiRKs7bZqpASssKfGUjYFseL3931M4dseVLiZwA6
 
