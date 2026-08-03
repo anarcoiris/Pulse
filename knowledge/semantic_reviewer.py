@@ -21,10 +21,12 @@ from knowledge.llm_types import StreamChunk
 from core.logger import logger
 
 
-_SYSTEM_PROMPT = """
+_BASE_PROMPT = """
 Eres un ingeniero electrónico experto revisando una Netlist de PulseLab Forge.
 El formato que recibirás detalla componentes, su tipo y a qué nodos conectan (n1, n2 o pines numéricos).
+"""
 
+_OBLIGATORIAS_AI_DRC = """
 REGLAS DE DISEÑO ESTRICTAS (AI DRC):
 1. '0' es la tierra de simulación SPICE. 'GND' es la malla de masa física en KiCad.
    Si un componente está conectado a '0', físicamente quedará AISLADO de 'GND' a menos que haya un alias. Falla siempre si existen ambos y no están alías.
@@ -34,7 +36,9 @@ REGLAS DE DISEÑO ESTRICTAS (AI DRC):
 5. ESP32 EN necesita pull-up 10k a 3.3V. GPIO0 (BOOT) debe poder ir a GND para flash mode.
 6. Diseños USB-UART deben incluir nets USB_D+ y USB_D- además de MCU_TX/MCU_RX cruzados correctamente.
 7. CH340 TXD conecta a RX del MCU; CH340 RXD conecta a TX del MCU (crossover).
+"""
 
+_PROMPT_TAIL = """
 Deberás analizar el circuito y responder ÚNICAMENTE en formato JSON estricto con la siguiente estructura, sin texto adicional:
 {
     "issues": [
@@ -50,9 +54,11 @@ class SemanticAIAgent:
     GNDs aislados, condensadores de desacople faltantes, etc.)
     Usa el LLMClient unificado con health check y retry.
     """
-    def __init__(self):
+    def __init__(self, ab_variant: str = "a"):
+        self.ab_variant = ab_variant if ab_variant in ("a", "b") else "a"
         self.llm = get_llm_client()
-        self.system_prompt = _SYSTEM_PROMPT
+        rules = _OBLIGATORIAS_AI_DRC if self.ab_variant == "a" else ""
+        self.system_prompt = _BASE_PROMPT + rules + _PROMPT_TAIL
 
     def analyze_circuit(self, graph) -> Dict[str, Any]:
         if not self.llm.available:
@@ -101,10 +107,12 @@ class SemanticReviewer:
     synthesis stays on `primary` (long-context reasoning) — see
     docs/calibration_forge/llm_output_pipeline.md §Session 4d.
     """
-    def __init__(self, backend: str = "auto"):
+    def __init__(self, backend: str = "auto", ab_variant: str = "a"):
         self.backend_pref = backend
+        self.ab_variant = ab_variant if ab_variant in ("a", "b") else "a"
         self.backend_name, self.llm = self._resolve_backend()
-        self.system_prompt = _SYSTEM_PROMPT
+        rules = _OBLIGATORIAS_AI_DRC if self.ab_variant == "a" else ""
+        self.system_prompt = _BASE_PROMPT + rules + _PROMPT_TAIL
 
     def _resolve_backend(self) -> tuple[str, Any]:
         name = resolve_backend_name(task="review", prefer=self.backend_pref)
@@ -118,7 +126,7 @@ class SemanticReviewer:
         meta: dict | None = None,
         on_chunk: Callable[[StreamChunk], None] | None = None,
     ) -> dict:
-        max_tokens = int(cfg("llm.agents.semantic_reviewer.max_tokens", 8192))
+        max_tokens = int(cfg("llm.agents.semantic_reviewer.max_tokens", 4096))
         common = dict(
             system=self.system_prompt,
             user=netlist_desc,
@@ -165,9 +173,14 @@ class SemanticReviewer:
                 pins_desc = f"n1={c.get('n1', '?')}, n2={c.get('n2', '?')}"
             netlist_desc += f"- {c.get('uid', '?')} ({c.get('etype', '?')}): value={c.get('value', 0)}, {pins_desc}\n"
 
+        # P2 fix: use a dedicated session for the review call so it does NOT
+        # pollute / be polluted by the synthesis KV cache on the same slot.
+        from knowledge.llm_session_log import new_session_id
+        review_session = session_id + "_review" if session_id else new_session_id("review")
+
         logger.ai_review("semantic_reviewer", f"review_netlist() {len(components)} componentes")
 
-        result = self._chat_review(netlist_desc, session_id=session_id, meta=meta, on_chunk=on_chunk)
+        result = self._chat_review(netlist_desc, session_id=review_session, meta=meta, on_chunk=on_chunk)
 
         if "error" in result:
             logger.error("semantic_reviewer", f"review_netlist() LLM error: {result['error']}")

@@ -2,6 +2,7 @@ import json
 import re
 from typing import Callable, Any
 from core.logger import logger
+from knowledge.context_budget import ContextBudget, estimate_history_tokens
 from knowledge.llm_types import StreamChunk
 
 _STEWARD_SYSTEM_PROMPT = """Eres el 'PulseLab Circuit Steward', un agente inteligente experto en diseño de circuitos electrónicos.
@@ -45,11 +46,39 @@ REGLAS DE DISEÑO:
 Una vez emitido el JSON final válido, el flujo terminará.
 """
 
+# Cuantas coincidencias de search_knowledge se incluyen en el historial por llamada.
+# Solo la primera va en detalle completo; el resto de aqui en adelante se omiten (antes
+# se incluian TODAS, la primera completa y el resto parcial - eso duplicaba pinouts casi
+# identicos de variantes del mismo componente, ej. "ESP32-S3" vs "ESP32-S3-WROOM-1", y era
+# una de las mayores fuentes de crecimiento del historial).
+_MAX_FULL_PINOUT_MATCHES = 1
+_MAX_LISTED_MATCHES = 2
+
+
 class CircuitStewardAgent:
-    def __init__(self, synthesizer: Any):
+    def __init__(self, synthesizer: Any, max_turns: int = 8):
         # We take a reference to CircuitSynthesizer to reuse its RAG and DB
         self.synth = synthesizer
-        self.max_turns = 10
+        self.max_turns = max_turns
+        # Context budget derived from the actual backend limits (token-based,
+        # not char-based).  Created lazily on first call to run_agent_loop so
+        # that backend_limits() is resolved after config is fully loaded.
+        self._budget: ContextBudget | None = None
+
+    def _get_budget(self) -> ContextBudget:
+        if self._budget is None:
+            try:
+                backend_name = self.synth._resolve_backend()[0]
+                self._budget = ContextBudget.from_backend(backend_name)
+            except Exception:
+                # Fallback: 96k context, 8k output
+                self._budget = ContextBudget(num_ctx=98304, num_predict=8192)
+            logger.info(
+                "steward_agent",
+                f"Context budget: {self._budget.history_budget_tokens} tokens "
+                f"(ctx={self._budget.num_ctx}, predict={self._budget.num_predict})",
+            )
+        return self._budget
 
     def run_agent_loop(
         self,
@@ -68,12 +97,31 @@ class CircuitStewardAgent:
             history.append({"role": "system", "content": _STEWARD_SYSTEM_PROMPT})
             history.append({"role": "user", "content": prompt})
 
+        # Terminos de search_knowledge ya consultados en esta sesion (normalizado), para
+        # no volver a volcar el mismo pinout completo si el modelo repite la busqueda.
+        seen_skill_lookups: set[str] = set()
+
+        budget = self._get_budget()
+
         turn = 0
         while turn < self.max_turns:
             turn += 1
+
+            # ── Pre-turn compaction (mirrors Tiny Steward) ────────────
+            if budget.should_compact(history):
+                before = len(history)
+                history[:] = budget.compact(history)
+                utilization = budget.utilization(history)
+                logger.info(
+                    "steward_agent",
+                    f"[Turn {turn}] Compacted: {before} → {len(history)} msgs "
+                    f"(utilization {utilization:.0%})",
+                )
+
+            token_est = estimate_history_tokens(history)
             if on_turn_end:
-                on_turn_end(turn, "INFERRING")
-                
+                on_turn_end(turn, f"INFERRING ({token_est} tok est, {budget.utilization(history):.0%} budget)")
+
             # Resolve LLM client
             backend_name, llm = self.synth._resolve_backend()
             if not getattr(llm, 'available', True):
@@ -109,6 +157,36 @@ class CircuitStewardAgent:
                 return result
 
             content = result.get("content", "")
+
+            # ── Truncation detection (P1/P3 fix) ─────────────────────
+            from knowledge.llm_json import llm_output_truncated
+            if llm_output_truncated(result):
+                done_reason = result.get("done_reason", "unknown")
+                logger.warning(
+                    "steward_agent",
+                    f"[Turn {turn}] Output truncated (done_reason={done_reason}), "
+                    f"history={estimate_history_tokens(history)} tok",
+                )
+                # If the truncated output looks like it contains a partial circuit,
+                # ask the model to finish just the JSON in a new turn
+                if '"circuit"' in content or '"etype"' in content:
+                    history.append({"role": "assistant", "content": content})
+                    history.append({
+                        "role": "user",
+                        "content": (
+                            "Tu respuesta anterior fue TRUNCADA (superó el límite de tokens). "
+                            "Por favor, genera el JSON completo del circuito de forma más concisa. "
+                            "Omite explicaciones. Solo el JSON con clave 'circuit'."
+                        ),
+                    })
+                    continue
+                # Otherwise, return the truncation as an error
+                return {
+                    "error": f"Output truncado (done_reason={done_reason}) en turno {turn}",
+                    "turns": turn,
+                    "truncated": True,
+                }
+
             history.append({"role": "assistant", "content": content})
 
             # 1. Check if the model generated the final circuit
@@ -134,6 +212,10 @@ class CircuitStewardAgent:
                     on_turn_end(turn, f"SKILL_CALL: {skill_name}({skill_arg})")
 
                 if skill_name == "search_knowledge":
+                    lookup_key = skill_arg.strip().lower()
+                    already_seen = lookup_key in seen_skill_lookups
+                    seen_skill_lookups.add(lookup_key)
+
                     # Delegate to the synthesizer's RAG and pinout matcher
                     matches = self.synth._match_pinouts(skill_arg)
                     if not matches:
@@ -145,11 +227,27 @@ class CircuitStewardAgent:
                                 resp_text += f"- {r['data'].get('name', 'Info')}: {r['data'].get('content', '')}\n"
                         else:
                             resp_text = f"No se encontró información en la base de conocimientos para: {skill_arg}"
+                    elif already_seen:
+                        # Mismo termino ya buscado antes en esta sesion: no volver a inflar
+                        # el historial con el mismo dump completo, solo confirmar que ya lo tiene.
+                        keys = ", ".join(key for key, _ in matches[:_MAX_LISTED_MATCHES])
+                        resp_text = (
+                            f"Ya consultaste '{skill_arg}' en un turno anterior de esta misma sesión "
+                            f"(coincidencias: {keys}). Usa los pines que ya te di antes; no hace falta "
+                            "repetir la búsqueda."
+                        )
                     else:
                         resp_text = "Resultados de pinouts encontrados:\n"
-                        for i, (key, entry) in enumerate(matches):
-                            compact = self.synth._compact_pinout(entry, full=(i==0))
+                        shown = matches[:_MAX_LISTED_MATCHES]
+                        for i, (key, entry) in enumerate(shown):
+                            compact = self.synth._compact_pinout(entry, full=(i < _MAX_FULL_PINOUT_MATCHES))
                             resp_text += f"--- {key} ---\n{json.dumps(compact, indent=2, ensure_ascii=False)}\n"
+                        extra = len(matches) - len(shown)
+                        if extra > 0:
+                            resp_text += (
+                                f"\n(+{extra} coincidencias adicionales omitidas por espacio; "
+                                "pide un nombre más específico si ninguna de las anteriores es la correcta.)\n"
+                            )
                     
                     history.append({"role": "user", "content": f"SYSTEM_SKILL_RESPONSE:\n{resp_text}\n\n(Puedes hacer otra llamada a skill o generar el JSON final si ya tienes todo lo necesario)."})
                 else:

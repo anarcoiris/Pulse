@@ -17,7 +17,7 @@ from typing import Any
 _ROOT = Path(__file__).resolve().parent.parent
 _CFG_PATH = _ROOT / "Pulse_cfg.json"
 _ENV_FILE = _ROOT / ".env"
-_MIN_NUM_CTX = 98304
+_MIN_NUM_CTX = 32768
 
 # Load .env before reading env overrides
 if _ENV_FILE.exists():

@@ -5,8 +5,8 @@
     "api": "auto",
     "think": "low",
     "num_ctx": 98304,
-    "max_tokens": 32600,
-    "num_predict": 16300,
+    "max_tokens": 16384,
+    "num_predict": 8192,
     "timeout_s": 900,
     "max_retries": 2,
     "retry_backoff_base_s": 1.0,
@@ -33,7 +33,7 @@
       },
       "semantic_reviewer": {
         "temperature": 0.6,
-        "max_tokens": 16384
+        "max_tokens": 4096
       },
       "firmware_synthesizer": {
         "temperature": 0.6,
@@ -48,8 +48,9 @@
         "api": "openai",
         "think": "low",
         "num_ctx": 98304,
-        "max_tokens": 32768,
-        "num_predict": 16384,
+        "max_tokens": 16384,
+        "num_predict": 8192,
+        "cache_prompt": true,
         "roles": [
           "reasoning",
           "complex_synthesis",

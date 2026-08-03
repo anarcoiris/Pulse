@@ -222,7 +222,7 @@ def main():
     print(f"OK: Backends: primary={primary.get('available')} atomic={backends.get('atomic', {}).get('available')}")
     print(f"Variant: {args.variant}")
     synth = CircuitSynthesizer(backend=args.backend, ab_variant=args.variant)
-    reviewer = SemanticReviewer(backend=args.review_backend)
+    reviewer = SemanticReviewer(backend=args.review_backend, ab_variant=args.variant)
     print(f"Review backend: {reviewer.backend_name}")
 
     cases = TEST_CASES
@@ -267,6 +267,10 @@ def main():
         t0 = time.time()
         steward = CircuitStewardAgent(synth)
         history = []
+
+        # Per-case timeout: 600s for synthesis, prevents runaway loops
+        SYNTHESIS_TIMEOUT_S = 600
+
         result = steward.run_agent_loop(
             prompt=prompt,
             session_id=run_session,
@@ -278,8 +282,12 @@ def main():
         # Compatibility with the rest of the script
         result["session_dir"] = str(_ROOT / "knowledge" / "data" / "llm_sessions" / "sessions" / run_session)
         result["generation_attempts"] = result.get("turns", 1)
-        result["truncated"] = False
+        # Propagate truncation flag from agent (P1/P3 fix)
+        result.setdefault("truncated", False)
         print(f"  ({elapsed:.0f}s)", flush=True)
+
+        if elapsed > SYNTHESIS_TIMEOUT_S:
+            _safe_print(f"  WARN: Synthesis took {elapsed:.0f}s (timeout={SYNTHESIS_TIMEOUT_S}s)")
 
         entry = {
             "name": name,
@@ -305,9 +313,11 @@ def main():
 
         print("Revisando semantica (AI DRC)...", flush=True)
         t_review = time.time()
+        # Phase 2: separate session_id for review to isolate KV cache
+        review_session = f"{run_session}_review_{name}"
         review_raw = reviewer.review_netlist(
             json.dumps({"components": components}, ensure_ascii=False),
-            session_id=run_session,
+            session_id=review_session,
             meta={"test": name, "ab_variant": args.variant},
         )
         review_elapsed = time.time() - t_review
