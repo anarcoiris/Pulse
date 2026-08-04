@@ -21,6 +21,9 @@ from knowledge.llm_backends import list_backends
 from knowledge.llm_session_log import new_session_id
 from knowledge.semantic_reviewer import SemanticReviewer, generate_markdown_report
 from knowledge.circuit_agent import CircuitStewardAgent
+from core.circuit_graph import CircuitGraph
+from bridge.forge_api import export_kicad_netlist, generate_pcb
+import os
 
 OUT_DIR = Path("knowledge/data/validation_complex")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -263,117 +266,163 @@ def main():
             base_wrapped = {"circuit": base_circuit_data.get("circuit", base_circuit_data)}
             prompt = args.follow_up_prompt + f"\n\nCIRCUITO BASE A MODIFICAR:\n```json\n{json.dumps(base_wrapped, indent=2)}\n```\n(Por favor, aplica las modificaciones del prompt anterior sobre este circuito preservando los componentes existentes a menos que se te pida explícitamente eliminarlos. Asegúrate de devolver el JSON envuelto en la clave 'circuit' tal como se muestra en el circuito base.)"
 
-        print("Generando circuito (Agente Multi-Turno)...", flush=True)
-        t0 = time.time()
-        steward = CircuitStewardAgent(synth)
-        history = []
+        max_retries = 2
+        attempt = 0
+        current_prompt = prompt
 
-        # Per-case timeout: 600s for synthesis, prevents runaway loops
-        SYNTHESIS_TIMEOUT_S = 600
+        while attempt <= max_retries:
+            print(f"Generando circuito (Agente Multi-Turno) [Intento {attempt+1}/{max_retries+1}]...", flush=True)
+            t0 = time.time()
+            steward = CircuitStewardAgent(synth)
+            history = []
 
-        result = steward.run_agent_loop(
-            prompt=prompt,
-            session_id=run_session,
-            history=history,
-            on_turn_end=lambda t, status: _safe_print(f"  [Turno {t}] {status}")
-        )
-        elapsed = time.time() - t0
-        
-        # Compatibility with the rest of the script
-        result["session_dir"] = str(_ROOT / "knowledge" / "data" / "llm_sessions" / "sessions" / run_session)
-        result["generation_attempts"] = result.get("turns", 1)
-        # Propagate truncation flag from agent (P1/P3 fix)
-        result.setdefault("truncated", False)
-        print(f"  ({elapsed:.0f}s)", flush=True)
+            # Per-case timeout: 600s for synthesis, prevents runaway loops
+            SYNTHESIS_TIMEOUT_S = 600
 
-        if elapsed > SYNTHESIS_TIMEOUT_S:
-            _safe_print(f"  WARN: Synthesis took {elapsed:.0f}s (timeout={SYNTHESIS_TIMEOUT_S}s)")
-
-        entry = {
-            "name": name,
-            "elapsed_s": round(elapsed, 1),
-            "session_id": run_session,
-            "generation_attempts": result.get("generation_attempts"),
-            "truncated": result.get("truncated"),
-        }
-
-        if "error" in result:
-            print(f"ERROR en generacion: {result['error']}")
-            entry["error"] = result["error"]
-            run_manifest["results"].append(entry)
-            continue
-
-        components = result.get("components", [])
-        print(f"OK: Generacion exitosa. {len(components)} componentes.")
-        print(f"  backend: {result.get('backend', '?')}")
-        if result.get("session_dir"):
-            print(f"  llm logs: {result['session_dir']}", flush=True)
-
-        pin_coverage = _pin_coverage(components, synth.pinouts_db)
-
-        print("Revisando semantica (AI DRC)...", flush=True)
-        t_review = time.time()
-        # Phase 2: separate session_id for review to isolate KV cache
-        review_session = f"{run_session}_review_{name}"
-        review_raw = reviewer.review_netlist(
-            json.dumps({"components": components}, ensure_ascii=False),
-            session_id=review_session,
-            meta={"test": name, "ab_variant": args.variant},
-        )
-        review_elapsed = time.time() - t_review
-        semantic_review = _semantic_review_summary(review_raw)
-        print(f"  ({review_elapsed:.0f}s)", flush=True)
-
-        out_file = run_dir / f"{name}.json"
-        output_data = {
-            "run_session": run_session,
-            "test_case": case["description"],
-            "prompt": prompt,
-            "ab_variant": args.variant,
-            "backend": result.get("backend"),
-            "synthesis_backend": result.get("backend"),
-            "review_backend": review_raw.get("backend"),
-            "generation_attempts": result.get("generation_attempts"),
-            "truncated": result.get("truncated"),
-            "llm_session_dir": result.get("session_dir"),
-            "circuit": components,
-            "pin_coverage": pin_coverage,
-            "semantic_review": semantic_review,
-        }
-        with open(out_file, "w", encoding="utf-8") as f:
-            json.dump(output_data, f, indent=2, ensure_ascii=False)
-        print(f"Guardado en: {out_file}")
-
-        review_file = run_dir / "review.md"
-        with open(review_file, "w", encoding="utf-8") as f:
-            f.write(generate_markdown_report(semantic_review.get("issues", [])))
-        print(f"Revisión generada en: {review_file}")
-
-        etypes = {}
-        for comp in components:
-            t = comp.get("etype", "UNKNOWN")
-            etypes[t] = etypes.get(t, 0) + 1
-        print(f"Resumen: {etypes}")
-
-        if pin_coverage["per_component"]:
-            cov_str = ", ".join(
-                f"{c['label']}({c['value']}): {c['generated_pins']}/{c['total_pins']} pins "
-                f"({c['coverage'] * 100:.0f}%)"
-                for c in pin_coverage["per_component"]
+            result = steward.run_agent_loop(
+                prompt=current_prompt,
+                session_id=run_session,
+                history=history,
+                on_turn_end=lambda t, status: _safe_print(f"  [Turno {t}] {status}")
             )
-            avg = pin_coverage["average_coverage"]
-            print(f"Pin Coverage Fidelity: {cov_str}  [avg={avg * 100:.0f}%]" if avg is not None else f"Pin Coverage Fidelity: {cov_str}")
-        if pin_coverage["unmatched"]:
-            unmatched_vals = [u["value"] for u in pin_coverage["unmatched"]]
-            print(f"  (sin pinout de referencia en pinouts_library.json ni symbols_index.json: {unmatched_vals})")
+            elapsed = time.time() - t0
+            
+            # Compatibility with the rest of the script
+            result["session_dir"] = str(_ROOT / "knowledge" / "data" / "llm_sessions" / "sessions" / run_session)
+            result["generation_attempts"] = result.get("turns", 1)
+            # Propagate truncation flag from agent (P1/P3 fix)
+            result.setdefault("truncated", False)
+            print(f"  ({elapsed:.0f}s)", flush=True)
 
-        if semantic_review.get("error"):
-            _safe_print(f"Semantic review ERROR: {semantic_review['error']}")
-        else:
-            _safe_print(
-                f"Semantic review: {semantic_review['issue_count']} issues "
-                f"({semantic_review['critical_count']} critical)"
+            if elapsed > SYNTHESIS_TIMEOUT_S:
+                _safe_print(f"  WARN: Synthesis took {elapsed:.0f}s (timeout={SYNTHESIS_TIMEOUT_S}s)")
+
+            entry = {
+                "name": name,
+                "elapsed_s": round(elapsed, 1),
+                "session_id": run_session,
+                "generation_attempts": result.get("generation_attempts"),
+                "truncated": result.get("truncated"),
+            }
+
+            if "error" in result:
+                print(f"ERROR en generacion: {result['error']}")
+                entry["error"] = result["error"]
+                run_manifest["results"].append(entry)
+                break
+
+            components = result.get("components", [])
+            print(f"OK: Generacion exitosa. {len(components)} componentes.")
+            print(f"  backend: {result.get('backend', '?')}")
+            if result.get("session_dir"):
+                print(f"  llm logs: {result['session_dir']}", flush=True)
+
+            pin_coverage = _pin_coverage(components, synth.pinouts_db)
+
+            print("Revisando semantica (AI DRC)...", flush=True)
+            t_review = time.time()
+            # Phase 2: separate session_id for review to isolate KV cache
+            review_session = f"{run_session}_review_{name}_{attempt}"
+            review_raw = reviewer.review_netlist(
+                json.dumps({"components": components}, ensure_ascii=False),
+                session_id=review_session,
+                meta={"test": name, "ab_variant": args.variant},
             )
+            review_elapsed = time.time() - t_review
+            semantic_review = _semantic_review_summary(review_raw)
+            print(f"  ({review_elapsed:.0f}s)", flush=True)
+
+            out_file = run_dir / f"{name}.json"
+            output_data = {
+                "run_session": run_session,
+                "test_case": case["description"],
+                "prompt": prompt,
+                "ab_variant": args.variant,
+                "backend": result.get("backend"),
+                "synthesis_backend": result.get("backend"),
+                "review_backend": review_raw.get("backend"),
+                "generation_attempts": result.get("generation_attempts"),
+                "truncated": result.get("truncated"),
+                "llm_session_dir": result.get("session_dir"),
+                "circuit": components,
+                "pin_coverage": pin_coverage,
+                "semantic_review": semantic_review,
+            }
+            with open(out_file, "w", encoding="utf-8") as f:
+                json.dump(output_data, f, indent=2, ensure_ascii=False)
+            print(f"Guardado en: {out_file}")
+
+            review_file = run_dir / f"review_{attempt}.md"
+            with open(review_file, "w", encoding="utf-8") as f:
+                f.write(generate_markdown_report(semantic_review.get("issues", [])))
+            print(f"Revisión generada en: {review_file}")
+
+            etypes = {}
+            for comp in components:
+                t = comp.get("etype", "UNKNOWN")
+                etypes[t] = etypes.get(t, 0) + 1
+            print(f"Resumen: {etypes}")
+
+            if pin_coverage["per_component"]:
+                cov_str = ", ".join(
+                    f"{c['label']}({c['value']}): {c['generated_pins']}/{c['total_pins']} pins "
+                    f"({c['coverage'] * 100:.0f}%)"
+                    for c in pin_coverage["per_component"]
+                )
+                avg = pin_coverage["average_coverage"]
+                print(f"Pin Coverage Fidelity: {cov_str}  [avg={avg * 100:.0f}%]" if avg is not None else f"Pin Coverage Fidelity: {cov_str}")
+            if pin_coverage["unmatched"]:
+                unmatched_vals = [u["value"] for u in pin_coverage["unmatched"]]
+                print(f"  (sin pinout de referencia en pinouts_library.json ni symbols_index.json: {unmatched_vals})")
+
+            if semantic_review.get("error"):
+                _safe_print(f"Semantic review ERROR: {semantic_review['error']}")
+            else:
+                _safe_print(
+                    f"Semantic review: {semantic_review['issue_count']} issues "
+                    f"({semantic_review['critical_count']} critical)"
+                )
+            
+            if semantic_review.get("critical_count", 0) > 0 and attempt < max_retries:
+                print(f"\n[! CRITICAL ISSUES FOUND !] Auto-correcting (Attempt {attempt+1}/{max_retries})...")
+                issues_text = "\n".join(f"- {i['msg']} (Proposal: {i['proposal']})" for i in semantic_review["issues"] if i["severity"] == "critical")
+                current_prompt = prompt + f"\n\nCIRCUITO BASE A MODIFICAR:\n```json\n{json.dumps({'circuit': components}, indent=2)}\n```\n(El circuito base tiene los siguientes problemas CRÍTICOS:\n{issues_text}\nCorrige estos problemas explícitamente y devuelve el JSON del circuito resultante)."
+                attempt += 1
+                continue
+            else:
+                # Si llegamos aquí, o no hay críticos o superamos el límite.
+                # Vamos a generar KiCad
+                if "error" not in result and len(components) > 0:
+                    print("\nExportando a KiCad...")
+                    try:
+                        cg = CircuitGraph.from_component_dicts(components)
+                        kicad_out = run_dir / "kicad_export"
+                        kicad_out.mkdir(exist_ok=True)
+                        
+                        export_kicad_netlist(cg, str(kicad_out))
+                        generate_pcb(cg, str(kicad_out))
+                        
+                        print(f"Archivos de KiCad generados en: {kicad_out}")
+                        
+                        if os.name == 'nt':
+                            print("Abriendo archivos de KiCad...")
+                            sch_file = list(kicad_out.glob("*.kicad_sch"))
+                        if pcb_file:
+                            os.system(f'start "" "{pcb_file[0]}"')
+                            try:
+                                from bridge.gerber_export import export_svg
+                                from bridge.pcb_builder import find_kicad_cli
+                                cli = find_kicad_cli()
+                                svg_res = export_svg(cli, pcb_file[0], output_dir=kicad_out / "svg_preview")
+                                if svg_res.get("files"):
+                                    print(f"SVG Previews generados ({len(svg_res['files'])} capas) en: {kicad_out / 'svg_preview'}")
+                            except Exception as svg_err:
+                                print(f"Nota: No se pudo generar SVG preview: {svg_err}")
+                            
+                    except Exception as e:
+                        print(f"ERROR exportando a KiCad: {e}")
+                
+                break
 
         entry.update(
             {

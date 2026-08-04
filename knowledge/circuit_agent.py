@@ -9,53 +9,44 @@ _STEWARD_SYSTEM_PROMPT = """Eres el 'PulseLab Circuit Steward', un agente inteli
 Tu objetivo final es traducir las peticiones del usuario a una topología de circuito en un formato JSON estricto.
 
 HABILIDADES (SKILLS) DISPONIBLES:
-No tienes que adivinar los pines de los componentes. Si no conoces con certeza el pinout de un IC, módulo o microcontrolador, PUEDES y DEBES buscarlo usando la habilidad `search_knowledge`.
-Para usar una habilidad, emite exactamente este formato XML y DETENTE:
+
+1. BÚSQUEDA DE CONOCIMIENTO:
+Si no conoces con certeza el pinout de un IC, módulo o microcontrolador, DEBES buscarlo usando `search_knowledge`:
 <call_skill name="search_knowledge">NOMBRE DEL COMPONENTE O REGLA</call_skill>
-
-Ejemplo:
-<call_skill name="search_knowledge">A4988</call_skill>
-
-El sistema interceptará tu mensaje y te responderá con la tabla de pines o la información relevante.
-Puedes hacer tantas llamadas a `search_knowledge` como componentes complejos necesites investigar, pero hazlo de uno en uno o en turnos sucesivos.
 
 REGLAS DE BÚSQUEDA Y COMPONENTES GENÉRICOS:
 - Haz búsquedas SOLO para ICs, microcontroladores o módulos complejos (ej: ESP32-S3, SSD1306, PN532, CC1101).
-- NO busques pinouts para componentes pasivos o elementos genéricos como pulsadores, D-Pads de botones, interruptores, resistores, capacitores o conectores de expansión.
-- Si `search_knowledge` te responde que no encontró información para un término, NO insistas en buscar variaciones de ese término. Represéntalos directamente en el JSON final con componentes estándar ('S' para switches/pulsadores, 'R', 'C', o 'IC' genérico para conectores/headers) y procede a generar el circuito JSON final.
+- NO busques pinouts para componentes pasivos o elementos genéricos como pulsadores, resistores, capacitores o conectores de expansión.
 
-GENERACIÓN DEL CIRCUITO:
-Cuando tengas toda la información necesaria (o si la petición es tan sencilla que ya la sabes), y SÓLO ENTONCES, genera el circuito final.
-Debes encerrar el circuito final en un bloque JSON que tenga exactamente la clave "circuit" en la raíz.
+2. CONSTRUCCIÓN ITERATIVA DEL CIRCUITO (¡RECOMENDADO!):
+Puedes ir construyendo el circuito paso a paso agregando uno o varios componentes a la vez. Esto evita errores de truncamiento y permite mayor precisión.
+Usa la habilidad `add_components` enviando un objeto JSON o una Lista JSON de componentes:
+<call_skill name="add_components">
+[
+  {"etype": "MCU", "value": "ESP32-S3", "label": "U1", "pins": {"1": "3V3", "2": "GND"}},
+  {"etype": "C", "value": "100nF", "label": "C1", "n1": "3V3", "n2": "GND"}
+]
+</call_skill>
 
-REGLAS DE FORMATO JSON:
-- Devuelve ÚNICAMENTE un objeto JSON con una clave "circuit" que contenga una lista de componentes.
-- Cada componente debe ser un objeto con:
-    "etype": "R" (resistencia), "C" (cap), "L" (ind), "V" (fuente), "S" (sw), "GND" (tierra), o "IC", "MCU".
-    "value": Valor NUMÉRICO real para pasivos o string para nombre de ICs (ej. "ESP32", "1000").
-    "n1", "n2": Nombres de nodos (strings) para componentes de 2 pines (R, C, L, V, S). 'GND' es obligatorio para la referencia.
-    "pins": (SOLO PARA IC/MCU) Un objeto que mapea el NÚMERO del pad (string, ej. "1", "2") al nombre de la red. Ej: {"1": "VCC", "2": "GND", "3": "I2C_SDA"}.
-    "unconnected_pins": (OPCIONAL, SOLO PARA IC/MCU) Array de números de pin (strings) que existen físicamente pero se dejan libres A PROPÓSITO en este diseño.
-    "label": Etiqueta descriptiva corta.
-    "symbol": (SOLO PARA IC/MCU) Símbolo KiCad extraído del contexto (si se proporcionó).
-    "footprint": (SOLO PARA IC/MCU) Footprint KiCad extraído del contexto (si se proporcionó).
+3. FINALIZAR CIRCUITO:
+Cuando hayas agregado todos los componentes necesarios al Scratchpad y el circuito esté completo, finalízalo con:
+<call_skill name="finish_circuit">listo</call_skill>
+
+REGLAS DE FORMATO DE COMPONENTES:
+Cada componente debe ser un objeto con:
+- "etype": "R" (resistencia), "C" (cap), "L" (ind), "V" (fuente), "S" (sw), "GND" (tierra), o "IC", "MCU".
+- "value": Valor NUMÉRICO real para pasivos o string para nombre de ICs (ej. "10k", "100nF", "ESP32-S3").
+- "label": Etiqueta descriptiva corta (ej: "U1", "R1", "C1").
+- "n1", "n2": Nombres de nodos (strings) para componentes de 2 pines (R, C, L, V, S). 'GND' es obligatorio para la referencia.
+- "pins": (SOLO PARA IC/MCU) Un objeto que mapea el NÚMERO del pad (string, ej. "1", "2") al nombre de la red. Ej: {"1": "VCC", "2": "GND", "3": "I2C_SDA"}.
+- "unconnected_pins": (OPCIONAL, SOLO PARA IC/MCU) Array de números de pin (strings) que se dejan libres A PROPÓSITO.
+- "symbol": (SOLO PARA IC/MCU) Símbolo KiCad extraído del contexto (si aplica).
+- "footprint": (SOLO PARA IC/MCU) Footprint KiCad extraído del contexto (si aplica).
 
 FIDELIDAD DE PINES (IC/MCU) — OBLIGATORIO:
 - Si el sistema te devolvió la tabla de pines completa de un componente a través de `search_knowledge`, tu respuesta debe dar cuenta de TODOS esos pines.
-- Para cada pin físico que exista pero NO se use en el diseño, decláralo explícitamente en `pins` como "NC" o inclúyelo en `unconnected_pins`. NUNCA omitas un pin en silencio.
-
-REGLAS DE DISEÑO:
-- Los circuitos integrados necesitan condensadores de desacople de 100nF en VCC/GND.
-- Las fuentes de voltaje de 2 pines (V) deben cerrar el circuito (ej n2="GND").
-
-Una vez emitido el JSON final válido, el flujo terminará.
 """
 
-# Cuantas coincidencias de search_knowledge se incluyen en el historial por llamada.
-# Solo la primera va en detalle completo; el resto de aqui en adelante se omiten (antes
-# se incluian TODAS, la primera completa y el resto parcial - eso duplicaba pinouts casi
-# identicos de variantes del mismo componente, ej. "ESP32-S3" vs "ESP32-S3-WROOM-1", y era
-# una de las mayores fuentes de crecimiento del historial).
 _MAX_FULL_PINOUT_MATCHES = 1
 _MAX_LISTED_MATCHES = 2
 
@@ -70,12 +61,13 @@ def strip_think_tags(text: str) -> str:
 
 
 class CircuitScratchpad:
-    """Tracks component status, pinout resolutions, and agent synthesis phase."""
+    """Tracks component status, pinout resolutions, accumulated circuit, and agent synthesis phase."""
     def __init__(self, prompt: str):
         self.prompt = prompt
         self.resolved_pinouts: dict[str, dict] = {}
         self.generic_components: set[str] = set()
         self.search_history: list[str] = []
+        self.circuit: list[dict] = []
         self.phase: str = "RESEARCH"  # RESEARCH | SYNTHESIS
 
     def record_search(self, term: str, matches: list) -> bool:
@@ -89,18 +81,54 @@ class CircuitScratchpad:
             self.generic_components.add(term_norm)
             return False
 
+    def add_components(self, raw_data: Any) -> tuple[int, list[str]]:
+        """Añade uno o varios componentes al circuito acumulado."""
+        items = raw_data if isinstance(raw_data, list) else [raw_data]
+        added_count = 0
+        warnings = []
+        for item in items:
+            if not isinstance(item, dict):
+                warnings.append(f"Elemento ignorado por no ser un objeto JSON: {item}")
+                continue
+            if "etype" not in item and "type" in item:
+                item["etype"] = item.pop("type")
+            if "etype" not in item:
+                item["etype"] = "IC" if "pins" in item else "R"
+            if "label" not in item:
+                item["label"] = f"{item['etype']}{len(self.circuit) + 1}"
+            self.circuit.append(item)
+            added_count += 1
+        if self.circuit:
+            self.phase = "SYNTHESIS"
+        return added_count, warnings
+
     def get_summary(self) -> str:
         res_keys = ", ".join(self.resolved_pinouts.keys()) or "Ninguno"
         gen_keys = ", ".join(self.generic_components) or "Ninguno"
-        return f"[SCRATCHPAD]\n- IC Pinouts Resueltos: {res_keys}\n- Elementos Pasivos/Genéricos: {gen_keys}\n- Fase: {self.phase}"
+        
+        comp_summary_items = []
+        for c in self.circuit[-10:]: # últimos 10
+            lbl = c.get("label", "?")
+            val = c.get("value", "")
+            etype = c.get("etype", "")
+            comp_summary_items.append(f"{lbl} ({val or etype})")
+        comp_str = ", ".join(comp_summary_items) or "Ninguno"
+        if len(self.circuit) > 10:
+            comp_str = f"...(+{len(self.circuit)-10} anteriores), " + comp_str
+
+        return (
+            f"[SCRATCHPAD DE ESTADO]\n"
+            f"- Fase Actual: {self.phase}\n"
+            f"- Pinouts Resueltos: {res_keys}\n"
+            f"- Elementos Genéricos: {gen_keys}\n"
+            f"- Componentes Acumulados ({len(self.circuit)} total): [{comp_str}]"
+        )
 
 
 class CircuitStewardAgent:
-    def __init__(self, synthesizer: Any, max_turns: int = 12):
-        # We take a reference to CircuitSynthesizer to reuse its RAG and DB
+    def __init__(self, synthesizer: Any, max_turns: int = 16):
         self.synth = synthesizer
         self.max_turns = max_turns
-        # Context budget derived from actual backend limits (token-based).
         self._budget: ContextBudget | None = None
 
     def _get_budget(self) -> ContextBudget:
@@ -109,7 +137,6 @@ class CircuitStewardAgent:
                 backend_name = self.synth._resolve_backend()[0]
                 self._budget = ContextBudget.from_backend(backend_name)
             except Exception:
-                # Fallback: 128k context, 16k output
                 self._budget = ContextBudget(num_ctx=131072, num_predict=16384)
             logger.info(
                 "steward_agent",
@@ -128,26 +155,21 @@ class CircuitStewardAgent:
     ) -> dict:
         """
         Executes a multi-turn agent loop with Scratchpad & reasoning-free history.
-        Updates `history` in-place.
-        Returns the final JSON parsing result or error.
+        Supports stateful iterative component building via skills.
         """
         scratchpad = CircuitScratchpad(prompt)
-        accumulated_circuit: list[dict] = []
 
         if not history:
             history.append({"role": "system", "content": _STEWARD_SYSTEM_PROMPT})
             history.append({"role": "user", "content": prompt})
 
-        # Terminos de search_knowledge ya consultados en esta sesion (normalizado)
         seen_skill_lookups: set[str] = set()
-
         budget = self._get_budget()
 
         turn = 0
         while turn < self.max_turns:
             turn += 1
 
-            # ── Pre-turn compaction (mirrors Tiny Steward) ────────────
             if budget.should_compact(history):
                 before = len(history)
                 history[:] = budget.compact(history)
@@ -162,25 +184,19 @@ class CircuitStewardAgent:
             if on_turn_end:
                 on_turn_end(turn, f"INFERRING ({token_est} tok est, {budget.utilization(history):.0%} budget)")
 
-            # Resolve LLM client
             backend_name, llm = self.synth._resolve_backend()
             if not getattr(llm, 'available', True):
                 return {"error": f"LLM backend '{backend_name}' no disponible."}
 
-            # Convert history to the format expected by llm.chat
             sys_prompt = history[0]["content"]
-            
-            # Combine history messages for chat
-            # Note: since llm.chat expects `system`, `user` and `history`, we pass it like this:
             current_history = history[1:-1] if len(history) > 2 else None
             last_user_msg = history[-1]["content"] if history[-1]["role"] == "user" else "Continúa."
             
-            # Bypass generate_circuit_json and talk to LLM directly
             result = llm.chat_stream(
                 system=sys_prompt,
                 user=last_user_msg,
                 history=current_history,
-                json_mode=False, # We don't force JSON mode yet because it might use XML tools
+                json_mode=False,
                 session_id=session_id,
                 caller="steward_agent",
                 on_chunk=on_chunk
@@ -198,7 +214,6 @@ class CircuitStewardAgent:
 
             content = result.get("content", "")
 
-            # ── Truncation detection (P1/P3 fix) ─────────────────────
             from knowledge.llm_json import llm_output_truncated
             if llm_output_truncated(result):
                 done_reason = result.get("done_reason", "unknown")
@@ -207,61 +222,81 @@ class CircuitStewardAgent:
                     f"[Turn {turn}] Output truncated (done_reason={done_reason}), "
                     f"history={estimate_history_tokens(history)} tok",
                 )
+                if scratchpad.circuit:
+                    # Si ya tenemos componentes acumulados en el scratchpad, podemos usarlos
+                    if on_turn_end:
+                        on_turn_end(turn, "DONE (recovered from scratchpad)")
+                    return {
+                        "status": "ok",
+                        "components": scratchpad.circuit,
+                        "backend": result.get("backend"),
+                        "turns": turn,
+                        "recovered": True
+                    }
                 if turn < self.max_turns:
                     if content:
                         history.append({"role": "assistant", "content": content})
                     history.append({
                         "role": "user",
                         "content": (
-                            "Tu respuesta anterior fue TRUNCADA (superó el límite de tokens). "
-                            "Por favor, genera inmediatamente el JSON completo del circuito en formato estricto sin explicaciones ni razonamiento previo. "
-                            "Solo el bloque JSON envuelto en la clave 'circuit'."
+                            "Tu respuesta fue TRUNCADA. Usa la habilidad `<call_skill name=\"add_components\">` "
+                            "para ir agregando componentes de pocos en pocos al Scratchpad."
                         ),
                     })
                     continue
-                return {
-                    "error": f"Output truncado (done_reason={done_reason}) en turno {turn}",
-                    "turns": turn,
-                    "truncated": True,
-                }
 
             clean_content = strip_think_tags(content)
             if clean_content:
                 history.append({"role": "assistant", "content": clean_content})
 
-            # 1. Check if the model generated the final circuit
-            if '"circuit"' in content and ("{" in content and "[" in content):
-                from knowledge.llm_json import parse_llm_result
-                try:
-                    data = parse_llm_result(content, result.get("thinking", ""))
-                    if "circuit" in data:
-                        if on_turn_end:
-                            on_turn_end(turn, "DONE")
-                        return {"status": "ok", "components": data["circuit"], "backend": result.get("backend"), "turns": turn}
-                except Exception as e:
-                    history.append({"role": "user", "content": f"El JSON generado es inválido: {e}. Por favor, corrígelo y devuelve sólo el JSON estricto."})
+            # 1. Check for Skill Calls (search_knowledge, add_components, finish_circuit)
+            skill_match = re.search(r'<call_skill\s+name="([^"]+)">([\s\S]*?)</call_skill>', content)
+            if skill_match:
+                skill_name = skill_match.group(1).strip()
+                skill_body = skill_match.group(2).strip()
+
+                if on_turn_end:
+                    on_turn_end(turn, f"SKILL_CALL: {skill_name}")
+
+                if skill_name in ("add_components", "add_component"):
+                    from knowledge.llm_json import parse_json_object
+                    try:
+                        parsed = parse_json_object(skill_body)
+                        if isinstance(parsed, dict):
+                            if "components" in parsed:
+                                parsed = parsed["components"]
+                            elif "circuit" in parsed:
+                                parsed = parsed["circuit"]
+                        added, warnings = scratchpad.add_components(parsed)
+                        msg = f"SYSTEM_SKILL_RESPONSE: Se añadieron {added} componente(s) al circuito exitosamente."
+                        if warnings:
+                            msg += "\nAdvertencias: " + "; ".join(warnings)
+                    except Exception as e:
+                        msg = f"SYSTEM_SKILL_ERROR: Fallo al parsear JSON de componentes ({e}). Pasa un objeto o lista JSON bien formado."
+                    
+                    sp_info = scratchpad.get_summary()
+                    history.append({"role": "user", "content": f"{msg}\n\n{sp_info}\n\nContinúa agregando componentes o usa `<call_skill name=\"finish_circuit\">listo</call_skill>` si terminaste."})
                     continue
 
-            # 2. Check if the model called a skill
-            skill_match = re.search(r'<call_skill\s+name="([^"]+)">([^<]+)</call_skill>', content)
-            if skill_match:
-                skill_name = skill_match.group(1)
-                skill_arg = skill_match.group(2).strip()
-                
-                if on_turn_end:
-                    on_turn_end(turn, f"SKILL_CALL: {skill_name}({skill_arg})")
+                elif skill_name == "finish_circuit":
+                    if on_turn_end:
+                        on_turn_end(turn, "DONE")
+                    return {
+                        "status": "ok",
+                        "components": scratchpad.circuit,
+                        "backend": result.get("backend"),
+                        "turns": turn
+                    }
 
-                if skill_name == "search_knowledge":
+                elif skill_name == "search_knowledge":
+                    skill_arg = skill_body
                     lookup_key = skill_arg.strip().lower()
-                    already_seen = lookup_key in seen_skill_lookups
                     seen_skill_lookups.add(lookup_key)
 
-                    # Delegate to the synthesizer's RAG and pinout matcher
                     matches = self.synth._match_pinouts(skill_arg)
                     scratchpad.record_search(skill_arg, matches)
 
                     if not matches:
-                        # Try a generic RAG query if it's not a pinout
                         rag_results = self.synth.rag.query(skill_arg, top_k=3, chunk_type="concept")
                         if rag_results:
                             resp_text = "Resultados de conocimiento general:\n"
@@ -270,46 +305,46 @@ class CircuitStewardAgent:
                         else:
                             resp_text = (
                                 f"No se encontró información en la base de conocimientos para: '{skill_arg}'. "
-                                "Si se trata de pulsadores, D-Pad, interruptores, resistores o conectores genéricos, "
-                                "NO busques más variaciones de este término. Procede inmediatamente a generar el circuito JSON final "
-                                "utilizando componentes estándar ('S', 'R', 'C' o 'IC' para conectores)."
+                                "Procede a agregar los componentes al circuito con `add_components`."
                             )
-                    elif already_seen:
-                        # Mismo termino ya buscado antes en esta sesion: no volver a inflar
-                        keys = ", ".join(key for key, _ in matches[:_MAX_LISTED_MATCHES]) if matches else ""
-                        resp_text = (
-                            f"Ya consultaste '{skill_arg}' en un turno anterior de esta misma sesión "
-                            f"(coincidencias: {keys or 'ninguna'}). Usa los pines que ya te di antes o procede a generar el JSON final; "
-                            "no hace falta repetir la búsqueda."
-                        )
                     else:
                         resp_text = "Resultados de pinouts encontrados:\n"
                         shown = matches[:_MAX_LISTED_MATCHES]
                         for i, (key, entry) in enumerate(shown):
                             compact = self.synth._compact_pinout(entry, full=(i < _MAX_FULL_PINOUT_MATCHES))
                             resp_text += f"--- {key} ---\n{json.dumps(compact, indent=2, ensure_ascii=False)}\n"
-                        extra = len(matches) - len(shown)
-                        if extra > 0:
-                            resp_text += (
-                                f"\n(+{extra} coincidencias adicionales omitidas por espacio; "
-                                "pide un nombre más específico si ninguna de las anteriores es la correcta.)\n"
-                            )
-                    
+
                     sp_info = scratchpad.get_summary()
                     history.append({
                         "role": "user",
-                        "content": f"SYSTEM_SKILL_RESPONSE:\n{resp_text}\n\n{sp_info}\n\n(Puedes hacer otra llamada a skill o generar el JSON final si ya tienes todo lo necesario)."
+                        "content": f"SYSTEM_SKILL_RESPONSE:\n{resp_text}\n\n{sp_info}\n\n(Puedes hacer otra búsqueda, añadir componentes con `add_components` o finalizar con `finish_circuit`)."
                     })
+                    continue
                 else:
                     history.append({"role": "user", "content": f"SYSTEM_SKILL_ERROR: Habilidad desconocida '{skill_name}'"})
-                
-                continue
+                    continue
 
-            # If no skill was called and no valid circuit JSON was found, prompt the model to continue or fix formatting
+            # 2. Backwards compatibility: Check if the model generated the final circuit in a raw JSON block
+            if '"circuit"' in content and ("{" in content and "[" in content):
+                from knowledge.llm_json import parse_llm_result
+                try:
+                    data = parse_llm_result(content, result.get("thinking", ""))
+                    if "circuit" in data:
+                        scratchpad.add_components(data["circuit"])
+                        if on_turn_end:
+                            on_turn_end(turn, "DONE")
+                        return {"status": "ok", "components": scratchpad.circuit, "backend": result.get("backend"), "turns": turn}
+                except Exception as e:
+                    history.append({"role": "user", "content": f"El JSON generado es inválido: {e}. Usa `<call_skill name=\"add_components\">` para agregar componentes limpiamente."})
+                    continue
+
             sp_info = scratchpad.get_summary()
             history.append({
                 "role": "user",
-                "content": f"No detecté una llamada a skill ni un bloque JSON válido con la clave 'circuit'.\n{sp_info}\nSi necesitas información de un IC, usa <call_skill name=\"search_knowledge\">. Si ya terminaste, devuelve el JSON con la clave 'circuit'."
+                "content": f"No detecté una llamada a skill.\n{sp_info}\nUsa `<call_skill name=\"add_components\">` para añadir componentes, o `<call_skill name=\"finish_circuit\">` para concluir."
             })
+
+        if scratchpad.circuit:
+            return {"status": "ok", "components": scratchpad.circuit, "backend": "fallback_scratchpad", "turns": turn}
 
         return {"error": f"Se alcanzó el límite máximo de {self.max_turns} turnos sin un resultado válido."}

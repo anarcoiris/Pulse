@@ -89,6 +89,49 @@ class Footprint:
         if not self.uuid_str:
             self.uuid_str = str(uuid.uuid4())
 
+    def bounding_box(self) -> tuple[float, float, float, float]:
+        """Devuelve (min_x, min_y, max_x, max_y) global del footprint, basado en sus pads."""
+        if not self.pads:
+            return (self.x, self.y, self.x, self.y)
+            
+        min_x = min_y = float('inf')
+        max_x = max_y = float('-inf')
+        
+        # Rotación en radianes
+        theta = math.radians(self.rotation)
+        cos_t = math.cos(theta)
+        sin_t = math.sin(theta)
+        
+        for p in self.pads:
+            # Calcular esquinas del pad relativo a su propio centro
+            half_w = p.w / 2.0
+            half_h = p.h / 2.0
+            
+            # 4 esquinas locales del pad
+            corners = [
+                (p.x - half_w, p.y - half_h),
+                (p.x + half_w, p.y - half_h),
+                (p.x - half_w, p.y + half_h),
+                (p.x + half_w, p.y + half_h)
+            ]
+            
+            for cx, cy in corners:
+                # Rotar la esquina alrededor del origen del footprint
+                rot_x = cx * cos_t - cy * sin_t
+                rot_y = cx * sin_t + cy * cos_t
+                
+                # Coordenada global
+                gx = self.x + rot_x
+                gy = self.y + rot_y
+                
+                if gx < min_x: min_x = gx
+                if gx > max_x: max_x = gx
+                if gy < min_y: min_y = gy
+                if gy > max_y: max_y = gy
+                
+        # Padding extra de 1mm (seda, holgura)
+        return (min_x - 1.0, min_y - 1.0, max_x + 1.0, max_y + 1.0)
+
     def to_sexpr(self) -> str:
         rotation_str = f" {self.rotation:.1f}" if self.rotation != 0 else ""
         pad_lines = "\n".join(p.to_sexpr() for p in self.pads)
@@ -136,13 +179,23 @@ class RawFootprint(Footprint):
         # Replace Value property
         body = re.sub(r'\(property\s+"Value"\s+"[^"]+"', f'(property "Value" "{self.value}"', body, count=1)
         
-        # Replace root (at ...) with new at
-        rotation_str = f" {self.rotation:.1f}" if self.rotation != 0 else ""
-        body = re.sub(r'\n\s*\(at [^\)]+\)', f'\n  (at {self.x:.4f} {self.y:.4f}{rotation_str})', body, count=1)
+        # Remove the faulty regex for (at) that matches properties
+        # And insert the (at ...) right after (footprint ...)
         
-        # Add indentation for the root footprint body to match the layout
         lines = body.splitlines()
         if lines and lines[0].startswith('(footprint'):
+            rotation_str = f" {self.rotation:.1f}" if self.rotation != 0 else ""
+            new_at = f'  (at {self.x:.4f} {self.y:.4f}{rotation_str})'
+            
+            # Find and remove any root-level (at ) just in case
+            # It's usually indented by some spaces or tabs.
+            for i in range(1, min(10, len(lines))):
+                if lines[i].strip().startswith('(at '):
+                    lines.pop(i)
+                    break
+                    
+            lines.insert(1, new_at)
+            
             lines[0] = '  ' + lines[0]
             for i in range(1, len(lines)):
                 if lines[i].startswith(')'):
@@ -307,7 +360,7 @@ class KeepoutZone:
         pts_str = "\n          ".join(f"(xy {x:.4f} {y:.4f})" for x, y in self.points)
         uid = str(uuid.uuid4())
         return (
-            f'  (zone (keepout (tracks allowed) (vias allowed) (pads allowed) (copper_pours prohibited))\n'
+            f'  (zone (keepout (tracks allowed) (vias allowed) (pads allowed) (copperpour not_allowed))\n'
             f'    (layer "{self.layers[0]}") (uuid "{uid}")\n'
             f'    (polygon\n'
             f'      (pts\n          {pts_str}\n      )\n'
@@ -490,12 +543,27 @@ class FootprintPresets:
 
     @staticmethod
     def from_kicad_lib(ref: str, lib: str, name: str, value: str = "") -> Optional[RawFootprint]:
-        """Carga un footprint desde las librerías de sistema de KiCad."""
+        """Carga un footprint desde las librerías de sistema de KiCad y parsea sus pads."""
         from bridge.kicad_bridge import get_kicad_footprint
+        import re
         raw = get_kicad_footprint(lib, name)
         if not raw:
             return None
-        return RawFootprint(ref=ref, lib_id=f"{lib}:{name}", value=value or name, raw_sexpr=raw)
+        rf = RawFootprint(ref=ref, lib_id=f"{lib}:{name}", value=value or name, raw_sexpr=raw)
+        
+        # Parse pads for autorouting & net binding
+        pad_matches = re.findall(
+            r'\(pad\s+"?([^"\s]+)"?\s+([^\s]+)\s+([^\s]+)\s+\(at\s+([\d\.-]+)\s+([\d\.-]+)[^\)]*\)\s+\(size\s+([\d\.-]+)\s+([\d\.-]+)\)',
+            raw
+        )
+        for num, ptype, shape, x_str, y_str, w_str, h_str in pad_matches:
+            px, py = float(x_str), float(y_str)
+            w, h = float(w_str), float(h_str)
+            drill_m = re.search(r'\(drill\s+([\d\.-]+)\)', raw)
+            drill = float(drill_m.group(1)) if drill_m else 0.0
+            rf.pads.append(Pad(num, ptype, shape, x=px, y=py, w=w, h=h, drill=drill))
+            
+        return rf
 
     @staticmethod
     def tactile_switch_6x6(ref: str, value: str = "Switch",
@@ -510,6 +578,29 @@ class FootprintPresets:
             Pad("3", "thru_hole", "circle", x=-3.25, y=2.25,  w=1.6, h=1.6, drill=1.0, net_id=net2_id, net_name=net2_name),
             Pad("4", "thru_hole", "circle", x=3.25,  y=2.25,  w=1.6, h=1.6, drill=1.0, net_id=net2_id, net_name=net2_name),
         ]
+        return fp
+
+    @staticmethod
+    def flipper_zero_gpio(ref: str, value: str = "Flipper Zero") -> Footprint:
+        """Header de Flipper Zero (18 pines) con separación de 4 pines (10.16mm) entre el 8 y el 9."""
+        fp = Footprint(ref=ref, lib_id="Custom:Flipper_Zero_GPIO", value=value)
+        fp.pads = []
+        pitch = 2.54
+        # Pines 1 a 8
+        for i in range(8):
+            fp.pads.append(Pad(
+                str(i + 1), "thru_hole",
+                "rect" if i == 0 else "circle",
+                x=0, y=i * pitch,
+                w=1.7, h=1.7, drill=1.0,
+            ))
+        # Pines 9 a 18 (desplazados 4 posiciones extra)
+        for i in range(8, 18):
+            fp.pads.append(Pad(
+                str(i + 1), "thru_hole", "circle",
+                x=0, y=(i + 4) * pitch,
+                w=1.7, h=1.7, drill=1.0,
+            ))
         return fp
 
 
@@ -545,7 +636,8 @@ class PCBLayout:
                  layers: int = 2,
                  trace_width: float = 0.25,
                  clearance: float = 0.2,
-                 project_name: str = "PulseLab Design"):
+                 project_name: str = "PulseLab Design",
+                 net_classes: dict = None):
         self.board = BoardOutline(
             width_mm=board_width, height_mm=board_height,
             corner_radius_mm=corner_radius,
@@ -554,6 +646,7 @@ class PCBLayout:
         self.default_trace_width = trace_width
         self.clearance = clearance
         self.project_name = project_name
+        self.net_classes = net_classes or {}
 
         self._footprints: list[Footprint] = []
         self._traces: list[Trace] = []
@@ -572,6 +665,15 @@ class PCBLayout:
             self._net_counter += 1
             self._nets[name] = self._net_counter
         return self._nets[name]
+
+    def get_net_width(self, net_name: str) -> float:
+        """Determina el grosor de pista basado en las clases de nets (net_classes)."""
+        if not net_name:
+            return self.default_trace_width
+        for cls_name, cls_data in self.net_classes.items():
+            if net_name in cls_data.get("nets", []):
+                return float(cls_data.get("width", self.default_trace_width))
+        return self.default_trace_width
 
     # ── Component placement ───────────────────────────────────────
 
@@ -674,6 +776,12 @@ class PCBLayout:
         )
         return self.add_footprint(fp, x, y, rotation)
 
+    def add_flipper_zero_gpio(self, ref: str, value: str = "Flipper Zero", x: float = 0, y: float = 0,
+                              rotation: float = 0) -> Footprint:
+        """Añade el header GPIO de Flipper Zero."""
+        fp = FootprintPresets.flipper_zero_gpio(ref, value)
+        return self.add_footprint(fp, x, y, rotation)
+
     def add_ic(self, ref: str, value: str, x: float = 0.0, y: float = 0.0,
                pins: dict = None, pkg_type: str = "SOP16", rotation: float = 0.0) -> Footprint:
         """Añade un IC multipin parametrizado."""
@@ -730,7 +838,7 @@ class PCBLayout:
         centros absolutos de los dos pads.
         """
         if width is None:
-            width = self.default_trace_width
+            width = self.get_net_width(net)
         net_id = self._get_net_id(net) if net else 0
 
         # Posiciones absolutas de los pads
@@ -756,7 +864,7 @@ class PCBLayout:
                   net: str = "") -> list[Trace]:
         """Traza una línea de pistas por una serie de puntos."""
         if width is None:
-            width = self.default_trace_width
+            width = self.get_net_width(net)
         net_id = self._get_net_id(net) if net else 0
         traces = []
         for i in range(len(points) - 1):
@@ -869,7 +977,7 @@ class PCBLayout:
                         for l_idx in pad_layers:
                             occupied.add((l_idx, gx+dx, gy+dy))
 
-        def astar(start_px, start_py, start_l, end_px, end_py, end_l):
+        def astar(start_px, start_py, start_l, end_px, end_py, end_l, current_net_width):
             start_l_act = 0 if start_l == -1 else start_l
             end_l_act = 0 if end_l == -1 else end_l
             
@@ -879,7 +987,7 @@ class PCBLayout:
             open_set = [(0, start_g)]
             came_from = {}
             g_score = {start_g: 0}
-            directions = [(0, 1, 0), (1, 0, 0), (0, -1, 0), (-1, 0, 0), (0, 0, 1)]
+            directions = [(0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1), (1, 0, 0)]
             
             min_x = int(self.board.origin_x / grid_size)
             min_y = int(self.board.origin_y / grid_size)
@@ -940,9 +1048,10 @@ class PCBLayout:
         for net_name, pads in net_pads.items():
             if len(pads) < 2: continue
             nid = pads[0][2]
+            net_w = self.get_net_width(net_name)
             for i in range(len(pads) - 1):
                 p1, p2 = pads[i], pads[i+1]
-                path_grid = astar(p1[0], p1[1], p1[3], p2[0], p2[1], p2[3])
+                path_grid = astar(p1[0], p1[1], p1[3], p2[0], p2[1], p2[3], net_w)
                 if path_grid:
                     routed_ok += 1
                     start_pt = path_grid[0]
@@ -955,11 +1064,11 @@ class PCBLayout:
                                 self._traces.append(Trace(
                                     start_pt[1] * grid_size, start_pt[2] * grid_size,
                                     gp[1] * grid_size, gp[2] * grid_size,
-                                    width=width, layer=layers[start_pt[0]], net_id=nid
+                                    width=net_w, layer=layers[start_pt[0]], net_id=nid
                                 ))
                             start_pt = gp
                     self._traces.append(Trace(start_pt[1] * grid_size, start_pt[2] * grid_size,
-                                             p2[0], p2[1], width=width, layer=layers[start_pt[0]], net_id=nid))
+                                             p2[0], p2[1], width=net_w, layer=layers[start_pt[0]], net_id=nid))
                     for pt in path_grid:
                         occupied.add(pt)
                 else:

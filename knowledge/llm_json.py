@@ -32,21 +32,21 @@ def extract_json_text(raw: str) -> str:
         text = text[:start] + text[end + len(close_tag) :]
     text = re.sub(r"Thinking\.\.\..*?done thinking\.?\s*", "", text, flags=re.DOTALL | re.IGNORECASE)
 
-    # Fenced JSON
-    fence = re.search(r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", text, re.IGNORECASE)
+    # Fenced JSON (object or array)
+    fence = re.search(r"```(?:json)?\s*([\{\[\s\S]*?[\}\]])\s*```", text, re.IGNORECASE)
     if fence:
         return fence.group(1).strip()
 
-    # Bare object
-    obj = re.search(r"\{[\s\S]*\}", text)
-    if obj:
-        return obj.group(0).strip()
+    # Bare object or array
+    m = re.search(r"(\{[\s\S]*\}|\[[\s\S]*\])", text)
+    if m:
+        return m.group(1).strip()
 
     return text.strip()
 
 
-def parse_json_object(raw: str) -> dict:
-    """Parse JSON object from raw LLM text; raises JSONDecodeError on failure."""
+def parse_json_object(raw: str) -> dict | list:
+    """Parse JSON object or array from raw LLM text; raises JSONDecodeError on failure."""
     cleaned = extract_json_text(raw)
     if not cleaned:
         raise json.JSONDecodeError("empty LLM response", raw or "", 0)

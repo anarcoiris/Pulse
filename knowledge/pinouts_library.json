@@ -60,55 +60,48 @@
       "1": "GND",
       "2": "3V3",
       "3": "EN",
-      "4": "GPIO0",
-      "5": "GPIO1",
-      "6": "GPIO2",
-      "7": "GPIO3",
-      "8": "GPIO4",
-      "9": "GPIO5",
-      "10": "GPIO6",
-      "11": "GPIO7",
-      "12": "GPIO8",
-      "13": "GPIO9",
-      "14": "GPIO10",
-      "15": "GPIO11",
-      "16": "GPIO12",
-      "17": "GPIO13",
-      "18": "GPIO14",
-      "19": "GPIO15",
-      "20": "GPIO16",
-      "21": "GPIO17",
-      "22": "GPIO18",
-      "23": "GPIO19",
-      "24": "GPIO20",
-      "25": "GPIO21",
-      "26": "GPIO26",
-      "27": "GPIO27",
-      "28": "GPIO28",
-      "29": "GPIO29",
-      "30": "GPIO30",
-      "31": "GPIO31",
-      "32": "GPIO32",
-      "33": "GPIO33",
-      "34": "GPIO34",
-      "35": "GPIO35",
-      "36": "GPIO36",
-      "37": "GPIO37",
-      "38": "GPIO38",
-      "39": "GPIO39",
-      "40": "GPIO40",
-      "41": "GPIO41",
-      "42": "GPIO42",
-      "43": "GPIO43",
-      "44": "GPIO44",
-      "45": "GPIO45",
-      "46": "GPIO46",
-      "47": "GND",
-      "48": "GND_PAD"
+      "4": "IO4",
+      "5": "IO5",
+      "6": "IO6",
+      "7": "IO7",
+      "8": "IO15",
+      "9": "IO16",
+      "10": "IO17",
+      "11": "IO18",
+      "12": "IO8",
+      "13": "USB_D-",
+      "14": "USB_D+",
+      "15": "IO3",
+      "16": "IO46",
+      "17": "IO9",
+      "18": "IO10",
+      "19": "IO11",
+      "20": "IO12",
+      "21": "IO13",
+      "22": "IO14",
+      "23": "IO21",
+      "24": "IO47",
+      "25": "IO48",
+      "26": "IO45",
+      "27": "IO0",
+      "28": "IO35",
+      "29": "IO36",
+      "30": "IO37",
+      "31": "IO38",
+      "32": "IO39",
+      "33": "IO40",
+      "34": "IO41",
+      "35": "IO42",
+      "36": "RXD0",
+      "37": "TXD0",
+      "38": "IO2",
+      "39": "IO1",
+      "40": "GND",
+      "41": "GND"
     },
     "uart_programming": {
-      "U0TXD": "GPIO43",
-      "U0RXD": "GPIO44",
+      "U0TXD": "TXD0",
+      "U0RXD": "RXD0",
       "note": "ESP32-S2/S3 native USB optional; UART header for CP2102 fallback"
     }
   },
@@ -302,6 +295,158 @@
       "14": "2B (Motor)",
       "15": "GND (Motor)",
       "16": "VMOT (Power)"
+    }
+  },
+  "Flipper_Zero": {
+    "device": "Flipper Zero",
+    "component": "GPIO Header",
+    "unit": "mm",
+    "origin_pin": 1,
+    "pitch_standard": 2.54,
+    "gap_pin8_to_pin9": 10.16,
+    "pins": [
+      {
+        "pin_number": 1,
+        "label": "5V",
+        "type": "Power Output",
+        "coord_x": 0.0,
+        "coord_y": 0.0
+      },
+      {
+        "pin_number": 2,
+        "label": "PA7",
+        "type": "Digital I/O / ADC",
+        "coord_x": 0.0,
+        "coord_y": -2.54
+      },
+      {
+        "pin_number": 3,
+        "label": "A6",
+        "type": "Digital I/O / ADC",
+        "coord_x": 0.0,
+        "coord_y": -5.08
+      },
+      {
+        "pin_number": 4,
+        "label": "A4",
+        "type": "Digital I/O / ADC",
+        "coord_x": 0.0,
+        "coord_y": -7.62
+      },
+      {
+        "pin_number": 5,
+        "label": "B3",
+        "type": "Digital I/O / SPI MISO",
+        "coord_x": 0.0,
+        "coord_y": -10.16
+      },
+      {
+        "pin_number": 6,
+        "label": "B2",
+        "type": "Digital I/O / SPI MOSI",
+        "coord_x": 0.0,
+        "coord_y": -12.7
+      },
+      {
+        "pin_number": 7,
+        "label": "C3",
+        "type": "Digital I/O / SPI SCK",
+        "coord_x": 0.0,
+        "coord_y": -15.24
+      },
+      {
+        "pin_number": 8,
+        "label": "GND",
+        "type": "Ground",
+        "coord_x": 0.0,
+        "coord_y": -17.78
+      },
+      {
+        "pin_number": 9,
+        "label": "3V3",
+        "type": "Power Output",
+        "coord_x": 0.0,
+        "coord_y": -27.94
+      },
+      {
+        "pin_number": 10,
+        "label": "SWC",
+        "type": "SWD Clock / ARM Debug",
+        "coord_x": 0.0,
+        "coord_y": -30.48
+      },
+      {
+        "pin_number": 11,
+        "label": "GND",
+        "type": "Ground",
+        "coord_x": 0.0,
+        "coord_y": -33.02
+      },
+      {
+        "pin_number": 12,
+        "label": "SIO",
+        "type": "SWD Data I/O / ARM Debug",
+        "coord_x": 0.0,
+        "coord_y": -35.56
+      },
+      {
+        "pin_number": 13,
+        "label": "TX",
+        "type": "Digital I/O / UART TX",
+        "coord_x": 0.0,
+        "coord_y": -38.1
+      },
+      {
+        "pin_number": 14,
+        "label": "RX",
+        "type": "Digital I/O / UART RX",
+        "coord_x": 0.0,
+        "coord_y": -40.64
+      },
+      {
+        "pin_number": 15,
+        "label": "C1",
+        "type": "Digital I/O",
+        "coord_x": 0.0,
+        "coord_y": -43.18
+      },
+      {
+        "pin_number": 16,
+        "label": "C0",
+        "type": "Digital I/O",
+        "coord_x": 0.0,
+        "coord_y": -45.72
+      },
+      {
+        "pin_number": 17,
+        "label": "1W",
+        "type": "iButton / 1-Wire",
+        "coord_x": 0.0,
+        "coord_y": -48.26
+      },
+      {
+        "pin_number": 18,
+        "label": "GND",
+        "type": "Ground",
+        "coord_x": 0.0,
+        "coord_y": -50.8
+      }
+    ]
+  },
+  "nRF24": {
+    "type": "IC",
+    "description": "2.4GHz RF Transceiver Module",
+    "symbol": "Connector_Generic:Conn_01x08",
+    "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+    "pins": {
+      "1": "GND",
+      "2": "VCC",
+      "3": "CE",
+      "4": "CSN",
+      "5": "SCK",
+      "6": "MOSI",
+      "7": "MISO",
+      "8": "IRQ"
     }
   }
 }

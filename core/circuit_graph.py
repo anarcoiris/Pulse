@@ -332,7 +332,7 @@ class CircuitGraph:
             try:
                 val_f = float(val_raw)
             except (ValueError, TypeError):
-                val_f = 0.0
+                val_f = val_raw
 
             g.add(
                 etype       = c.get("etype", c.get("type", "R")),

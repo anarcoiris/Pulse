@@ -28,6 +28,7 @@ if TYPE_CHECKING:
 
 from bridge.pcb_layout import PCBLayout
 from knowledge.pulse_config import cfg as pulse_cfg
+from core.logger import logger
 
 
 def _pcb(key: str, default=None):
@@ -46,6 +47,7 @@ class PCBBuilder:
         trace_width: float | None = None,
         mounting_holes: bool | None = None,
         output_dir: str | None = None,
+        net_classes: dict | None = None,
     ):
         self.board_width = board_width
         self.board_height = board_height
@@ -54,6 +56,7 @@ class PCBBuilder:
         self.trace_width = float(trace_width if trace_width is not None else _pcb("trace_width_mm", 0.25))
         self.mounting_holes = mounting_holes if mounting_holes is not None else bool(_pcb("mounting_holes", True))
         self.output_dir = output_dir or _pcb("output_dir", "output")
+        self.net_classes = net_classes or {}
         self._pcb: Optional[PCBLayout] = None
         self._graph: Optional[CircuitGraph] = None
 
@@ -142,6 +145,7 @@ class PCBBuilder:
             corner_radius=self.corner_radius,
             trace_width=self.trace_width,
             project_name=self.project_name,
+            net_classes=self.net_classes,
         )
         
         # Center the board on an A4 sheet (297x210mm)
@@ -158,36 +162,68 @@ class PCBBuilder:
             ref = c.uid
             val = f"{c.value:.6g}" if isinstance(c.value, float) else str(c.value)
 
-            fp_added = False
+            fp = None
             f_id = getattr(c, 'footprint_id', None)
             if f_id:
                 if ':' in f_id:
                     lib, name = f_id.split(':', 1)
                     if pcb.add_raw_footprint(ref, lib, name, x, y, value=val):
                         fp_added = True
+                        fp = pcb._footprints[-1]
                 elif f_id == 'tactile_switch_6x6':
                     from bridge.pcb_layout import FootprintPresets
                     fp_sw = FootprintPresets.tactile_switch_6x6(
                         ref, val, net1_name=c.n1, net2_name=c.n2
                     )
-                    pcb.add_footprint(fp_sw, x, y)
+                    fp = pcb.add_footprint(fp_sw, x, y)
                     fp_added = True
+                elif f_id == 'flipper_zero_gpio':
+                    fp = pcb.add_flipper_zero_gpio(ref, val, x, y)
+                    fp_added = True
+
+            if not fp_added:
+                if etype == 'R':
+                    fp = pcb.add_resistor(ref, val, x, y, net1=c.n1, net2=c.n2)
+                elif etype == 'C':
+                    fp = pcb.add_capacitor(ref, val, x, y, net1=c.n1, net2=c.n2)
+                elif etype == 'L':
+                    fp = pcb.add_inductor(ref, val, x, y, net1=c.n1, net2=c.n2)
+                elif etype == 'V':
+                    fp = pcb.add_pin_header(ref, 2, x, y, value=f"{val}V")
+                elif etype in ('IC', 'MCU'):
+                    fp = self._place_ic(pcb, c, ref, val, x, y)
+                elif etype in ('Header', 'Conn', 'Connector'):
+                    num_pins = len(c.pins) if getattr(c, 'pins', None) else 2
+                    fp = pcb.add_pin_header(ref, num_pins, x, y, value=val)
+                else:
+                    fp = pcb.add_pin_header(ref, 2, x, y, value=etype)
 
             if fp_added and etype in ('IC', 'MCU'):
                 self._apply_ic_extras(pcb, c, ref, val, x, y)
-            elif not fp_added:
-                if etype == 'R':
-                    pcb.add_resistor(ref, val, x, y, net1=c.n1, net2=c.n2)
-                elif etype == 'C':
-                    pcb.add_capacitor(ref, val, x, y, net1=c.n1, net2=c.n2)
-                elif etype == 'L':
-                    pcb.add_inductor(ref, val, x, y, net1=c.n1, net2=c.n2)
-                elif etype == 'V':
-                    pcb.add_pin_header(ref, 2, x, y, value=f"{val}V")
-                elif etype in ('IC', 'MCU'):
-                    self._place_ic(pcb, c, ref, val, x, y)
-                else:
-                    pcb.add_pin_header(ref, 2, x, y, value=etype)
+
+            # Bind pin nets from component definition to footprint pads
+            if fp and getattr(c, "pins", None):
+                for pad in fp.pads:
+                    if pad.number in c.pins:
+                        net_name = c.pins[pad.number]
+                        pad.net_name = net_name
+                        pad.net_id = pcb._get_net_id(net_name)
+
+            # Check for collisions with previously placed footprints
+            if fp:
+                min_x, min_y, max_x, max_y = fp.bounding_box()
+                for other_fp in pcb._footprints[:-1]:
+                    if fp == other_fp:
+                        continue
+                    o_min_x, o_min_y, o_max_x, o_max_y = other_fp.bounding_box()
+                    # Check for AABB intersection
+                    if (min_x < o_max_x and max_x > o_min_x and
+                        min_y < o_max_y and max_y > o_min_y):
+                        logger.warning(
+                            "pcb_builder",
+                            f"COLLISION DETECTED: {fp.ref} overlaps with {other_fp.ref} "
+                            f"near ({x:.1f}, {y:.1f})"
+                        )
 
         # Post-processing
         self._finalize(pcb, graph.all_nodes, n)
@@ -196,9 +232,10 @@ class PCBBuilder:
     def _apply_ic_extras(self, pcb: PCBLayout, comp, ref: str, val: str, x: float, y: float) -> None:
         """Decoupling caps and antenna keepout for IC/MCU (including raw footprints)."""
         is_esp = ("ESP" in val.upper() or "NODE" in val.upper())
+        is_rf = ("CC1101" in val.upper() or "NRF" in val.upper())
         power_nets = [
             n for n in getattr(comp, 'pins', {}).values()
-            if n in ('3V3', 'VCC33', 'VCC', 'VBUS', '5V', '3.3V')
+            if n in ('3V3', 'VCC33', 'VCC', 'VBUS', '5V', '3.3V', '3.3V_ESP', '3.3V_FLIPPER')
         ]
         dec = _pcb("ic_decoupling", {})
         high_val = dec.get("high_value", "10uF")
@@ -212,8 +249,14 @@ class PCBBuilder:
                 (x - 9, y - 13), (x + 9, y - 13),
                 (x + 9, y - 7),  (x - 9, y - 7),
             ])
+        if is_rf:
+            # Typical RF module keepout for the antenna side
+            pcb.add_keepout([
+                (x - 10, y - 10), (x + 10, y - 10),
+                (x + 10, y + 10), (x - 10, y + 10),
+            ])
 
-    def _place_ic(self, pcb: PCBLayout, comp, ref: str, val: str, x: float, y: float) -> None:
+    def _place_ic(self, pcb: PCBLayout, comp, ref: str, val: str, x: float, y: float) -> Footprint:
         """Coloca un IC multipin parametrizado con extras de soporte."""
         pkg = "SOP16"
         is_esp = ("ESP" in val.upper() or "NODE" in val.upper())
@@ -222,8 +265,9 @@ class PCBBuilder:
         if "CH340" in val.upper() or "SOP8" in val.upper():
             pkg = "SOP8"
 
-        pcb.add_ic(ref, val, x, y, pins=getattr(comp, 'pins', {}), pkg_type=pkg)
+        fp = pcb.add_ic(ref, val, x, y, pins=getattr(comp, 'pins', {}), pkg_type=pkg)
         self._apply_ic_extras(pcb, comp, ref, val, x, y)
+        return fp
 
     def _finalize(self, pcb: PCBLayout, all_nodes: list, n_comps: int) -> None:
         """Pasos finales comunes a ambos builders."""
@@ -237,7 +281,9 @@ class PCBBuilder:
         )
 
         if "GND" in all_nodes:
-            pcb.add_copper_pour("GND", margin=float(_pcb("copper_pour.margin_mm", 1.0)))
+            margin = float(_pcb("copper_pour.margin_mm", 1.0))
+            pcb.add_copper_pour("GND", layer="F.Cu", margin=margin)
+            pcb.add_copper_pour("GND", layer="B.Cu", margin=margin)
 
         self._route_usb_nets(pcb)
 
@@ -306,6 +352,7 @@ class PCBBuilder:
             corner_radius=self.corner_radius,
             trace_width=self.trace_width,
             project_name=self.project_name,
+            net_classes=self.net_classes,
         )
         
         # Center the board on an A4 sheet (297x210mm)
@@ -321,13 +368,22 @@ class PCBBuilder:
             ctype = c.get("type", "resistor")
             ref   = c.get("ref", "X1")
             value = c.get("value", "?")
-            x     = float(c.get("x", 0)) + offset_x
-            y     = float(c.get("y", 0)) + offset_y
+            pos = c.get("position", {})
+            x     = float(c.get("x", pos.get("x", 0))) + offset_x
+            y     = float(c.get("y", pos.get("y", 0))) + offset_y
             rot   = float(c.get("rotation", 0))
             net1  = c.get("net1", "")
             net2  = c.get("net2", "")
             pkg   = c.get("package", _pcb("default_smd_package", "0805"))
-            pins  = int(c.get("pins", 2))
+            
+            pins_data = c.get("pins", 2)
+            if isinstance(pins_data, (dict, list)):
+                pins = len(pins_data)
+            else:
+                try:
+                    pins = int(pins_data)
+                except (ValueError, TypeError):
+                    pins = 2
 
             if net1: all_nets.add(net1)
             if net2: all_nets.add(net2)
