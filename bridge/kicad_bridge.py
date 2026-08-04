@@ -1,10 +1,10 @@
 """
 bridge/kicad_bridge.py
 ======================
-Puente entre PulseLab y KiCad 8+.
+Puente entre PulseLab y KiCad 10.0+.
 
 Detecta KiCad automáticamente y envuelve:
-  - kicad-cli (CLI oficial de KiCad 8)
+  - kicad-cli (CLI oficial de KiCad 10.0+)
   - Generación de netlists via core.netlist
   - Opciones de placement básico via pcbnew (si disponible)
 """

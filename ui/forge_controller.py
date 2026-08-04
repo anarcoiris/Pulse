@@ -234,7 +234,7 @@ class ForgeController:
                     (0, 200, 180),
                 )
             else:
-                self._status('KiCad no encontrado. Instala KiCad 8+', (220, 50, 50))
+                self._status('KiCad no encontrado. Instala KiCad 10.0+', (220, 50, 50))
         except Exception as e:
             self._status(f'KiCad status error: {e}', (220, 50, 50))
 

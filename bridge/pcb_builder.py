@@ -26,7 +26,7 @@ from typing import Optional, TYPE_CHECKING
 if TYPE_CHECKING:
     from core.circuit_graph import CircuitGraph
 
-from bridge.pcb_layout import PCBLayout
+from bridge.pcb_layout import PCBLayout, Footprint
 from knowledge.pulse_config import cfg as pulse_cfg
 from core.logger import logger
 
@@ -163,6 +163,7 @@ class PCBBuilder:
             val = f"{c.value:.6g}" if isinstance(c.value, float) else str(c.value)
 
             fp = None
+            fp_added = False
             f_id = getattr(c, 'footprint_id', None)
             if f_id:
                 if ':' in f_id:

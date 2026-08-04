@@ -407,17 +407,19 @@ def main():
                         if os.name == 'nt':
                             print("Abriendo archivos de KiCad...")
                             sch_file = list(kicad_out.glob("*.kicad_sch"))
-                        if pcb_file:
-                            os.system(f'start "" "{pcb_file[0]}"')
-                            try:
-                                from bridge.gerber_export import export_svg
-                                from bridge.pcb_builder import find_kicad_cli
-                                cli = find_kicad_cli()
-                                svg_res = export_svg(cli, pcb_file[0], output_dir=kicad_out / "svg_preview")
-                                if svg_res.get("files"):
-                                    print(f"SVG Previews generados ({len(svg_res['files'])} capas) en: {kicad_out / 'svg_preview'}")
-                            except Exception as svg_err:
-                                print(f"Nota: No se pudo generar SVG preview: {svg_err}")
+                            pcb_file = list(kicad_out.glob("*.kicad_pcb"))
+                            if sch_file: os.system(f'start "" "{sch_file[0]}"')
+                            if pcb_file:
+                                os.system(f'start "" "{pcb_file[0]}"')
+                                try:
+                                    from bridge.gerber_export import export_svg
+                                    from bridge.pcb_builder import find_kicad_cli
+                                    cli = find_kicad_cli()
+                                    svg_res = export_svg(cli, pcb_file[0], output_dir=kicad_out / "svg_preview")
+                                    if svg_res.get("files"):
+                                        print(f"SVG Previews generados ({len(svg_res['files'])} capas) en: {kicad_out / 'svg_preview'}")
+                                except Exception as svg_err:
+                                    print(f"Nota: No se pudo generar SVG preview: {svg_err}")
                             
                     except Exception as e:
                         print(f"ERROR exportando a KiCad: {e}")

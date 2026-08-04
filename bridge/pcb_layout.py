@@ -1,24 +1,15 @@
 """
 bridge/pcb_layout.py
 ====================
-Generador programático de archivos .kicad_pcb (KiCad 8 S-expression format).
+Generador programático de archivos .kicad_pcb (KiCad 10.0 S-expression format).
 
-Permite crear PCBs completos desde Python con control espacial:
-  - Posición (x, y) en mm
-  - Rotación (0°, 90°, 180°, 270°)
-  - Alineación por ejes de simetría
-  - Distribución automática (grid, circular, lineal)
-  - Trazas (traces) entre pads con rutas ortogonales
-  - Zonas de cobre (copper pours) para GND
-  - Outline del PCB (Edge.Cuts)
-
-Formato de archivo: KiCad 8.0 S-expression (.kicad_pcb)
+Formato de archivo: KiCad 10.0 S-expression (.kicad_pcb)
 Ref: https://dev-docs.kicad.org/en/file-formats/sexpr-pcb/
 
 Nota de diseño:
   No importamos pcbnew — generamos el S-expression directamente.
   Esto significa que NO necesitamos KiCad instalado para generar el .kicad_pcb.
-  Solo necesitamos kicad-cli para el paso final de exportación a Gerber.
+  kicad-cli (KiCad 10.0+) se utiliza para DRC y exportación de fabricación.
 """
 
 from __future__ import annotations
