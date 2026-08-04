@@ -82,7 +82,7 @@ class ContextBudget:
     call and ``compact`` when it returns True.
     """
 
-    def __init__(self, num_ctx: int, num_predict: int = 8192):
+    def __init__(self, num_ctx: int, num_predict: int = 16384):
         self.num_ctx = num_ctx
         self.num_predict = num_predict
         # History budget = total ctx minus output reservation, capped at ratio
@@ -97,7 +97,7 @@ class ContextBudget:
         from knowledge.llm_backends import backend_limits
         limits = backend_limits(backend_name)
         return cls(
-            num_ctx=int(limits.get("num_ctx", 98304)),
+            num_ctx=int(limits.get("num_ctx", 131072)),
             num_predict=int(limits.get("max_tokens", 16384)),
         )
 
