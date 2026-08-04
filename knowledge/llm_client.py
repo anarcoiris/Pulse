@@ -1,13 +1,14 @@
 """
 knowledge/llm_client.py
 =======================
-Client unificado para interacción con LLMs vía OpenAI-compat o Ollama native /api/chat.
+Client unificado para interacción con LLMs vía OpenAI-compat o Ollama native /api/chat,
+con soporte para motor de fallback multiproveedor (GitHub Models, Groq, OpenRouter, Gemini).
 All chat() calls are recorded to knowledge/data/llm_sessions/ when PULSE_LLM_LOG_IO=1.
 """
 
 from __future__ import annotations
 import time
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, List
 
 from knowledge.llm_session_log import new_call_id, record_llm_exchange
 from knowledge.llm_types import StreamAccumulator, StreamChunk
@@ -24,10 +25,11 @@ from knowledge.pulse_config import (
     PULSE_LLM_MAX_RETRIES,
     cfg,
 )
+from knowledge.providers.llm_provider import BaseLLMProvider
 
 
 class LLMClient:
-    """Client unificado para LLMs con health check, retry y timeout."""
+    """Client unificado para LLMs con health check, retry, timeout y fallbacks multiproveedor."""
 
     DEFAULT_BASE_URL = PULSE_OLLAMA_BASE_URL
     DEFAULT_MODEL = PULSE_LLM_MODEL
@@ -47,6 +49,7 @@ class LLMClient:
         api_mode: str | None = None,
         backend_id: str = "primary",
         num_ctx: int | None = None,
+        fallback_providers: list[BaseLLMProvider] | None = None,
     ):
         self.base_url = base_url
         self.model = model
@@ -57,6 +60,8 @@ class LLMClient:
         self.think = normalize_think(think if think is not None else PULSE_LLM_THINK)
         self.api_mode = (api_mode or PULSE_LLM_API).lower()
         self.native_url = ollama_native_url(base_url)
+        self.fallback_providers: list[BaseLLMProvider] = list(fallback_providers or [])
+        self.active_provider_name: str = "primary"
         self._client = None
         self._import_error: Optional[str] = None
 
@@ -97,7 +102,27 @@ class LLMClient:
             with urllib.request.urlopen(req, timeout=3) as resp:
                 return resp.status == 200
         except Exception:
+            # If primary fails but fallbacks exist, check if any fallback is healthy
+            if self.fallback_providers:
+                return any(fb.check_health().get("healthy", False) for fb in self.fallback_providers)
             return False
+
+    def get_provider_statuses(self) -> list[dict[str, Any]]:
+        """Return health status list for primary and fallback providers."""
+        statuses = []
+        statuses.append({
+            "name": "primary",
+            "provider_type": self.api_mode,
+            "model": self.model,
+            "base_url": self.base_url,
+            "healthy": self.available,
+            "active": (self.active_provider_name == "primary"),
+        })
+        for fb in self.fallback_providers:
+            info = fb.check_health()
+            info["active"] = (self.active_provider_name == fb.name)
+            statuses.append(info)
+        return statuses
 
     def chat(
         self,
@@ -123,10 +148,6 @@ class LLMClient:
             except Exception as e:
                 return {"error": f"Mock parse error: {e}"}
 
-        """history: optional prior turns (e.g. [{"role": "user", ...},
-        {"role": "assistant", ...}]) inserted between system and the final user
-        message — used for continuation turns on truncated output (see
-        circuit_synthesizer._continue_truncated_json)."""
         if max_tokens is None:
             max_tokens = self.DEFAULT_NUM_PREDICT
         if temperature is None:
@@ -147,6 +168,8 @@ class LLMClient:
 
         api = "native" if self._use_native(disable_thinking) else "openai"
         t0 = time.perf_counter()
+        
+        result = None
         if api == "native":
             result = self._chat_native(
                 messages=messages,
@@ -165,6 +188,34 @@ class LLMClient:
                 num_ctx=self.num_ctx,
                 **kwargs,
             )
+
+        # Multi-provider fallback execution if primary error occurred
+        if isinstance(result, dict) and "error" in result and self.fallback_providers:
+            primary_err = result["error"]
+            for fb_provider in self.fallback_providers:
+                try:
+                    print(f"\n  [Pulse LLM Fallback] Primary failed ({primary_err}). Falling back to provider: {fb_provider.name} ({fb_provider.model})")
+                    fb_res = fb_provider.chat(messages, max_tokens=max_tokens, temperature=temperature)
+                    self.active_provider_name = fb_provider.name
+                    
+                    thinking_text = ""
+                    content_text = fb_res
+                    if "<think>" in fb_res and "</think>" in fb_res:
+                        parts = fb_res.split("</think>", 1)
+                        thinking_text = parts[0].replace("<think>", "").strip()
+                        content_text = parts[1].strip()
+
+                    result = {
+                        "content": content_text,
+                        "thinking": thinking_text,
+                        "model": fb_provider.model,
+                        "provider": fb_provider.name,
+                        "done_reason": "stop",
+                    }
+                    break
+                except Exception as fb_err:
+                    print(f"  [Pulse LLM Fallback] Fallback provider {fb_provider.name} failed: {fb_err}")
+
         duration_ms = (time.perf_counter() - t0) * 1000
 
         call_id = new_call_id()
@@ -235,9 +286,9 @@ class LLMClient:
 
         api = "native" if self._use_native(disable_thinking) else "openai"
         t0 = time.perf_counter()
-        acc = StreamAccumulator()
 
         if api == "native":
+            acc = StreamAccumulator()
             for chunk in chat_native_stream(
                 api_url=self.native_url,
                 model=self.model,
@@ -280,6 +331,43 @@ class LLMClient:
                         tokens=int(result.get("tokens") or 0),
                         model=result.get("model") or self.model,
                     ))
+
+        # Multi-provider fallback execution if primary error occurred during streaming
+        if isinstance(result, dict) and "error" in result and self.fallback_providers:
+            primary_err = result.get("error", "Unknown error")
+            for fb_provider in self.fallback_providers:
+                try:
+                    print(f"\n  [Pulse LLM Stream Fallback] Primary failed ({primary_err}). Falling back to provider: {fb_provider.name} ({fb_provider.model})")
+                    full_content = ""
+                    full_reasoning = ""
+                    for kind, chunk_text in fb_provider.chat_stream(messages, max_tokens=max_tokens, temperature=temperature):
+                        if kind == "reasoning":
+                            full_reasoning += chunk_text
+                            if on_chunk:
+                                on_chunk(StreamChunk(kind="thinking", text=chunk_text))
+                        elif kind == "content":
+                            full_content += chunk_text
+                            if on_chunk:
+                                on_chunk(StreamChunk(kind="content", text=chunk_text))
+                    
+                    self.active_provider_name = fb_provider.name
+                    if on_chunk:
+                        on_chunk(StreamChunk(
+                            kind="done",
+                            done_reason="stop",
+                            tokens=0,
+                            model=fb_provider.model,
+                        ))
+                    result = {
+                        "content": full_content,
+                        "thinking": full_reasoning,
+                        "model": fb_provider.model,
+                        "provider": fb_provider.name,
+                        "done_reason": "stop",
+                    }
+                    break
+                except Exception as fb_err:
+                    print(f"  [Pulse LLM Stream Fallback] Fallback provider {fb_provider.name} failed: {fb_err}")
 
         duration_ms = (time.perf_counter() - t0) * 1000
         call_id = new_call_id()
@@ -421,6 +509,7 @@ class LLMClient:
             "num_ctx": self.num_ctx,
             "num_predict": self.DEFAULT_NUM_PREDICT,
             "import_error": self._import_error,
+            "fallbacks_count": len(self.fallback_providers),
         }
 
 

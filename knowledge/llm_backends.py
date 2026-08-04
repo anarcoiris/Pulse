@@ -53,7 +53,7 @@ def backend_limits(name: str) -> dict[str, Any]:
         slot = atomic_lane.slot_context_tokens()
         return {
             "num_ctx": slot,
-            "max_tokens": int(spec.get("num_predict") or spec.get("max_tokens") or cfg("llm.max_tokens", 16384)),
+            "max_tokens": int(spec.get("max_tokens") or spec.get("num_predict") or cfg("llm.max_tokens", 16384)),
             "prompt_max_chars": int(spec.get("prompt_max_chars", min(48000, slot * 3))),
             "json_mode": bool(spec.get("json_mode", True)),
             "think": False,
@@ -61,7 +61,7 @@ def backend_limits(name: str) -> dict[str, Any]:
         }
     return {
         "num_ctx": int(spec.get("num_ctx") or cfg("llm.num_ctx", 98304)),
-        "max_tokens": int(spec.get("num_predict") or spec.get("max_tokens") or cfg("llm.max_tokens", 16384)),
+        "max_tokens": int(spec.get("max_tokens") or spec.get("num_predict") or cfg("llm.max_tokens", 16384)),
         "prompt_max_chars": int(cfg("llm.agents.circuit_synthesizer.prompt_max_chars", 48000)),
         "json_mode": False,
         "think": spec.get("think", cfg("llm.think", "low")),
