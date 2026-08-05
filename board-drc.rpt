@@ -1,0 +1,223 @@
+** Drc report for board.kicad_pcb **
+** Created on 2026-08-05T03:39:29 **
+** Report includes: Errors, Warnings **
+
+** Found 33 DRC violations **
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(90.5000 mm, 125.5000 mm): Segment on Edge.Cuts
+    @(93.5000 mm, 97.8000 mm): Reference field of C_MCU_004_H
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(90.5000 mm, 125.5000 mm): Segment on Edge.Cuts
+    @(93.5000 mm, 107.8000 mm): Reference field of C_MCU_004_L
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(92.0000 mm, 83.0000 mm): Segment on Edge.Cuts
+    @(94.0000 mm, 82.5000 mm): Reference field of H
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(92.0000 mm, 83.0000 mm): Segment on Edge.Cuts
+    @(203.0000 mm, 82.5000 mm): Reference field of H
+[hole_to_hole]: Taladro demasiado cerca de otro taladro (restricciones de configuración de placa mínimo 0,2495 mm; real 0,0000 mm)
+    Rule: restricciones de configuración de placa; warning
+    @(127.5000 mm, 110.0800 mm): PTH pad 3 [GDO0_CC] of Header_000
+    @(127.5000 mm, 109.5000 mm): Via [GDO0_CC] on F.Cu - B.Cu
+[hole_to_hole]: Taladro demasiado cerca de otro taladro (restricciones de configuración de placa mínimo 0,2495 mm; real 0,0811 mm)
+    Rule: restricciones de configuración de placa; warning
+    @(166.7500 mm, 104.5000 mm): Via [SPI_MOSI] on F.Cu - B.Cu
+    @(167.4800 mm, 104.5400 mm): PTH pad 3 [SPI_MOSI] of IC_006
+[hole_to_hole]: Taladro demasiado cerca de otro taladro (restricciones de configuración de placa mínimo 0,2495 mm; real 0,0811 mm)
+    Rule: restricciones de configuración de placa; warning
+    @(170.7500 mm, 104.5000 mm): Via [SPI_SCK] on F.Cu - B.Cu
+    @(170.0200 mm, 104.5400 mm): PTH pad 4 [SPI_SCK] of IC_006
+[hole_to_hole]: Taladro demasiado cerca de otro taladro (restricciones de configuración de placa mínimo 0,2495 mm; real 0,0000 mm)
+    Rule: restricciones de configuración de placa; warning
+    @(127.5000 mm, 110.0800 mm): PTH pad 3 [GDO0_CC] of Header_000
+    @(127.5000 mm, 109.5000 mm): Via [GDO0_CC] on F.Cu - B.Cu
+[hole_to_hole]: Taladro demasiado cerca de otro taladro (restricciones de configuración de placa mínimo 0,2495 mm; real 0,0811 mm)
+    Rule: restricciones de configuración de placa; warning
+    @(166.7500 mm, 104.5000 mm): Via [SPI_MOSI] on F.Cu - B.Cu
+    @(167.4800 mm, 104.5400 mm): PTH pad 3 [SPI_MOSI] of IC_006
+[hole_to_hole]: Taladro demasiado cerca de otro taladro (restricciones de configuración de placa mínimo 0,2495 mm; real 0,0811 mm)
+    Rule: restricciones de configuración de placa; warning
+    @(170.7500 mm, 104.5000 mm): Via [SPI_SCK] on F.Cu - B.Cu
+    @(170.0200 mm, 104.5400 mm): PTH pad 4 [SPI_SCK] of IC_006
+[lib_footprint_issues]: La configuración actual no incluye la biblioteca de huellas 'Custom'
+    Local override; warning
+    @(127.5000 mm, 105.0000 mm): Footprint Header_000
+[lib_footprint_mismatch]: La huella 'SOT-223-3_TabPin2' no coincide con la copia en la biblioteca 'Package_TO_SOT_SMD'
+    Local override; warning
+    @(150.2500 mm, 105.0000 mm): Footprint IC_001
+[lib_footprint_mismatch]: La huella 'C_0805_2012Metric' no coincide con la copia en la biblioteca 'Capacitor_SMD'
+    Local override; warning
+    @(147.2500 mm, 97.0000 mm): Footprint C_IC_001_H
+[lib_footprint_mismatch]: La huella 'C_0805_2012Metric' no coincide con la copia en la biblioteca 'Capacitor_SMD'
+    Local override; warning
+    @(153.2500 mm, 97.0000 mm): Footprint C_IC_001_L
+[lib_footprint_mismatch]: La huella 'C_0805_2012Metric' no coincide con la copia en la biblioteca 'Capacitor_SMD'
+    Local override; warning
+    @(159.0000 mm, 105.0000 mm): Footprint C_002
+[lib_footprint_mismatch]: La huella 'C_0805_2012Metric' no coincide con la copia en la biblioteca 'Capacitor_SMD'
+    Local override; warning
+    @(196.7500 mm, 104.0000 mm): Footprint C_003
+[lib_footprint_mismatch]: La huella 'C_0805_2012Metric' no coincide con la copia en la biblioteca 'Capacitor_SMD'
+    Local override; warning
+    @(93.5000 mm, 100.0000 mm): Footprint C_MCU_004_H
+[lib_footprint_mismatch]: La huella 'C_0805_2012Metric' no coincide con la copia en la biblioteca 'Capacitor_SMD'
+    Local override; warning
+    @(93.5000 mm, 110.0000 mm): Footprint C_MCU_004_L
+[lib_footprint_mismatch]: La huella 'R_0805_2012Metric' no coincide con la copia en la biblioteca 'Resistor_SMD'
+    Local override; warning
+    @(137.5000 mm, 105.0000 mm): Footprint R_005
+[lib_footprint_mismatch]: La huella 'PinHeader_2x04_P2.54mm_Vertical' no coincide con la copia en la biblioteca 'Connector_PinHeader_2.54mm'
+    Local override; warning
+    @(168.7500 mm, 102.0000 mm): Footprint IC_006
+[lib_footprint_mismatch]: La huella 'C_0805_2012Metric' no coincide con la copia en la biblioteca 'Capacitor_SMD'
+    Local override; warning
+    @(165.7500 mm, 94.0000 mm): Footprint C_IC_006_H
+[lib_footprint_mismatch]: La huella 'C_0805_2012Metric' no coincide con la copia en la biblioteca 'Capacitor_SMD'
+    Local override; warning
+    @(171.7500 mm, 94.0000 mm): Footprint C_IC_006_L
+[lib_footprint_mismatch]: La huella 'PinHeader_2x04_P2.54mm_Vertical' no coincide con la copia en la biblioteca 'Connector_PinHeader_2.54mm'
+    Local override; warning
+    @(182.7500 mm, 102.0000 mm): Footprint IC_007
+[lib_footprint_mismatch]: La huella 'C_0805_2012Metric' no coincide con la copia en la biblioteca 'Capacitor_SMD'
+    Local override; warning
+    @(179.7500 mm, 94.0000 mm): Footprint C_IC_007_H
+[lib_footprint_mismatch]: La huella 'C_0805_2012Metric' no coincide con la copia en la biblioteca 'Capacitor_SMD'
+    Local override; warning
+    @(185.7500 mm, 94.0000 mm): Footprint C_IC_007_L
+[lib_footprint_mismatch]: La huella 'MountingHole_3.2mm_M3' no coincide con la copia en la biblioteca 'MountingHole'
+    Local override; warning
+    @(94.0000 mm, 86.5000 mm): Footprint H
+[lib_footprint_mismatch]: La huella 'MountingHole_3.2mm_M3' no coincide con la copia en la biblioteca 'MountingHole'
+    Local override; warning
+    @(203.0000 mm, 86.5000 mm): Footprint H
+[lib_footprint_mismatch]: La huella 'MountingHole_3.2mm_M3' no coincide con la copia en la biblioteca 'MountingHole'
+    Local override; warning
+    @(94.0000 mm, 123.5000 mm): Footprint H
+[lib_footprint_mismatch]: La huella 'MountingHole_3.2mm_M3' no coincide con la copia en la biblioteca 'MountingHole'
+    Local override; warning
+    @(203.0000 mm, 123.5000 mm): Footprint H
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(147.2500 mm, 94.8000 mm): Reference field of C_IC_001_H
+    @(153.2500 mm, 94.8000 mm): Reference field of C_IC_001_L
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(165.7500 mm, 91.8000 mm): Reference field of C_IC_006_H
+    @(171.7500 mm, 91.8000 mm): Reference field of C_IC_006_L
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(171.7500 mm, 91.8000 mm): Reference field of C_IC_006_L
+    @(179.7500 mm, 91.8000 mm): Reference field of C_IC_007_H
+[silk_overlap]: Silkscreen clearance
+    Rule: restricciones de configuración de placa para serigrafía; warning
+    @(185.7500 mm, 91.8000 mm): Reference field of C_IC_007_L
+    @(179.7500 mm, 91.8000 mm): Reference field of C_IC_007_H
+
+** Found 23 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(94.6000 mm, 100.0000 mm): Pad 2 [GND] of C_MCU_004_H on F.Cu
+    @(94.6000 mm, 110.0000 mm): Pad 2 [GND] of C_MCU_004_L on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(100.5000 mm, 96.7450 mm): Pad 1 [GND] of MCU_004 on F.Cu
+    @(94.6000 mm, 100.0000 mm): Pad 2 [GND] of C_MCU_004_H on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(127.5000 mm, 122.7800 mm): PTH pad 8 [GND] of Header_000
+    @(127.5000 mm, 140.5600 mm): PTH pad 11 [GND] of Header_000
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(127.5000 mm, 122.7800 mm): PTH pad 8 [GND] of Header_000
+    @(94.6000 mm, 110.0000 mm): Pad 2 [GND] of C_MCU_004_L on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(127.5000 mm, 140.5600 mm): PTH pad 11 [GND] of Header_000
+    @(127.5000 mm, 158.3400 mm): PTH pad 18 [GND] of Header_000
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(147.9500 mm, 108.1000 mm): Pad 1 [GND] of IC_001 on F.Cu
+    @(127.5000 mm, 122.7800 mm): PTH pad 8 [GND] of Header_000
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(148.3500 mm, 97.0000 mm): Pad 2 [GND] of C_IC_001_H on F.Cu
+    @(147.9500 mm, 108.1000 mm): Pad 1 [GND] of IC_001 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(154.3500 mm, 97.0000 mm): Pad 2 [GND] of C_IC_001_L on F.Cu
+    @(148.3500 mm, 97.0000 mm): Pad 2 [GND] of C_IC_001_H on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(160.1000 mm, 105.0000 mm): Pad 2 [GND] of C_002 on F.Cu
+    @(154.3500 mm, 97.0000 mm): Pad 2 [GND] of C_IC_001_L on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(170.0200 mm, 102.0000 mm): PTH pad 2 [GND] of IC_006
+    @(160.1000 mm, 105.0000 mm): Pad 2 [GND] of C_002 on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(172.8500 mm, 94.0000 mm): Pad 2 [GND] of C_IC_006_L on F.Cu
+    @(166.8500 mm, 94.0000 mm): Pad 2 [GND] of C_IC_006_H on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(172.8500 mm, 94.0000 mm): Pad 2 [GND] of C_IC_006_L on F.Cu
+    @(170.0200 mm, 102.0000 mm): PTH pad 2 [GND] of IC_006
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(180.8500 mm, 94.0000 mm): Pad 2 [GND] of C_IC_007_H on F.Cu
+    @(172.8500 mm, 94.0000 mm): Pad 2 [GND] of C_IC_006_L on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(181.4800 mm, 102.0000 mm): PTH pad 1 [GND] of IC_007
+    @(180.8500 mm, 94.0000 mm): Pad 2 [GND] of C_IC_007_H on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(186.8500 mm, 94.0000 mm): Pad 2 [GND] of C_IC_007_L on F.Cu
+    @(180.8500 mm, 94.0000 mm): Pad 2 [GND] of C_IC_007_H on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(197.8500 mm, 104.0000 mm): Pad 2 [GND] of C_003 on F.Cu
+    @(186.8500 mm, 94.0000 mm): Pad 2 [GND] of C_IC_007_L on F.Cu
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(120.0000 mm, 114.2500 mm): Track [3.3V] on F.Cu, length 0.2500 mm
+    @(127.5000 mm, 135.4800 mm): PTH pad 9 [3.3V] of Header_000
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(167.2500 mm, 99.7500 mm): Track [3.3V] on F.Cu, length 0.2500 mm
+    @(167.4800 mm, 102.0000 mm): PTH pad 1 [3.3V] of IC_006
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(118.5000 mm, 98.0150 mm): Pad 37 [UART_RX_ESP] of MCU_004 on F.Cu
+    @(127.5000 mm, 145.6400 mm): PTH pad 13 [UART_RX_ESP] of Header_000
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(118.5000 mm, 99.2850 mm): Pad 36 [UART_TX_ESP] of MCU_004 on F.Cu
+    @(127.5000 mm, 148.1800 mm): PTH pad 14 [UART_TX_ESP] of Header_000
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(127.5000 mm, 150.7200 mm): PTH pad 15 [CS_NRF] of Header_000
+    @(184.0200 mm, 104.5400 mm): PTH pad 4 [CS_NRF] of IC_007
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(127.5000 mm, 153.2600 mm): PTH pad 16 [CE_NRF] of Header_000
+    @(181.4800 mm, 104.5400 mm): PTH pad 3 [CE_NRF] of IC_007
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(100.5000 mm, 99.2850 mm): Pad 3 [EN] of MCU_004 on F.Cu
+    @(138.6000 mm, 105.0000 mm): Pad 2 [EN] of R_005 on F.Cu
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

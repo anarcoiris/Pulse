@@ -1,11 +1,15 @@
 {
   "run_session": "flipper_multiboard_gen1",
   "test_case": "Flipper Zero Expansion: CC1101 + nRF24 + ESP32-S3",
-  "prompt": "Generación de PCB layout para Flipper Zero Multiboard.",
+  "prompt": "Generaci\u00c3\u00b3n de PCB layout para Flipper Zero Multiboard.",
   "net_classes": {
     "power": {
       "width": 0.5,
-      "nets": ["5V_USB", "3.3V_FLIPPER", "3.3V_ESP", "GND"]
+      "nets": [
+        "5V_USB",
+        "3.3V",
+        "GND"
+      ]
     },
     "default": {
       "width": 0.25
@@ -30,7 +34,7 @@
         "6": "SPI_MOSI",
         "7": "SPI_SCK",
         "8": "GND",
-        "9": "3.3V_FLIPPER",
+        "9": "3.3V",
         "10": "SWC",
         "11": "GND",
         "12": "SIO",
@@ -47,14 +51,14 @@
       "etype": "IC",
       "value": "AMS1117-3.3",
       "symbol": "Regulator_Linear:AMS1117-3.3",
-      "footprint": "Package_TO_SOT_SMD:SOT-223-3_TabPin2",
+      "footprint": "sot223",
       "position": {
         "x": 20.0,
         "y": -10.0
       },
       "pins": {
         "1": "GND",
-        "2": "3.3V_ESP",
+        "2": "3.3V",
         "3": "5V_USB"
       },
       "label": "U1"
@@ -81,7 +85,7 @@
         "x": 25.0,
         "y": -10.0
       },
-      "n1": "3.3V_ESP",
+      "n1": "3.3V",
       "n2": "GND",
       "label": "C2"
     },
@@ -89,14 +93,13 @@
       "etype": "MCU",
       "value": "ESP32-S3",
       "symbol": "RF_Module:ESP32-S3-WROOM-1",
-      "footprint": "RF_Module:ESP32-S3-WROOM-1",
       "position": {
         "x": 40.0,
         "y": 0.0
       },
       "pins": {
         "1": "GND",
-        "2": "3.3V_ESP",
+        "2": "3.3V",
         "3": "EN",
         "36": "UART_TX_ESP",
         "37": "UART_RX_ESP",
@@ -114,7 +117,7 @@
         "x": 35.0,
         "y": 5.0
       },
-      "n1": "3.3V_ESP",
+      "n1": "3.3V",
       "n2": "EN",
       "label": "R1"
     },
@@ -122,13 +125,12 @@
       "etype": "IC",
       "value": "CC1101",
       "symbol": "Connector_Generic:Conn_02x04_Odd_Even",
-      "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x04_P2.54mm_Vertical",
       "position": {
         "x": 20.0,
         "y": 20.0
       },
       "pins": {
-        "1": "3.3V_FLIPPER",
+        "1": "3.3V",
         "2": "GND",
         "3": "SPI_MOSI",
         "4": "SPI_SCK",
@@ -137,20 +139,20 @@
         "7": "GDO0_CC",
         "8": "CS_CC1101"
       },
-      "label": "U3"
+      "label": "U3",
+      "pkg_type": "MODULE_2x4"
     },
     {
       "etype": "IC",
       "value": "nRF24",
       "symbol": "Connector_Generic:Conn_02x04_Odd_Even",
-      "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x04_P2.54mm_Vertical",
       "position": {
         "x": 20.0,
         "y": -20.0
       },
       "pins": {
         "1": "GND",
-        "2": "3.3V_FLIPPER",
+        "2": "3.3V",
         "3": "CE_NRF",
         "4": "CS_NRF",
         "5": "SPI_SCK",
@@ -158,7 +160,8 @@
         "7": "SPI_MISO",
         "8": "NC_IRQ"
       },
-      "label": "U4"
+      "label": "U4",
+      "pkg_type": "MODULE_2x4"
     }
   ]
 }

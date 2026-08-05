@@ -53,6 +53,7 @@ class PlacedComponent:
     height:      int   = 2
     footprint_id: Optional[str] = None
     symbol_id:    Optional[str] = None
+    pkg_type:     Optional[str] = None
 
     def __post_init__(self):
         # Asegurar que pins esté poblado para componentes de 2 pines
@@ -166,13 +167,13 @@ class CircuitGraph:
     # ── Component CRUD ────────────────────────────────────────
 
     def add(self, etype, grid_c, grid_r, orientation, value, label,
-            n1="", n2="", **kwargs) -> PlacedComponent:
+            n1="", n2="", pkg_type=None, **kwargs) -> PlacedComponent:
         uid  = f"{etype}_{self._counter:03d}"
         self._counter += 1
         comp = PlacedComponent(uid=uid, etype=etype, grid_c=grid_c,
                                grid_r=grid_r, orientation=orientation,
                                value=value, label=label, n1=n1, n2=n2,
-                               **kwargs)
+                               pkg_type=pkg_type, **kwargs)
         self.components.append(comp)
         return comp
 
@@ -346,6 +347,7 @@ class CircuitGraph:
                 pins        = c.get("pins", {}).copy(),
                 symbol_id   = c.get("symbol", ""),
                 footprint_id= c.get("footprint", ""),
+                pkg_type    = c.get("pkg_type", None)
             )
         return g
 

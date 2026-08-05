@@ -128,19 +128,26 @@ class Footprint:
         pad_lines = "\n".join(p.to_sexpr() for p in self.pads)
         silk = self.layer.replace('Cu', 'SilkS')
         fab  = self.layer.replace('Cu', 'Fab')
+
+        # Dynamic offset for reference & value text based on pad extent
+        local_min_y = min((p.y - p.h / 2.0 for p in self.pads), default=-1.5)
+        local_max_y = max((p.y + p.h / 2.0 for p in self.pads), default=1.5)
+        ref_y = min(-2.2, local_min_y - 1.2)
+        val_y = max(2.2, local_max_y + 1.2)
+
         return (
             f'  (footprint "{self.lib_id}"\n'
             f'    (layer "{self.layer}")\n'
             f'    (uuid "{self.uuid_str}")\n'
             f'    (at {self.x:.4f} {self.y:.4f}{rotation_str})\n'
             f'    (property "Reference" "{self.ref}"\n'
-            f'      (at 0 -2.5)\n'
+            f'      (at 0 {ref_y:.2f})\n'
             f'      (layer "{silk}")\n'
             f'      (uuid "{uuid.uuid4()}")\n'
             f'      (effects (font (size 1 1) (thickness 0.15)))\n'
             f'    )\n'
             f'    (property "Value" "{self.value}"\n'
-            f'      (at 0 2.5)\n'
+            f'      (at 0 {val_y:.2f})\n'
             f'      (layer "{fab}")\n'
             f'      (uuid "{uuid.uuid4()}")\n'
             f'      (effects (font (size 1 1) (thickness 0.15)))\n'
@@ -350,9 +357,10 @@ class KeepoutZone:
     def to_sexpr(self) -> str:
         pts_str = "\n          ".join(f"(xy {x:.4f} {y:.4f})" for x, y in self.points)
         uid = str(uuid.uuid4())
+        layers_str = " ".join(f'"{ly}"' for ly in self.layers)
         return (
             f'  (zone (keepout (tracks allowed) (vias allowed) (pads allowed) (copperpour not_allowed))\n'
-            f'    (layer "{self.layers[0]}") (uuid "{uid}")\n'
+            f'    (layers {layers_str}) (uuid "{uid}")\n'
             f'    (polygon\n'
             f'      (pts\n          {pts_str}\n      )\n'
             f'    )\n'
@@ -424,6 +432,32 @@ class FootprintPresets:
                 str(i + 1), "thru_hole",
                 "rect" if i == 0 else "circle",
                 x=0, y=i * pitch,
+                w=1.7, h=1.7, drill=1.0,
+            ))
+        return fp
+
+    @staticmethod
+    def pin_header_2x(ref: str, rows: int = 4, pitch: float = 2.54,
+                      value: str = "Conn") -> Footprint:
+        """Header de pines THT 2xN."""
+        pins = rows * 2
+        fp = Footprint(ref=ref,
+                       lib_id=f"Connector_PinHeader_2.54mm:PinHeader_2x{rows:02d}_P2.54mm_Vertical",
+                       value=value)
+        fp.pads = []
+        for i in range(rows):
+            # Left column (odd pins)
+            fp.pads.append(Pad(
+                str(i * 2 + 1), "thru_hole",
+                "rect" if i == 0 else "circle",
+                x=-pitch/2, y=i * pitch,
+                w=1.7, h=1.7, drill=1.0,
+            ))
+            # Right column (even pins)
+            fp.pads.append(Pad(
+                str(i * 2 + 2), "thru_hole",
+                "circle",
+                x=pitch/2, y=i * pitch,
                 w=1.7, h=1.7, drill=1.0,
             ))
         return fp
@@ -521,14 +555,14 @@ class FootprintPresets:
 
     @staticmethod
     def sot223(ref: str, value: str, net1_id: int = 0, net1_name: str = "",
-               net2_id: int = 0, net2_name: str = "", net3_id: int = 0, net3_name: str = "") -> Footprint:
+               net2_id: int = 0, net2_name: str = "", net3_id: int = 0, net3_name: str = "", net4_id: int = 0, net4_name: str = "") -> Footprint:
         """SOT-223-3_TabPin2: Pin1(GND/Adj), Pin2(Vout), Pin3(Vin), Pin4(Tab=Vout)"""
         fp = Footprint(ref=ref, lib_id="Package_TO_SOT_SMD:SOT-223-3_TabPin2", value=value)
         fp.pads = [
             Pad("1", "smd", "rect", x=-2.3, y=3.1, w=1.2, h=1.5, net_id=net1_id, net_name=net1_name),
             Pad("2", "smd", "rect", x=0.0,  y=3.1, w=1.2, h=1.5, net_id=net2_id, net_name=net2_name),
             Pad("3", "smd", "rect", x=2.3,  y=3.1, w=1.2, h=1.5, net_id=net3_id, net_name=net3_name),
-            Pad("2", "smd", "rect", x=0.0,  y=-3.1, w=3.3, h=1.5, net_id=net2_id, net_name=net2_name), # Tab
+            Pad("4", "smd", "rect", x=0.0,  y=-3.1, w=3.3, h=1.5, net_id=net4_id, net_name=net4_name), # Tab
         ]
         return fp
 
@@ -782,6 +816,8 @@ class PCBLayout:
             fp = FootprintPresets.sop_ic(ref, pins=16, value=value)
         elif pkg_type in ("ESP12", "ESP32"):
             fp = FootprintPresets.esp32_wroom(ref, value=value)
+        elif pkg_type == "MODULE_2x4":
+            fp = FootprintPresets.pin_header_2x(ref, rows=4, value=value)
         else:
             fp = FootprintPresets.sop_ic(ref, pins=8, pitch=1.27, body_w=3.9, body_h=4.9, value=value)
             
@@ -921,6 +957,58 @@ class PCBLayout:
         pts = [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
         self._zones.append(Zone(net_id=nid, net_name=net, layer=layer, points=pts))
 
+    def add_gnd_via_stitching(self, spacing_mm: float = 10.0, net: str = "GND", clearance_mm: float = 2.5):
+        """
+        Inyecta vías de cosido de plano de masa (GND via stitching) distribuidas en cuadrícula.
+        Conecta las zonas de cobre superior e inferior evitando zonas de exclusión y pads/pistas de señal.
+        """
+        x0 = self.board.origin_x + 5.0
+        y0 = self.board.origin_y + 5.0
+        x1 = self.board.origin_x + self.board.width_mm - 5.0
+        y1 = self.board.origin_y + self.board.height_mm - 5.0
+
+        # Bloqueos de pads que no son del net GND
+        avoid_points = []
+        for fp in self._footprints:
+            for p in fp.pads:
+                if p.net_name != net:
+                    rad = math.radians(fp.rotation)
+                    px = fp.x + p.x * math.cos(rad) - p.y * math.sin(rad)
+                    py = fp.y + p.x * math.sin(rad) + p.y * math.cos(rad)
+                    avoid_points.append((px, py))
+
+        curr_x = x0
+        vias_added = 0
+        while curr_x <= x1:
+            curr_y = y0
+            while curr_y <= y1:
+                # Comprobar si el punto está dentro de un keepout
+                inside_keepout = False
+                for kz in self._keepouts:
+                    k_min_x = min(pt[0] for pt in kz.points)
+                    k_max_x = max(pt[0] for pt in kz.points)
+                    k_min_y = min(pt[1] for pt in kz.points)
+                    k_max_y = max(pt[1] for pt in kz.points)
+                    if k_min_x <= curr_x <= k_max_x and k_min_y <= curr_y <= k_max_y:
+                        inside_keepout = True
+                        break
+
+                if not inside_keepout:
+                    # Comprobar distancia a pads/pistas de señal
+                    safe = True
+                    for ax, ay in avoid_points:
+                        if math.hypot(curr_x - ax, curr_y - ay) < clearance_mm:
+                            safe = False
+                            break
+                    if safe:
+                        self.add_via(curr_x, curr_y, size=0.6, drill=0.3, net=net)
+                        vias_added += 1
+
+                curr_y += spacing_mm
+            curr_x += spacing_mm
+
+        logger.info("pcb_layout", f"add_gnd_via_stitching(): {vias_added} vías de cosido GND colocadas.")
+
     # ── Auto-Router ───────────────────────────────────────────────
 
     def autoroute(self, layer: str = "F.Cu", width: float = 0.25, grid_size: float = 0.25):
@@ -950,7 +1038,7 @@ class PCBLayout:
             logger.warning("pcb_layout", "autoroute() sin nets a rutear (net_pads vacio)")
             return
 
-        occupied = set() # (layer_idx, x, y)
+        occupied = {} # (layer_idx, x, y) -> net_name
         for fp in self._footprints:
             for p in fp.pads:
                 rad = math.radians(fp.rotation)
@@ -959,16 +1047,29 @@ class PCBLayout:
                 gx, gy = int(px / grid_size), int(py / grid_size)
                 pad_layers = [0, 1]  # Bloquear TODAS LAS CAPAS visualmente (F.Cu y B.Cu) para forzar un enrutamiento en escalera (detour 2D puro)
                     
-                # Espacio libre alrededor del pad (Dilation para Clearance)
-                clearance = 0.35
-                pad_w_c = max(1, int((p.w / 2 + clearance) / grid_size))
-                pad_h_c = max(1, int((p.h / 2 + clearance) / grid_size))
-                for dx in range(-pad_w_c, pad_w_c + 1):
-                    for dy in range(-pad_h_c, pad_h_c + 1):
-                        for l_idx in pad_layers:
-                            occupied.add((l_idx, gx+dx, gy+dy))
+                # Espacio libre alrededor del pad (Clearance + max track radius)
+                # Max track width for power is 0.50 (radius 0.25). Required clearance is 0.20.
+                clearance = 0.45
+                search_radius = int(math.ceil((max(p.w, p.h) / 2 + clearance) / grid_size)) + 1
+                for dx in range(-search_radius, search_radius + 1):
+                    for dy in range(-search_radius, search_radius + 1):
+                        cx = (gx + dx) * grid_size
+                        cy = (gy + dy) * grid_size
+                        
+                        # Distancia exacta al rectángulo del pad
+                        dx_rect = max(0, abs(cx - px) - p.w/2)
+                        dy_rect = max(0, abs(cy - py) - p.h/2)
+                        dist = math.hypot(dx_rect, dy_rect)
+                        
+                        if dist < clearance:
+                            for l_idx in pad_layers:
+                                pt = (l_idx, gx+dx, gy+dy)
+                                if pt in occupied and occupied[pt] != p.net_name:
+                                    occupied[pt] = "BLOCKED"
+                                else:
+                                    occupied[pt] = p.net_name
 
-        def astar(start_px, start_py, start_l, end_px, end_py, end_l, current_net_width):
+        def astar(start_px, start_py, start_l, end_px, end_py, end_l, current_net_width, net_name):
             start_l_act = 0 if start_l == -1 else start_l
             end_l_act = 0 if end_l == -1 else end_l
             
@@ -1011,16 +1112,14 @@ class PCBLayout:
                     if nb_x < min_x or nb_x > max_x or nb_y < min_y or nb_y > max_y:
                         continue
                         
-                    is_occupied = False
                     if nb in occupied:
-                        if (nb_x, nb_y) != end_loc and (nb_x, nb_y) != (start_g[1], start_g[2]):
-                            is_occupied = True
+                        if occupied[nb] != net_name:
+                            if (nb_x, nb_y) != end_loc and (nb_x, nb_y) != (start_g[1], start_g[2]):
+                                continue # Hard block for different nets
                             
                     cost = 1
                     if dl != 0:
                         cost = 15  # Via cost penalty
-                    if is_occupied:
-                        cost = 1000  # Penalización suave para clearances propios
                         
                     tentative_g = g_score[current] + cost
                     if nb not in g_score or tentative_g < g_score[nb]:
@@ -1042,7 +1141,7 @@ class PCBLayout:
             net_w = self.get_net_width(net_name)
             for i in range(len(pads) - 1):
                 p1, p2 = pads[i], pads[i+1]
-                path_grid = astar(p1[0], p1[1], p1[3], p2[0], p2[1], p2[3], net_w)
+                path_grid = astar(p1[0], p1[1], p1[3], p2[0], p2[1], p2[3], net_w, net_name)
                 if path_grid:
                     routed_ok += 1
                     start_pt = path_grid[0]
@@ -1050,18 +1149,27 @@ class PCBLayout:
                         if start_pt != gp:
                             if start_pt[0] != gp[0]:
                                 self.add_via(start_pt[1] * grid_size, start_pt[2] * grid_size, net=net_name)
-                                occupied.add((gp[0], gp[1], gp[2]))
                             else:
                                 self._traces.append(Trace(
                                     start_pt[1] * grid_size, start_pt[2] * grid_size,
                                     gp[1] * grid_size, gp[2] * grid_size,
                                     width=net_w, layer=layers[start_pt[0]], net_id=nid
                                 ))
+                            
+                            # Occupy the point and its adjacent neighbors for clearance
+                            for dx in [-2, -1, 0, 1, 2]:
+                                for dy in [-2, -1, 0, 1, 2]:
+                                    pt = (gp[0], gp[1]+dx, gp[2]+dy)
+                                    if pt in occupied and occupied[pt] != net_name:
+                                        occupied[pt] = "BLOCKED"
+                                    else:
+                                        occupied[pt] = net_name
+                            
                             start_pt = gp
                     self._traces.append(Trace(start_pt[1] * grid_size, start_pt[2] * grid_size,
                                              p2[0], p2[1], width=net_w, layer=layers[start_pt[0]], net_id=nid))
                     for pt in path_grid:
-                        occupied.add(pt)
+                        occupied[pt] = net_name
                 else:
                     routed_failed += 1
                     logger.warning("pcb_layout", f"Segmento sin rutear en net '{net_name}' (pad {i} -> {i+1})")

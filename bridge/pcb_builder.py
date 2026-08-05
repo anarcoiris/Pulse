@@ -165,6 +165,11 @@ class PCBBuilder:
             fp = None
             fp_added = False
             f_id = getattr(c, 'footprint_id', None)
+            
+            # Use built-in parameterized footprints for simple passives to ensure netlist binding works
+            if etype in ('R', 'C', 'L'):
+                f_id = None
+
             if f_id:
                 if ':' in f_id:
                     lib, name = f_id.split(':', 1)
@@ -177,6 +182,22 @@ class PCBBuilder:
                         ref, val, net1_name=c.n1, net2_name=c.n2
                     )
                     fp = pcb.add_footprint(fp_sw, x, y)
+                    fp_added = True
+                elif f_id == 'sot223':
+                    from bridge.pcb_layout import FootprintPresets
+                    net1, net2, net3 = "", "", ""
+                    if hasattr(c, "pins"):
+                        net1 = c.pins.get("1", "")
+                        net2 = c.pins.get("2", "")
+                        net3 = c.pins.get("3", "")
+                    fp_sot = FootprintPresets.sot223(
+                        ref, val,
+                        net1_id=pcb._get_net_id(net1), net1_name=net1,
+                        net2_id=pcb._get_net_id(net2), net2_name=net2,
+                        net3_id=pcb._get_net_id(net3), net3_name=net3,
+                        net4_id=pcb._get_net_id(net2), net4_name=net2
+                    )
+                    fp = pcb.add_footprint(fp_sot, x, y)
                     fp_added = True
                 elif f_id == 'flipper_zero_gpio':
                     fp = pcb.add_flipper_zero_gpio(ref, val, x, y)
@@ -207,6 +228,10 @@ class PCBBuilder:
                 for pad in fp.pads:
                     if pad.number in c.pins:
                         net_name = c.pins[pad.number]
+                        pad.net_name = net_name
+                        pad.net_id = pcb._get_net_id(net_name)
+                    elif not pad.net_name:
+                        net_name = f"NC_{ref}_{pad.number}"
                         pad.net_name = net_name
                         pad.net_id = pcb._get_net_id(net_name)
 
@@ -243,9 +268,17 @@ class PCBBuilder:
         low_val = dec.get("low_value", "100nF")
         if power_nets:
             p_net = power_nets[0]
-            pcb.add_capacitor(f"C_{ref}_H", high_val, x + 5, y - 5, net1=p_net, net2="GND")
-            pcb.add_capacitor(f"C_{ref}_L", low_val, x + 8, y - 5, net1=p_net, net2="GND")
+            if is_esp:
+                cx1, cx2 = x - 16, x - 16
+                cy1, cy2 = y - 5, y + 5
+            else:
+                cx1, cx2 = x - 3, x + 3
+                cy1, cy2 = y - 8, y - 8
+            pcb.add_capacitor(f"C_{ref}_H", high_val, cx1, cy1, net1=p_net, net2="GND")
+            pcb.add_capacitor(f"C_{ref}_L", low_val, cx2, cy2, net1=p_net, net2="GND")
         if is_esp:
+            def bb(f):
+                return (f.x - f.w/2, f.y - f.h/2, f.x + f.w/2, f.y + f.h/2),
             pcb.add_keepout([
                 (x - 9, y - 13), (x + 9, y - 13),
                 (x + 9, y - 7),  (x - 9, y - 7),
@@ -259,12 +292,14 @@ class PCBBuilder:
 
     def _place_ic(self, pcb: PCBLayout, comp, ref: str, val: str, x: float, y: float) -> Footprint:
         """Coloca un IC multipin parametrizado con extras de soporte."""
-        pkg = "SOP16"
-        is_esp = ("ESP" in val.upper() or "NODE" in val.upper())
-        if is_esp:
-            pkg = "ESP32"
-        if "CH340" in val.upper() or "SOP8" in val.upper():
-            pkg = "SOP8"
+        pkg = getattr(comp, 'pkg_type', None)
+        if not pkg:
+            pkg = "SOP16"
+            is_esp = ("ESP" in val.upper() or "NODE" in val.upper())
+            if is_esp:
+                pkg = "ESP32"
+            if "CH340" in val.upper() or "SOP8" in val.upper():
+                pkg = "SOP8"
 
         fp = pcb.add_ic(ref, val, x, y, pins=getattr(comp, 'pins', {}), pkg_type=pkg)
         self._apply_ic_extras(pcb, comp, ref, val, x, y)
@@ -292,6 +327,9 @@ class PCBBuilder:
             width=self.trace_width,
             grid_size=float(_pcb("autoroute.grid_size_mm", 0.25)),
         )
+
+        if "GND" in all_nodes:
+            pcb.add_gnd_via_stitching(spacing_mm=12.0)
 
     def _route_usb_nets(self, pcb: PCBLayout) -> None:
         """Apply USB diff-pair geometry when D+/D- nets and pads exist."""
