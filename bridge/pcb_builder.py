@@ -255,13 +255,36 @@ class PCBBuilder:
         self._finalize(pcb, graph.all_nodes, n)
         self._pcb = pcb
 
+    def _find_non_overlapping_position(self, pcb: PCBLayout, start_x: float, start_y: float, step: float = 4.0) -> tuple[float, float]:
+        """Finds a position near (start_x, start_y) that does not overlap existing footprints."""
+        offsets = [
+            (0, 0), (0, -step), (0, step), (-step, 0), (step, 0),
+            (-step, -step), (step, -step), (-step, step), (step, step),
+            (0, -2*step), (0, 2*step), (-2*step, 0), (2*step, 0),
+            (-2*step, -step), (2*step, -step), (-2*step, step), (2*step, step),
+            (-3*step, 0), (3*step, 0), (0, -3*step), (0, 3*step)
+        ]
+        for dx, dy in offsets:
+            cx, cy = start_x + dx, start_y + dy
+            min_x, min_y, max_x, max_y = cx - 1.5, cy - 1.5, cx + 1.5, cy + 1.5
+            collision = False
+            for fp in pcb._footprints:
+                o_min_x, o_min_y, o_max_x, o_max_y = fp.bounding_box()
+                if (min_x < o_max_x and max_x > o_min_x and min_y < o_max_y and max_y > o_min_y):
+                    collision = True
+                    break
+            if not collision:
+                return cx, cy
+        return start_x, start_y
+
     def _apply_ic_extras(self, pcb: PCBLayout, comp, ref: str, val: str, x: float, y: float) -> None:
         """Decoupling caps and antenna keepout for IC/MCU (including raw footprints)."""
-        is_esp = ("ESP" in val.upper() or "NODE" in val.upper())
-        is_rf = ("CC1101" in val.upper() or "NRF" in val.upper())
+        pkg = getattr(comp, 'pkg_type', None) or ""
+        is_esp = ("ESP" in val.upper() or "NODE" in val.upper() or pkg == "ESP32")
+        is_rf = ("CC1101" in val.upper() or "NRF" in val.upper() or "MODULE" in pkg.upper())
         power_nets = [
             n for n in getattr(comp, 'pins', {}).values()
-            if n in ('3V3', 'VCC33', 'VCC', 'VBUS', '5V', '3.3V', '3.3V_ESP', '3.3V_FLIPPER')
+            if n in ('3V3', 'VCC33', 'VCC', 'VBUS', '5V', '3.3V', '3.3V_ESP', '3.3V_FLIPPER', '5V_USB', '+5V', '+3V3', 'VDD', 'V_IN')
         ]
         dec = _pcb("ic_decoupling", {})
         high_val = dec.get("high_value", "10uF")
@@ -269,16 +292,19 @@ class PCBBuilder:
         if power_nets:
             p_net = power_nets[0]
             if is_esp:
-                cx1, cx2 = x - 16, x - 16
-                cy1, cy2 = y - 5, y + 5
+                init_cx1, init_cx2 = x - 16, x - 16
+                init_cy1, init_cy2 = y - 5, y + 5
+            elif "MODULE" in pkg.upper() or "2x4" in pkg or "1x" in pkg:
+                init_cx1, init_cx2 = x - 8, x + 8
+                init_cy1, init_cy2 = y - 6, y - 6
             else:
-                cx1, cx2 = x - 3, x + 3
-                cy1, cy2 = y - 8, y - 8
+                init_cx1, init_cx2 = x - 6, x + 6
+                init_cy1, init_cy2 = y - 8, y - 8
+            cx1, cy1 = self._find_non_overlapping_position(pcb, init_cx1, init_cy1)
+            cx2, cy2 = self._find_non_overlapping_position(pcb, init_cx2, init_cy2)
             pcb.add_capacitor(f"C_{ref}_H", high_val, cx1, cy1, net1=p_net, net2="GND")
             pcb.add_capacitor(f"C_{ref}_L", low_val, cx2, cy2, net1=p_net, net2="GND")
         if is_esp:
-            def bb(f):
-                return (f.x - f.w/2, f.y - f.h/2, f.x + f.w/2, f.y + f.h/2),
             pcb.add_keepout([
                 (x - 9, y - 13), (x + 9, y - 13),
                 (x + 9, y - 7),  (x - 9, y - 7),

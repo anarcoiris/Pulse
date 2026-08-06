@@ -302,6 +302,7 @@ class MountingHole:
     y: float
     drill_mm: float = 3.2
     pad_mm: float = 6.0
+    ref: str = "H1"
 
     def to_sexpr(self) -> str:
         uid  = str(uuid.uuid4())
@@ -312,7 +313,7 @@ class MountingHole:
             f'    (layer "F.Cu")\n'
             f'    (uuid "{uid}")\n'
             f'    (at {self.x:.4f} {self.y:.4f})\n'
-            f'    (property "Reference" "H"\n'
+            f'    (property "Reference" "{self.ref}"\n'
             f'      (at 0 -4)\n'
             f'      (layer "F.SilkS")\n'
             f'      (uuid "{uid2}")\n'
@@ -427,11 +428,12 @@ class FootprintPresets:
                        lib_id=f"Connector_PinHeader_2.54mm:PinHeader_1x{pins:02d}_P2.54mm_Vertical",
                        value=value)
         fp.pads = []
+        offset_y = ((pins - 1) * pitch) / 2.0
         for i in range(pins):
             fp.pads.append(Pad(
                 str(i + 1), "thru_hole",
                 "rect" if i == 0 else "circle",
-                x=0, y=i * pitch,
+                x=0, y=i * pitch - offset_y,
                 w=1.7, h=1.7, drill=1.0,
             ))
         return fp
@@ -445,19 +447,21 @@ class FootprintPresets:
                        lib_id=f"Connector_PinHeader_2.54mm:PinHeader_2x{rows:02d}_P2.54mm_Vertical",
                        value=value)
         fp.pads = []
+        offset_y = ((rows - 1) * pitch) / 2.0
         for i in range(rows):
+            py = i * pitch - offset_y
             # Left column (odd pins)
             fp.pads.append(Pad(
                 str(i * 2 + 1), "thru_hole",
                 "rect" if i == 0 else "circle",
-                x=-pitch/2, y=i * pitch,
+                x=-pitch/2, y=py,
                 w=1.7, h=1.7, drill=1.0,
             ))
             # Right column (even pins)
             fp.pads.append(Pad(
                 str(i * 2 + 2), "thru_hole",
                 "circle",
-                x=pitch/2, y=i * pitch,
+                x=pitch/2, y=py,
                 w=1.7, h=1.7, drill=1.0,
             ))
         return fp
@@ -471,19 +475,22 @@ class FootprintPresets:
                        value=value)
         half = pins // 2
         fp.pads = []
+        offset_y = ((half - 1) * pitch) / 2.0
         # Fila izquierda (pines 1..half, de arriba a abajo)
         for i in range(half):
+            py = i * pitch - offset_y
             fp.pads.append(Pad(
                 str(i + 1), "thru_hole",
                 "rect" if i == 0 else "oval",
-                x=-row_width / 2, y=i * pitch,
+                x=-row_width / 2, y=py,
                 w=1.6, h=1.6, drill=0.8,
             ))
         # Fila derecha (pines pins..half+1, de abajo a arriba)
         for i in range(half):
+            py = i * pitch - offset_y
             fp.pads.append(Pad(
                 str(pins - i), "thru_hole", "oval",
-                x=+row_width / 2, y=i * pitch,
+                x=+row_width / 2, y=py,
                 w=1.6, h=1.6, drill=0.8,
             ))
         return fp
@@ -611,19 +618,20 @@ class FootprintPresets:
         fp = Footprint(ref=ref, lib_id="Custom:Flipper_Zero_GPIO", value=value)
         fp.pads = []
         pitch = 2.54
+        offset_y = (21 * pitch) / 2.0  # 26.67mm total span centered
         # Pines 1 a 8
         for i in range(8):
             fp.pads.append(Pad(
                 str(i + 1), "thru_hole",
                 "rect" if i == 0 else "circle",
-                x=0, y=i * pitch,
+                x=0, y=i * pitch - offset_y,
                 w=1.7, h=1.7, drill=1.0,
             ))
         # Pines 9 a 18 (desplazados 4 posiciones extra)
         for i in range(8, 18):
             fp.pads.append(Pad(
                 str(i + 1), "thru_hole", "circle",
-                x=0, y=(i + 4) * pitch,
+                x=0, y=(i + 4) * pitch - offset_y,
                 w=1.7, h=1.7, drill=1.0,
             ))
         return fp
@@ -830,13 +838,28 @@ class PCBLayout:
         return self.add_footprint(fp, x, y, rotation)
 
     def add_mounting_hole(self, x: float, y: float,
-                          drill: float = 3.2) -> MountingHole:
+                          drill: float = 3.2, ref: str = None) -> MountingHole:
         """Coloca un agujero de montaje M3."""
-        hole = MountingHole(x=x, y=y, drill_mm=drill)
+        if ref is None:
+            ref = f"H{len(self._mounting_holes) + 1}"
+        hole = MountingHole(x=x, y=y, drill_mm=drill, ref=ref)
         self._mounting_holes.append(hole)
         return hole
 
-    def add_keepout(self, points: List[Tuple[float, float]], layers: List[str] = None) -> KeepoutZone:
+    def add_mounting_holes_corners(self, margin: float = 3.5,
+                                   drill: float = 3.2) -> list[MountingHole]:
+        """Coloca 4 agujeros de montaje M3 en las esquinas."""
+        ox, oy = self.board.origin_x, self.board.origin_y
+        w, h = self.board.width_mm, self.board.height_mm
+        holes = [
+            self.add_mounting_hole(ox + margin, oy + margin, drill, ref="H1"),
+            self.add_mounting_hole(ox + w - margin, oy + margin, drill, ref="H2"),
+            self.add_mounting_hole(ox + margin, oy + h - margin, drill, ref="H3"),
+            self.add_mounting_hole(ox + w - margin, oy + h - margin, drill, ref="H4"),
+        ]
+        return holes
+
+    def add_keepout(self, points: list[tuple[float, float]], layers: list[str] = None) -> KeepoutZone:
         """Define una zona donde el motor no debe verter cobre."""
         kz = KeepoutZone(points=points, layers=layers or ["F.Cu", "B.Cu"])
         self._keepouts.append(kz)
@@ -1045,46 +1068,41 @@ class PCBLayout:
                 px = fp.x + p.x * math.cos(rad) - p.y * math.sin(rad)
                 py = fp.y + p.x * math.sin(rad) + p.y * math.cos(rad)
                 gx, gy = int(px / grid_size), int(py / grid_size)
-                pad_layers = [0, 1]  # Bloquear TODAS LAS CAPAS visualmente (F.Cu y B.Cu) para forzar un enrutamiento en escalera (detour 2D puro)
+                pad_layers = [0, 1] if ("thru_hole" in p.pad_type or "*.Cu" in p.layers) else ([1] if ("B.Cu" in p.layers or fp.layer == "B.Cu") else [0])
                     
-                # Espacio libre alrededor del pad (Clearance + max track radius)
-                # Max track width for power is 0.50 (radius 0.25). Required clearance is 0.20.
-                clearance = 0.45
-                search_radius = int(math.ceil((max(p.w, p.h) / 2 + clearance) / grid_size)) + 1
+                # Solo bloquear celdas directamente dentro del pad copper (para evitar cortocircuitos reales)
+                search_radius = int(math.ceil((max(p.w, p.h) / 2 + 0.20) / grid_size)) + 1
                 for dx in range(-search_radius, search_radius + 1):
                     for dy in range(-search_radius, search_radius + 1):
                         cx = (gx + dx) * grid_size
                         cy = (gy + dy) * grid_size
                         
-                        # Distancia exacta al rectángulo del pad
-                        dx_rect = max(0, abs(cx - px) - p.w/2)
-                        dy_rect = max(0, abs(cy - py) - p.h/2)
-                        dist = math.hypot(dx_rect, dy_rect)
-                        
-                        if dist < clearance:
+                        # Celda dentro del rectángulo real del pad de cobre
+                        if abs(cx - px) <= p.w/2.0 + 0.01 and abs(cy - py) <= p.h/2.0 + 0.01:
                             for l_idx in pad_layers:
                                 pt = (l_idx, gx+dx, gy+dy)
-                                if pt in occupied and occupied[pt] != p.net_name:
-                                    occupied[pt] = "BLOCKED"
-                                else:
-                                    occupied[pt] = p.net_name
+                                occupied[pt] = p.net_name
 
         def astar(start_px, start_py, start_l, end_px, end_py, end_l, current_net_width, net_name):
-            start_l_act = 0 if start_l == -1 else start_l
-            end_l_act = 0 if end_l == -1 else end_l
-            
-            start_g = (start_l_act, int(start_px/grid_size), int(start_py/grid_size))
+            start_x_g, start_y_g = int(start_px/grid_size), int(start_py/grid_size)
             end_loc = (int(end_px/grid_size), int(end_py/grid_size))
             
-            open_set = [(0, start_g)]
+            start_layers = [0, 1] if start_l == -1 else [start_l]
+            open_set = []
             came_from = {}
-            g_score = {start_g: 0}
+            g_score = {}
+            
+            for sl in start_layers:
+                sg = (sl, start_x_g, start_y_g)
+                open_set.append((0, sg))
+                g_score[sg] = 0
+            
             directions = [(0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1), (1, 0, 0)]
             
-            min_x = int(self.board.origin_x / grid_size)
-            min_y = int(self.board.origin_y / grid_size)
-            max_x = int((self.board.origin_x + self.board.width_mm) / grid_size)
-            max_y = int((self.board.origin_y + self.board.height_mm) / grid_size)
+            min_x = int((self.board.origin_x - 5.0) / grid_size)
+            min_y = int((self.board.origin_y - 5.0) / grid_size)
+            max_x = int((self.board.origin_x + self.board.width_mm + 5.0) / grid_size)
+            max_y = int((self.board.origin_y + self.board.height_mm + 5.0) / grid_size)
             
             nodes_explored = 0
             while open_set:
@@ -1099,7 +1117,7 @@ class PCBLayout:
                         pths.append(current)
                     logger.debug(
                         "pcb_layout",
-                        f"A* exito: {start_g} -> {end_loc} en {nodes_explored} nodos explorados, "
+                        f"A* exito: ({start_x_g},{start_y_g}) -> {end_loc} en {nodes_explored} nodos explorados, "
                         f"path len={len(pths)}",
                     )
                     return pths[::-1]
@@ -1114,12 +1132,13 @@ class PCBLayout:
                         
                     if nb in occupied:
                         if occupied[nb] != net_name:
-                            if (nb_x, nb_y) != end_loc and (nb_x, nb_y) != (start_g[1], start_g[2]):
+                            # Allow entering target pad cell or exiting start pad cell
+                            if (nb_x, nb_y) != end_loc and (nb_x, nb_y) != (start_x_g, start_y_g):
                                 continue # Hard block for different nets
                             
                     cost = 1
                     if dl != 0:
-                        cost = 15  # Via cost penalty
+                        cost = 10  # Via cost penalty
                         
                     tentative_g = g_score[current] + cost
                     if nb not in g_score or tentative_g < g_score[nb]:
@@ -1129,14 +1148,39 @@ class PCBLayout:
                         heapq.heappush(open_set, (tentative_g + h, nb))
             logger.debug(
                 "pcb_layout",
-                f"A* fallo: {start_g} -> {end_loc} sin camino tras {nodes_explored} nodos explorados",
+                f"A* fallo: ({start_x_g},{start_y_g}) -> {end_loc} sin camino tras {nodes_explored} nodos explorados",
             )
             return None
 
         routed_ok = 0
         routed_failed = 0
-        for net_name, pads in net_pads.items():
+        
+        # Sort nets: shorter 2-pad signal nets first, multi-pad power nets last
+        def net_sort_key(item):
+            n_name, p_list = item
+            if len(p_list) == 2:
+                dist = math.hypot(p_list[0][0] - p_list[1][0], p_list[0][1] - p_list[1][1])
+                return (0, dist)
+            return (1, len(p_list))
+
+        sorted_nets = sorted(net_pads.items(), key=net_sort_key)
+
+        for net_name, pads in sorted_nets:
             if len(pads) < 2: continue
+            
+            # Re-order multi-pad nets using nearest-neighbor to prevent criss-crossing long traces
+            if len(pads) > 2:
+                unvisited = pads.copy()
+                ordered = [unvisited.pop(0)]
+                while unvisited:
+                    last = ordered[-1]
+                    best_i = min(
+                        range(len(unvisited)),
+                        key=lambda idx: math.hypot(unvisited[idx][0] - last[0], unvisited[idx][1] - last[1])
+                    )
+                    ordered.append(unvisited.pop(best_i))
+                pads = ordered
+
             nid = pads[0][2]
             net_w = self.get_net_width(net_name)
             for i in range(len(pads) - 1):
@@ -1157,8 +1201,8 @@ class PCBLayout:
                                 ))
                             
                             # Occupy the point and its adjacent neighbors for clearance
-                            for dx in [-2, -1, 0, 1, 2]:
-                                for dy in [-2, -1, 0, 1, 2]:
+                            for dx in [-1, 0, 1]:
+                                for dy in [-1, 0, 1]:
                                     pt = (gp[0], gp[1]+dx, gp[2]+dy)
                                     if pt in occupied and occupied[pt] != net_name:
                                         occupied[pt] = "BLOCKED"
