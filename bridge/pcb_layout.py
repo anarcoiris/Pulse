@@ -319,7 +319,7 @@ class MountingHole:
             f'      (uuid "{uid2}")\n'
             f'      (effects (font (size 1 1) (thickness 0.15)))\n'
             f'    )\n'
-            f'    (pad "" thru_hole circle (at 0 0) (size {self.pad_mm:.2f} {self.pad_mm:.2f})\n'
+            f'    (pad "" np_thru_hole circle (at 0 0) (size {self.drill_mm:.2f} {self.drill_mm:.2f})\n'
             f'      (drill {self.drill_mm:.2f}) (layers "*.Cu" "*.Mask") (uuid "{uid3}"))\n'
             f'  )'
         )
@@ -1042,7 +1042,8 @@ class PCBLayout:
         
         for fp in self._footprints:
             for p in fp.pads:
-                if p.net_name and p.net_name != "GND":  # GND se asume en zone
+                gnd_nets = {'GND', 'PWR_GND', 'PGND', 'AGND', 'DGND', 'SGND', '-'}
+                if p.net_name and p.net_name not in gnd_nets:  # GND nets handled by copper fill-zone
                     rad = math.radians(fp.rotation)
                     px = fp.x + p.x * math.cos(rad) - p.y * math.sin(rad)
                     py = fp.y + p.x * math.sin(rad) + p.y * math.cos(rad)
@@ -1062,6 +1063,51 @@ class PCBLayout:
             return
 
         occupied = {} # (layer_idx, x, y) -> net_name
+
+        # 1. Keepout IC & MCU inner bodies so traces NEVER cross inside component bodies
+        for fp in self._footprints:
+            if len(fp.pads) > 4:
+                pad_xs, pad_ys = [], []
+                for p in fp.pads:
+                    rad = math.radians(fp.rotation)
+                    px = fp.x + p.x * math.cos(rad) - p.y * math.sin(rad)
+                    py = fp.y + p.x * math.sin(rad) + p.y * math.cos(rad)
+                    pad_xs.append(px)
+                    pad_ys.append(py)
+                
+                min_px, max_px = min(pad_xs), max(pad_xs)
+                min_py, max_py = min(pad_ys), max(pad_ys)
+                
+                # Center core rectangle (shrunk by 1.2mm inward from outer pad tips)
+                b_min_x = min_px + 1.2
+                b_max_x = max_px - 1.2
+                b_min_y = min_py + 1.2
+                b_max_y = max_py - 1.2
+                
+                if b_max_x > b_min_x + 1.0 and b_max_y > b_min_y + 1.0:
+                    min_gx = int(b_min_x / grid_size)
+                    max_gx = int(b_max_x / grid_size)
+                    min_gy = int(b_min_y / grid_size)
+                    max_gy = int(b_max_y / grid_size)
+                    for gx in range(min_gx, max_gx + 1):
+                        for gy in range(min_gy, max_gy + 1):
+                            for l_idx in [0, 1]:
+                                occupied[(l_idx, gx, gy)] = "KEEPOUT_BODY"
+
+        # 1b. Keepout mounting holes
+        for mh in self._mounting_holes:
+            rad = mh.drill_mm / 2.0 + 0.6  # drill radius + 0.6mm copper keepout margin
+            min_gx = int((mh.x - rad) / grid_size)
+            max_gx = int((mh.x + rad) / grid_size)
+            min_gy = int((mh.y - rad) / grid_size)
+            max_gy = int((mh.y + rad) / grid_size)
+            for gx in range(min_gx, max_gx + 1):
+                for gy in range(min_gy, max_gy + 1):
+                    for l_idx in [0, 1]:
+                        occupied[(l_idx, gx, gy)] = "KEEPOUT_BODY"
+
+        # 2. Block pad copper cells AND clearance margin in occupied grid
+        net_pad_cells_map = {} # net_name -> set of (l_idx, gx, gy)
         for fp in self._footprints:
             for p in fp.pads:
                 rad = math.radians(fp.rotation)
@@ -1069,23 +1115,38 @@ class PCBLayout:
                 py = fp.y + p.x * math.sin(rad) + p.y * math.cos(rad)
                 gx, gy = int(px / grid_size), int(py / grid_size)
                 pad_layers = [0, 1] if ("thru_hole" in p.pad_type or "*.Cu" in p.layers) else ([1] if ("B.Cu" in p.layers or fp.layer == "B.Cu") else [0])
-                    
-                # Solo bloquear celdas directamente dentro del pad copper (para evitar cortocircuitos reales)
-                search_radius = int(math.ceil((max(p.w, p.h) / 2 + 0.20) / grid_size)) + 1
-                for dx in range(-search_radius, search_radius + 1):
-                    for dy in range(-search_radius, search_radius + 1):
+                
+                half_w, half_h = p.w / 2.0, p.h / 2.0
+                cl_margin = 0.35  # 350 Micron clearance margin around every pad (sweet-spot for A* + fill-zone GND)
+                
+                search_rx = int(math.ceil((half_w + cl_margin) / grid_size)) + 1
+                search_ry = int(math.ceil((half_h + cl_margin) / grid_size)) + 1
+                
+                for dx in range(-search_rx, search_rx + 1):
+                    for dy in range(-search_ry, search_ry + 1):
                         cx = (gx + dx) * grid_size
                         cy = (gy + dy) * grid_size
                         
-                        # Celda dentro del rectángulo real del pad de cobre
-                        if abs(cx - px) <= p.w/2.0 + 0.01 and abs(cy - py) <= p.h/2.0 + 0.01:
-                            for l_idx in pad_layers:
-                                pt = (l_idx, gx+dx, gy+dy)
+                        dist_x = abs(cx - px)
+                        dist_y = abs(cy - py)
+                        
+                        is_copper = (dist_x <= half_w + 0.02) and (dist_y <= half_h + 0.02)
+                        is_clearance = (dist_x <= half_w + cl_margin) and (dist_y <= half_h + cl_margin)
+                        
+                        for l_idx in pad_layers:
+                            pt = (l_idx, gx + dx, gy + dy)
+                            if is_copper:
                                 occupied[pt] = p.net_name
+                                if p.net_name:
+                                    net_pad_cells_map.setdefault(p.net_name, set()).add(pt)
+                            elif is_clearance:
+                                if pt not in occupied:
+                                    occupied[pt] = f"CLEARANCE_{p.net_name}"
 
         def astar(start_px, start_py, start_l, end_px, end_py, end_l, current_net_width, net_name):
             start_x_g, start_y_g = int(start_px/grid_size), int(start_py/grid_size)
             end_loc = (int(end_px/grid_size), int(end_py/grid_size))
+            target_net_cells = net_pad_cells_map.get(net_name, set())
             
             start_layers = [0, 1] if start_l == -1 else [start_l]
             open_set = []
@@ -1099,10 +1160,11 @@ class PCBLayout:
             
             directions = [(0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1), (1, 0, 0)]
             
-            min_x = int((self.board.origin_x - 5.0) / grid_size)
-            min_y = int((self.board.origin_y - 5.0) / grid_size)
-            max_x = int((self.board.origin_x + self.board.width_mm + 5.0) / grid_size)
-            max_y = int((self.board.origin_y + self.board.height_mm + 5.0) / grid_size)
+            margin_edge = 0.8
+            min_x = int((self.board.origin_x + margin_edge) / grid_size)
+            min_y = int((self.board.origin_y + margin_edge) / grid_size)
+            max_x = int((self.board.origin_x + self.board.width_mm - margin_edge) / grid_size)
+            max_y = int((self.board.origin_y + self.board.height_mm - margin_edge) / grid_size)
             
             nodes_explored = 0
             while open_set:
@@ -1115,11 +1177,6 @@ class PCBLayout:
                     while current in came_from:
                         current = came_from[current]
                         pths.append(current)
-                    logger.debug(
-                        "pcb_layout",
-                        f"A* exito: ({start_x_g},{start_y_g}) -> {end_loc} en {nodes_explored} nodos explorados, "
-                        f"path len={len(pths)}",
-                    )
                     return pths[::-1]
 
                 for dl, dx, dy in directions:
@@ -1131,10 +1188,19 @@ class PCBLayout:
                         continue
                         
                     if nb in occupied:
-                        if occupied[nb] != net_name:
-                            # Allow entering target pad cell or exiting start pad cell
-                            if (nb_x, nb_y) != end_loc and (nb_x, nb_y) != (start_x_g, start_y_g):
-                                continue # Hard block for different nets
+                        occ_val = occupied[nb]
+                        if occ_val == "KEEPOUT_BODY":
+                            continue  # Absolutely NEVER enter IC/MCU body interiors!
+                        
+                        if occ_val.startswith("CLEARANCE_"):
+                            cl_net = occ_val.replace("CLEARANCE_", "")
+                            if cl_net != net_name:
+                                if nb not in target_net_cells:
+                                    continue # Hard block for different net's clearance corridor
+                        elif occ_val != net_name:
+                            # Hard block for different net's exact copper
+                            if nb not in target_net_cells:
+                                continue
                             
                     cost = 1
                     if dl != 0:
@@ -1146,10 +1212,6 @@ class PCBLayout:
                         g_score[nb] = tentative_g
                         h = abs(nb_x - end_loc[0]) + abs(nb_y - end_loc[1]) + (0 if dl == 0 else 5)
                         heapq.heappush(open_set, (tentative_g + h, nb))
-            logger.debug(
-                "pcb_layout",
-                f"A* fallo: ({start_x_g},{start_y_g}) -> {end_loc} sin camino tras {nodes_explored} nodos explorados",
-            )
             return None
 
         routed_ok = 0
@@ -1188,8 +1250,20 @@ class PCBLayout:
                 path_grid = astar(p1[0], p1[1], p1[3], p2[0], p2[1], p2[3], net_w, net_name)
                 if path_grid:
                     routed_ok += 1
-                    start_pt = path_grid[0]
-                    for gp in path_grid[1:]:
+                    # Simplify path: merge contiguous collinear segments on the same layer
+                    simple_path = [path_grid[0]]
+                    for k in range(1, len(path_grid) - 1):
+                        p_prev = simple_path[-1]
+                        p_curr = path_grid[k]
+                        p_next = path_grid[k + 1]
+                        d1 = (p_curr[1] - p_prev[1], p_curr[2] - p_prev[2])
+                        d2 = (p_next[1] - p_curr[1], p_next[2] - p_curr[2])
+                        if p_prev[0] != p_curr[0] or p_curr[0] != p_next[0] or d1 != d2:
+                            simple_path.append(p_curr)
+                    simple_path.append(path_grid[-1])
+
+                    start_pt = simple_path[0]
+                    for gp in simple_path[1:]:
                         if start_pt != gp:
                             if start_pt[0] != gp[0]:
                                 self.add_via(start_pt[1] * grid_size, start_pt[2] * grid_size, net=net_name)
@@ -1199,21 +1273,21 @@ class PCBLayout:
                                     gp[1] * grid_size, gp[2] * grid_size,
                                     width=net_w, layer=layers[start_pt[0]], net_id=nid
                                 ))
-                            
-                            # Occupy the point and its adjacent neighbors for clearance
-                            for dx in [-1, 0, 1]:
-                                for dy in [-1, 0, 1]:
-                                    pt = (gp[0], gp[1]+dx, gp[2]+dy)
-                                    if pt in occupied and occupied[pt] != net_name:
-                                        occupied[pt] = "BLOCKED"
-                                    else:
-                                        occupied[pt] = net_name
-                            
                             start_pt = gp
-                    self._traces.append(Trace(start_pt[1] * grid_size, start_pt[2] * grid_size,
-                                             p2[0], p2[1], width=net_w, layer=layers[start_pt[0]], net_id=nid))
+
+                    # Occupy cells along the full path + 2-cell clearance corridor (0.5mm) for future nets
+                    cl_cells = 2
                     for pt in path_grid:
-                        occupied[pt] = net_name
+                        for dx in range(-cl_cells, cl_cells + 1):
+                            for dy in range(-cl_cells, cl_cells + 1):
+                                occ_pt = (pt[0], pt[1] + dx, pt[2] + dy)
+                                if occ_pt in occupied:
+                                    if occupied[occ_pt] not in (net_name, "KEEPOUT_BODY"):
+                                        occupied[occ_pt] = f"CLEARANCE_{net_name}"
+                                else:
+                                    occupied[occ_pt] = f"CLEARANCE_{net_name}"
+                                if dx == 0 and dy == 0:
+                                    occupied[occ_pt] = net_name
                 else:
                     routed_failed += 1
                     logger.warning("pcb_layout", f"Segmento sin rutear en net '{net_name}' (pad {i} -> {i+1})")
@@ -1401,10 +1475,22 @@ class PCBLayout:
         # Setup (design rules)
         lines.append('  (setup')
         lines.append('    (pad_to_mask_clearance 0.05)')
+        lines.append('    (solder_mask_min_width 0.1)')
         lines.append('    (pcbplotparams')
         lines.append('      (layerselection 0x00010fc_ffffffff)')
         lines.append('      (outputdirectory "gerbers/")')
         lines.append('    )')
+        lines.append('  )')
+        lines.append('')
+
+        # Netclasses
+        lines.append('  (net_class "Default" "Default netclass"')
+        lines.append('    (clearance 0.15)')
+        lines.append('    (trace_width 0.25)')
+        lines.append('    (via_dia 0.6)')
+        lines.append('    (via_drill 0.3)')
+        lines.append('    (uvia_dia 0.3)')
+        lines.append('    (uvia_drill 0.1)')
         lines.append('  )')
         lines.append('')
 

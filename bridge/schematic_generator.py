@@ -1,20 +1,21 @@
 """
 bridge/schematic_generator.py
 =============================
-Generador nativo de archivos esquemáticos de KiCad 8/10 (.kicad_sch)
+Generador nativo de archivos esquemáticos de KiCad 10 (.kicad_sch)
 """
 
 from __future__ import annotations
 import uuid
-import math
+import re
 from pathlib import Path
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING, Tuple, Optional
 
 if TYPE_CHECKING:
     from core.circuit_graph import CircuitGraph
 
 from knowledge.pulse_config import cfg
 from core.component_types import VALUE_SYMBOL_MAP, KICAD_SYMBOLS, VALUE_FMT
+from bridge.kicad_bridge import find_kicad_symbol_dir
 
 
 def _sch(key: str, default=None):
@@ -25,19 +26,12 @@ def _grid_scale() -> float:
     return float(_sch("grid_scale_mm", 5.08))
 
 
-def _offset_x() -> float:
-    return float(_sch("offset_x_mm", 50.0))
-
-
-def _offset_y() -> float:
-    return float(_sch("offset_y_mm", 50.0))
-
-
 class SchematicGenerator:
     def __init__(self, graph: "CircuitGraph"):
         self.graph = graph
         self.wires = []
-        self._used_lib_ids: dict[str, dict] = {} # lib_id -> pin info dict
+        self._used_lib_ids: dict[str, dict] = {}
+        self.schematic_uuid = self._get_uuid()
 
     def _get_uuid(self):
         return str(uuid.uuid4())
@@ -76,7 +70,7 @@ class SchematicGenerator:
             f'  (wire (pts {pts})\n'
             f'    (stroke (width 0) (type default)) (uuid "{self._get_uuid()}")\n  )'
         )
-        
+
     def _format_val(self, c) -> str:
         if c.etype == "GND":
             return "GND"
@@ -89,80 +83,125 @@ class SchematicGenerator:
                 return str(c.value)
         return str(c.value)
 
+    def _extract_raw_kicad_symbol(self, lib_id: str, visited: set | None = None) -> list[str]:
+        """Intenta extraer la S-expression del símbolo (y sus padres `extends`) desde las librerías oficiales de KiCad 10."""
+        if visited is None:
+            visited = set()
+        if lib_id in visited:
+            return []
+        visited.add(lib_id)
+
+        sym_dir = find_kicad_symbol_dir()
+        if not sym_dir or ':' not in lib_id:
+            return []
+        lib_name, sym_name = lib_id.split(':', 1)
+        lib_file = sym_dir / f"{lib_name}.kicad_sym"
+        if not lib_file.exists():
+            return []
+
+        results = []
+        try:
+            content = lib_file.read_text(encoding='utf-8')
+            pattern = re.compile(rf'\n\t\(symbol "{re.escape(sym_name)}"\s+.*?\n\t\)', re.DOTALL)
+            m = pattern.search(content)
+            if m:
+                raw_sym = m.group(0).strip()
+                # Verificar si extiende a otro símbolo
+                ext_m = re.search(r'\(extends "([^"]+)"\)', raw_sym)
+                if ext_m:
+                    parent_name = ext_m.group(1)
+                    parent_lib_id = f"{lib_name}:{parent_name}"
+                    parent_results = self._extract_raw_kicad_symbol(parent_lib_id, visited=visited)
+                    results.extend(parent_results)
+                    raw_sym = raw_sym.replace(f'(extends "{parent_name}")', f'(extends "{parent_lib_id}")')
+
+                raw_sym = raw_sym.replace(f'(symbol "{sym_name}"', f'(symbol "{lib_id}"', 1)
+                results.append(f"    {raw_sym}")
+        except Exception:
+            pass
+        return results
+
+
     def generate(self) -> str:
         s = []
-        s.append('(kicad_sch (version 20241228) (generator "PulseLab_Forge")')
-        s.append(f'  (uuid "{self._get_uuid()}")')
+        s.append('(kicad_sch (version 20241228) (generator "PulseLab_Forge") (generator_version "10.0.0")')
+        s.append(f'  (uuid "{self.schematic_uuid}")')
         s.append('  (paper "A4")')
 
-        ref_counters = {}
         symbol_lines = []
-        
         comps = self.graph.components
-        
-        # Check if coordinates are flat linear (auto-assigned default grid_r=0)
-        # If so, regenerate them using the Hierarchical Island Packing algorithm
+
+        # Check if coordinates are flat linear
         is_flat = all(c.grid_r == 0 for c in comps) or (max(c.grid_r for c in comps) == 0)
-        
-        # We compute layout bounds to center the schematic on A4
+
         from bridge.island_layout import compute_layout
         positions, total_w, total_h = compute_layout(comps, mode='schematic')
-        
+
         if is_flat:
             for c in comps:
                 cx, cy = positions.get(c.uid, (0.0, 0.0))
                 c.grid_c = int(round(cx))
                 c.grid_r = int(round(cy))
-        
-        # Center on A4 paper (297 x 210 mm)
-        # grid_scale is typically 5.08mm
+
         gs = _grid_scale()
         total_w_mm = total_w * gs
         total_h_mm = total_h * gs
         dyn_offset_x = max(10.0, (297.0 - total_w_mm) / 2.0)
         dyn_offset_y = max(10.0, (210.0 - total_h_mm) / 2.0)
-        
+
         for i, c in enumerate(comps):
-            cx, cy = self._grid_to_kicad(c.grid_c, c.grid_r, offset_x=dyn_offset_x, offset_y=dyn_offset_y)
+            # Centro del componente en KiCad
+            comp_w = getattr(c, "width", 2)
+            comp_h = getattr(c, "height", 2)
+            center_gc = c.grid_c + comp_w / 2.0
+            center_gr = c.grid_r + comp_h / 2.0
+            cx, cy = self._grid_to_kicad(center_gc, center_gr, offset_x=dyn_offset_x, offset_y=dyn_offset_y)
+
             angle = 90 if c.orientation == "H" else 0
             lib_id = self._resolve_lib_id(c)
-            
-            # Register pins for lib_symbols
+            fp_id = getattr(c, "footprint_id", None) or getattr(c, "footprint", "") or ""
+            comp_uuid = self._get_uuid()
+
+            # Registrar para lib_symbols
             if lib_id not in self._used_lib_ids:
-                self._used_lib_ids[lib_id] = {"etype": c.etype, "pins": {}}
+                self._used_lib_ids[lib_id] = {
+                    "etype": c.etype,
+                    "pins": {},
+                    "width": comp_w,
+                    "height": comp_h
+                }
             if getattr(c, "pins", None):
                 for p_id in c.pins:
                     self._used_lib_ids[lib_id]["pins"][str(p_id)] = c.pins[p_id]
+            elif c.etype in ("R", "C", "L", "D", "V", "S"):
+                self._used_lib_ids[lib_id]["pins"]["1"] = getattr(c, "n1", "1")
+                self._used_lib_ids[lib_id]["pins"]["2"] = getattr(c, "n2", "2")
 
             base = c.etype
             if base == "GND":
                 ref = f"#PWR{self._get_uuid()[:4]}"
             else:
-                ref_counters[base] = ref_counters.get(base, 0) + 1
-                ref = getattr(c, "label", None) or f"{base}{ref_counters[base]}"
+                ref = c.uid if hasattr(c, "uid") and c.uid else getattr(c, "label", None) or f"{base}{i+1}"
 
             val = self._format_val(c)
 
-            if c.etype in ("IC", "MCU") and getattr(c, "pins", None):
-                # Place net labels around ICs with a short wire stub
+            if getattr(c, "pins", None):
+                # Generar cables de conexión (wire stubs) y etiquetas de red
                 num_pins = len(c.pins)
-                half = num_pins // 2
+                half = max(1, num_pins // 2)
                 pin_ids = sorted(c.pins.keys(), key=lambda x: int(x) if x.isdigit() else x)
-                for i, p_id in enumerate(pin_ids):
+                for i_pin, p_id in enumerate(pin_ids):
                     net_name = c.pins.get(p_id, "")
                     if net_name:
-                        # get_pins_layout() returns absolute grid_c, grid_r
-                        is_left = (i < half)
-                        p_gc = c.grid_c if is_left else c.grid_c + c.width
-                        p_gr = c.grid_r + i if is_left else c.grid_r + (num_pins - 1 - i)
-                        
-                        # Draw wire stub outward
+                        is_left = (i_pin < half)
+                        p_gc = c.grid_c if is_left else c.grid_c + comp_w
+                        p_gr = c.grid_r + (i_pin if is_left else (num_pins - 1 - i_pin))
+
                         stub_gc = p_gc - 1 if is_left else p_gc + 1
-                        
+
                         px, py = self._grid_to_kicad(p_gc, p_gr, offset_x=dyn_offset_x, offset_y=dyn_offset_y)
                         sx, sy = self._grid_to_kicad(stub_gc, p_gr, offset_x=dyn_offset_x, offset_y=dyn_offset_y)
-                        
-                        # Add wire stub
+
                         self.wires.append(
                             f'  (wire (pts (xy {px} {py}) (xy {sx} {sy}))\n'
                             f'    (stroke (width 0) (type default)) (uuid "{self._get_uuid()}")\n  )'
@@ -179,25 +218,78 @@ class SchematicGenerator:
             symbol_lines.append(
                 f'  (symbol (lib_id "{lib_id}") (at {cx} {cy} {angle}) (unit 1)\n'
                 f'    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)\n'
-                f'    (uuid "{self._get_uuid()}")\n'
+                f'    (uuid "{comp_uuid}")\n'
                 f'    (property "Reference" "{ref}" (at {cx} {cy - 2.54} 0)\n'
                 f'      (effects (font (size 1.27 1.27)) (justify right)))\n'
                 f'    (property "Value" "{val}" (at {cx} {cy + 2.54} 0)\n'
                 f'      (effects (font (size 1.27 1.27)) (justify right)))\n'
+                f'    (property "Footprint" "{fp_id}" (at {cx} {cy} 0)\n'
+                f'      (effects (font (size 1.27 1.27)) hide))\n'
+                f'    (instances\n'
+                f'      (project "board"\n'
+                f'        (path "/{self.schematic_uuid}/{comp_uuid}" (reference "{ref}") (unit 1))\n'
+                f'      )\n'
+                f'    )\n'
                 f'  )'
             )
 
         s.append("  (lib_symbols")
+        added_symbols = set()
         for lib_id, info in self._used_lib_ids.items():
-            s.append(
-                f'    (symbol "{lib_id}" (pin_numbers hide) (pin_names (offset 1.016) hide)\n'
-                f'      (exclude_from_sim no) (in_bom yes) (on_board yes)\n'
-                f'      (property "Reference" "U" (at 0 2.54 0) (effects (font (size 1.27 1.27))))\n'
-                f'      (property "Value" "Val" (at 0 -2.54 0) (effects (font (size 1.27 1.27))))\n'
-                f'      (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))\n'
-                f'      (property "Datasheet" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))\n'
-                f'    )'
-            )
+            if lib_id in added_symbols:
+                continue
+            raw_sexprs = self._extract_raw_kicad_symbol(lib_id)
+            if raw_sexprs:
+                for expr in raw_sexprs:
+                    sym_m = re.search(r'\(symbol "([^"]+)"', expr)
+                    if sym_m:
+                        sym_k = sym_m.group(1)
+                        if sym_k not in added_symbols:
+                            added_symbols.add(sym_k)
+                            s.append(expr)
+            else:
+                added_symbols.add(lib_id)
+                # Generar símbolo dinámico con pines alineados espacialmente
+                sub_name = f"{lib_id.split(':')[-1]}_0_1" if ":" in lib_id else f"{lib_id}_0_1"
+                pins_data = info.get("pins", {})
+                if not pins_data:
+                    pins_data = {"1": "1", "2": "2"}
+
+                comp_w = info.get("width", 2)
+                comp_h = info.get("height", 2)
+
+                num_pins = len(pins_data)
+                half = max(1, num_pins // 2)
+                pin_ids = sorted(pins_data.keys(), key=lambda x: int(x) if x.isdigit() else x)
+
+                pin_lines = []
+                for i_pin, p_num in enumerate(pin_ids):
+                    is_left = (i_pin < half)
+                    rel_x = round((-comp_w / 2.0 if is_left else comp_w / 2.0) * gs, 2)
+                    pin_row = i_pin if is_left else (num_pins - 1 - i_pin)
+                    rel_y = round((pin_row - comp_h / 2.0) * gs, 2)
+                    orient = 0 if is_left else 180
+
+                    pin_lines.append(
+                        f'        (pin passive line (at {rel_x} {rel_y} {orient}) (length 2.54)\n'
+                        f'          (name "~" (effects (font (size 1.27 1.27))))\n'
+                        f'          (number "{p_num}" (effects (font (size 1.27 1.27))))\n'
+                        f'        )'
+                    )
+
+                pins_str = "\n".join(pin_lines)
+                s.append(
+                    f'    (symbol "{lib_id}" (pin_numbers hide) (pin_names (offset 1.016) hide)\n'
+                    f'      (exclude_from_sim no) (in_bom yes) (on_board yes)\n'
+                    f'      (property "Reference" "U" (at 0 2.54 0) (effects (font (size 1.27 1.27))))\n'
+                    f'      (property "Value" "Val" (at 0 -2.54 0) (effects (font (size 1.27 1.27))))\n'
+                    f'      (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))\n'
+                    f'      (property "Datasheet" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))\n'
+                    f'      (symbol "{sub_name}"\n'
+                    f'{pins_str}\n'
+                    f'      )\n'
+                    f'    )'
+                )
         s.append("  )")
 
         s.extend(symbol_lines)
@@ -210,6 +302,7 @@ class SchematicGenerator:
                 self._add_wire(p1, p2)
 
         s.extend(self.wires)
+        s.append('  (sheet_instances\n    (path "/" (page "1"))\n  )')
         s.append(")")
         return "\n".join(s)
 

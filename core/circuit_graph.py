@@ -54,6 +54,8 @@ class PlacedComponent:
     footprint_id: Optional[str] = None
     symbol_id:    Optional[str] = None
     pkg_type:     Optional[str] = None
+    position:     Optional[Dict[str, float]] = None
+    rotation:     float = 0.0
 
     def __post_init__(self):
         # Asegurar que pins esté poblado para componentes de 2 pines
@@ -347,9 +349,55 @@ class CircuitGraph:
                 pins        = c.get("pins", {}).copy(),
                 symbol_id   = c.get("symbol", ""),
                 footprint_id= c.get("footprint", ""),
-                pkg_type    = c.get("pkg_type", None)
+                pkg_type    = c.get("pkg_type", None),
+                position    = c.get("position", None),
+                rotation    = c.get("rotation", 0.0)
             )
+        g.apply_design_rules()
         return g
+
+    def apply_design_rules(self) -> None:
+        """
+        Aplica reglas de diseño avanzadas (desacoplo para ICs/MCUs) directamente
+        sobre el grafo, asegurando que todos los componentes suplementarios 
+        existan en el Single Source of Truth (SSOT).
+        """
+        existing_labels = {c.label for c in self.components}
+        power_net_candidates = ('3V3', 'VCC33', 'VCC', 'VBUS', '5V', '3.3V', '3.3V_ESP', '3.3V_FLIPPER', '5V_USB', '+5V', '+3V3', 'VDD', 'V_IN')
+
+        for c in list(self.components):
+            if c.etype in ('IC', 'MCU'):
+                comp_ref = c.label or c.uid
+                power_nets = [n for n in getattr(c, 'pins', {}).values() if n in power_net_candidates]
+                if power_nets:
+                    p_net = power_nets[0]
+                    cap_h_label = f"C_{comp_ref}_H"
+                    cap_l_label = f"C_{comp_ref}_L"
+                    if cap_h_label not in existing_labels:
+                        self.add(
+                            etype='C',
+                            grid_c=c.grid_c + c.width + 1,
+                            grid_r=c.grid_r,
+                            orientation='V',
+                            value='10uF',
+                            label=cap_h_label,
+                            n1=p_net,
+                            n2='GND',
+                        )
+                        existing_labels.add(cap_h_label)
+                    if cap_l_label not in existing_labels:
+                        self.add(
+                            etype='C',
+                            grid_c=c.grid_c + c.width + 1,
+                            grid_r=c.grid_r + 2,
+                            orientation='V',
+                            value='100nF',
+                            label=cap_l_label,
+                            n1=p_net,
+                            n2='GND',
+                        )
+                        existing_labels.add(cap_l_label)
+
 
 
 # ─── SimulationRunner ─────────────────────────────────────────────────────────

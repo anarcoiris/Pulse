@@ -84,14 +84,29 @@ class PCBBuilder:
         board_height_mm: float | None = None,
         **kwargs,
     ) -> "PCBBuilder":
-        """Construye un PCB a partir de dicts LLM-friendly (API MCP)."""
-        builder = cls(
+        """Construye un PCB convirtiendo primero a CircuitGraph para mantener el SSOT."""
+        from core.circuit_graph import CircuitGraph
+        graph = CircuitGraph.from_component_dicts(components)
+        builder = cls.from_circuit_graph(
+            graph,
+            out_dir=kwargs.get("output_dir", "output"),
             board_width=board_width_mm,
             board_height=board_height_mm,
-            **kwargs,
+            **{k: v for k, v in kwargs.items() if k != "output_dir"}
         )
-        builder._build_from_dicts(components, traces or [])
+        if traces and builder._pcb:
+            fp_map = {fp.ref: fp for fp in builder._pcb._footprints}
+            for t in traces:
+                fr = t.get("from_ref", "")
+                fp1 = t.get("from_pad", "1")
+                tr = t.get("to_ref", "")
+                tp1 = t.get("to_pad", "1")
+                net = t.get("net", "")
+                tw = float(t.get("width", builder.trace_width))
+                if fr in fp_map and tr in fp_map:
+                    builder._pcb.trace(fp_map[fr], fp1, fp_map[tr], tp1, width=tw, net=net)
         return builder
+
 
     # ── Output ────────────────────────────────────────────────
 
@@ -155,9 +170,19 @@ class PCBBuilder:
         pcb.board.origin_y = offset_y
 
         for c in comps:
-            x, y = positions.get(c.uid, (10.0, 10.0))
-            x += offset_x
-            y += offset_y
+            pos = None
+            if hasattr(c, 'position') and isinstance(c.position, (tuple, list, dict)):
+                if isinstance(c.position, dict):
+                    pos = (c.position.get('x', 10.0), c.position.get('y', 10.0))
+                else:
+                    pos = c.position
+            if not pos:
+                pos = positions.get(c.uid) or positions.get(getattr(c, 'label', ''))
+            if not pos:
+                pos = (10.0, 10.0)
+            x, y = pos[0], pos[1]
+            x += offset_x + w / 2.0
+            y += offset_y + h / 2.0
             etype = c.etype
             ref = c.uid
             val = f"{c.value:.6g}" if isinstance(c.value, float) else str(c.value)
@@ -235,6 +260,10 @@ class PCBBuilder:
                         pad.net_name = net_name
                         pad.net_id = pcb._get_net_id(net_name)
 
+            # Apply component rotation if specified
+            if fp and hasattr(c, "rotation"):
+                fp.rotation = float(getattr(c, "rotation", 0.0))
+
             # Check for collisions with previously placed footprints
             if fp:
                 min_x, min_y, max_x, max_y = fp.bounding_box()
@@ -282,28 +311,32 @@ class PCBBuilder:
         pkg = getattr(comp, 'pkg_type', None) or ""
         is_esp = ("ESP" in val.upper() or "NODE" in val.upper() or pkg == "ESP32")
         is_rf = ("CC1101" in val.upper() or "NRF" in val.upper() or "MODULE" in pkg.upper())
-        power_nets = [
-            n for n in getattr(comp, 'pins', {}).values()
-            if n in ('3V3', 'VCC33', 'VCC', 'VBUS', '5V', '3.3V', '3.3V_ESP', '3.3V_FLIPPER', '5V_USB', '+5V', '+3V3', 'VDD', 'V_IN')
-        ]
-        dec = _pcb("ic_decoupling", {})
-        high_val = dec.get("high_value", "10uF")
-        low_val = dec.get("low_value", "100nF")
-        if power_nets:
-            p_net = power_nets[0]
-            if is_esp:
-                init_cx1, init_cx2 = x - 16, x - 16
-                init_cy1, init_cy2 = y - 5, y + 5
-            elif "MODULE" in pkg.upper() or "2x4" in pkg or "1x" in pkg:
-                init_cx1, init_cx2 = x - 8, x + 8
-                init_cy1, init_cy2 = y - 6, y - 6
-            else:
-                init_cx1, init_cx2 = x - 6, x + 6
-                init_cy1, init_cy2 = y - 8, y - 8
-            cx1, cy1 = self._find_non_overlapping_position(pcb, init_cx1, init_cy1)
-            cx2, cy2 = self._find_non_overlapping_position(pcb, init_cx2, init_cy2)
-            pcb.add_capacitor(f"C_{ref}_H", high_val, cx1, cy1, net1=p_net, net2="GND")
-            pcb.add_capacitor(f"C_{ref}_L", low_val, cx2, cy2, net1=p_net, net2="GND")
+
+        # Si venimos de un CircuitGraph explícito, los desacoplos ya existen en el grafo (SSOT).
+        if self._graph is None:
+            power_nets = [
+                n for n in getattr(comp, 'pins', {}).values()
+                if n in ('3V3', 'VCC33', 'VCC', 'VBUS', '5V', '3.3V', '3.3V_ESP', '3.3V_FLIPPER', '5V_USB', '+5V', '+3V3', 'VDD', 'V_IN')
+            ]
+            dec = _pcb("ic_decoupling", {})
+            high_val = dec.get("high_value", "10uF")
+            low_val = dec.get("low_value", "100nF")
+            if power_nets:
+                p_net = power_nets[0]
+                if is_esp:
+                    init_cx1, init_cx2 = x - 16, x - 16
+                    init_cy1, init_cy2 = y - 5, y + 5
+                elif "MODULE" in pkg.upper() or "2x4" in pkg or "1x" in pkg:
+                    init_cx1, init_cx2 = x - 8, x + 8
+                    init_cy1, init_cy2 = y - 6, y - 6
+                else:
+                    init_cx1, init_cx2 = x - 6, x + 6
+                    init_cy1, init_cy2 = y - 8, y - 8
+                cx1, cy1 = self._find_non_overlapping_position(pcb, init_cx1, init_cy1)
+                cx2, cy2 = self._find_non_overlapping_position(pcb, init_cx2, init_cy2)
+                pcb.add_capacitor(f"C_{ref}_H", high_val, cx1, cy1, net1=p_net, net2="GND")
+                pcb.add_capacitor(f"C_{ref}_L", low_val, cx2, cy2, net1=p_net, net2="GND")
+
         if is_esp:
             pcb.add_keepout([
                 (x - 9, y - 13), (x + 9, y - 13),
@@ -315,6 +348,7 @@ class PCBBuilder:
                 (x - 10, y - 10), (x + 10, y - 10),
                 (x + 10, y + 10), (x - 10, y + 10),
             ])
+
 
     def _place_ic(self, pcb: PCBLayout, comp, ref: str, val: str, x: float, y: float) -> Footprint:
         """Coloca un IC multipin parametrizado con extras de soporte."""
