@@ -120,8 +120,8 @@ class Footprint:
                 if gy < min_y: min_y = gy
                 if gy > max_y: max_y = gy
                 
-        # Padding extra de 0.2mm (holgura)
-        return (min_x - 0.2, min_y - 0.2, max_x + 0.2, max_y + 0.2)
+        # Padding extra de 1mm (seda, holgura)
+        return (min_x - 1.0, min_y - 1.0, max_x + 1.0, max_y + 1.0)
 
     def to_sexpr(self) -> str:
         rotation_str = f" {self.rotation:.1f}" if self.rotation != 0 else ""
@@ -935,9 +935,8 @@ class PCBLayout:
         # Enforce minimum size of 0.8mm for DRC compliance
         size = max(0.8, size)
         justify = " (justify mirror)" if layer.startswith("B.") else ""
-        safe_text = text.replace('"', "'")
         self._text_items.append(
-            f'  (gr_text "{safe_text}" (at {x:.3f} {y:.3f}) (layer "{layer}") '
+            f'  (gr_text "{text}" (at {x:.3f} {y:.3f}) (layer "{layer}") '
             f'(uuid "{uid}") '
             f'(effects (font (size {size:.1f} {size:.1f}) (thickness 0.15)){justify}))'
         )

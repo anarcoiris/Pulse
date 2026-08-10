@@ -192,12 +192,11 @@ class PCBBuilder:
             fp = None
             fp_added = False
             f_id = getattr(c, 'footprint_id', None)
-            rot = getattr(c, 'rotation', 0.0)
-
+            
             if f_id:
                 if ':' in f_id:
                     lib, name = f_id.split(':', 1)
-                    if pcb.add_raw_footprint(ref, lib, name, x, y, rot, value=val):
+                    if pcb.add_raw_footprint(ref, lib, name, x, y, value=val):
                         fp_added = True
                         fp = pcb._footprints[-1]
                 elif f_id == 'tactile_switch_6x6':
@@ -205,7 +204,7 @@ class PCBBuilder:
                     fp_sw = FootprintPresets.tactile_switch_6x6(
                         ref, val, net1_name=c.n1, net2_name=c.n2
                     )
-                    fp = pcb.add_footprint(fp_sw, x, y, rot)
+                    fp = pcb.add_footprint(fp_sw, x, y)
                     fp_added = True
                 elif f_id == 'sot223':
                     from bridge.pcb_layout import FootprintPresets
@@ -221,34 +220,34 @@ class PCBBuilder:
                         net3_id=pcb._get_net_id(net3), net3_name=net3,
                         net4_id=pcb._get_net_id(net2), net4_name=net2
                     )
-                    fp = pcb.add_footprint(fp_sot, x, y, rot)
+                    fp = pcb.add_footprint(fp_sot, x, y)
                     fp_added = True
                 elif f_id == 'flipper_zero_gpio':
-                    fp = pcb.add_flipper_zero_gpio(ref, val, x, y, rot)
+                    fp = pcb.add_flipper_zero_gpio(ref, val, x, y)
                     fp_added = True
 
             if not fp_added:
                 if etype == 'R':
-                    fp = pcb.add_resistor(ref, val, x, y, rot, net1=c.n1, net2=c.n2)
+                    fp = pcb.add_resistor(ref, val, x, y, net1=c.n1, net2=c.n2)
                 elif etype == 'C':
-                    fp = pcb.add_capacitor(ref, val, x, y, rot, net1=c.n1, net2=c.n2)
+                    fp = pcb.add_capacitor(ref, val, x, y, net1=c.n1, net2=c.n2)
                 elif etype == 'L':
-                    fp = pcb.add_inductor(ref, val, x, y, rot, net1=c.n1, net2=c.n2)
+                    fp = pcb.add_inductor(ref, val, x, y, net1=c.n1, net2=c.n2)
                 elif etype == 'V':
-                    fp = pcb.add_pin_header(ref, 2, x, y, rot, value=f"{val}V")
+                    fp = pcb.add_pin_header(ref, 2, x, y, value=f"{val}V")
                 elif etype in ('IC', 'MCU'):
-                    fp = self._place_ic(pcb, c, ref, val, x, y, rot)
+                    fp = self._place_ic(pcb, c, ref, val, x, y)
                 elif etype in ('Header', 'Conn', 'Connector'):
                     if 'USB' in val.upper() or 'USB' in str(getattr(c, 'symbol', '')).upper():
                         from bridge.pcb_layout import FootprintPresets
                         fp_usb = FootprintPresets.usb_c(ref, val)
-                        fp = pcb.add_footprint(fp_usb, x, y, rot)
+                        fp = pcb.add_footprint(fp_usb, x, y)
                         fp_added = True
                     else:
                         num_pins = len(c.pins) if getattr(c, 'pins', None) else 2
-                        fp = pcb.add_pin_header(ref, num_pins, x, y, rot, value=val)
+                        fp = pcb.add_pin_header(ref, num_pins, x, y, value=val)
                 else:
-                    fp = pcb.add_pin_header(ref, 2, x, y, rot, value=etype)
+                    fp = pcb.add_pin_header(ref, 2, x, y, value=etype)
 
             if fp_added and etype in ('IC', 'MCU'):
                 self._apply_ic_extras(pcb, c, ref, val, x, y)
@@ -343,24 +342,27 @@ class PCBBuilder:
                 pcb.add_capacitor(f"C_{ref}_L", low_val, cx2, cy2, net1=p_net, net2="GND")
 
         if is_esp:
-            # ESP32-S3-WROOM antenna keepout zone (above top pads y=-11):
+            # ESP32-S3-WROOM antenna keepout zone:
+            # The antenna occupies ~6mm above the top pad row (y=-8.255 local).
+            # Keepout extends from y=-8 to y=-14 from MCU center, 18mm wide.
             pcb.add_keepout([
-                (x - 9, y - 18), (x + 9, y - 18),
-                (x + 9, y - 12), (x - 9, y - 12),
-            ], tracks_allowed=False, vias_allowed=False, copperpour_allowed=False)
+                (x - 9, y - 14), (x + 9, y - 14),
+                (x + 9, y - 8),  (x - 9, y - 8),
+            ])
             # ESP32-S3-WROOM inner belly keepout zone:
-            # Prevents vias and traces from routing directly underneath the MCU,
-            # but allows copper pour to flood the exposed GND thermal pad (Pad 41 EPAD).
+            # Prevents vias and traces from routing directly underneath the MCU, 
+            # avoiding shorts with the exposed GND thermal pad.
+            # Pads are at x=±9 (width 2.0) and y=9 (height 2.0).
             pcb.add_keepout([
-                (x - 6.5, y - 6.5), (x + 6.5, y - 6.5),
-                (x + 6.5, y + 6.5), (x - 6.5, y + 6.5),
-            ], tracks_allowed=False, vias_allowed=False, copperpour_allowed=True)
+                (x - 7.5, y - 7.5), (x + 7.5, y - 7.5),
+                (x + 7.5, y + 7.5), (x - 7.5, y + 7.5),
+            ])
         # Note: RF breakout connector modules (Conn_02x04) don't need keepout zones
         # since they are just pin headers. The actual RF modules (CC1101, nRF24) are
         # external boards connected via these headers.
 
 
-    def _place_ic(self, pcb: PCBLayout, comp, ref: str, val: str, x: float, y: float, rot: float = 0.0) -> Footprint:
+    def _place_ic(self, pcb: PCBLayout, comp, ref: str, val: str, x: float, y: float) -> Footprint:
         """Coloca un IC multipin parametrizado con extras de soporte."""
         pkg = getattr(comp, 'pkg_type', None)
         if not pkg:
@@ -371,7 +373,7 @@ class PCBBuilder:
             if "CH340" in val.upper() or "SOP8" in val.upper():
                 pkg = "SOP8"
 
-        fp = pcb.add_ic(ref, val, x, y, pins=getattr(comp, 'pins', {}), pkg_type=pkg, rotation=rot)
+        fp = pcb.add_ic(ref, val, x, y, pins=getattr(comp, 'pins', {}), pkg_type=pkg)
         self._apply_ic_extras(pcb, comp, ref, val, x, y)
         return fp
 

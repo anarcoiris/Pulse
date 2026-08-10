@@ -1,30 +1,28 @@
 {
   "run_session": "flipper_multiboard_gen1",
-  "test_case": "Flipper Zero Expansion: CC1101 + nRF24 + ESP32-S3",
-  "prompt": "Generaci\u00c3\u00b3n de PCB layout para Flipper Zero Multiboard.",
+  "test_case": "Flipper Zero Expansion: CC1101 + nRF24 (Flipper Dedicated) + ESP32-S3 + USB-C (v0.6 Phase 4 Clean)",
+  "prompt": "PCB Layout para Flipper Zero Multiboard v0.6. Redes estandarizadas con prefijos claros por dominio (PWR_, SPI_FLIPPER_, CS_RF_, UART_ESP_, USB_ESP_). Grilla métrica de alta precisión (0.01mm), colocación sin colisiones con corredores de ruteado limpios y keepout de cuerpos de ICs.",
   "net_classes": {
     "power": {
       "width": 0.5,
       "nets": [
-        "PWR_5V_USB",
-        "PWR_3V3_FLIPPER",
-        "PWR_3V3_ESP",
-        "PWR_GND"
+        "PWR_5V_USB"
       ]
     },
     "default": {
-      "width": 0.25
+      "width": 0.15,
+      "autoroute.grid_size_mm": 0.125
     }
   },
   "circuit": [
     {
       "etype": "Header",
-      "value": "Flipper Zero",
+      "value": "Flipper Zero Male Header",
       "symbol": "Connector_Generic:Conn_02x09_Odd_Even",
       "footprint": "flipper_zero_gpio",
       "position": {
-        "x": 0.0,
-        "y": 14.0
+        "x": 0.00,
+        "y": 16.00
       },
       "rotation": -90.0,
       "pins": {
@@ -32,40 +30,85 @@
         "2": "CS_RF_CC1101",
         "3": "GDO0_RF_CC1101",
         "4": "NC_A4",
-        "5": "SPI_MISO",
-        "6": "SPI_MOSI",
-        "7": "SPI_SCK",
+        "5": "SPI_FLIPPER_MISO",
+        "6": "SPI_FLIPPER_MOSI",
+        "7": "SPI_FLIPPER_SCK",
         "8": "PWR_GND",
         "9": "PWR_3V3_FLIPPER",
         "10": "SWC",
-        "11": "PWR_GND",
+        "11": "NC_GND_11",
         "12": "SIO",
         "13": "UART_ESP_RX",
         "14": "UART_ESP_TX",
         "15": "CS_RF_NRF24",
         "16": "CE_RF_NRF24",
         "17": "NC_1W",
-        "18": "PWR_GND"
+        "18": "NC_GND_18"
       },
       "label": "J2"
     },
     {
-      "etype": "Header",
-      "value": "USB_C",
-      "symbol": "Connector_Generic:Conn_01x04",
-      "footprint": "usb_c",
+      "etype": "Connector",
+      "value": "USB-C",
+      "symbol": "Connector:USB_C_Receptacle_USB20",
+      "footprint": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12",
       "position": {
-        "x": -20.0,
-        "y": -16.0
+        "x": -20.00,
+        "y": -16.00
       },
       "rotation": 0.0,
       "pins": {
+        "1": "PWR_5V_USB",
+        "2": "USB_ESP_DN",
+        "3": "USB_ESP_DP",
+        "4": "PWR_GND",
+        "A1": "PWR_GND",
+        "A4": "PWR_5V_USB",
+        "A5": "USB_CC1",
+        "A6": "USB_ESP_DP",
+        "A7": "USB_ESP_DN",
         "A9": "PWR_5V_USB",
-        "B9": "PWR_5V_USB",
         "A12": "PWR_GND",
+        "B1": "PWR_GND",
+        "B4": "PWR_5V_USB",
+        "B5": "USB_CC2",
+        "B6": "USB_ESP_DP",
+        "B7": "USB_ESP_DN",
+        "B9": "PWR_5V_USB",
         "B12": "PWR_GND"
       },
-      "label": "J1"
+      "label": "J1",
+      "jlcpcb_part": "C165948"
+    },
+    {
+      "etype": "R",
+      "value": "5.1k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0402_1005Metric",
+      "position": {
+        "x": -25.0,
+        "y": -4.0
+      },
+      "rotation": 90.0,
+      "n1": "USB_CC1",
+      "n2": "PWR_GND",
+      "label": "R2",
+      "jlcpcb_part": "C25900"
+    },
+    {
+      "etype": "R",
+      "value": "5.1k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0402_1005Metric",
+      "position": {
+        "x": -25.0,
+        "y": -6.0
+      },
+      "rotation": 90.0,
+      "n1": "USB_CC2",
+      "n2": "PWR_GND",
+      "label": "R3",
+      "jlcpcb_part": "C25900"
     },
     {
       "etype": "IC",
@@ -73,10 +116,10 @@
       "symbol": "Regulator_Linear:AMS1117-3.3",
       "footprint": "Package_TO_SOT_SMD:SOT-223-3_TabPin2",
       "position": {
-        "x": -14.0,
-        "y": 0.0
+        "x": 0.00,
+        "y": -16.00
       },
-      "rotation": 90.0,
+      "rotation": 0.0,
       "pins": {
         "1": "PWR_GND",
         "2": "PWR_3V3_ESP",
@@ -90,8 +133,8 @@
       "symbol": "Device:C",
       "footprint": "Capacitor_SMD:C_0805_2012Metric",
       "position": {
-        "x": -14.0,
-        "y": 6.5
+        "x": -8.00,
+        "y": -16.00
       },
       "rotation": 0.0,
       "n1": "PWR_5V_USB",
@@ -104,8 +147,8 @@
       "symbol": "Device:C",
       "footprint": "Capacitor_SMD:C_0805_2012Metric",
       "position": {
-        "x": -14.0,
-        "y": -5.5
+        "x": 8.00,
+        "y": -16.00
       },
       "rotation": 0.0,
       "n1": "PWR_3V3_ESP",
@@ -113,68 +156,74 @@
       "label": "C2"
     },
     {
+      "etype": "C",
+      "value": "100nF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "position": {
+        "x": -13.00,
+        "y": -8.00
+      },
+      "rotation": 0.0,
+      "n1": "PWR_3V3_ESP",
+      "n2": "PWR_GND",
+      "label": "C3",
+      "jlcpcb_part": "C14663"
+    },
+    {
       "etype": "MCU",
       "value": "ESP32-S3",
       "symbol": "RF_Module:ESP32-S3-WROOM-1",
-      "footprint": "RF_Module:ESP32-S3-WROOM-1",
       "position": {
-        "x": 0.0,
-        "y": 2.0
+        "x": 0.00,
+        "y": 2.00
       },
       "rotation": 0.0,
       "pins": {
         "1": "PWR_GND",
         "2": "PWR_3V3_ESP",
-        "3": "EN_ESP_CH_PD",
+        "3": "EN_ESP_RESET",
+        "4": "LED_STATUS_IO4",
+        "13": "USB_ESP_DN",
+        "14": "USB_ESP_DP",
         "27": "BOOT_ESP_IO0",
-        "36": "UART_ESP_TX",
-        "37": "UART_ESP_RX",
+        "36": "UART_ESP_RX",
+        "37": "UART_ESP_TX",
         "40": "PWR_GND",
         "41": "PWR_GND"
       },
       "label": "U2"
     },
     {
-      "etype": "C",
-      "value": "100nF",
-      "symbol": "Device:C",
-      "footprint": "Capacitor_SMD:C_0603_1608Metric",
-      "position": {
-        "x": -13.0,
-        "y": -8.0
-      },
-      "rotation": 0.0,
-      "n1": "PWR_3V3_ESP",
-      "n2": "PWR_GND",
-      "label": "C3"
-    },
-    {
       "etype": "R",
       "value": "10k",
       "symbol": "Device:R",
       "footprint": "Resistor_SMD:R_0805_2012Metric",
       "position": {
-        "x": -13.0,
-        "y": -11.0
+        "x": -13.00,
+        "y": -11.00
       },
       "rotation": 0.0,
       "n1": "PWR_3V3_ESP",
-      "n2": "EN_ESP_CH_PD",
+      "n2": "EN_ESP_RESET",
       "label": "R1"
     },
     {
-      "etype": "SW",
+      "etype": "Button",
       "value": "RESET",
       "symbol": "Switch:SW_Push",
-      "footprint": "tactile_switch_6x6",
+      "footprint": "Button_Switch_SMD:SW_SPST_EVQPE1",
       "position": {
-        "x": -22.0,
-        "y": 5.0
+        "x": -22.00,
+        "y": 5.00
       },
       "rotation": 0.0,
-      "n1": "EN_ESP_CH_PD",
-      "n2": "PWR_GND",
-      "label": "SW1"
+      "pins": {
+        "1": "EN_ESP_RESET",
+        "2": "PWR_GND"
+      },
+      "label": "SW1",
+      "jlcpcb_part": "C318884"
     },
     {
       "etype": "C",
@@ -182,103 +231,82 @@
       "symbol": "Device:C",
       "footprint": "Capacitor_SMD:C_0603_1608Metric",
       "position": {
-        "x": -22.0,
-        "y": 10.0
+        "x": -22.00,
+        "y": 10.00
       },
       "rotation": 0.0,
-      "n1": "EN_ESP_CH_PD",
+      "n1": "EN_ESP_RESET",
       "n2": "PWR_GND",
-      "label": "C4"
+      "label": "C4",
+      "jlcpcb_part": "C14663"
     },
     {
-      "etype": "SW",
+      "etype": "Button",
       "value": "BOOT",
       "symbol": "Switch:SW_Push",
-      "footprint": "tactile_switch_6x6",
+      "footprint": "Button_Switch_SMD:SW_SPST_EVQPE1",
       "position": {
-        "x": 18.0,
-        "y": 5.0
+        "x": 16.00,
+        "y": -1.00
       },
-      "rotation": 90.0,
-      "n1": "BOOT_ESP_IO0",
-      "n2": "PWR_GND",
-      "label": "SW2"
+      "rotation": 0.0,
+      "pins": {
+        "1": "BOOT_ESP_IO0",
+        "2": "PWR_GND"
+      },
+      "label": "SW2",
+      "jlcpcb_part": "C318884"
     },
     {
       "etype": "LED",
-      "value": "STATUS",
+      "value": "Green",
       "symbol": "Device:LED",
-      "footprint": "LED_SMD:LED_0805_2012Metric",
+      "footprint": "LED_SMD:LED_0603_1608Metric",
       "position": {
-        "x": 18.0,
-        "y": 12.0
+        "x": 18.00,
+        "y": -5.00
       },
       "rotation": 0.0,
-      "n1": "BOOT_ESP_IO0",
-      "n2": "LED_STATUS",
-      "label": "LED1"
+      "pins": {
+        "1": "LED_RES_NET",
+        "2": "PWR_GND"
+      },
+      "label": "LED1",
+      "jlcpcb_part": "C72043"
     },
     {
       "etype": "R",
-      "value": "330R",
+      "value": "330",
       "symbol": "Device:R",
-      "footprint": "Resistor_SMD:R_0805_2012Metric",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
       "position": {
-        "x": 18.0,
-        "y": 15.0
+        "x": 18.00,
+        "y": -8.00
       },
       "rotation": 0.0,
-      "n1": "LED_STATUS",
-      "n2": "PWR_GND",
-      "label": "R4"
-    },
-    {
-      "etype": "R",
-      "value": "10k",
-      "symbol": "Device:R",
-      "footprint": "Resistor_SMD:R_0805_2012Metric",
-      "position": {
-        "x": -27.0,
-        "y": -3.5
-      },
-      "rotation": 90.0,
-      "n1": "BOOT_ESP_IO0",
-      "n2": "PWR_3V3_ESP",
-      "label": "R2"
-    },
-    {
-      "etype": "R",
-      "value": "10k",
-      "symbol": "Device:R",
-      "footprint": "Resistor_SMD:R_0805_2012Metric",
-      "position": {
-        "x": -27.0,
-        "y": -7.5
-      },
-      "rotation": 90.0,
-      "n1": "EN_ESP_CH_PD",
-      "n2": "PWR_3V3_ESP",
-      "label": "R3"
+      "n1": "LED_STATUS_IO4",
+      "n2": "LED_RES_NET",
+      "label": "R4",
+      "jlcpcb_part": "C23107"
     },
     {
       "etype": "IC",
       "value": "CC1101",
       "symbol": "Connector_Generic:Conn_02x04_Odd_Even",
-      "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x04_P2.54mm_Vertical",
       "position": {
-        "x": 15.0,
-        "y": -17.0
+        "x": 24.00,
+        "y": -14.00
       },
       "rotation": 0.0,
       "pins": {
-        "1": "PWR_3V3_FLIPPER",
-        "2": "PWR_GND",
-        "3": "SPI_MOSI",
-        "4": "SPI_SCK",
-        "5": "SPI_MISO",
-        "6": "NC_GDO2",
-        "7": "GDO0_RF_CC1101",
-        "8": "CS_RF_CC1101"
+        "1": "PWR_GND",
+        "2": "PWR_3V3_FLIPPER",
+        "3": "GDO0_RF_CC1101",
+        "4": "CS_RF_CC1101",
+        "5": "SPI_FLIPPER_SCK",
+        "6": "SPI_FLIPPER_MOSI",
+        "7": "SPI_FLIPPER_MISO",
+        "8": "NC_GDO2"
       },
       "label": "U3",
       "pkg_type": "MODULE_2x4"
@@ -287,10 +315,9 @@
       "etype": "IC",
       "value": "nRF24",
       "symbol": "Connector_Generic:Conn_02x04_Odd_Even",
-      "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x04_P2.54mm_Vertical",
       "position": {
-        "x": 25.0,
-        "y": -17.0
+        "x": 25.00,
+        "y": 6.00
       },
       "rotation": 0.0,
       "pins": {
@@ -298,9 +325,9 @@
         "2": "PWR_3V3_FLIPPER",
         "3": "CE_RF_NRF24",
         "4": "CS_RF_NRF24",
-        "5": "SPI_SCK",
-        "6": "SPI_MOSI",
-        "7": "SPI_MISO",
+        "5": "SPI_FLIPPER_SCK",
+        "6": "SPI_FLIPPER_MOSI",
+        "7": "SPI_FLIPPER_MISO",
         "8": "NC_IRQ"
       },
       "label": "U4",
