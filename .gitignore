@@ -66,7 +66,8 @@ docs/archive/**/*.aux
 docs/archive/**/*.out
 docs/archive/**/*.toc
 docs/archive/**/*.png
-
+scripts/test*.py
+scratch/*
 # Webapp
 node_modules/
 .next/

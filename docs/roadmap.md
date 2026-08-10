@@ -3,26 +3,27 @@
 > **Role:** living  
 > **Status:** active  
 > **Source of truth for:** product phases and long-term themes (not day-to-day sprint blockers)  
-> **Last verified:** 2026-07-18  
+> **Last verified:** 2026-08-06  
 > **See also:** [`status/CURRENT_SPRINT.md`](./status/CURRENT_SPRINT.md) · [`calibration_forge/index.md`](./calibration_forge/index.md)
 
-## Currently Active: Phase 1 & 2 (Stability & Professionalism)
+## Currently Active: Phase 1, 2 & August Sprint (Robustness & Geometry)
 
-### Connectivity Engine (In Progress)
+### Connectivity & Topological Engine
 - [x] Wire-aware node detection.
+- [x] **Topological Audit Gate (`core/kicad_audit.py`)**: 14 reglas estructurales estrictas (R001-R014) pre-ruteo.
 - [ ] Multi-wire net propagation logic.
 - [ ] Visual verification of complex nodes (BANCO in EMP circuit).
 
-### Hardware Professionalization
+### Hardware Professionalization & Generation
 - [x] Dedicated switch footprints (Tactile 6x6mm).
 - [x] One-click Gerber Export (via `kicad-cli`).
 - [x] Bill of Materials (BOM) generator.
 - [x] **DRC Gate**: Automated safety check before export.
 - [x] **Multi-platform**: Linux/macOS support for fabrication.
+- [x] **Automated S-expression PCB Builder (`bridge/pcb_builder.py`)**: Generación nativa de `.kicad_pcb` unificada.
+- [x] **PulseLogger**: Unified debug sink (`core/logger.py`).
+- [ ] **A* Autorouter Geometric Clearance Engine**: Dilación de reglas de separación física para eliminar errores de clearance en DRC.
 - [ ] Footprint selection UI in Properties Panel.
-- [ ] Confirmation dialog for footprint overrides.
-- [x] **PulseLogger**: Unified debug sink (`core/logger.py` — singleton, AI context buffer) **wired in** (06-jul-2026): `bridge/pcb_layout.py::autoroute()` (A* attempts/nodes explored), `bridge/gerber_export.py` (DRC/gerbers/drill/position/svg steps), `knowledge/circuit_synthesizer.py` and `knowledge/semantic_reviewer.py` (`ai_review` around LLM calls), plus the two `record_design_outcome()` call sites (previously silent `except: pass`, now logged). The AI Context Buffer (`get_context()`) is also injected into `circuit_synthesizer.py`'s JSON-decode retry path. See [`dormant_features_audit.md`](./calibration_forge/dormant_features_audit.md) §Resultado for details.
-- [x] **Autorouter with collision avoidance**: A* implementation with pad clearance dilation and via-cost penalties (`bridge/pcb_layout.py::autoroute`), wired into `bridge/pcb_builder.py`. Resolves the gap tracked in the 23-Apr-2026 review.
 
 ---
 
@@ -33,19 +34,16 @@
 - [ ] **Forge Studio web canvas** — live schematic/PCB viewer (deferred; CLI v1 done)
 - [ ] "Cyber Night" theme implementation.
 - [ ] Simulation-responsive Wire Glow (Glow proportional to Voltage).
-- [ ] Animated background particles and glassmorphism panels.
-- [ ] Search/Selection tool for "Identified elements".
 
-### Phase 4: Extended Automation
+### Phase 4: Extended Automation & LLM Infrastructure
 - [x] Automatic Design Rule Check (DRC) integration.
 - [x] 3D Preview bridge (via KiCad CLI).
 - [x] Support for external KiCad footprint libraries.
 - [x] Interactive Footprint library browser in UI.
-- [x] Sincronizar documentación y workflows.
-- [x] Integrar `kicad-cli` cross-platform.
-- [x] Ejecutar validación de DRC estricta antes de exportar Gerbers.
-- [x] Mapear footprints de catálogo SMD moderno con `add_raw_footprint`.
-- [x] Entrenar motor de Generación de Circuitos (`circuit_synthesizer.py`).
+- [x] **Modular LLM Providers (`knowledge/providers/`)**: Soporte multi-backend local/cloud.
+- [x] **Contexto Ampliado 128k (`circuit_agent.py`)**: Agente multicapa con seguimiento de estado.
+- [ ] **Estabilización de Contexto LLM 128k**: Optimización de prompts para reducir reintentos (<3) en circuitos complejos.
+- [ ] **Fix Bug Métrica Cobertura de Pines**: Corrección de cálculo de pines extraños (>100%).
 
 ### Phase 5: High-Voltage Specialization
 - [ ] Spark gap component model.

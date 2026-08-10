@@ -3,7 +3,7 @@
 > **Role:** living  
 > **Status:** active  
 > **Source of truth for:** verifiable metrics (tests, RAG, MCP, pipeline)  
-> **Last verified:** 2026-07-18  
+> **Last verified:** 2026-08-06  
 > **See also:** [`CURRENT_SPRINT.md`](./CURRENT_SPRINT.md) · [`../calibration_forge/index.md`](../calibration_forge/index.md)
 
 Refresh ritual after each sprint:
@@ -20,22 +20,25 @@ python -c "import re; from pathlib import Path; t=Path('mcp_server/server.py').r
 ## Pipeline
 
 ```
-CircuitGraph / LLM JSON → PCBLayout → .kicad_pcb → kicad-cli → Gerber + Drill + CPL
+CircuitGraph / LLM JSON → PCBBuilder → PCBLayout → kicad_audit (14 reglas) → .kicad_pcb → kicad-cli → Gerber + Drill + CPL
 ```
 
-DRC gate before Gerber export — see [`../workflows/howto/fabrication_pipeline.md`](../workflows/howto/fabrication_pipeline.md).
+Topological audit gate (`core/kicad_audit.py` rules R001-R014) & DRC gate before Gerber export — see [`../workflows/howto/fabrication_pipeline.md`](../workflows/howto/fabrication_pipeline.md).
 
 ---
 
 ## Tests
 
-| Metric | Value (2026-07-18) |
+| Metric | Value (2026-08-06) |
 |--------|---------------------|
-| Tests collected | **110** (`pytest tests/ --co -q`) |
-| Test files | **17** (in `tests/`) |
-| CI coverage | **4/17** test files (`ci.yml` — offline-safe subset) |
+| Tests collected | **112** (`pytest tests/ --co -q`) |
+| Test files | **18+** (in `tests/`) |
+| PCB Audit unit tests | **15** (`test_kicad_audit.py` — R001-R014) |
+| SCH↔PCB Crosscheck unit tests | **3** (`test_sch_pcb_crosscheck.py`) |
+| Signal Net Routing | **100% (33/33 segments routed)** |
+| KiCad 10 CLI Validation | **Returncode 0 (Clean Export)** |
 | Forge Studio unit tests | **10** (`test_ollama_native_stream`, `test_studio_session`) |
-| Last full run | Run `python -m pytest tests/ -q` locally (suite includes optional KiCad / LLM skips) |
+| Last full run | Run `python -m pytest tests/ -q` locally |
 
 Historical note: pre-Session-3 baseline was 8/8 in `test_forge.py` only — see [`../archive/baseline_report_20260705.md`](../archive/baseline_report_20260705.md).
 
@@ -43,10 +46,10 @@ Historical note: pre-Session-3 baseline was 8/8 in `test_forge.py` only — see 
 
 ## RAG knowledge base
 
-| Metric | Value (2026-07-18) |
+| Metric | Value (2026-08-06) |
 |--------|---------------------|
-| Total chunks | **5685** |
-| `pinout` | 5326 |
+| Total chunks | **5687** |
+| `pinout` | 5328 |
 | `circuit_example` | 326 |
 | `design_rule` | 13 |
 | `component` | 10 |
@@ -55,30 +58,29 @@ Historical note: pre-Session-3 baseline was 8/8 in `test_forge.py` only — see 
 | Hybrid embed index loaded | **true** (`vectors.npy` manifest matches chunk count) |
 | Backend | `hybrid` (dense + TF-IDF per `Pulse_cfg.json`) |
 
-Circuit-example description density: **~80%** post Session 1 — see [`../calibration_forge/knowledge_base_fidelity.md`](../calibration_forge/knowledge_base_fidelity.md) §Resultado.
+Circuit-example description density: **80.06%** — see [`../calibration_forge/knowledge_base_fidelity.md`](../calibration_forge/knowledge_base_fidelity.md) §Resultado.
 
 ---
 
-## LLM backends
+## LLM backends & Providers
 
 | Backend | Role | Status |
 |---------|------|--------|
-| `primary` | Circuit synthesis (qwythos-9b-96k, 98k ctx) | ✅ Active |
-| `atomic` | Fast JSON tasks; semantic review | ✅ **Verified live** (run 20260716) |
+| `primary` | Circuit synthesis (qwythos-9b-96k, 128k ctx) | ✅ Active (Modular provider architecture) |
+| `atomic` | Fast JSON tasks; semantic review | ✅ **Verified live** (run 20260804) |
 
 Harness: `python -m knowledge.validate_complex_apps --case esp32_sensors`
 
 ---
 
-## Validation KPIs (latest run: 2026-07-16)
+## Validation KPIs (latest run: 2026-08-04)
 
 | Case | Components | Pin Coverage | Gen Attempts | Semantic Issues | Elapsed |
 |------|------------|-------------|--------------|-----------------|---------|
-| `pulselab_zero` | 24 | **97.4%** avg | 2 | 6 (3 critical) | 188s + 30s review |
+| `pulselab_zero` | 26 | **332%** (anomaly: 12.5x on CC1101) | 8 | 5 (2 critical: EN pull-up, 100nF VCC) | 770s + 20s review |
 
-Previous KPIs (2026-07-07 commit):
-- `esp32_sensors`: 8 comp, 72.65% pin cov, 4 turns, 1 critical DRC
-- `pulselab_zero`: 21 comp, 88.54% pin cov, 5 turns, 0 issues
+Previous KPIs (2026-07-16):
+- `pulselab_zero`: 24 comp, 97.4% pin cov, 2 attempts, 6 issues, 188s
 
 ---
 
@@ -116,25 +118,26 @@ Windows: `$env:PYTHONIOENCODING='utf-8'` + Windows Terminal. Requires Ollama `:1
 
 ---
 
-## Example boards (verified earlier)
+## Example boards (verified earlier & August)
 
-| Board | Size | Comps | Traces |
-|-------|------|-------|--------|
-| Voltage divider | 20×15 mm | 3 | 7 |
-| 555 LED driver | 40×25 mm | 14 | 3 |
-| ESP8266 sensor node | 50×35 mm | 14 | 4 |
+| Board | Size | Comps | Traces | DRC Status |
+|-------|------|-------|--------|------------|
+| Voltage divider | 20×15 mm | 3 | 7 | Pass |
+| 555 LED driver | 40×25 mm | 14 | 3 | Pass |
+| ESP8266 sensor node | 50×35 mm | 14 | 4 | Pass |
+| Flipper Killer Mk II 0.3 | Complex | 20+ | Multi | Topological Pass / 865 Geometric DRC clearance errors |
 
 ---
 
-## Open engineering themes
+## Open engineering themes (August Sprint)
 
 Tracked in [`../roadmap.md`](../roadmap.md) and [`../calibration_forge/index.md`](../calibration_forge/index.md):
 
-- **4b clean A/B** — prompt rules vs richer RAG (decision deferred — **4d blocker now resolved**)
+- **A* Autorouter Clearance Engine** — Resolver 865 errores DRC geométricos introduciendo dilación/reglas de separación física en `pcb_layout.py`.
+- **Corrección de Métrica de Cobertura de Pines** — Investigar y reparar la anomalía del 12.5x en componentes multipin (CC1101/PN532).
+- **Estabilización de Contexto 128k LLM** — Reducir intentos de generación de 8 a <3 para la síntesis de circuitos complejos.
 - **Forge Studio web canvas** — CLI v1 done; React viewer deferred (see [`forge_studio.md`](../calibration_forge/forge_studio.md))
-- **Modelo Multipin** — Editor + netlist + schematic unification (cross-cutting, not a numbered session)
-- Copper pours, scikit-rf, PDF datasheet ingestion — backlog
-- **Skills KB expansion** — I2C pull-ups, boot strap pins, component library (see [`skills/ROADMAP.md`](../../skills/ROADMAP.md))
+- **Copper pours & RF keep-outs** — Integración con las reglas R013/R014.
 
 ---
 

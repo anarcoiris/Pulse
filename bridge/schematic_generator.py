@@ -84,7 +84,7 @@ class SchematicGenerator:
         return str(c.value)
 
     def _extract_raw_kicad_symbol(self, lib_id: str, visited: set | None = None) -> list[str]:
-        """Intenta extraer la S-expression del símbolo (y sus padres `extends`) desde las librerías oficiales de KiCad 10."""
+        """Intenta extraer la S-expression completa del símbolo (y sus padres `extends`) desde las librerías oficiales de KiCad 10."""
         if visited is None:
             visited = set()
         if lib_id in visited:
@@ -102,10 +102,22 @@ class SchematicGenerator:
         results = []
         try:
             content = lib_file.read_text(encoding='utf-8')
-            pattern = re.compile(rf'\n\t\(symbol "{re.escape(sym_name)}"\s+.*?\n\t\)', re.DOTALL)
+            pattern = re.compile(rf'\(symbol "{re.escape(sym_name)}"\s')
             m = pattern.search(content)
             if m:
-                raw_sym = m.group(0).strip()
+                start_idx = m.start()
+                depth = 0
+                end_idx = start_idx
+                for i in range(start_idx, len(content)):
+                    char = content[i]
+                    if char == '(':
+                        depth += 1
+                    elif char == ')':
+                        depth -= 1
+                        if depth == 0:
+                            end_idx = i + 1
+                            break
+                raw_sym = content[start_idx:end_idx].strip()
                 # Verificar si extiende a otro símbolo
                 ext_m = re.search(r'\(extends "([^"]+)"\)', raw_sym)
                 if ext_m:
@@ -120,6 +132,21 @@ class SchematicGenerator:
         except Exception:
             pass
         return results
+
+    def _get_symbol_pin_map(self, lib_id: str) -> dict[str, tuple[float, float, float]]:
+        raw = self._extract_raw_kicad_symbol(lib_id)
+        if not raw:
+            return {}
+        full_text = "\n".join(raw)
+        pin_pattern = re.compile(
+            r'\(pin\s+\w+\s+\w+\s+\(at\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\).*?\(number\s+"([^"]+)"',
+            re.DOTALL
+        )
+        pins = {}
+        for pm in pin_pattern.finditer(full_text):
+            x, y, rot, num = pm.groups()
+            pins[num] = (float(x), float(y), float(rot))
+        return pins
 
 
     def generate(self) -> str:
@@ -157,7 +184,7 @@ class SchematicGenerator:
             center_gr = c.grid_r + comp_h / 2.0
             cx, cy = self._grid_to_kicad(center_gc, center_gr, offset_x=dyn_offset_x, offset_y=dyn_offset_y)
 
-            angle = 90 if c.orientation == "H" else 0
+            angle = 0
             lib_id = self._resolve_lib_id(c)
             fp_id = getattr(c, "footprint_id", None) or getattr(c, "footprint", "") or ""
             comp_uuid = self._get_uuid()
@@ -181,26 +208,46 @@ class SchematicGenerator:
             if base == "GND":
                 ref = f"#PWR{self._get_uuid()[:4]}"
             else:
-                ref = c.uid if hasattr(c, "uid") and c.uid else getattr(c, "label", None) or f"{base}{i+1}"
+                ref = getattr(c, "label", None) or c.uid or f"{base}{i+1}"
 
             val = self._format_val(c)
+            pin_map = self._get_symbol_pin_map(lib_id)
 
             if getattr(c, "pins", None):
                 # Generar cables de conexión (wire stubs) y etiquetas de red
                 num_pins = len(c.pins)
                 half = max(1, num_pins // 2)
-                pin_ids = sorted(c.pins.keys(), key=lambda x: int(x) if x.isdigit() else x)
+                pin_ids = sorted(c.pins.keys(), key=lambda x: (0, int(x)) if str(x).isdigit() else (1, str(x)))
                 for i_pin, p_id in enumerate(pin_ids):
                     net_name = c.pins.get(p_id, "")
                     if net_name:
-                        is_left = (i_pin < half)
-                        p_gc = c.grid_c if is_left else c.grid_c + comp_w
-                        p_gr = c.grid_r + (i_pin if is_left else (num_pins - 1 - i_pin))
+                        if p_id in pin_map:
+                            rx_mm, ry_mm, rot = pin_map[p_id]
+                            # KiCad symbol Y is inverted relative to schematic space
+                            px = round(cx + rx_mm, 2)
+                            py = round(cy - ry_mm, 2)
 
-                        stub_gc = p_gc - 1 if is_left else p_gc + 1
+                            if rot == 180:
+                                sx, sy = round(px + 3.81, 2), py
+                                justify = "left"
+                            elif rot == 90:
+                                sx, sy = px, round(py + 3.81, 2)
+                                justify = "right"
+                            elif rot == 270:
+                                sx, sy = px, round(py - 3.81, 2)
+                                justify = "right"
+                            else: # rot == 0
+                                sx, sy = round(px - 3.81, 2), py
+                                justify = "right"
+                        else:
+                            is_left = (i_pin < half)
+                            p_gc = c.grid_c if is_left else c.grid_c + comp_w
+                            p_gr = c.grid_r + (i_pin if is_left else (num_pins - 1 - i_pin))
+                            stub_gc = p_gc - 1 if is_left else p_gc + 1
 
-                        px, py = self._grid_to_kicad(p_gc, p_gr, offset_x=dyn_offset_x, offset_y=dyn_offset_y)
-                        sx, sy = self._grid_to_kicad(stub_gc, p_gr, offset_x=dyn_offset_x, offset_y=dyn_offset_y)
+                            px, py = self._grid_to_kicad(p_gc, p_gr, offset_x=dyn_offset_x, offset_y=dyn_offset_y)
+                            sx, sy = self._grid_to_kicad(stub_gc, p_gr, offset_x=dyn_offset_x, offset_y=dyn_offset_y)
+                            justify = "right" if is_left else "left"
 
                         self.wires.append(
                             f'  (wire (pts (xy {px} {py}) (xy {sx} {sy}))\n'
@@ -208,7 +255,6 @@ class SchematicGenerator:
                         )
 
                         label = self._net_to_label(net_name)
-                        justify = "right" if is_left else "left"
                         symbol_lines.append(
                             f'  (label "{label}" (at {sx} {sy} 0) (fields_autoplaced)\n'
                             f'    (effects (font (size 1.27 1.27)) (justify {justify} bottom))\n'
@@ -260,7 +306,7 @@ class SchematicGenerator:
 
                 num_pins = len(pins_data)
                 half = max(1, num_pins // 2)
-                pin_ids = sorted(pins_data.keys(), key=lambda x: int(x) if x.isdigit() else x)
+                pin_ids = sorted(pins_data.keys(), key=lambda x: (0, int(x)) if str(x).isdigit() else (1, str(x)))
 
                 pin_lines = []
                 for i_pin, p_num in enumerate(pin_ids):

@@ -35,19 +35,19 @@ _PCB_SIZES = {
     "default":      ( 6.0,  6.0),
 }
 
-# Schematic grid units (columns, rows) — much smaller numbers
+# Schematic grid units (columns, rows) — spacious dimensions to avoid collisions
 _SCH_SIZES = {
-    "MCU":          ( 6,  8),
-    "IC_large":     ( 4,  5),
-    "IC_small":     ( 3,  3),
-    "IC_header":    ( 2,  0),       # per-pin
-    "S":            ( 2,  2),
-    "R":            ( 2,  1),
-    "C":            ( 2,  1),
-    "L":            ( 2,  1),
-    "V":            ( 2,  2),
-    "GND":          ( 1,  1),
-    "default":      ( 3,  3),
+    "MCU":          (10, 12),
+    "IC_large":     ( 8,  8),
+    "IC_small":     ( 6,  6),
+    "IC_header":    ( 4,  0),       # per-pin
+    "S":            ( 4,  4),
+    "R":            ( 3,  2),
+    "C":            ( 3,  2),
+    "L":            ( 3,  2),
+    "V":            ( 4,  4),
+    "GND":          ( 2,  2),
+    "default":      ( 6,  6),
 }
 
 POWER_NETS = frozenset({
@@ -70,11 +70,12 @@ def _classify(c) -> str:
 
     if etype == "MCU" or "ESP32" in identity:
         return "MCU"
+    if etype in ("Header", "Connector"):
+        return "IC_header"
     if etype == "IC":
         POWER_NETS_LOCAL = {"GND", "3.3V", "3V3", "VCC", "5V", "VBUS", "VCC33", "GND_PAD", "0", ""}
         signal_nets = {n for n in pins_dict.values() if n not in POWER_NETS_LOCAL}
         # If this IC has real signal nets, it's a functional module (SSD1306, PN532 etc.)
-        # Signal presence overrides any footprint/label name heuristics
         if signal_nets:
             if n_pins >= 20:
                 return "IC_large"
@@ -97,8 +98,8 @@ def estimate_size(c, mode: str = "pcb") -> Tuple[float, float]:
     # Dynamic height for headers based on pin count
     if cat == "IC_header":
         n_pins = max(len(getattr(c, "pins", {}) or {}), 2)
-        per_pin = 2.54 if mode == "pcb" else 1.2
-        h = n_pins * per_pin
+        per_pin = 2.54 if mode == "pcb" else 0.8
+        h = max(3.0, n_pins * per_pin)
         w = table["IC_header"][0]   # keep width fixed
 
     return (w, h)
@@ -326,9 +327,9 @@ def compute_layout(
     # Defaults for schematic: fit on A4 with grid_scale=5.08, offset=50
     # Usable area: (297-50)/5.08 ≈ 48 grid cols, (210-50)/5.08 ≈ 31 grid rows
     if mode == "schematic":
-        spacing = 1.5
-        island_spacing = 3.0
-        margin = 2.0
+        spacing = 4.0
+        island_spacing = 6.0
+        margin = 3.0
         if max_width <= 0:
             max_width = 46.0    # grid units — fits (46*5.08+50=284mm) on A4
         if max_height <= 0:

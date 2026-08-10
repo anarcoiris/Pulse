@@ -108,8 +108,8 @@ class Footprint:
             
             for cx, cy in corners:
                 # Rotar la esquina alrededor del origen del footprint
-                rot_x = cx * cos_t - cy * sin_t
-                rot_y = cx * sin_t + cy * cos_t
+                rot_x = cx * cos_t + cy * sin_t
+                rot_y = -cx * sin_t + cy * cos_t
                 
                 # Coordenada global
                 gx = self.x + rot_x
@@ -120,8 +120,8 @@ class Footprint:
                 if gy < min_y: min_y = gy
                 if gy > max_y: max_y = gy
                 
-        # Padding extra de 1mm (seda, holgura)
-        return (min_x - 1.0, min_y - 1.0, max_x + 1.0, max_y + 1.0)
+        # Padding extra de 0.2mm (holgura)
+        return (min_x - 0.2, min_y - 0.2, max_x + 0.2, max_y + 0.2)
 
     def to_sexpr(self) -> str:
         rotation_str = f" {self.rotation:.1f}" if self.rotation != 0 else ""
@@ -144,7 +144,7 @@ class Footprint:
             f'      (at 0 {ref_y:.2f})\n'
             f'      (layer "{silk}")\n'
             f'      (uuid "{uuid.uuid4()}")\n'
-            f'      (effects (font (size 1 1) (thickness 0.15)))\n'
+            f'      (effects (font (size 1 1) (thickness 0.15)) hide)\n'
             f'    )\n'
             f'    (property "Value" "{self.value}"\n'
             f'      (at 0 {val_y:.2f})\n'
@@ -177,16 +177,22 @@ class RawFootprint(Footprint):
         # Replace Value property
         body = re.sub(r'\(property\s+"Value"\s+"[^"]+"', f'(property "Value" "{self.value}"', body, count=1)
         
-        # Remove the faulty regex for (at) that matches properties
-        # And insert the (at ...) right after (footprint ...)
-        
+        for pad in self.pads:
+            if pad.net_name:
+                p_num = str(pad.number)
+                nid = pad.net_id
+                nname = pad.net_name
+                # Inject (net ID "NAME") right after (layers "...")
+                pattern = r'(\(pad\s+"?' + re.escape(p_num) + r'"?[\s\S]*?\(\s*layers\s+(?:"[^"]+"\s*)+\))'
+                replacement = r'\1 (net ' + str(nid) + r' "' + nname + r'")'
+                body = re.sub(pattern, replacement, body, count=1)
+
         lines = body.splitlines()
+
         if lines and lines[0].startswith('(footprint'):
             rotation_str = f" {self.rotation:.1f}" if self.rotation != 0 else ""
             new_at = f'  (at {self.x:.4f} {self.y:.4f}{rotation_str})'
             
-            # Find and remove any root-level (at ) just in case
-            # It's usually indented by some spaces or tabs.
             for i in range(1, min(10, len(lines))):
                 if lines[i].strip().startswith('(at '):
                     lines.pop(i)
@@ -252,6 +258,8 @@ class BoardOutline:
     corner_radius_mm: float = 1.0
     origin_x: float = 0.0     # esquina superior izquierda
     origin_y: float = 0.0
+    # List of (cx, half_width, depth) for top-edge notches (for edge-mount connectors)
+    top_cutouts: list = field(default_factory=list)
 
     @property
     def center_x(self) -> float:
@@ -265,33 +273,56 @@ class BoardOutline:
         x0, y0 = self.origin_x, self.origin_y
         x1, y1 = x0 + self.width_mm, y0 + self.height_mm
         r = min(self.corner_radius_mm, self.width_mm / 4, self.height_mm / 4)
+
+        def top_edge_segments(start_x: float, end_x: float) -> list:
+            """Generate top edge lines, including notch walls and bottom, forming a continuous path."""
+            segs = []
+            cuts = sorted(self.top_cutouts, key=lambda c: c[0])
+            cur = start_x
+            for cx, hw, depth in cuts:
+                nl, nr = cx - hw, cx + hw
+                if nl >= cur and nr <= end_x:
+                    if nl > cur:
+                        segs.append(f'  (gr_line (start {cur:.4f} {y0:.4f}) (end {nl:.4f} {y0:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+                    # Notch down
+                    segs.append(f'  (gr_line (start {nl:.4f} {y0:.4f}) (end {nl:.4f} {y0+depth:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+                    # Notch bottom
+                    segs.append(f'  (gr_line (start {nl:.4f} {y0+depth:.4f}) (end {nr:.4f} {y0+depth:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+                    # Notch up
+                    segs.append(f'  (gr_line (start {nr:.4f} {y0+depth:.4f}) (end {nr:.4f} {y0:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+                    cur = nr
+            if cur < end_x:
+                segs.append(f'  (gr_line (start {cur:.4f} {y0:.4f}) (end {end_x:.4f} {y0:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+            return segs
+
         if r < 0.1:
-            # Esquinas cuadradas — 4 líneas
-            return "\n".join([
-                f'  (gr_line (start {x0:.3f} {y0:.3f}) (end {x1:.3f} {y0:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))',
+            lines = top_edge_segments(x0, x1)
+            lines += [
                 f'  (gr_line (start {x1:.3f} {y0:.3f}) (end {x1:.3f} {y1:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))',
                 f'  (gr_line (start {x1:.3f} {y1:.3f}) (end {x0:.3f} {y1:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))',
                 f'  (gr_line (start {x0:.3f} {y1:.3f}) (end {x0:.3f} {y0:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))',
-            ])
+            ]
+            return "\n".join(lines)
         else:
             # Esquinas redondeadas — líneas + arcos
+            c = 0.70710678118
             lines = []
-            # Top edge
-            lines.append(f'  (gr_line (start {x0+r:.3f} {y0:.3f}) (end {x1-r:.3f} {y0:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+            # Top edge (with possible cutouts)
+            lines.extend(top_edge_segments(x0 + r, x1 - r))
             # Top-right arc
-            lines.append(f'  (gr_arc (start {x1-r:.3f} {y0:.3f}) (mid {x1-r+r*0.707:.3f} {y0+r-r*0.707:.3f}) (end {x1:.3f} {y0+r:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+            lines.append(f'  (gr_arc (start {x1-r:.4f} {y0:.4f}) (mid {x1-r+r*c:.4f} {y0+r-r*c:.4f}) (end {x1:.4f} {y0+r:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
             # Right edge
-            lines.append(f'  (gr_line (start {x1:.3f} {y0+r:.3f}) (end {x1:.3f} {y1-r:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+            lines.append(f'  (gr_line (start {x1:.4f} {y0+r:.4f}) (end {x1:.4f} {y1-r:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
             # Bottom-right arc
-            lines.append(f'  (gr_arc (start {x1:.3f} {y1-r:.3f}) (mid {x1-r+r*0.707:.3f} {y1-r+r*0.707:.3f}) (end {x1-r:.3f} {y1:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+            lines.append(f'  (gr_arc (start {x1:.4f} {y1-r:.4f}) (mid {x1-r+r*c:.4f} {y1-r+r*c:.4f}) (end {x1-r:.4f} {y1:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
             # Bottom edge
-            lines.append(f'  (gr_line (start {x1-r:.3f} {y1:.3f}) (end {x0+r:.3f} {y1:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+            lines.append(f'  (gr_line (start {x1-r:.4f} {y1:.4f}) (end {x0+r:.4f} {y1:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
             # Bottom-left arc
-            lines.append(f'  (gr_arc (start {x0+r:.3f} {y1:.3f}) (mid {x0+r-r*0.707:.3f} {y1-r+r*0.707:.3f}) (end {x0:.3f} {y1-r:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+            lines.append(f'  (gr_arc (start {x0+r:.4f} {y1:.4f}) (mid {x0+r-r*c:.4f} {y1-r+r*c:.4f}) (end {x0:.4f} {y1-r:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
             # Left edge
-            lines.append(f'  (gr_line (start {x0:.3f} {y1-r:.3f}) (end {x0:.3f} {y0+r:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+            lines.append(f'  (gr_line (start {x0:.4f} {y1-r:.4f}) (end {x0:.4f} {y0+r:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
             # Top-left arc
-            lines.append(f'  (gr_arc (start {x0:.3f} {y0+r:.3f}) (mid {x0+r-r*0.707:.3f} {y0+r-r*0.707:.3f}) (end {x0+r:.3f} {y0:.3f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
+            lines.append(f'  (gr_arc (start {x0:.4f} {y0+r:.4f}) (mid {x0+r-r*c:.4f} {y0+r-r*c:.4f}) (end {x0+r:.4f} {y0:.4f}) (layer "Edge.Cuts") (stroke (width 0.1)))')
             return "\n".join(lines)
 
 
@@ -332,6 +363,7 @@ class Zone:
     net_name: str
     layer: str = "F.Cu"
     points: list[tuple[float, float]] = field(default_factory=list)
+    priority: int = 0
 
     def to_sexpr(self) -> str:
         uid = str(uuid.uuid4())
@@ -340,9 +372,10 @@ class Zone:
             f'  (zone (net {self.net_id}) (net_name "{self.net_name}") (layer "{self.layer}") '
             f'(uuid "{uid}")\n'
             f'    (hatch edge 0.5)\n'
+            f'    (priority {self.priority})\n'
             f'    (connect_pads (clearance 0.2))\n'
             f'    (min_thickness 0.25)\n'
-            f'    (fill yes (thermal_gap 0.508) (thermal_bridge_width 0.508))\n'
+            f'    (fill yes (thermal_gap 0.25) (thermal_bridge_width 0.35))\n'
             f'    (polygon\n'
             f'      (pts\n          {pts_str}\n      )\n'
             f'    )\n'
@@ -354,13 +387,20 @@ class KeepoutZone:
     """Zona de exclusión (sin pistas o sin planos)."""
     points: list[tuple[float, float]] = field(default_factory=list)
     layers: list[str] = field(default_factory=lambda: ["F.Cu", "B.Cu"])
+    tracks_allowed: bool = False
+    vias_allowed: bool = False
+    copperpour_allowed: bool = False
 
     def to_sexpr(self) -> str:
         pts_str = "\n          ".join(f"(xy {x:.4f} {y:.4f})" for x, y in self.points)
         uid = str(uuid.uuid4())
         layers_str = " ".join(f'"{ly}"' for ly in self.layers)
+        t_allow = "allowed" if self.tracks_allowed else "not_allowed"
+        v_allow = "allowed" if self.vias_allowed else "not_allowed"
+        c_allow = "allowed" if self.copperpour_allowed else "not_allowed"
+        
         return (
-            f'  (zone (keepout (tracks allowed) (vias allowed) (pads allowed) (copperpour not_allowed))\n'
+            f'  (zone (keepout (tracks {t_allow}) (vias {v_allow}) (pads allowed) (copperpour {c_allow}))\n'
             f'    (layers {layers_str}) (uuid "{uid}")\n'
             f'    (polygon\n'
             f'      (pts\n          {pts_str}\n      )\n'
@@ -524,9 +564,26 @@ class FootprintPresets:
         return fp
 
     @staticmethod
-    def esp32_wroom(ref: str, value: str = "ESP32-WROOM") -> Footprint:
-        """Modulo ESP32 con pads en 3 lados (38 pins)."""
-        fp = Footprint(ref, value, "RF_Module:ESP32-WROOM-32")
+    def usb_c(ref: str, value: str = "USB-C") -> Footprint:
+        """Puerto USB-C hembra (16 pads SMD / 4 de soporte)."""
+        fp = Footprint(ref, "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12", value)
+        pads = [
+            Pad("1", "smd", "rect", x=-2.4, y=-3.5, w=0.6, h=1.15),
+            Pad("2", "smd", "rect", x=-0.8, y=-3.5, w=0.6, h=1.15),
+            Pad("3", "smd", "rect", x=0.8, y=-3.5, w=0.6, h=1.15),
+            Pad("4", "smd", "rect", x=2.4, y=-3.5, w=0.6, h=1.15),
+            Pad("SH1", "thru_hole", "oval", x=-4.3, y=-2.5, w=1.0, h=1.6, drill=0.6),
+            Pad("SH2", "thru_hole", "oval", x=4.3, y=-2.5, w=1.0, h=1.6, drill=0.6),
+            Pad("SH3", "thru_hole", "oval", x=-4.3, y=2.5, w=1.0, h=1.6, drill=0.6),
+            Pad("SH4", "thru_hole", "oval", x=4.3, y=2.5, w=1.0, h=1.6, drill=0.6),
+        ]
+        fp.pads = pads
+        return fp
+
+    @staticmethod
+    def esp32_wroom(ref: str, value: str = "ESP32-S3") -> Footprint:
+        """Modulo ESP32-S3-WROOM-1 con pads (41 pins incl. EPAD)."""
+        fp = Footprint(ref, "RF_Module:ESP32-S3-WROOM-1", value)
         pitch = 1.27
         # Izquierda (1-14)
         for i in range(14):
@@ -537,6 +594,11 @@ class FootprintPresets:
         # Derecha (25-38)
         for i in range(14):
             fp.pads.append(Pad(str(38-i), "smd", "rect", x=9.0, y=-8.255 + i*pitch, w=2.0, h=0.9))
+        # Arriba / Extras (39, 40)
+        fp.pads.append(Pad("39", "smd", "rect", x=-2.0, y=-11.0, w=0.9, h=2.0))
+        fp.pads.append(Pad("40", "smd", "rect", x=2.0, y=-11.0, w=0.9, h=2.0))
+        # Central EPAD (41) - Thermal Ground Pad
+        fp.pads.append(Pad("41", "smd", "rect", x=0.0, y=0.0, w=6.0, h=6.0))
         return fp
 
     @staticmethod
@@ -687,6 +749,7 @@ class PCBLayout:
         self._mounting_holes: list[MountingHole] = []
         self._zones: list[Zone] = []
         self._keepouts: list[KeepoutZone] = []
+        self._edge_cutouts: list[str] = []  # raw S-expr lines for Edge.Cuts cutouts
         self._nets: dict[str, int] = {"": 0}  # net_name → net_id
         self._net_counter = 0
         self._text_items: list[str] = []
@@ -859,9 +922,9 @@ class PCBLayout:
         ]
         return holes
 
-    def add_keepout(self, points: list[tuple[float, float]], layers: list[str] = None) -> KeepoutZone:
-        """Define una zona donde el motor no debe verter cobre."""
-        kz = KeepoutZone(points=points, layers=layers or ["F.Cu", "B.Cu"])
+    def add_keepout(self, points: list[tuple[float, float]], layers: list[str] = None, tracks_allowed: bool = False, vias_allowed: bool = False, copperpour_allowed: bool = False) -> KeepoutZone:
+        """Define una zona donde el motor no debe verter cobre ni opcionalmente trazar pistas/vías."""
+        kz = KeepoutZone(points=points, layers=layers or ["F.Cu", "B.Cu"], tracks_allowed=tracks_allowed, vias_allowed=vias_allowed, copperpour_allowed=copperpour_allowed)
         self._keepouts.append(kz)
         return kz
 
@@ -869,11 +932,23 @@ class PCBLayout:
                  size: float = 1.5, layer: str = "F.SilkS") -> None:
         """Coloca texto en el PCB (silkscreen)."""
         uid = str(uuid.uuid4())
+        # Enforce minimum size of 0.8mm for DRC compliance
+        size = max(0.8, size)
+        justify = " (justify mirror)" if layer.startswith("B.") else ""
+        safe_text = text.replace('"', "'")
         self._text_items.append(
-            f'  (gr_text "{text}" (at {x:.3f} {y:.3f}) (layer "{layer}") '
+            f'  (gr_text "{safe_text}" (at {x:.3f} {y:.3f}) (layer "{layer}") '
             f'(uuid "{uid}") '
-            f'(effects (font (size {size:.1f} {size:.1f}) (thickness 0.15))))'
+            f'(effects (font (size {size:.1f} {size:.1f}) (thickness 0.15)){justify}))'
         )
+
+    def add_multiline_text(self, multiline_text: str, start_x: float, start_y: float,
+                           line_height: float = 1.0, size: float = 0.8, layer: str = "F.SilkS") -> None:
+        """Coloca texto multilínea (ej. Arte ASCII) en la serigrafía del PCB."""
+        lines = multiline_text.strip("\r\n").splitlines()
+        for idx, line in enumerate(lines):
+            if line.strip():
+                self.add_text(line, start_x, start_y + idx * line_height, size=size, layer=layer)
 
     # ── Traces ────────────────────────────────────────────────────
 
@@ -886,6 +961,7 @@ class PCBLayout:
 
         Genera un segmento en L (horizontal + vertical) entre los
         centros absolutos de los dos pads.
+
         """
         if width is None:
             width = self.get_net_width(net)
@@ -970,15 +1046,31 @@ class PCBLayout:
         self._vias.append(v)
         return v
 
-    def add_copper_pour(self, net: str = "GND", layer: str = "F.Cu", margin: float = 1.0):
-        """Añade plano de masa envolviendo toda el área de diseño."""
+    def add_copper_pour(self, net: str = "GND", layer: str = "F.Cu", margin: float = 1.0,
+                        priority: int = 0,
+                        x0: float = None, y0: float = None,
+                        x1: float = None, y1: float = None):
+        """Añade plano de masa envolviendo toda el área de diseño o un área personalizada."""
         nid = self._get_net_id(net)
-        x0 = self.board.origin_x + margin
-        y0 = self.board.origin_y + margin
-        x1 = self.board.origin_x + self.board.width_mm - margin
-        y1 = self.board.origin_y + self.board.height_mm - margin
-        pts = [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
-        self._zones.append(Zone(net_id=nid, net_name=net, layer=layer, points=pts))
+        _x0 = (self.board.origin_x + margin) if x0 is None else x0
+        _y0 = (self.board.origin_y + margin) if y0 is None else y0
+        _x1 = (self.board.origin_x + self.board.width_mm - margin) if x1 is None else x1
+        _y1 = (self.board.origin_y + self.board.height_mm - margin) if y1 is None else y1
+        pts = [(_x0, _y0), (_x1, _y0), (_x1, _y1), (_x0, _y1)]
+        self._zones.append(Zone(net_id=nid, net_name=net, layer=layer, points=pts, priority=priority))
+
+    def add_edge_cutout(self, cx: float, width: float, depth: float, edge: str = "top"):
+        """
+        Añade un recorte rectangular en el borde de la placa (Edge.Cuts).
+        Para montaje de conector en borde (edge-mount).
+        cx: centro X del recorte (mm)
+        width: anchura del recorte (mm)
+        depth: profundidad del recorte hacia el interior (mm)
+        edge: 'top', 'bottom', 'left', 'right'
+        """
+        hw = width / 2.0
+        if edge == "top":
+            self.board.top_cutouts.append((cx, hw, depth))
 
     def add_gnd_via_stitching(self, spacing_mm: float = 10.0, net: str = "GND", clearance_mm: float = 2.5):
         """
@@ -996,8 +1088,8 @@ class PCBLayout:
             for p in fp.pads:
                 if p.net_name != net:
                     rad = math.radians(fp.rotation)
-                    px = fp.x + p.x * math.cos(rad) - p.y * math.sin(rad)
-                    py = fp.y + p.x * math.sin(rad) + p.y * math.cos(rad)
+                    px = fp.x + p.x * math.cos(rad) + p.y * math.sin(rad)
+                    py = fp.y - p.x * math.sin(rad) + p.y * math.cos(rad)
                     avoid_points.append((px, py))
 
         curr_x = x0
@@ -1042,11 +1134,11 @@ class PCBLayout:
         
         for fp in self._footprints:
             for p in fp.pads:
-                gnd_nets = {'GND', 'PWR_GND', 'PGND', 'AGND', 'DGND', 'SGND', '-'}
+                gnd_nets = {'GND', 'PWR_GND', 'PWR_GND_FLIPPER', 'PGND', 'AGND', 'DGND', 'SGND', '-'}
                 if p.net_name and p.net_name not in gnd_nets:  # GND nets handled by copper fill-zone
                     rad = math.radians(fp.rotation)
-                    px = fp.x + p.x * math.cos(rad) - p.y * math.sin(rad)
-                    py = fp.y + p.x * math.sin(rad) + p.y * math.cos(rad)
+                    px = fp.x + p.x * math.cos(rad) + p.y * math.sin(rad)
+                    py = fp.y - p.x * math.sin(rad) + p.y * math.cos(rad)
                     if p.net_name not in net_pads:
                         net_pads[p.net_name] = []
                     
@@ -1070,8 +1162,8 @@ class PCBLayout:
                 pad_xs, pad_ys = [], []
                 for p in fp.pads:
                     rad = math.radians(fp.rotation)
-                    px = fp.x + p.x * math.cos(rad) - p.y * math.sin(rad)
-                    py = fp.y + p.x * math.sin(rad) + p.y * math.cos(rad)
+                    px = fp.x + p.x * math.cos(rad) + p.y * math.sin(rad)
+                    py = fp.y - p.x * math.sin(rad) + p.y * math.cos(rad)
                     pad_xs.append(px)
                     pad_ys.append(py)
                 
@@ -1106,18 +1198,36 @@ class PCBLayout:
                     for l_idx in [0, 1]:
                         occupied[(l_idx, gx, gy)] = "KEEPOUT_BODY"
 
+        # 1c. Keepout zones (antenna exclusion, RF shields, user-defined)
+        for kz in self._keepouts:
+            if not kz.points:
+                continue
+            kz_xs = [pt[0] for pt in kz.points]
+            kz_ys = [pt[1] for pt in kz.points]
+            kz_min_x, kz_max_x = min(kz_xs) - 0.5, max(kz_xs) + 0.5
+            kz_min_y, kz_max_y = min(kz_ys) - 0.5, max(kz_ys) + 0.5
+            min_gx = int(kz_min_x / grid_size)
+            max_gx = int(kz_max_x / grid_size)
+            min_gy = int(kz_min_y / grid_size)
+            max_gy = int(kz_max_y / grid_size)
+            for gx in range(min_gx, max_gx + 1):
+                for gy in range(min_gy, max_gy + 1):
+                    for l_idx in [0, 1]:
+                        occupied[(l_idx, gx, gy)] = "KEEPOUT_BODY"
+
         # 2. Block pad copper cells AND clearance margin in occupied grid
         net_pad_cells_map = {} # net_name -> set of (l_idx, gx, gy)
         for fp in self._footprints:
             for p in fp.pads:
                 rad = math.radians(fp.rotation)
-                px = fp.x + p.x * math.cos(rad) - p.y * math.sin(rad)
-                py = fp.y + p.x * math.sin(rad) + p.y * math.cos(rad)
+                px = fp.x + p.x * math.cos(rad) + p.y * math.sin(rad)
+                py = fp.y - p.x * math.sin(rad) + p.y * math.cos(rad)
                 gx, gy = int(px / grid_size), int(py / grid_size)
                 pad_layers = [0, 1] if ("thru_hole" in p.pad_type or "*.Cu" in p.layers) else ([1] if ("B.Cu" in p.layers or fp.layer == "B.Cu") else [0])
                 
                 half_w, half_h = p.w / 2.0, p.h / 2.0
-                cl_margin = 0.35  # 350 Micron clearance margin around every pad (sweet-spot for A* + fill-zone GND)
+                # THT pads need larger clearance to prevent traces from squeezing
+                cl_margin = 0.28 if ("thru_hole" in p.pad_type) else 0.35
                 
                 search_rx = int(math.ceil((half_w + cl_margin) / grid_size)) + 1
                 search_ry = int(math.ceil((half_h + cl_margin) / grid_size)) + 1
@@ -1142,6 +1252,10 @@ class PCBLayout:
                             elif is_clearance:
                                 if pt not in occupied:
                                     occupied[pt] = f"CLEARANCE_{p.net_name}"
+                                else:
+                                    occ = occupied[pt]
+                                    if occ.startswith("CLEARANCE_") and occ != f"CLEARANCE_{p.net_name}":
+                                        occupied[pt] = "CLEARANCE_CONFLICT"
 
         def astar(start_px, start_py, start_l, end_px, end_py, end_l, current_net_width, net_name):
             start_x_g, start_y_g = int(start_px/grid_size), int(start_py/grid_size)
@@ -1168,6 +1282,8 @@ class PCBLayout:
             
             nodes_explored = 0
             while open_set:
+                if nodes_explored > 200000:
+                    return None
                 _, current = heapq.heappop(open_set)
                 c_l, cx, cy = current
                 nodes_explored += 1
@@ -1203,9 +1319,39 @@ class PCBLayout:
                                 continue
                             
                     cost = 1
-                    if dl != 0:
-                        cost = 10  # Via cost penalty
+                    if current_net_width > self.default_trace_width and dl == 0:
+                        thick_blocked = False
+                        for vx, vy in ((1,0), (-1,0), (0,1), (0,-1)):
+                            v_nb = (nb_l, nb_x + vx, nb_y + vy)
+                            if v_nb in occupied:
+                                vocc = occupied[v_nb]
+                                if vocc.startswith("CLEARANCE_") and vocc != f"CLEARANCE_{net_name}":
+                                    thick_blocked = True
+                                    break
+                                elif vocc == "CLEARANCE_CONFLICT":
+                                    thick_blocked = True
+                                    break
+                        if thick_blocked: continue
                         
+                    if dl != 0:
+                        # Vias are fat (0.6mm diam). Check 3x3 area to avoid stepping on the edge of another net's trace-optimized clearance
+                        via_blocked = False
+                        for vx in (-1, 0, 1):
+                            for vy in (-1, 0, 1):
+                                v_nb = (nb_l, nb_x + vx, nb_y + vy)
+                                if v_nb in occupied:
+                                    vocc = occupied[v_nb]
+                                    if vocc.startswith("CLEARANCE_") and vocc != f"CLEARANCE_{net_name}":
+                                        via_blocked = True
+                                        break
+                                    elif vocc == "CLEARANCE_CONFLICT":
+                                        via_blocked = True
+                                        break
+                            if via_blocked: break
+                        if via_blocked:
+                            continue
+                        
+                        cost = 10  # Via cost penalty
                     tentative_g = g_score[current] + cost
                     if nb not in g_score or tentative_g < g_score[nb]:
                         came_from[nb] = current
@@ -1217,15 +1363,22 @@ class PCBLayout:
         routed_ok = 0
         routed_failed = 0
         
-        # Sort nets: shorter 2-pad signal nets first, multi-pad power nets last
+        # Sort nets: long-distance nets first (they need the most routing freedom),
+        # then short local nets last (they can weave around existing traces more easily)
         def net_sort_key(item):
             n_name, p_list = item
-            if len(p_list) == 2:
-                dist = math.hypot(p_list[0][0] - p_list[1][0], p_list[0][1] - p_list[1][1])
-                return (0, dist)
-            return (1, len(p_list))
+            if len(p_list) >= 2:
+                # Calculate max pairwise distance in the net
+                max_dist = 0
+                for i in range(len(p_list)):
+                    for j in range(i + 1, len(p_list)):
+                        d = math.hypot(p_list[i][0] - p_list[j][0], p_list[i][1] - p_list[j][1])
+                        if d > max_dist:
+                            max_dist = d
+                return (0, max_dist)
+            return (1, 0)
 
-        sorted_nets = sorted(net_pads.items(), key=net_sort_key)
+        sorted_nets = sorted(net_pads.items(), key=net_sort_key, reverse=False)
 
         for net_name, pads in sorted_nets:
             if len(pads) < 2: continue
@@ -1275,19 +1428,36 @@ class PCBLayout:
                                 ))
                             start_pt = gp
 
-                    # Occupy cells along the full path + 2-cell clearance corridor (0.5mm) for future nets
-                    cl_cells = 2
-                    for pt in path_grid:
-                        for dx in range(-cl_cells, cl_cells + 1):
-                            for dy in range(-cl_cells, cl_cells + 1):
-                                occ_pt = (pt[0], pt[1] + dx, pt[2] + dy)
-                                if occ_pt in occupied:
-                                    if occupied[occ_pt] not in (net_name, "KEEPOUT_BODY"):
+                    # Occupy cells along the full path + clearance corridor for future nets
+                    for k, pt in enumerate(path_grid):
+                        # Detect if this point is a via (layer changes compared to prev or next point)
+                        is_via = False
+                        if k > 0 and path_grid[k-1][0] != pt[0]:
+                            is_via = True
+                        if k < len(path_grid) - 1 and path_grid[k+1][0] != pt[0]:
+                            is_via = True
+                        
+                        # 3 cells (0.75mm) for vias, 2 cells (0.5mm) for standard/wide traces
+                        cl_cells = 3 if is_via else 2
+                        layers_to_block = [0, 1] if is_via else [pt[0]]
+                        
+                        for l_idx in layers_to_block:
+                            for dx in range(-cl_cells, cl_cells + 1):
+                                for dy in range(-cl_cells, cl_cells + 1):
+                                    occ_pt = (l_idx, pt[1] + dx, pt[2] + dy)
+                                    if occ_pt in occupied:
+                                        occ = occupied[occ_pt]
+                                        if occ not in (net_name, "KEEPOUT_BODY"):
+                                            if occ.startswith("CLEARANCE_") and occ != f"CLEARANCE_{net_name}":
+                                                occupied[occ_pt] = "CLEARANCE_CONFLICT"
+                                            else:
+                                                occupied[occ_pt] = f"CLEARANCE_{net_name}"
+                                    else:
                                         occupied[occ_pt] = f"CLEARANCE_{net_name}"
-                                else:
-                                    occupied[occ_pt] = f"CLEARANCE_{net_name}"
-                                if dx == 0 and dy == 0:
-                                    occupied[occ_pt] = net_name
+                                    
+                                    # Mark the exact center as copper
+                                    if dx == 0 and dy == 0 and l_idx == pt[0]:
+                                        occupied[occ_pt] = net_name
                 else:
                     routed_failed += 1
                     logger.warning("pcb_layout", f"Segmento sin rutear en net '{net_name}' (pad {i} -> {i+1})")
@@ -1483,10 +1653,26 @@ class PCBLayout:
         lines.append('  )')
         lines.append('')
 
-        # Netclasses
+        # Ensure all used net names are registered in self._nets
+        for fp in self._footprints:
+            for p in fp.pads:
+                if p.net_name:
+                    p.net_id = self._get_net_id(p.net_name)
+        for t in self._traces:
+            if hasattr(t, 'net_name') and t.net_name:
+                t.net_id = self._get_net_id(t.net_name)
+
+        # Ensure GND copper pour zones exist for F.Cu and B.Cu
+        if not self._zones:
+            self.add_copper_pour(net="PWR_GND", layer="F.Cu", margin=0.5, priority=1)
+            self.add_copper_pour(net="PWR_GND", layer="B.Cu", margin=0.5, priority=1)
+            self.add_copper_pour(net="PWR_GND_FLIPPER", layer="F.Cu", margin=0.5, priority=0)
+            self.add_copper_pour(net="PWR_GND_FLIPPER", layer="B.Cu", margin=0.5, priority=0)
+
+        # Netclasses — use configured default_trace_width instead of hardcoded 0.25
         lines.append('  (net_class "Default" "Default netclass"')
-        lines.append('    (clearance 0.15)')
-        lines.append('    (trace_width 0.25)')
+        lines.append('    (clearance 0.12)')
+        lines.append(f'    (trace_width {self.default_trace_width:.4f})')
         lines.append('    (via_dia 0.6)')
         lines.append('    (via_drill 0.3)')
         lines.append('    (uvia_dia 0.3)')
@@ -1496,7 +1682,7 @@ class PCBLayout:
 
         # Nets
         lines.append('  (net 0 "")')
-        for name, nid in self._nets.items():
+        for name, nid in sorted(self._nets.items(), key=lambda x: x[1]):
             if nid > 0:
                 lines.append(f'  (net {nid} "{name}")')
         lines.append('')
