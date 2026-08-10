@@ -342,21 +342,20 @@ class PCBBuilder:
                 pcb.add_capacitor(f"C_{ref}_L", low_val, cx2, cy2, net1=p_net, net2="GND")
 
         if is_esp:
-            # ESP32-S3-WROOM antenna keepout zone:
-            # The antenna occupies ~6mm above the top pad row (y=-8.255 local).
-            # Keepout extends from y=-8 to y=-14 from MCU center, 18mm wide.
-            pcb.add_keepout([
-                (x - 9, y - 14), (x + 9, y - 14),
-                (x + 9, y - 8),  (x - 9, y - 8),
-            ])
-            # ESP32-S3-WROOM inner belly keepout zone:
-            # Prevents vias and traces from routing directly underneath the MCU, 
-            # avoiding shorts with the exposed GND thermal pad.
-            # Pads are at x=±9 (width 2.0) and y=9 (height 2.0).
-            pcb.add_keepout([
-                (x - 7.5, y - 7.5), (x + 7.5, y - 7.5),
-                (x + 7.5, y + 7.5), (x - 7.5, y + 7.5),
-            ])
+            is_1u = ("1U" in val.upper() or "1U" in str(getattr(comp, 'symbol', '')).upper() or "1U" in str(getattr(comp, 'footprint_id', '')).upper())
+            if not is_1u:
+                # ESP32-S3-WROOM-1 (PCB antenna variant) keepout zone:
+                # Antenna extends above top pad row (pads 39,40 at y=-11.0 local).
+                # Keepout covers y=-11.8 to y=-18.0 from MCU center, 18mm wide.
+                pcb.add_keepout([
+                    (x - 9, y - 18.0), (x + 9, y - 18.0),
+                    (x + 9, y - 11.8), (x - 9, y - 11.8),
+                ])
+            # ESP32-S3-WROOM EPAD 6x6mm thermal ground via array (3x3 grid centered at x, y)
+            gnd_net = "PWR_GND" if "PWR_GND" in pcb._nets else "GND"
+            for dx in (-1.5, 0.0, 1.5):
+                for dy in (-1.5, 0.0, 1.5):
+                    pcb.add_via(x + dx, y + dy, size=0.6, drill=0.3, net=gnd_net)
         # Note: RF breakout connector modules (Conn_02x04) don't need keepout zones
         # since they are just pin headers. The actual RF modules (CC1101, nRF24) are
         # external boards connected via these headers.

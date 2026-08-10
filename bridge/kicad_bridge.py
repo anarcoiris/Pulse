@@ -279,6 +279,7 @@ class KiCadBridge:
         try:
             result = subprocess.run(
                 [str(self._cli), "pcb", "drc",
+                 "--refill-zones", "--save-board",
                  "--output", str(report),
                  "--format", "json",
                  str(pcb_path)],

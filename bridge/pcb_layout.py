@@ -182,8 +182,8 @@ class RawFootprint(Footprint):
                 p_num = str(pad.number)
                 nid = pad.net_id
                 nname = pad.net_name
-                # Inject (net ID "NAME") right after (layers "...")
-                pattern = r'(\(pad\s+"?' + re.escape(p_num) + r'"?[\s\S]*?\(\s*layers\s+(?:"[^"]+"\s*)+\))'
+                # Inject (net ID "NAME") right after (layers "...") for exact pad number
+                pattern = r'(\(pad\s+"' + re.escape(p_num) + r'"\s+[\s\S]*?\(\s*layers\s+(?:"[^"]+"\s*)+\))'
                 replacement = r'\1 (net ' + str(nid) + r' "' + nname + r'")'
                 body = re.sub(pattern, replacement, body, count=1)
 
@@ -373,9 +373,9 @@ class Zone:
             f'(uuid "{uid}")\n'
             f'    (hatch edge 0.5)\n'
             f'    (priority {self.priority})\n'
-            f'    (connect_pads (clearance 0.2))\n'
-            f'    (min_thickness 0.25)\n'
-            f'    (fill yes (thermal_gap 0.25) (thermal_bridge_width 0.35))\n'
+            f'    (connect_pads (clearance 0.15))\n'
+            f'    (min_thickness 0.20)\n'
+            f'    (fill yes (thermal_gap 0.15) (thermal_bridge_width 0.20))\n'
             f'    (polygon\n'
             f'      (pts\n          {pts_str}\n      )\n'
             f'    )\n'
