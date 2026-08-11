@@ -1,0 +1,383 @@
+{
+  "name": "ESP32-S3 TFT Console Board",
+  "version": "0.1.0",
+  "board_width": 75.0,
+  "board_height": 50.0,
+  "net_classes": {
+    "Default": {
+      "clearance": 0.12,
+      "trace_width": 0.15,
+      "via_dia": 0.6,
+      "via_drill": 0.3
+    },
+    "Power": {
+      "clearance": 0.15,
+      "trace_width": 0.5,
+      "via_dia": 0.8,
+      "via_drill": 0.4,
+      "nets": [
+        "PWR_5V_USB",
+        "PWR_3V3_ESP"
+      ]
+    }
+  },
+  "circuit": [
+    {
+      "etype": "MCU",
+      "value": "ESP32-S3-WROOM-1U",
+      "symbol": "ESP32-S3",
+      "footprint": "ESP32-S3-WROOM-1U",
+      "position": [
+        10.0,
+        30.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_ESP",
+        "3": "PWR_3V3_ESP",
+        "4": "PWR_3V3_ESP",
+        "5": "PWR_3V3_ESP",
+        "6": "PWR_3V3_ESP",
+        "7": "PWR_3V3_ESP",
+        "8": "PWR_3V3_ESP",
+        "9": "PWR_3V3_ESP",
+        "10": "PWR_3V3_ESP",
+        "11": "PWR_3V3_ESP",
+        "12": "PWR_3V3_ESP",
+        "13": "PWR_3V3_ESP",
+        "14": "PWR_3V3_ESP",
+        "15": "PWR_3V3_ESP",
+        "16": "PWR_3V3_ESP",
+        "17": "PWR_3V3_ESP",
+        "18": "PWR_3V3_ESP",
+        "19": "PWR_3V3_ESP",
+        "20": "PWR_3V3_ESP",
+        "21": "PWR_3V3_ESP",
+        "22": "PWR_3V3_ESP",
+        "23": "PWR_3V3_ESP",
+        "24": "PWR_3V3_ESP",
+        "25": "PWR_3V3_ESP",
+        "26": "PWR_3V3_ESP",
+        "27": "PWR_3V3_ESP",
+        "28": "PWR_3V3_ESP"
+      },
+      "label": "U1",
+      "jlcpcb_part": "C9900027631"
+    },
+    {
+      "etype": "Connector | USB-C",
+      "value": "HRO TYPE-C-31-M-12",
+      "symbol": "USB-C",
+      "footprint": "USB-C-1x1",
+      "position": [
+        15.0,
+        10.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_5V_USB",
+        "2": "PWR_5V_USB",
+        "3": "PWR_5V_USB",
+        "4": "PWR_5V_USB",
+        "5": "PWR_5V_USB",
+        "6": "PWR_5V_USB",
+        "7": "PWR_5V_USB",
+        "8": "PWR_5V_USB"
+      },
+      "label": "J_USB",
+      "jlcpcb_part": "C165948"
+    },
+    {
+      "etype": "Component | Regulator",
+      "value": "AMS1117-3.3V",
+      "symbol": "AMS1117-3.3V",
+      "footprint": "AMS1117-3.3V",
+      "position": [
+        30.0,
+        20.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_ESP",
+        "3": "PWR_GND"
+      },
+      "label": "R1",
+      "jlcpcb_part": "AMS1117-3.3"
+    },
+    {
+      "etype": "Resistor",
+      "value": "5.1k",
+      "symbol": "R",
+      "footprint": "R_0805",
+      "position": [
+        35.0,
+        25.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_ESP"
+      },
+      "label": "R5",
+      "jlcpcb_part": "R_5100"
+    },
+    {
+      "etype": "Capacitor",
+      "value": "100nF",
+      "symbol": "C",
+      "footprint": "C_0805",
+      "position": [
+        35.0,
+        20.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_ESP"
+      },
+      "label": "C1",
+      "jlcpcb_part": "C_100nF"
+    },
+    {
+      "etype": "Capacitor",
+      "value": "100nF",
+      "symbol": "C",
+      "footprint": "C_0805",
+      "position": [
+        40.0,
+        25.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_ESP"
+      },
+      "label": "C2",
+      "jlcpcb_part": "C_100nF"
+    },
+    {
+      "etype": "LED",
+      "value": "Red",
+      "symbol": "LED",
+      "footprint": "LED_0603",
+      "position": [
+        45.0,
+        20.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_ESP"
+      },
+      "label": "LED_PWR",
+      "jlcpcb_part": "LED_RED"
+    },
+    {
+      "etype": "Connector | Header",
+      "value": "1x14 2.54mm Pin Header",
+      "symbol": "TFT_SPI_HEADER",
+      "footprint": "Header_1x14",
+      "position": [
+        50.0,
+        30.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "J_DISP_SCK",
+        "2": "J_DISP_MISO",
+        "3": "J_DISP_MOSI",
+        "4": "J_DISP_CS",
+        "5": "J_DISP_DC",
+        "6": "J_DISP_RST",
+        "7": "J_DISP_BLK",
+        "8": "J_DISP_CLK",
+        "9": "J_DISP_DIN",
+        "10": "J_DISP_DOUT",
+        "11": "J_DISP_DIN",
+        "12": "J_DISP_DOUT",
+        "13": "J_DISP_DIN",
+        "14": "J_DISP_DOUT"
+      },
+      "label": "J_DISP",
+      "jlcpcb_part": "Header_1x14"
+    },
+    {
+      "etype": "Switch | Tactile",
+      "value": "SW_UP",
+      "symbol": "SW",
+      "footprint": "SW_TACTILE",
+      "position": [
+        10.0,
+        40.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "SW_UP"
+      },
+      "label": "SW_UP",
+      "jlcpcb_part": "SW_TACTILE"
+    },
+    {
+      "etype": "Switch | Tactile",
+      "value": "SW_DOWN",
+      "symbol": "SW",
+      "footprint": "SW_TACTILE",
+      "position": [
+        18.0,
+        40.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "SW_DOWN"
+      },
+      "label": "SW_DOWN",
+      "jlcpcb_part": "SW_TACTILE"
+    },
+    {
+      "etype": "Switch | Tactile",
+      "value": "SW_LEFT",
+      "symbol": "SW",
+      "footprint": "SW_TACTILE",
+      "position": [
+        26.0,
+        40.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "SW_LEFT"
+      },
+      "label": "SW_LEFT",
+      "jlcpcb_part": "SW_TACTILE"
+    },
+    {
+      "etype": "Switch | Tactile",
+      "value": "SW_RIGHT",
+      "symbol": "SW",
+      "footprint": "SW_TACTILE",
+      "position": [
+        34.0,
+        40.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "SW_RIGHT"
+      },
+      "label": "SW_RIGHT",
+      "jlcpcb_part": "SW_TACTILE"
+    },
+    {
+      "etype": "Switch | Tactile",
+      "value": "SW_OK",
+      "symbol": "SW",
+      "footprint": "SW_TACTILE",
+      "position": [
+        42.0,
+        40.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "SW_OK"
+      },
+      "label": "SW_OK",
+      "jlcpcb_part": "SW_TACTILE"
+    },
+    {
+      "etype": "Switch | Tactile",
+      "value": "SW_SELECT",
+      "symbol": "SW",
+      "footprint": "SW_TACTILE",
+      "position": [
+        50.0,
+        40.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "SW_SELECT"
+      },
+      "label": "SW_SELECT",
+      "jlcpcb_part": "SW_TACTILE"
+    },
+    {
+      "etype": "Switch | Tactile",
+      "value": "SW_BACK",
+      "symbol": "SW",
+      "footprint": "SW_TACTILE",
+      "position": [
+        58.0,
+        40.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "SW_BACK"
+      },
+      "label": "SW_BACK",
+      "jlcpcb_part": "SW_TACTILE"
+    },
+    {
+      "etype": "Button | Reset",
+      "value": "Reset Button",
+      "symbol": "SW",
+      "footprint": "SW_TACTILE",
+      "position": [
+        10.0,
+        10.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "RESET"
+      },
+      "label": "SW_RESET",
+      "jlcpcb_part": "SW_TACTILE"
+    },
+    {
+      "etype": "Button | Boot",
+      "value": "Boot Button",
+      "symbol": "SW",
+      "footprint": "SW_TACTILE",
+      "position": [
+        18.0,
+        10.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "BOOT"
+      },
+      "label": "SW_BOOT",
+      "jlcpcb_part": "SW_TACTILE"
+    },
+    {
+      "etype": "Connector | GPIO Expansion",
+      "value": "8-pin 2.54mm Header",
+      "symbol": "GPIO_HEADER",
+      "footprint": "Header_8pin",
+      "position": [
+        60.0,
+        30.0
+      ],
+      "rotation": 0.0,
+      "pins": {
+        "1": "GPIO_0",
+        "2": "GPIO_1",
+        "3": "GPIO_2",
+        "4": "GPIO_3",
+        "5": "GPIO_4",
+        "6": "GPIO_5",
+        "7": "GPIO_6",
+        "8": "GPIO_7"
+      },
+      "label": "J_EXP",
+      "jlcpcb_part": "Header_8pin"
+    }
+  ]
+}

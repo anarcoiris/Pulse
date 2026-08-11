@@ -387,10 +387,11 @@ class PCBBuilder:
             size=float(_pcb("silkscreen.text_size_mm", 0.8)),
         )
 
-        if "GND" in all_nodes:
-            margin = float(_pcb("copper_pour.margin_mm", 1.0))
-            pcb.add_copper_pour("GND", layer="F.Cu", margin=margin)
-            pcb.add_copper_pour("GND", layer="B.Cu", margin=margin)
+        gnd_net = "PWR_GND" if "PWR_GND" in all_nodes else ("GND" if "GND" in all_nodes else None)
+        if gnd_net and not pcb._zones:
+            margin = float(_pcb("copper_pour.margin_mm", 0.5))
+            pcb.add_copper_pour(gnd_net, layer="F.Cu", margin=margin)
+            pcb.add_copper_pour(gnd_net, layer="B.Cu", margin=margin)
 
         if not self.skip_routing:
             self._route_usb_nets(pcb)
@@ -399,7 +400,7 @@ class PCBBuilder:
                 grid_size=0.125,
             )
 
-            if "GND" in all_nodes:
+            if gnd_net:
                 pcb.add_gnd_via_stitching(spacing_mm=12.0)
 
     def _route_usb_nets(self, pcb: PCBLayout) -> None:
