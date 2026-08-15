@@ -58,6 +58,11 @@ class PlacedComponent:
     rotation:     float = 0.0
 
     def __post_init__(self):
+        try:
+            self.value = float(self.value)
+        except (ValueError, TypeError):
+            self.value = 0.0
+
         # Asegurar que pins esté poblado para componentes de 2 pines
         if self.etype != 'GND' and self.etype not in ('IC', 'MCU'):
             if '1' not in self.pins: self.pins['1'] = self.n1
@@ -335,7 +340,7 @@ class CircuitGraph:
             try:
                 val_f = float(val_raw)
             except (ValueError, TypeError):
-                val_f = val_raw
+                val_f = 0.0
 
             g.add(
                 etype       = c.get("etype", c.get("type", "R")),

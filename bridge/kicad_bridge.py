@@ -287,12 +287,31 @@ class KiCadBridge:
             )
             if report.exists():
                 data = json.loads(report.read_text(encoding="utf-8"))
-                return {
+                drc_result = {
                     "status": "ok",
                     "violations": data.get("violations", []),
                     "warnings": data.get("warnings", []),
                     "report": str(report),
                 }
+                # Check for corresponding schematic file to perform SCH<->PCB crosscheck
+                sch_path = Path(pcb_path).with_suffix(".kicad_sch")
+                if sch_path.exists():
+                    try:
+                        from core.sch_pcb_crosscheck import sch_symbols, BoardContext
+                        pcb_ctx = BoardContext(str(pcb_path))
+                        sch_syms = sch_symbols(str(sch_path))
+                        sch_refs = {s.reference for s in sch_syms}
+                        pcb_refs = {fp.reference for fp in pcb_ctx.footprints}
+                        common_refs = sch_refs & pcb_refs
+                        drc_result["crosscheck"] = {
+                            "status": "ok" if len(common_refs) == len(pcb_refs) else "warning",
+                            "sch_refs_count": len(sch_refs),
+                            "pcb_refs_count": len(pcb_refs),
+                            "common_refs_count": len(common_refs),
+                        }
+                    except Exception as cx_err:
+                        drc_result["crosscheck"] = {"status": "error", "error": str(cx_err)}
+                return drc_result
             return {
                 "status": "error",
                 "stdout": result.stdout,

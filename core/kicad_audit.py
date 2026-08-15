@@ -96,9 +96,20 @@ def extract_nets(root: Node) -> Dict[int, str]:
     root_list = root if isinstance(root, list) else [root]
     for n in find_direct(root_list, "net"):
         # (net <id> "<name>")
-        net_id = int(n[1])
-        net_name = n[2] if len(n) > 2 else ""
-        nets[net_id] = net_name
+        try:
+            net_id = int(n[1])
+            net_name = n[2] if len(n) > 2 else ""
+            nets[net_id] = net_name
+        except (ValueError, TypeError):
+            pass
+
+    # Collect net names from footprint pads as fallback
+    for fp in extract_footprints(root):
+        for pad in fp.pads:
+            if pad.net_id is not None and pad.net_name and pad.net_id not in nets:
+                nets[pad.net_id] = pad.net_name
+            elif pad.net_name and pad.net_name not in nets.values():
+                nets[pad.net_name] = pad.net_name
     return nets
 
 
@@ -130,8 +141,14 @@ def extract_footprints(root: Node) -> List[Footprint]:
             layers_node = first_direct(pad_node, "layers")
             layers = layers_node[1:] if layers_node else []
             net_node = first_direct(pad_node, "net")
-            net_id = int(net_node[1]) if net_node else None
-            net_name = net_node[2] if net_node and len(net_node) > 2 else None
+            net_id = None
+            net_name = None
+            if net_node and len(net_node) > 1:
+                try:
+                    net_id = int(net_node[1])
+                    net_name = str(net_node[2]) if len(net_node) > 2 else None
+                except (ValueError, TypeError):
+                    net_name = str(net_node[1])
             pads.append(Pad(number, pad_type, shape, net_id, net_name, layers, pad_at))
 
         fps.append(Footprint(lib_id, ref, value, at, layer, pads))
@@ -143,7 +160,10 @@ def extract_via_nets(root: Node) -> List[int]:
     for v in find_all(root, "via"):
         net_node = first_direct(v, "net")
         if net_node:
-            out.append(int(net_node[1]))
+            try:
+                out.append(int(net_node[1]))
+            except (ValueError, TypeError):
+                pass
     return out
 
 
@@ -152,7 +172,10 @@ def extract_segment_nets(root: Node) -> List[int]:
     for s in find_all(root, "segment"):
         net_node = first_direct(s, "net")
         if net_node:
-            out.append(int(net_node[1]))
+            try:
+                out.append(int(net_node[1]))
+            except (ValueError, TypeError):
+                pass
     return out
 
 

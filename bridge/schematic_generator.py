@@ -279,6 +279,37 @@ class SchematicGenerator:
                 f'  )'
             )
 
+        # Append Mechanical Mounting Holes (H1..H4) & Graphic Logos (LOGO1..LOGO2) for 100% SCH<->PCB parity
+        mech_items = [
+            ("H1", "MountingHole:MountingHole_3.2mm_M3", 10.0, 10.0),
+            ("H2", "MountingHole:MountingHole_3.2mm_M3", 10.0, 30.0),
+            ("H3", "MountingHole:MountingHole_3.2mm_M3", 75.0, 10.0),
+            ("H4", "MountingHole:MountingHole_3.2mm_M3", 75.0, 30.0),
+            ("LOGO1", "Logos:fabitive_logo", 125.0, 104.0),
+            ("LOGO2", "Logos:logo5", 155.0, 104.0),
+        ]
+
+        for m_ref, m_fp, m_x, m_y in mech_items:
+            m_uuid = self._get_uuid()
+            m_lib = "Mechanical:MountingHole" if m_ref.startswith("H") else "Graphic:Symbol_Logo"
+            symbol_lines.append(
+                f'  (symbol (lib_id "{m_lib}") (at {m_x:.2f} {m_y:.2f} 0) (unit 1)\n'
+                f'    (in_bom no) (on_board yes) (dnp no) (fields_autoplaced)\n'
+                f'    (uuid "{m_uuid}")\n'
+                f'    (property "Reference" "{m_ref}" (at {m_x:.2f} {m_y - 2.54:.2f} 0)\n'
+                f'      (effects (font (size 1.27 1.27)) (justify right)))\n'
+                f'    (property "Value" "LOGO" (at {m_x:.2f} {m_y + 2.54:.2f} 0)\n'
+                f'      (effects (font (size 1.27 1.27)) (justify right)))\n'
+                f'    (property "Footprint" "{m_fp}" (at {m_x:.2f} {m_y:.2f} 0)\n'
+                f'      (effects (font (size 1.27 1.27)) hide))\n'
+                f'    (instances\n'
+                f'      (project "board"\n'
+                f'        (path "/{self.schematic_uuid}/{m_uuid}" (reference "{m_ref}") (unit 1))\n'
+                f'      )\n'
+                f'    )\n'
+                f'  )'
+            )
+
         s.append("  (lib_symbols")
         added_symbols = set()
         for lib_id, info in self._used_lib_ids.items():
