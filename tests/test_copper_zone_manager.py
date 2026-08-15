@@ -40,9 +40,26 @@ def test_format_zone_sexpr():
         net_id=1,
         layer="F.Cu",
         points=[(0.0, 0.0), (10.0, 0.0), (10.0, 10.0), (0.0, 10.0)],
-        clearance=0.15
+        clearance=0.15,
+        connect_pads="thermal_relief",
+        thermal_bridge_width=0.50,
+        thermal_gap=0.50
     )
     sexpr = format_zone_sexpr(zone)
     assert '(zone (net 1) (net_name "PWR_GND") (layer "F.Cu")' in sexpr
     assert '(connect_pads (clearance 0.15))' in sexpr
+    assert '(fill yes (thermal_gap 0.50) (thermal_bridge_width 0.50))' in sexpr
     assert '(xy 0.0000 0.0000)' in sexpr
+
+def test_format_zone_sexpr_solid():
+    zone = CopperZone(
+        net_name="PWR_GND",
+        net_id=1,
+        layer="B.Cu",
+        points=[(0.0, 0.0), (20.0, 0.0), (20.0, 20.0), (0.0, 20.0)],
+        clearance=0.20,
+        connect_pads="solid"
+    )
+    sexpr = format_zone_sexpr(zone)
+    assert '(connect_pads yes (clearance 0.20))' in sexpr
+

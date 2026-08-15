@@ -1,20 +1,26 @@
-# Independent research projects
+# Independent & External Research Tracks
 
 > **Role:** entry / map  
 > **Status:** active  
-> **Source of truth for:** self-contained research tracks separate from PulseLab Forge product docs  
+> **Source of truth for:** standalone research projects decoupled from the core PulseLab Forge EDA engine  
 
-Pulse Forge lives under [`docs/`](../docs/). **This folder** holds parallel research and manuscript work that may later connect to Pulse (e.g. RF materials, simulation) but does not share Forge sprint status or Calibration Forge session numbering.
+PulseLab Forge core documentation and sprint planning live under [`docs/`](../docs/).
 
-## Active projects
+---
 
-| Project | Topic | Entry |
-|---------|-------|-------|
-| **Cristales_Solares** | Transparent IR-absorbing thermoelectric window materials | [`Cristales_Solares/README.md`](./Cristales_Solares/README.md) |
+## 📌 Inherited & Off-Topic Research Reference
 
-## Conventions
+| Project | Description | Remote Repository |
+|---------|-------------|-------------------|
+| **Cristales_Solares** | Transparent IR-absorbing thermoelectric window materials research & simulations | [anarcoiris/Cristales_Solares](https://github.com/anarcoiris/Cristales_Solares) |
 
-Each project under `documents/<ProjectName>/` follows the same layout:
+> ℹ️ *Note: `Cristales_Solares` was migrated to its own dedicated repository ([anarcoiris/Cristales_Solares](https://github.com/anarcoiris/Cristales_Solares)) to isolate Python environment dependencies and keep the PulseLab Forge core repository lightweight.*
+
+---
+
+## Project Template Convention
+
+For any future parallel research track created under `documents/<ProjectName>/`:
 
 | Path | Purpose |
 |------|---------|
@@ -24,16 +30,7 @@ Each project under `documents/<ProjectName>/` follows the same layout:
 | `manuscript/` | Long-form writing (reviews, papers) |
 | `literature/` | Bibliography (`sources.bib`) and reading notes |
 | `notes/` | Working notes and informal synthesis |
-| `findings/` | Hypothesis → evidence → **§Resultado** (same discipline as Calibration Forge) |
+| `findings/` | Hypothesis → evidence → §Resultado |
 | `data/` | Datasets, measured values, CSV exports |
 | `simulations/` | Analysis code, notebooks, project-local Python deps |
 | `tools/` | One-off scripts and utilities |
-
-## Adding a new project
-
-```powershell
-mkdir documents\NewProject\{manuscript,literature,notes,findings,data,simulations,tools}
-# Copy STATUS.md and index.md templates from Cristales_Solares and adapt.
-```
-
-Link the new project from this file and optionally from [`docs/README.md`](../docs/README.md) under a **Research (external)** row.

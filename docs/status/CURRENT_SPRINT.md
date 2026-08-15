@@ -3,31 +3,30 @@
 > **Role:** living  
 > **Status:** active  
 > **Source of truth for:** session order, blockers, and next actions  
-> **Last verified:** 2026-08-06  
+> **Last verified:** 2026-08-15  
 > **See also:** [`../calibration_forge/index.md`](../calibration_forge/index.md) · [`../roadmap.md`](../roadmap.md) · [`../status/FORGE_STATUS.md`](./FORGE_STATUS.md)
 
 ## Execution order (Agosto Sprint)
 
-**PCB Builder** ✅ → **Audit Gate R001-R014** ✅ → **Modular Providers & 128k Ctx** ✅ → **A* Autorouter Clearance Engine** ✅ → **KiCad 10.0 PCB/SCH Sync** ✅ → **Estabilización LLM Context** ⏳
+**PCB Builder** ✅ → **Audit Gate R001-R014** ✅ → **Thermal & Ground Zone Engines** ✅ → **Component DB & Multi-Provider Fetchers** ✅ → **100% SCH↔PCB Parity** ✅ → **FastAPI Backend & Web UI** ⏳
 
-## Where we are (06-aug-2026)
+## Where we are (15-aug-2026)
 
 | Hito / Módulo | Estado | Documento / Artefacto |
 |---------------|--------|-----------------------|
 | Automated PCB Builder | ✅ | `bridge/pcb_builder.py` |
 | Topological Audit Gate (R001-R014) | ✅ | `core/kicad_audit.py` (15 unit tests) |
-| Modular LLM Providers | ✅ | `knowledge/providers/` |
-| Multi-turn 128k Context Agent | ✅ | `knowledge/circuit_agent.py` |
-| A* Autorouter Clearance Engine | ✅ Completado | Envolvente de clearance $0.35\,\text{mm}$ y corredor de pista $0.50\,\text{mm}$ (`bridge/pcb_layout.py`) |
-| KiCad 10.0 PCB/SCH Synthesis | ✅ Completado | Sintaxis S-expr `net_class` raíz, cabecera 10.0.3 con propiedad `Footprint` (CLI `Returncode 0`) |
-| Cross-check Esquemático↔PCB | ✅ Completado | `core/sch_pcb_crosscheck.py` (3 unit tests, 100% Coincidencia) |
-| Reducción Reintentos LLM (<3) | ⏳ Pendiente | Optimización de prompts en síntesis compleja |
+| Thermal Management Engine | ✅ Completado | `core/thermal_engine.py` (grid $3 \times 3$ en EPAD) |
+| Ground Pour & Via Stitching Grid | ✅ Completado | `core/copper_zone_manager.py` (planos 0V + stitching) |
+| Systematized Component DB & Candidates | ✅ Completado | `core/component_db.py` (39 componentes) |
+| Multi-Provider Supply Chain Engine | ✅ Completado | `core/providers/` (JLCPCB + PCBWay con cache 24h) |
+| Cross-check Esquemático↔PCB | ✅ Completado | `core/sch_pcb_crosscheck.py` (100% coincidencia) |
+| FastAPI Backend Gateway | ⏳ Pendiente | `app/main.py` (`/api/v1/generate-pcb`) |
 
 ## Next actions
 
-1. **Estabilización LLM Context & Prompts**: Optimización de prompts para reducir reintentos en síntesis complejas de circuitos.
-2. **Validación End-to-End**: Re-ejecutar el arnés de prueba en `pulselab_zero` y `flipper_multiboard` tras aplicar las mejoras de ruteado y clearance.
-3. **Consolidación de Reglas Diferenciales**: Definición de clases de red avanzadas en `knowledge/data/flipper_multiboard_pcb.json`.
+1. **FastAPI Backend Gateway (`app/main.py`)**: Implementar endpoint `/api/v1/generate-pcb` para orquestar la generación HTTP.
+2. **Web Canvas Frontend (`webapp/`)**: Desarrollar visualizador web 2D SVG y WebGL 3D.
 
 ## Active blockers
 

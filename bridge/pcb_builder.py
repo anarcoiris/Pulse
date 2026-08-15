@@ -171,17 +171,48 @@ class PCBBuilder:
         pcb.board.origin_x = offset_x
         pcb.board.origin_y = offset_y
 
+        # Check if components need auto-placement
+        unpositioned = [
+            c for c in comps
+            if not (hasattr(c, 'position') and isinstance(getattr(c, 'position'), (tuple, list, dict)))
+        ]
+        if unpositioned:
+            from core.auto_placement import AutoPlacementEngine
+            comp_dicts = [
+                {
+                    "etype": getattr(c, "etype", ""),
+                    "label": getattr(c, "label", c.uid),
+                    "value": str(getattr(c, "value", "")),
+                    "symbol": str(getattr(c, "symbol", "")),
+                    "footprint": str(getattr(c, "footprint", "")),
+                    "pins": getattr(c, "pins", {}),
+                    "n1": getattr(c, "n1", ""),
+                    "n2": getattr(c, "n2", "")
+                }
+                for c in comps
+            ]
+            engine = AutoPlacementEngine(w, h)
+            placed_dicts = engine.compute_placement(comp_dicts)
+            pos_map = {d["label"]: d["position"] for d in placed_dicts if "position" in d}
+        else:
+            pos_map = {}
+
         for c in comps:
             pos = None
             if hasattr(c, 'position') and isinstance(c.position, (tuple, list, dict)):
                 if isinstance(c.position, dict):
-                    pos = (c.position.get('x', 10.0), c.position.get('y', 10.0))
+                    pos = (c.position.get('x', 0.0), c.position.get('y', 0.0))
                 else:
                     pos = c.position
             if not pos:
-                pos = positions.get(c.uid) or positions.get(getattr(c, 'label', ''))
+                label = getattr(c, 'label', c.uid)
+                if label in pos_map:
+                    pos = pos_map[label]
+                else:
+                    pos = positions.get(c.uid) or positions.get(label)
             if not pos:
-                pos = (10.0, 10.0)
+                pos = (0.0, 0.0)
+
             x, y = pos[0], pos[1]
             x += offset_x + w / 2.0
             y += offset_y + h / 2.0
@@ -393,15 +424,16 @@ class PCBBuilder:
             pcb.add_copper_pour(gnd_net, layer="F.Cu", margin=margin)
             pcb.add_copper_pour(gnd_net, layer="B.Cu", margin=margin)
 
+        # Inject ground via stitching matrix to bridge F.Cu and B.Cu copper pour zones
+        if gnd_net:
+            pcb.add_gnd_via_stitching(spacing_mm=6.0, net=gnd_net)
+
         if not self.skip_routing:
             self._route_usb_nets(pcb)
             pcb.autoroute(
                 width=self.trace_width,
                 grid_size=0.125,
             )
-
-            if gnd_net:
-                pcb.add_gnd_via_stitching(spacing_mm=12.0)
 
     def _route_usb_nets(self, pcb: PCBLayout) -> None:
         """Apply USB diff-pair geometry when D+/D- nets and pads exist."""

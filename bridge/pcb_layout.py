@@ -42,6 +42,7 @@ class Pad:
     net_id: int = 0
     net_name: str = ""
     layers: list = None  # list of layer strings
+    zone_connect: Optional[int] = None  # 0=none, 1=thermal_relief, 2=solid
 
     def __post_init__(self):
         if self.layers is None:
@@ -53,12 +54,13 @@ class Pad:
     def to_sexpr(self) -> str:
         drill_str = f" (drill {self.drill})" if self.drill > 0 else ""
         layers_str = " ".join(f'"{ly}"' for ly in self.layers)
+        zone_conn_str = f" (zone_connect {self.zone_connect})" if self.zone_connect is not None else ""
         uid = str(uuid.uuid4())
         return (
             f'    (pad "{self.number}" {self.pad_type} {self.shape} '
             f'(at {self.x:.4f} {self.y:.4f}) '
             f'(size {self.w:.4f} {self.h:.4f}){drill_str} '
-            f'(layers {layers_str}) '
+            f'(layers {layers_str}){zone_conn_str} '
             f'(net {self.net_id} "{self.net_name}") (uuid "{uid}"))'
         )
 
@@ -364,18 +366,30 @@ class Zone:
     layer: str = "F.Cu"
     points: list[tuple[float, float]] = field(default_factory=list)
     priority: int = 0
+    connect_pads_mode: str = "thermal_relief"  # "thermal_relief", "solid", "none"
+    clearance: float = 0.15
+    min_thickness: float = 0.20
+    thermal_bridge_width: float = 0.50
+    thermal_gap: float = 0.50
 
     def to_sexpr(self) -> str:
         uid = str(uuid.uuid4())
         pts_str = "\n          ".join(f"(xy {x:.4f} {y:.4f})" for x, y in self.points)
+        if self.connect_pads_mode == "solid":
+            conn_str = f"(connect_pads yes (clearance {self.clearance:.2f}))"
+        elif self.connect_pads_mode == "none":
+            conn_str = f"(connect_pads no (clearance {self.clearance:.2f}))"
+        else:
+            conn_str = f"(connect_pads (clearance {self.clearance:.2f}))"
+
         return (
             f'  (zone (net {self.net_id}) (net_name "{self.net_name}") (layer "{self.layer}") '
             f'(uuid "{uid}")\n'
             f'    (hatch edge 0.5)\n'
             f'    (priority {self.priority})\n'
-            f'    (connect_pads (clearance 0.15))\n'
-            f'    (min_thickness 0.20)\n'
-            f'    (fill yes (thermal_gap 0.15) (thermal_bridge_width 0.20))\n'
+            f'    {conn_str}\n'
+            f'    (min_thickness {self.min_thickness:.2f})\n'
+            f'    (fill yes (thermal_gap {self.thermal_gap:.2f}) (thermal_bridge_width {self.thermal_bridge_width:.2f}))\n'
             f'    (polygon\n'
             f'      (pts\n          {pts_str}\n      )\n'
             f'    )\n'

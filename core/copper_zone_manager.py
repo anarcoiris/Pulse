@@ -108,16 +108,29 @@ def generate_stitching_vias(
 
     return vias
 
+import uuid
+
 def format_zone_sexpr(zone: CopperZone) -> str:
     """Formats a CopperZone into KiCad S-expression string block."""
-    pts_str = " ".join([f"(xy {x:.4f} {y:.4f})" for x, y in zone.points])
+    pts_str = "\n          ".join([f"(xy {x:.4f} {y:.4f})" for x, y in zone.points])
+    u_id = str(uuid.uuid4())
+    if zone.connect_pads == "solid":
+        conn_str = f"(connect_pads yes (clearance {zone.clearance:.2f}))"
+    elif zone.connect_pads == "none":
+        conn_str = f"(connect_pads no (clearance {zone.clearance:.2f}))"
+    else:
+        conn_str = f"(connect_pads (clearance {zone.clearance:.2f}))"
+
     return (
-        f'  (zone (net {zone.net_id}) (net_name "{zone.net_name}") (layer "{zone.layer}")\n'
+        f'  (zone (net {zone.net_id}) (net_name "{zone.net_name}") (layer "{zone.layer}") '
+        f'(uuid "{u_id}")\n'
         f'    (hatch {zone.hatch_style} {zone.hatch_pitch:.2f})\n'
-        f'    (connect_pads (clearance {zone.clearance:.2f}))\n'
+        f'    (priority 0)\n'
+        f'    {conn_str}\n'
         f'    (min_thickness {zone.min_thickness:.2f})\n'
-        f'    (filled_polygon\n'
-        f'      (pts {pts_str})\n'
+        f'    (fill yes (thermal_gap {zone.thermal_gap:.2f}) (thermal_bridge_width {zone.thermal_bridge_width:.2f}))\n'
+        f'    (polygon\n'
+        f'      (pts\n          {pts_str}\n      )\n'
         f'    )\n'
         f'  )'
     )

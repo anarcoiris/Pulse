@@ -6,11 +6,11 @@
 
 <div align="center">
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue)](https://python.org)
-[![KiCad](https://img.shields.io/badge/KiCad-8%2B-1BA94C)](https://www.kicad.org/)
-[![MCP Tools](https://img.shields.io/badge/MCP-31%20tools-orange)](https://github.com/anarcoiris/Pulse/tree/main/mcp_server)
-[![GitHub stars](https://img.shields.io/github/stars/anarcoiris/Pulse?style=flat-square)](https://github.com/anarcoiris/Pulse/stargazers)
-[![License](https://img.shields.io/badge/License-not%20specified-lightgrey)](#-licencia)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
+[![KiCad](https://img.shields.io/badge/KiCad-8%2B%20%7C%2010.0-1BA94C.svg)](https://www.kicad.org/)
+[![Tests](https://img.shields.io/badge/Tests-152%20passing-brightgreen.svg)](https://github.com/anarcoiris/Pulse)
+[![MCP Tools](https://img.shields.io/badge/MCP-31%20tools-orange.svg)](https://github.com/anarcoiris/Pulse/tree/main/mcp_server)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 </div>
 
@@ -29,43 +29,53 @@
  *                    `88bo,__,o, 888b "88bo,888   888,888         88,                                          
  *                      "YUMMMMMP"MMMM   "W" YMM   ""` "MM,        MMM                                          
  */
- ```
-> ☕ You can **buy me a coffee**... or help me update my Pascal GPUs!
+```
 
-ΧΜΡ: bc1qdwd85m7va6zetwjat9un3agxvvxg65tsld9v8j
-
-BTC: 8BdiSxgPtYTXaG8MB8WehKBQkQYpxxYcBcVSTGqh4s3jdYqDNuHL2KnFiRKs7bZqpASssKfGUjYFseL3931M4dseVLiZwA6
-
-**⚡ Editor de circuitos y simulador MNA unificado, con diseño algorítmico de PCB y agentes autónomos vía MCP**
+**⚡ Unified Circuit Editor & MNA Simulator with Algorithmic PCB Layout & Autonomous MCP Hardware Synthesis**
 
 ---
 
-> 🚧 **Proyecto en desarrollo activo.** La arquitectura y las herramientas cambian con frecuencia — consulta [`docs/status/FORGE_STATUS.md`](docs/status/FORGE_STATUS.md) para ver el estado real y [`docs/status/CURRENT_SPRINT.md`](docs/status/CURRENT_SPRINT.md) para el sprint en curso.
+> 🚧 **Active Development.** Architecture and generative pipelines evolve continuously — check [`docs/status/FORGE_STATUS.md`](docs/status/FORGE_STATUS.md) for live metrics and [`docs/status/CURRENT_SPRINT.md`](docs/status/CURRENT_SPRINT.md) for current active sprint tasks.
 
-## 🎯 ¿Qué es Pulse?
+---
 
-**PulseLab Forge** es un editor de circuitos y simulador **MNA** (Modified Nodal Analysis) que va del esquema conceptual a los archivos de fabricación industrial (Gerbers, Drill, CPL) sin salir de un único flujo de trabajo.
+## 🎯 What is Pulse?
 
-A diferencia de un editor de esquemáticos clásico, Pulse integra un **motor de layout de PCB algorítmico** propio (auto-emplazamiento, ruteo, exportación) y un **servidor MCP local con 31 herramientas**, de forma que un agente LLM puede diseñar, revisar y exportar un circuito completo de forma autónoma — desde "diseña un ESP32 con BME280 en I2C" hasta el Gerber final listo para PCBWay o JLCPCB.
+**PulseLab Forge** is a unified Modified Nodal Analysis (MNA) circuit editor, generative PCB synthesis engine, and hardware manufacturing pipeline. It bridges conceptual schematics to production-ready manufacturing deliverables (Gerbers, Drill files, CPL, BOM, and KiCad 8+/10 S-expressions) without leaving a single programmatic workflow.
 
-### Características principales
+Unlike standard CAD packages, Pulse incorporates:
+1. **Procedural PCB Layout Engine**: Force-directed attraction/repulsion, thermal via matrix generator, ground plane manager with inter-layer via stitching, and Specctra DSN/FreeRouting auto-routing bridge.
+2. **Multi-Provider Supply Chain Engine**: Live component fetching from **JLCPCB (LCSC)** and **PCBWay** catalogs with local 24h disk caching and interactive component candidate decision matching.
+3. **Local MCP Server (31 Tools)**: Exposes structural circuit design, schematic cross-checks, DRC verification, thermal calculation, and CAM exports directly to LLM agents (Claude Desktop, Ollama, etc.).
 
-| Módulo | Descripción |
-|---|---|
-| 🖥️ **Simulador y editor visual** (`pulse_lab.py`) | Interfaz PyGame con render anti-aliased, motor MNA para simulación temporal, osciloscopio en vivo, componentes R/C/L/fuentes/switches |
-| 🧩 **Diseño algorítmico de PCB** | Auto-emplazamiento (lineal, circular, simetrías), generación nativa de `.kicad_pcb` (S-Expression), ruteo automatizado, export Gerber vía `kicad-cli` |
-| 🧠 **Inteligencia y RAG** | Servidor **MCP** local con 31 herramientas, RAG híbrido (TF-IDF + embeddings) sobre normativas IPC-2221 y pinouts de KiCad, modelo local por defecto `qwythos-9b-96k` (Ollama) |
-| 🛠️ **Forge Studio** (`studio/`) | REPL headless con streaming en vivo de `thinking` + `content`, pensado para depurar el pipeline LLM sin PyGame |
+---
 
-## 🚀 Inicio rápido
+## 🛠️ Main Features & Modules
 
-### Requisitos previos
+| Module | Location | Description |
+|---|---|---|
+| 🖥️ **MNA Simulator & UI** | `pulse_lab.py` | PyGame visual editor with anti-aliased rendering, real-time MNA solver, live oscilloscope, and interactive passive/active components. |
+| 📐 **Algorithmic PCB Builder** | `bridge/pcb_builder.py` | Generates KiCad 8+/10 S-expressions, coordinates auto-placement heuristics, thermal pads, and DRC gates. |
+| 📍 **2D Auto-Placement Engine** | `core/auto_placement.py` | Physics-based placement relaxation using Hooke attraction, Coulomb pin repulsion, and domain orientation rules. |
+| ⚡ **Thermal Management Engine** | `core/thermal_engine.py` | Automated $3 \times 3$ thermal via grids under high-power pads (e.g. ESP32 EPAD 41, AMS1117 tab) with solid zone connections. |
+| 🛡️ **Ground Zone & Via Stitching** | `core/copper_zone_manager.py` | Automated double-sided `PWR_GND` ground pours, $0.50\,\text{mm}$ thermal peninsulas, and matrix inter-layer ground via stitching. |
+| 📦 **Multi-Provider Fetcher Engine** | `core/providers/` | Live side-by-side component search across **JLCPCB (LCSC)** and **PCBWay** with Basic/Extended library detection and local caching. |
+| 🎨 **Graphics & Stencil Engine** | `bridge/graphics_engine.py` | Converts DXF/SVG vector artwork into silk/copper KiCad polygon primitives (`gr_poly`). |
+| 🛣️ **FreeRouting Auto-Router Bridge** | `bridge/freerouting_bridge.py` | DSN export (`kicad-cli pcb export dsn`), headless FreeRouting CLI runner, and SES back-annotation import. |
+| 📑 **100% SCH $\leftrightarrow$ PCB Parity** | `core/sch_pcb_crosscheck.py` | Automatic net and symbol cross-check gate embedded into DRC validation. |
+| 🧠 **MCP Server (31 Tools)** | `mcp_server/` | FastMCP service exposing complete hardware synthesis capabilities to external LLM client apps. |
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
 
 - **Python 3.10+**
-- **KiCad 8+** (para exportación Gerber/SVG — debe estar en el `PATH` o instalado de forma estándar)
-- **Ollama** corriendo en `:11431` con el modelo `qwythos-9b-96k` (necesario para Forge Studio y Forge GUI)
+- **KiCad 8+ or KiCad 10+** (in `PATH` for Gerber/Drill generation and SVG export via `kicad-cli`)
+- *(Optional)* **Ollama** running locally on `:11434` or `:11431` for Forge Studio LLM agent features.
 
-### Instalación
+### Installation
 
 ```bash
 git clone https://github.com/anarcoiris/Pulse.git
@@ -73,164 +83,94 @@ cd Pulse
 pip install -r requirements.txt
 ```
 
-### Arrancar el editor principal
+### Launch the Visual Circuit Editor & Simulator
 
 ```bash
 python pulse_lab.py
 ```
 
-## 🧠 Cómo diseña un circuito el agente
+### Run Full Test Suite (152 Unit Tests)
 
-```
-Usuario: "Diseña un ESP32 con BME280 en I2C"
-
-Flujo interno:
-
-  1. El servidor MCP (31 herramientas) recibe la petición
-     → identifica los componentes necesarios: ESP32, BME280
-
-  2. El motor RAG híbrido (TF-IDF + embeddings) consulta
-     → normativas IPC-2221 y pinouts de KiCad indexados
-
-  3. circuit_synthesizer genera el netlist
-     → elige huellas (footprints) para cada componente
-
-  4. pcb_layout.py ejecuta el auto-emplazamiento y el ruteo
-     → genera las pistas de forma algorítmica
-
-  5. gerber_export.py invoca kicad-cli
-     → produce Gerbers, Drill y CPL listos para fabricación
+```bash
+python -m pytest tests/
 ```
 
-**Sin este pipeline**, diseñar un PCB implica pasar manualmente por el esquemático, el ruteo y la exportación en la UI de KiCad. **Con él**, un agente puede completar todo el ciclo describiendo el circuito en lenguaje natural.
+---
 
-## 📁 Estructura del proyecto
+## 📁 Repository Structure
 
 ```
 Pulse/
-├── core/                 ← Motor de simulación y bases de datos
-│   ├── component_db.py
-│   ├── netlist.py
-│   └── rf_tools.py
-├── bridge/               ← Interconexión con KiCad
-│   ├── pcb_layout.py     ← Motor procedural de .kicad_pcb
-│   ├── kicad_bridge.py   ← Localizador de binarios / SKiDL
-│   └── gerber_export.py  ← Orquestador de kicad-cli
-├── knowledge/            ← Motor RAG y agentes LLM
-│   ├── circuit_synthesizer
-│   └── semantic_reviewer
-├── studio/               ← Forge Studio (REPL headless, python -m studio)
-├── mcp_server/           ← Servidor MCP (31 herramientas expuestas)
-├── ui/                   ← Componentes de interfaz PyGame
-├── webapp/               ← Frontend web (TypeScript)
-├── examples/             ← Ejemplos y casos de referencia
-├── presets/              ← Plantillas y configuraciones predefinidas
-├── scripts/              ← Utilidades y automatizaciones
-├── tests/                ← Suite de tests (pytest)
-├── docs/                 ← Documentación del proyecto
-└── Pulse_cfg.json        ← Configuración del backend LLM
+├── core/                 ← Physics simulation, placement algorithms, supply chain & audit gates
+│   ├── auto_placement.py ← 2D spatial layout physics engine
+│   ├── circuit_engine.py ← Modified Nodal Analysis (MNA) solver
+│   ├── component_db.py   ← Systematized component database & decision assistant
+│   ├── copper_zone_manager.py ← Ground plane pour & via stitching manager
+│   ├── kicad_audit.py    ← 14-rule topological pre-routing audit gate
+│   ├── provider_fetcher.py ← JLCPCB / PCBWay multi-provider fetcher & cache
+│   ├── providers/        ← Supplier API fetchers (JLCPCB, PCBWay)
+│   ├── sch_pcb_crosscheck.py ← Schematic <-> PCB net & symbol validator
+│   └── thermal_engine.py ← Thermal via grid & pad zone connection manager
+├── bridge/               ← KiCad compilation, S-expressions, graphics & auto-routing
+│   ├── freerouting_bridge.py ← Specctra DSN export & SES import wrapper
+│   ├── gerber_export.py  ← Fabrication CAM export orchestrator (kicad-cli)
+│   ├── graphics_engine.py← Polygon vector logo artwork renderer
+│   ├── kicad_bridge.py   ← Cross-platform KiCad CLI wrapper & DRC gate
+│   ├── pcb_builder.py    ← S-expression PCB generator & auto-placement fallback
+│   ├── pcb_layout.py     ← S-expression primitives & zone connection overrides
+│   └── schematic_generator.py ← Automatic .kicad_sch builder with mounting holes
+├── knowledge/            ← RAG knowledge base, prompt templates & agent engines
+│   ├── circuit_agent.py  ← Multi-turn hardware agent loop
+│   ├── circuit_synthesizer.py ← High-level NLP circuit synthesis
+│   └── rag_engine.py     ← Hybrid RAG over IPC-2221 standards & KiCad libraries
+├── studio/               ← Forge Studio headless LLM REPL (`python -m studio`)
+├── mcp_server/           ← Local MCP server (31 exposed tools)
+├── ui/                   ← PyGame presentation layer & oscilloscope UI
+├── webapp/               ← Next.js / Vite web frontend canvas
+├── docs/                 ← Project documentation, status metrics & roadmap
+├── presets/              ← Circuit templates (ESP32 DevKit, EMP PFN, MCU UART)
+├── scripts/              ← Automation scripts & reference generation loops
+└── tests/                ← Pytest regression suite (152 tests)
 ```
 
-## 🛠️ Componentes principales
+---
 
-| Componente | Responsabilidad |
-|---|---|
-| **pulse_lab.py** | Editor visual y simulador MNA (PyGame) |
-| **bridge/pcb_layout.py** | Motor procedural de layout de PCB |
-| **bridge/gerber_export.py** | Exportación a archivos de fabricación vía `kicad-cli` |
-| **knowledge/circuit_synthesizer** | Genera netlists y elige huellas de componentes |
-| **knowledge/semantic_reviewer** | Revisión semántica del circuito generado |
-| **studio/** | REPL de depuración LLM con streaming en vivo |
-| **mcp_server/** | Expone 31 herramientas a Claude Desktop u otros agentes MCP |
+## 🎬 Modos de Uso / Execution Modes
 
-## 🎬 Modos de uso
-
-### Editor principal (PyGame)
+### 1. Main PyGame UI Simulator
 
 ```bash
 python pulse_lab.py
 ```
 
-### Forge Studio — shell LLM con streaming (Windows Terminal recomendado)
+### 2. Forge Studio (Headless LLM Debug REPL)
 
 ```powershell
-$env:PYTHONIOENCODING='utf-8'
-pip install -r requirements.txt
 python -m studio
-python -m studio --backend primary   # qwythos-9b-96k (auto por defecto)
 ```
 
-Ejemplo de sesión:
+Session log transcripts are stored under `knowledge/data/llm_sessions/sessions/{session_id}/`.
 
-```
-studio> /backends
-studio> Diseña un ESP32 con BME280 en I2C
-studio> /review
-studio> /schematic
-studio> /save output/studio_circuit.json
-studio> /quit
-```
-
-Los logs de la sesión LLM se guardan en `knowledge/data/llm_sessions/sessions/{session_id}/`.
-
-### Servidor MCP (Claude Desktop u otros agentes)
+### 3. MCP Server (Claude Desktop / Agent Integration)
 
 ```bash
 python -m mcp_server.server
 ```
 
-### Validación batch (Calibration Forge)
+---
 
-```bash
-python -m knowledge.validate_complex_apps --case esp32_sensors
-```
+## 📚 Documentation Map
 
-## 🧪 Testing
-
-```bash
-pytest tests/
-```
-
-## 📚 Documentación
-
-| Documento | Contenido |
+| Document | Purpose |
 |---|---|
-| [`docs/README.md`](docs/README.md) | Mapa de toda la documentación |
-| [`docs/status/CURRENT_SPRINT.md`](docs/status/CURRENT_SPRINT.md) | Sprint activo, blockers, próximas acciones |
-| [`docs/status/FORGE_STATUS.md`](docs/status/FORGE_STATUS.md) | Métricas (tests, RAG, MCP) |
-| [`docs/roadmap.md`](docs/roadmap.md) | Fases del producto |
-| [`docs/calibration_forge/index.md`](docs/calibration_forge/index.md) | Investigación de Calibration Forge |
-## ⚠️ Post-Mortem Note: The 12-Day Validation Gap (July 18, 2026)
-
-**A note from the Steward:** Between July 7 and July 18, the project experienced a seeming halt in LLM validation tasks (Session 4b). Initial reviews incorrectly diagnosed this as "resume-driven development" or strategic avoidance. 
-
-The reality was a severe hardware-level crash: dynamic prompt caching (`--cache-ram`) in `llama.cpp` was causing high-bandwidth PCIe bursts that physically dropped GPU1 from the bus, corrupting orchestrator sessions and causing kernel-level hangs. 
-
-While the hardware fault was being diagnosed and mitigated (via dynamic tensor splitting and `--cache-ram 0`), the team wisely pivoted to building the `skills/` knowledge base architecture—a task that required structural engineering rather than heavy LLM execution. 
-
-With the Qwythos orchestrator now stabilized, the repository documentation has been fully synchronized, and we are clear to resume the pipeline blockers. For full details on the hardware crash, see [`docs/calibration_forge/verification/pcie_instability_postmortem.md`](docs/calibration_forge/verification/pcie_instability_postmortem.md).
-
-
-## 🤝 Contribuciones
-
-Este proyecto está en evolución constante y las contribuciones son bienvenidas:
-
-- **Reporta bugs o ideas** abriendo un [issue](https://github.com/anarcoiris/Pulse/issues).
-- **Propón cambios** vía pull request — indica claramente qué módulo tocas (`core`, `bridge`, `knowledge`, `studio`, `mcp_server`...) y por qué.
-- Antes de un PR grande, es buena idea abrir primero un issue para discutir el enfoque.
-
-## 📄 Licencia
-
-Este repositorio no incluye actualmente un archivo `LICENSE`. Si tienes previsto que otras personas usen, modifiquen o distribuyan el código, te recomendamos añadir uno explícito (por ejemplo MIT o Apache-2.0) lo antes posible.
+| [`docs/README.md`](docs/README.md) | Complete documentation index and doc roles |
+| [`docs/status/CURRENT_SPRINT.md`](docs/status/CURRENT_SPRINT.md) | Active sprint execution order & next actions |
+| [`docs/status/FORGE_STATUS.md`](docs/status/FORGE_STATUS.md) | Verified system metrics (tests, RAG, MCP tools) |
+| [`docs/roadmap.md`](docs/roadmap.md) | Product phases & feature roadmap |
+| [`docs/architecture/APP_ARCHITECTURE.md`](docs/architecture/APP_ARCHITECTURE.md) | System architecture & layer isolation rules |
 
 ---
 
-<div align="center">
+## 📄 License
 
-**Si este proyecto te resulta útil, considera darle una ⭐**
-
-[⭐ Star](https://github.com/anarcoiris/Pulse/stargazers) · [🍴 Fork](https://github.com/anarcoiris/Pulse/fork) · [🐛 Issues](https://github.com/anarcoiris/Pulse/issues)
-
-Proyecto de [@anarcoiris](https://github.com/anarcoiris)
-
-</div>
+Distributed under the **Apache License 2.0**. See [`LICENSE`](LICENSE) for details.

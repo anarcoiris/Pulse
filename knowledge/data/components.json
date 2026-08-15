@@ -1,80 +1,76 @@
 [
   {
-    "id": "ATmega328P",
+    "id": "ESP32-S3-WROOM-1",
     "category": "MCU",
-    "family": "AVR",
-    "manufacturer": "Microchip",
-    "kicad_symbol": "MCU_Microchip_ATmega:ATmega328P-AU",
-    "kicad_footprint": "Package_QFP:TQFP-32_7x7mm_P0.8mm",
-    "footprint_alt": "Package_DIP:DIP-28_W7.62mm",
+    "family": "ESP32-S3",
+    "subcategory": "wifi_bt_mcu",
+    "manufacturer": "Espressif Systems",
+    "jlcpcb_part": "C2913202",
+    "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+    "kicad_symbol": "RF_Module:ESP32-S3-WROOM-1",
+    "kicad_footprint": "RF_Module:ESP32-S3-WROOM-1",
+    "footprint_info": {
+      "package": "SMD-44",
+      "dimensions_mm": [18.0, 25.5, 3.2],
+      "pin_count": 44,
+      "mounting_type": "SMD",
+      "thermal_pad": true
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "3.0V - 3.6V",
+      "max_current_a": 0.5,
+      "interface_bus": ["USB OTG", "SPI", "I2C", "UART", "I2S", "SDIO"],
+      "cpu": "Dual-core 32-bit LX7 @ 240MHz"
+    },
     "params": {
-      "vcc_min_v": 1.8,
-      "vcc_max_v": 5.5,
-      "typical_vcc_v": 5.0,
-      "flash_kb": 32,
-      "sram_kb": 2,
-      "eeprom_kb": 1,
-      "max_freq_mhz": 20,
-      "adc_channels": 8,
-      "adc_bits": 10,
-      "adc_vref_internal_v": 1.1,
-      "uart": 1,
-      "spi": 1,
-      "i2c": 1,
-      "timers_8bit": 2,
-      "timers_16bit": 1,
-      "pwm_channels": 6,
-      "gpio_pins": 23,
-      "isp": true,
-      "jtag": false,
-      "current_max_ma": 200,
-      "pin_current_max_ma": 40
+      "vcc_min_v": 3.0,
+      "vcc_max_v": 3.6,
+      "typical_vcc_v": 3.3,
+      "flash_kb": 8192,
+      "sram_kb": 512,
+      "max_freq_mhz": 240,
+      "adc_channels": 20,
+      "adc_bits": 12,
+      "wifi": true,
+      "bluetooth": true,
+      "cpu_cores": 2
     },
-    "pins": {
-      "VCC":  {"numbers": [7, 20], "type": "power_in"},
-      "AVCC": {"numbers": [18],    "type": "power_in", "note": "ADC supply, bypass with 100nF + 10µH inductor"},
-      "GND":  {"numbers": [8, 22], "type": "power_in"},
-      "AREF": {"numbers": [21],    "type": "analog",   "note": "ADC voltage reference, bypass 100nF to GND"},
-      "RESET":{"numbers": [1],     "type": "input",    "note": "Active LOW, 10kΩ pull-up required"},
-      "PB0":  {"numbers": [14],    "alt": ["ICP1","CLKO"], "type": "gpio"},
-      "PB1":  {"numbers": [15],    "alt": ["OC1A"],         "type": "gpio"},
-      "PB2":  {"numbers": [16],    "alt": ["SS","OC1B"],    "type": "gpio"},
-      "PB3":  {"numbers": [17],    "alt": ["MOSI","OC2A"],  "type": "gpio"},
-      "PB4":  {"numbers": [18],    "alt": ["MISO"],          "type": "gpio"},
-      "PB5":  {"numbers": [19],    "alt": ["SCK"],           "type": "gpio"},
-      "PD0":  {"numbers": [2],     "alt": ["RXD"],           "type": "gpio"},
-      "PD1":  {"numbers": [3],     "alt": ["TXD"],           "type": "gpio"},
-      "PD2":  {"numbers": [4],     "alt": ["INT0"],          "type": "gpio"},
-      "PD3":  {"numbers": [5],     "alt": ["INT1","OC2B"],   "type": "gpio"},
-      "PD4":  {"numbers": [6],     "alt": ["XCK","T0"],      "type": "gpio"},
-      "PD5":  {"numbers": [11],    "alt": ["T1","OC0B"],     "type": "gpio"},
-      "PD6":  {"numbers": [12],    "alt": ["AIN0","OC0A"],   "type": "gpio"},
-      "PD7":  {"numbers": [13],    "alt": ["AIN1"],          "type": "gpio"},
-      "PC0":  {"numbers": [23],    "alt": ["ADC0"],          "type": "analog"},
-      "PC1":  {"numbers": [24],    "alt": ["ADC1"],          "type": "analog"},
-      "PC2":  {"numbers": [25],    "alt": ["ADC2"],          "type": "analog"},
-      "PC3":  {"numbers": [26],    "alt": ["ADC3"],          "type": "analog"},
-      "PC4":  {"numbers": [27],    "alt": ["ADC4","SDA"],    "type": "analog"},
-      "PC5":  {"numbers": [28],    "alt": ["ADC5","SCL"],    "type": "analog"}
-    },
+    "alternatives": [
+      {"id": "ESP32-WROOM-32", "reason": "Drop-in alternative if USB OTG hardware native features are not required"},
+      {"id": "RP2040", "reason": "Dual-core ARM alternative for non-wireless applications"}
+    ],
     "support_circuits": {
-      "decoupling":  "100nF + 10µF ceramic en cada pin VCC/AVCC",
-      "crystal":     "16MHz + 2× 22pF C_load entre XTAL1/XTAL2 a GND",
-      "reset":       "10kΩ pull-up de RESET a VCC + 100nF a GND",
-      "programming": "Header ICSP 2×3, 2.54mm: MISO-VCC-SCK-MOSI-RESET-GND"
+      "decoupling": "100nF ceramic cap near pin 2 (3V3) + 10µF bulk capacitor",
+      "reset": "10kΩ pull-up resistor to 3.3V on EN pin + 100nF capacitor to GND",
+      "boot": "GPIO0 floating = normal boot; LOW = serial bootloader mode"
     },
-    "typical_applications": ["Arduino compatible", "Sensor nodes", "Motor control", "Prototype MCU boards"],
-    "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega328P-DS.pdf",
-    "notes": "El MCU preferido para proyectos Arduino. 5V-compatible, amplia comunidad."
+    "notes": "MCU principal de alta velocidad con aceleración Vector AI y soporte USB Nativo OTG."
   },
-
   {
     "id": "ESP32-WROOM-32",
     "category": "MCU",
     "family": "ESP32",
-    "manufacturer": "Espressif",
+    "subcategory": "wifi_bt_mcu",
+    "manufacturer": "Espressif Systems",
+    "jlcpcb_part": "C181781",
+    "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
     "kicad_symbol": "RF_Module:ESP32-WROOM-32",
     "kicad_footprint": "RF_Module:ESP32-WROOM-32",
+    "footprint_info": {
+      "package": "SMD-38",
+      "dimensions_mm": [18.0, 25.5, 3.1],
+      "pin_count": 38,
+      "mounting_type": "SMD",
+      "thermal_pad": true
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "3.0V - 3.6V",
+      "max_current_a": 0.5,
+      "interface_bus": ["SPI", "I2C", "UART", "I2S", "DAC"],
+      "cpu": "Dual-core Xtensa LX6 @ 240MHz"
+    },
     "params": {
       "vcc_min_v": 3.0,
       "vcc_max_v": 3.6,
@@ -82,48 +78,39 @@
       "flash_kb": 4096,
       "sram_kb": 520,
       "max_freq_mhz": 240,
-      "adc_channels": 18,
-      "adc_bits": 12,
       "wifi": true,
-      "wifi_std": "802.11 b/g/n 2.4GHz",
       "bluetooth": true,
-      "bt_version": "4.2 BR/EDR + BLE",
-      "uart": 3,
-      "spi": 4,
-      "i2c": 2,
-      "i2s": 2,
-      "can": 1,
-      "ethernet_mac": true,
-      "timers_64bit": 4,
-      "pwm_channels": 16,
-      "gpio_pins": 34,
-      "dac_channels": 2,
-      "dac_bits": 8,
-      "touch_pins": 10,
-      "hall_sensor": true,
-      "current_max_ma": 500,
-      "current_sleep_ua": 10,
       "cpu_cores": 2
     },
-    "support_circuits": {
-      "decoupling":  "100nF + 10µF en VCC (3.3V), 100nF cerca del módulo",
-      "regulator":   "AMS1117-3.3 o similar LDO desde 5V, mínimo 500mA",
-      "en_pin":      "10kΩ pull-up a VCC en pin EN (reset)",
-      "boot":        "GPIO0 floating = normal; LOW = flash mode",
-      "usb_uart":    "CH340 o CP2102 para programación por USB"
-    },
-    "typical_applications": ["IoT", "WiFi/BT nodes", "Smart home", "Wearables", "Industrial wireless"],
-    "datasheet": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
-    "notes": "Módulo con antena integrada y 4MB flash mínimo. 3.3V únicamente — use level shifters con periféricos 5V."
+    "alternatives": [
+      {"id": "ESP32-S3-WROOM-1", "reason": "Upgrade with USB OTG and AI vector instructions"}
+    ],
+    "notes": "Módulo clásico WiFi/Bluetooth con doble núcleo para proyectos IoT generales."
   },
-
   {
     "id": "ESP8266-ESP-12F",
     "category": "MCU",
     "family": "ESP8266",
-    "manufacturer": "Espressif",
+    "subcategory": "wifi_mcu",
+    "manufacturer": "Espressif Systems",
+    "jlcpcb_part": "C82891",
+    "datasheet": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
     "kicad_symbol": "RF_Module:ESP-12F",
     "kicad_footprint": "RF_Module:ESP-12F",
+    "footprint_info": {
+      "package": "SMD-16",
+      "dimensions_mm": [16.0, 24.0, 3.0],
+      "pin_count": 16,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "3.0V - 3.6V",
+      "max_current_a": 0.3,
+      "interface_bus": ["SPI", "UART", "I2C"],
+      "cpu": "Single-core Tensilica L106 @ 80MHz"
+    },
     "params": {
       "vcc_min_v": 3.0,
       "vcc_max_v": 3.6,
@@ -131,39 +118,39 @@
       "flash_kb": 4096,
       "sram_kb": 80,
       "max_freq_mhz": 80,
-      "adc_channels": 1,
-      "adc_bits": 10,
       "wifi": true,
-      "wifi_std": "802.11 b/g/n 2.4GHz",
       "bluetooth": false,
-      "uart": 2,
-      "spi": 1,
-      "i2c": 1,
-      "gpio_pins": 11,
-      "pwm_channels": 4,
-      "current_max_ma": 300,
-      "current_sleep_ua": 10,
       "cpu_cores": 1
     },
-    "support_circuits": {
-      "decoupling":  "100nF + 10µF en VCC (3.3V)",
-      "regulator":   "AMS1117-3.3 o AP2112K desde 5V, min 300mA LDO",
-      "en_pin":      "CH_PD (EN) con 10kΩ pull-up a VCC",
-      "boot":        "GPIO0 + GPIO2 HIGH, GPIO15 LOW para arranque normal",
-      "usb_uart":    "CH340 o CP2102 conectado a TX0/RX0"
-    },
-    "typical_applications": ["WiFi IoT low-cost", "Actuadores remotos", "Gateways baratos"],
-    "datasheet": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
-    "notes": "El predecesor del ESP32. Un solo core, 1 canal ADC, ideal para proyectos WiFi simples y de bajo coste."
+    "alternatives": [
+      {"id": "ESP32-WROOM-32", "reason": "Dual core + Bluetooth upgrade"}
+    ],
+    "notes": "MCU WiFi de bajo coste ideal para actuadores y sensores IoT simples."
   },
-
   {
     "id": "STM32F103C8T6",
     "category": "MCU",
     "family": "STM32F1",
+    "subcategory": "arm_mcu",
     "manufacturer": "STMicroelectronics",
+    "jlcpcb_part": "C8734",
+    "datasheet": "https://www.st.com/resource/en/datasheet/stm32f103c8.pdf",
     "kicad_symbol": "MCU_ST_STM32F1:STM32F103C8Tx",
     "kicad_footprint": "Package_QFP:LQFP-48_7x7mm_P0.5mm",
+    "footprint_info": {
+      "package": "LQFP-48",
+      "dimensions_mm": [7.0, 7.0, 1.4],
+      "pin_count": 48,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "2.0V - 3.6V",
+      "max_current_a": 0.15,
+      "interface_bus": ["USB", "CAN", "SPI", "I2C", "USART"],
+      "cpu": "ARM Cortex-M3 @ 72MHz"
+    },
     "params": {
       "vcc_min_v": 2.0,
       "vcc_max_v": 3.6,
@@ -171,198 +158,1141 @@
       "flash_kb": 64,
       "sram_kb": 20,
       "max_freq_mhz": 72,
-      "adc_channels": 10,
-      "adc_bits": 12,
-      "uart": 3,
-      "spi": 2,
-      "i2c": 2,
-      "can": 1,
-      "usb": true,
-      "timers_16bit": 7,
-      "timers_advanced": 1,
-      "pwm_channels": 15,
-      "gpio_pins": 37,
-      "dma_channels": 7,
-      "current_max_ma": 150,
-      "jtag": true,
-      "swd": true
+      "cpu_cores": 1
     },
-    "support_circuits": {
-      "decoupling":  "100nF en cada pin VDD/VDDA, 4.7µF bulk en VCC",
-      "crystal":     "8MHz + 2× 10pF entre OSC_IN/OSC_OUT a GND",
-      "nrst":        "100nF a GND en pin NRST",
-      "boot":        "BOOT0=GND (RUN), BOOT0=VCC + BOOT1=GND (system bootloader USB/UART)",
-      "swd":         "Header 4-pin: SWDIO-SWCLK-GND-VCC (SWD programming)"
-    },
-    "typical_applications": ["Blue Pill board", "Motor control", "USB devices", "Industrial control"],
-    "datasheet": "https://www.st.com/resource/en/datasheet/stm32f103c8.pdf",
-    "notes": "El famoso 'Blue Pill'. ARM Cortex-M3 @ 72MHz. Amplia comunidad, compatible con Arduino/STM32Duino."
+    "alternatives": [
+      {"id": "STM32F411CEU6", "reason": "Higher performance Cortex-M4 with DSP and Floating Point Unit"}
+    ],
+    "notes": "MCU ARM Cortex-M3 (Blue Pill core) muy popular para sistemas de control embebido."
   },
-
+  {
+    "id": "STM32F411CEU6",
+    "category": "MCU",
+    "family": "STM32F4",
+    "subcategory": "arm_mcu",
+    "manufacturer": "STMicroelectronics",
+    "jlcpcb_part": "C2688439",
+    "datasheet": "https://www.st.com/resource/en/datasheet/stm32f411ce.pdf",
+    "kicad_symbol": "MCU_ST_STM32F4:STM32F411CEUx",
+    "kicad_footprint": "Package_DFN_QFN:UFQFPN-48-1EP_7x7mm_P0.5mm_EP5.3x5.3mm",
+    "footprint_info": {
+      "package": "UFQFPN-48",
+      "dimensions_mm": [7.0, 7.0, 0.6],
+      "pin_count": 48,
+      "mounting_type": "SMD",
+      "thermal_pad": true
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "1.7V - 3.6V",
+      "max_current_a": 0.2,
+      "interface_bus": ["USB OTG", "SPI", "I2C", "USART", "I2S"],
+      "cpu": "ARM Cortex-M4 with FPU @ 100MHz"
+    },
+    "params": {
+      "vcc_min_v": 1.7,
+      "vcc_max_v": 3.6,
+      "typical_vcc_v": 3.3,
+      "flash_kb": 512,
+      "sram_kb": 128,
+      "max_freq_mhz": 100,
+      "cpu_cores": 1
+    },
+    "alternatives": [
+      {"id": "STM32F103C8T6", "reason": "Lower cost option if FPU/512KB flash is not required"}
+    ],
+    "notes": "MCU ARM Cortex-M4 (Black Pill) a 100MHz con FPU y 512KB Flash."
+  },
   {
     "id": "RP2040",
     "category": "MCU",
     "family": "RP2040",
+    "subcategory": "arm_mcu",
     "manufacturer": "Raspberry Pi",
+    "jlcpcb_part": "C2040",
+    "datasheet": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
     "kicad_symbol": "MCU_RaspberryPi:RP2040",
     "kicad_footprint": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+    "footprint_info": {
+      "package": "QFN-56",
+      "dimensions_mm": [7.0, 7.0, 0.9],
+      "pin_count": 56,
+      "mounting_type": "SMD",
+      "thermal_pad": true
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "1.8V - 3.3V",
+      "max_current_a": 0.3,
+      "interface_bus": ["USB 1.1", "SPI", "I2C", "UART", "PIO"],
+      "cpu": "Dual ARM Cortex-M0+ @ 133MHz"
+    },
     "params": {
       "vcc_min_v": 1.8,
       "vcc_max_v": 3.3,
       "typical_vcc_v": 3.3,
       "flash_kb": 0,
-      "flash_note": "Externo SPI — QSPI Flash requerido (W25Q16 o similar)",
       "sram_kb": 264,
       "max_freq_mhz": 133,
-      "adc_channels": 4,
-      "adc_bits": 12,
-      "uart": 2,
-      "spi": 2,
-      "i2c": 2,
-      "pio_state_machines": 8,
-      "usb": true,
-      "gpio_pins": 26,
-      "pwm_channels": 16,
-      "dma_channels": 12,
-      "cpu_cores": 2,
-      "current_max_ma": 300
+      "cpu_cores": 2
     },
-    "support_circuits": {
-      "decoupling":  "100nF en cada pin VDD/IOVDD/ADC_AVDD/DAC_AVDD, 10µF bulk",
-      "flash":       "W25Q16JV SPI Flash: QSPI_CLK, QSPI_D0-D3, QSPI_SS# + 100nF bypass",
-      "crystal":     "12MHz XTAL en XIN/XOUT (o uso interno si no precisión)",
-      "usb":         "USB DP/DM con 27Ω serie en cada línea",
-      "regulator":   "RT6150 o TPS62828 para 3.3V SMPS (el Pico usa RT6150)"
-    },
-    "typical_applications": ["Raspberry Pi Pico", "USB HID", "Audio DSP", "PIO state machine tricks"],
-    "datasheet": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
-    "notes": "Arquitectura dual-core Cortex-M0+ única. Las PIO (Programmable I/O) permiten emular protocolos de hardware a alta velocidad. Sin flash interna — siempre añadir QSPI flash externa."
+    "alternatives": [
+      {"id": "ESP32-S3-WROOM-1", "reason": "Upgrade for wireless WiFi/BT projects"}
+    ],
+    "notes": "Microcontrolador Dual Cortex-M0+ con 8 bloques PIO programables."
   },
-
   {
-    "id": "LM2596S-5.0",
-    "category": "PMIC",
-    "subcategory": "buck_regulator",
-    "manufacturer": "Texas Instruments / NSS",
-    "kicad_symbol": "Regulator_Switching:LM2596S-5.0",
-    "kicad_footprint": "Package_TO_SOT_SMD:TO-263-5_TabPin3",
+    "id": "ATmega328P",
+    "category": "MCU",
+    "family": "AVR",
+    "subcategory": "avr_mcu",
+    "manufacturer": "Microchip",
+    "jlcpcb_part": "C14877",
+    "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/ATmega328P-DS.pdf",
+    "kicad_symbol": "MCU_Microchip_ATmega:ATmega328P-AU",
+    "kicad_footprint": "Package_QFP:TQFP-32_7x7mm_P0.8mm",
+    "footprint_info": {
+      "package": "TQFP-32",
+      "dimensions_mm": [7.0, 7.0, 1.0],
+      "pin_count": 32,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "1.8V - 5.5V",
+      "max_current_a": 0.2,
+      "interface_bus": ["SPI", "I2C", "USART"],
+      "cpu": "8-bit AVR RISC @ 20MHz"
+    },
     "params": {
-      "topology": "buck",
-      "vin_min_v": 7.0,
-      "vin_max_v": 40.0,
-      "vout_v": 5.0,
-      "vout_adj": false,
-      "iout_max_a": 3.0,
-      "freq_khz": 150,
-      "eff_typ_pct": 75,
-      "dropout_v": 1.0,
-      "quiescent_ua": 5000
+      "vcc_min_v": 1.8,
+      "vcc_max_v": 5.5,
+      "typical_vcc_v": 5.0,
+      "flash_kb": 32,
+      "sram_kb": 2,
+      "max_freq_mhz": 20,
+      "cpu_cores": 1
     },
-    "support_circuits": {
-      "input_cap":  "10µF electrolytic + 100nF ceramic near VIN",
-      "output_cap": "100µF electrolytic (low ESR) + 100nF ceramic",
-      "inductor":   "68µH, Isat > 3A (e.g. SRR1260-680Y)",
-      "diode":      "Schottky 3A 40V (e.g. 1N5822, MBR340)",
-      "layout":     "Minimize loop: Cin-IC-L-Cout. Schottky close to IC."
-    },
-    "datasheet": "https://www.ti.com/lit/ds/symlink/lm2596.pdf"
+    "alternatives": [
+      {"id": "ATTiny85", "reason": "Smaller 8-pin alternative for ultra-compact circuits"}
+    ],
+    "notes": "MCU clásico de 8 bits para sistemas Arduino Uno/Nano."
   },
-
+  {
+    "id": "ATTiny85",
+    "category": "MCU",
+    "family": "AVR",
+    "subcategory": "avr_mcu",
+    "manufacturer": "Microchip",
+    "jlcpcb_part": "C14867",
+    "datasheet": "https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-2586-AVR-8-bit-Microcontroller-ATtiny25-ATtiny45-ATtiny85_Datasheet.pdf",
+    "kicad_symbol": "MCU_Microchip_ATtiny:ATtiny85-20SU",
+    "kicad_footprint": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
+    "footprint_info": {
+      "package": "SOIC-8",
+      "dimensions_mm": [3.9, 4.9, 1.75],
+      "pin_count": 8,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "2.7V - 5.5V",
+      "max_current_a": 0.05,
+      "interface_bus": ["USI (SPI/I2C)", "ADC"],
+      "cpu": "8-bit AVR @ 20MHz"
+    },
+    "params": {
+      "vcc_min_v": 2.7,
+      "vcc_max_v": 5.5,
+      "typical_vcc_v": 5.0,
+      "flash_kb": 8,
+      "sram_kb": 0.5,
+      "max_freq_mhz": 20,
+      "cpu_cores": 1
+    },
+    "alternatives": [
+      {"id": "ATmega328P", "reason": "More GPIO pins and hardware UART"}
+    ],
+    "notes": "Microcontrolador de 8 pines ultracompacto para tareas simples."
+  },
+  {
+    "id": "CC1101_MODULE",
+    "category": "RF",
+    "family": "CC1101",
+    "subcategory": "sub_ghz_rf",
+    "manufacturer": "Texas Instruments",
+    "jlcpcb_part": "C99000",
+    "datasheet": "https://www.ti.com/lit/ds/symlink/cc1101.pdf",
+    "kicad_symbol": "RF_Module:CC1101_Module",
+    "kicad_footprint": "RF_Module:CC1101_Module",
+    "footprint_info": {
+      "package": "Module-8",
+      "dimensions_mm": [12.0, 18.0, 2.5],
+      "pin_count": 8,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "1.8V - 3.6V",
+      "frequency": "300MHz - 928MHz Sub-1GHz",
+      "interface_bus": ["SPI"]
+    },
+    "params": {
+      "vcc_min_v": 1.8,
+      "vcc_max_v": 3.6,
+      "typical_vcc_v": 3.3,
+      "freq_sub_ghz": true
+    },
+    "alternatives": [
+      {"id": "NRF24L01_MODULE", "reason": "Alternative 2.4GHz GFSK transceiver"}
+    ],
+    "notes": "Módulo Transceptor Sub-1GHz para radiofrecuencia (315/433/868/915 MHz)."
+  },
+  {
+    "id": "NRF24L01_MODULE",
+    "category": "RF",
+    "family": "NRF24",
+    "subcategory": "2.4ghz_rf",
+    "manufacturer": "Nordic Semiconductor",
+    "jlcpcb_part": "C99001",
+    "datasheet": "https://infocenter.nordicsemi.com/pdf/nRF24L01P_PS_v1.0.pdf",
+    "kicad_symbol": "RF_Module:NRF24L01_Module",
+    "kicad_footprint": "RF_Module:NRF24L01_Module",
+    "footprint_info": {
+      "package": "Module-8",
+      "dimensions_mm": [15.0, 29.0, 2.5],
+      "pin_count": 8,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "1.9V - 3.6V",
+      "frequency": "2.4GHz ISM Band",
+      "interface_bus": ["SPI"]
+    },
+    "params": {
+      "vcc_min_v": 1.9,
+      "vcc_max_v": 3.6,
+      "typical_vcc_v": 3.3,
+      "freq_24ghz": true
+    },
+    "alternatives": [
+      {"id": "CC1101_MODULE", "reason": "Sub-1GHz alternative for long range"}
+    ],
+    "notes": "Transceptor 2.4GHz ISM con protocolo ShockBurst™ integrado."
+  },
   {
     "id": "AMS1117-3.3",
     "category": "PMIC",
+    "family": "AMS1117",
     "subcategory": "ldo_regulator",
     "manufacturer": "Advanced Monolithic Systems",
+    "jlcpcb_part": "C6186",
+    "datasheet": "https://www.alldatasheet.com/datasheet-pdf/pdf/204682/ADMOS/AMS1117-3.3.html",
     "kicad_symbol": "Regulator_Linear:AMS1117-3.3",
     "kicad_footprint": "Package_TO_SOT_SMD:SOT-223-3_TabPin2",
+    "footprint_info": {
+      "package": "SOT-223",
+      "dimensions_mm": [3.5, 6.5, 1.8],
+      "pin_count": 4,
+      "mounting_type": "SMD",
+      "thermal_pad": true
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "4.5V - 15V",
+      "max_current_a": 1.0,
+      "vout_v": 3.3,
+      "dropout_v": 1.1
+    },
     "params": {
-      "topology": "LDO",
       "vin_min_v": 4.5,
       "vin_max_v": 15.0,
       "vout_v": 3.3,
-      "vout_adj": false,
       "iout_max_a": 1.0,
-      "dropout_v": 1.1,
-      "quiescent_ma": 5
+      "dropout_v": 1.1
     },
-    "support_circuits": {
-      "input_cap":  "10µF electrolytic (necesario para estabilidad)",
-      "output_cap": "10µF electrolytic (necesario) + 100nF ceramic"
-    },
-    "datasheet": "https://www.alldatasheet.com/datasheet-pdf/pdf/204682/ADMOS/AMS1117-3.3.html",
-    "notes": "LDO mínimo para ESP32/STM32. Dropout de 1.1V: VIN debe ser > 4.4V. Max 1A — actualizar a AMS1117-1.0A si hay riesgo térmico."
+    "alternatives": [
+      {"id": "AP2112K-3.3", "reason": "Ultra-low dropout (250mV) replacement in SOT-23-5 for battery power"},
+      {"id": "ME6211C33M5G", "reason": "Low-noise 500mA LDO alternative"}
+    ],
+    "notes": "Regulador LDO estándar de 3.3V hasta 1A con pestaña de disipación térmica SOT-223."
   },
-
+  {
+    "id": "AMS1117-5.0",
+    "category": "PMIC",
+    "family": "AMS1117",
+    "subcategory": "ldo_regulator",
+    "manufacturer": "Advanced Monolithic Systems",
+    "jlcpcb_part": "C6187",
+    "datasheet": "https://www.alldatasheet.com/datasheet-pdf/pdf/204682/ADMOS/AMS1117-5.0.html",
+    "kicad_symbol": "Regulator_Linear:AMS1117-5.0",
+    "kicad_footprint": "Package_TO_SOT_SMD:SOT-223-3_TabPin2",
+    "footprint_info": {
+      "package": "SOT-223",
+      "dimensions_mm": [3.5, 6.5, 1.8],
+      "pin_count": 4,
+      "mounting_type": "SMD",
+      "thermal_pad": true
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "6.2V - 15V",
+      "max_current_a": 1.0,
+      "vout_v": 5.0,
+      "dropout_v": 1.1
+    },
+    "params": {
+      "vin_min_v": 6.2,
+      "vin_max_v": 15.0,
+      "vout_v": 5.0,
+      "iout_max_a": 1.0
+    },
+    "alternatives": [
+      {"id": "LM2596S-5.0", "reason": "High-efficiency 3A switching regulator alternative"}
+    ],
+    "notes": "Regulador lineal LDO 5.0V 1A SOT-223."
+  },
+  {
+    "id": "AP2112K-3.3",
+    "category": "PMIC",
+    "family": "AP2112",
+    "subcategory": "ldo_regulator",
+    "manufacturer": "Diodes Incorporated",
+    "jlcpcb_part": "C52346",
+    "datasheet": "https://www.diodes.com/assets/Datasheets/AP2112.pdf",
+    "kicad_symbol": "Regulator_Linear:AP2112K-3.3",
+    "kicad_footprint": "Package_TO_SOT_SMD:SOT-23-5",
+    "footprint_info": {
+      "package": "SOT-23-5",
+      "dimensions_mm": [1.6, 2.9, 1.1],
+      "pin_count": 5,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "3.55V - 6.0V",
+      "max_current_a": 0.6,
+      "vout_v": 3.3,
+      "dropout_v": 0.25
+    },
+    "params": {
+      "vin_min_v": 3.55,
+      "vin_max_v": 6.0,
+      "vout_v": 3.3,
+      "iout_max_a": 0.6,
+      "dropout_v": 0.25
+    },
+    "alternatives": [
+      {"id": "AMS1117-3.3", "reason": "Higher current (1A) but higher dropout (1.1V)"}
+    ],
+    "notes": "LDO de ultra bajo dropout (250mV @ 600mA) con pin de Enable (EN), ideal para alimentación por batería."
+  },
+  {
+    "id": "ME6211C33M5G",
+    "category": "PMIC",
+    "family": "ME6211",
+    "subcategory": "ldo_regulator",
+    "manufacturer": "Microne",
+    "jlcpcb_part": "C82942",
+    "datasheet": "https://www.microne.com.cn/upload/file/20210323/ME6211.pdf",
+    "kicad_symbol": "Regulator_Linear:ME6211C33M5G",
+    "kicad_footprint": "Package_TO_SOT_SMD:SOT-23-5",
+    "footprint_info": {
+      "package": "SOT-23-5",
+      "dimensions_mm": [1.6, 2.9, 1.1],
+      "pin_count": 5,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "3.5V - 6.0V",
+      "max_current_a": 0.5,
+      "vout_v": 3.3,
+      "dropout_v": 0.1,
+      "psrr_db": 75
+    },
+    "params": {
+      "vin_min_v": 3.5,
+      "vin_max_v": 6.0,
+      "vout_v": 3.3,
+      "iout_max_a": 0.5
+    },
+    "alternatives": [
+      {"id": "AP2112K-3.3", "reason": "Pin-compatible 600mA low dropout LDO"}
+    ],
+    "notes": "Regulador LDO de alto PSRR y bajo ruido para alimentación de etapas RF y analógicas."
+  },
+  {
+    "id": "LM2596S-5.0",
+    "category": "PMIC",
+    "family": "LM2596",
+    "subcategory": "buck_regulator",
+    "manufacturer": "Texas Instruments",
+    "jlcpcb_part": "C34737",
+    "datasheet": "https://www.ti.com/lit/ds/symlink/lm2596.pdf",
+    "kicad_symbol": "Regulator_Switching:LM2596S-5.0",
+    "kicad_footprint": "Package_TO_SOT_SMD:TO-263-5_TabPin3",
+    "footprint_info": {
+      "package": "TO-263-5",
+      "dimensions_mm": [10.16, 15.24, 4.5],
+      "pin_count": 5,
+      "mounting_type": "SMD",
+      "thermal_pad": true
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "7.0V - 40V",
+      "max_current_a": 3.0,
+      "vout_v": 5.0,
+      "efficiency": "80%"
+    },
+    "params": {
+      "vin_min_v": 7.0,
+      "vin_max_v": 40.0,
+      "vout_v": 5.0,
+      "iout_max_a": 3.0,
+      "freq_khz": 150
+    },
+    "alternatives": [
+      {"id": "MP2307DN", "reason": "Smaller synchronous buck regulator"}
+    ],
+    "notes": "Regulador Step-Down Buck conmutado hasta 3A para altas corrientes."
+  },
+  {
+    "id": "MP2307DN",
+    "category": "PMIC",
+    "family": "MP2307",
+    "subcategory": "buck_regulator",
+    "manufacturer": "Monolithic Power Systems",
+    "jlcpcb_part": "C14256",
+    "datasheet": "https://www.monolithicpower.com/en/documentview/productdocument/index/docid/235",
+    "kicad_symbol": "Regulator_Switching:MP2307DN",
+    "kicad_footprint": "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.41x3.3mm",
+    "footprint_info": {
+      "package": "SOIC-8-EP",
+      "dimensions_mm": [3.9, 4.9, 1.7],
+      "pin_count": 8,
+      "mounting_type": "SMD",
+      "thermal_pad": true
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "4.75V - 23V",
+      "max_current_a": 3.0,
+      "frequency": "340kHz"
+    },
+    "params": {
+      "vin_min_v": 4.75,
+      "vin_max_v": 23.0,
+      "iout_max_a": 3.0,
+      "freq_khz": 340
+    },
+    "alternatives": [
+      {"id": "LM2596S-5.0", "reason": "Higher voltage 40V buck regulator"}
+    ],
+    "notes": "Regulador síncrono Buck compacto de alta eficiencia (95%)."
+  },
+  {
+    "id": "MT3608",
+    "category": "PMIC",
+    "family": "MT3608",
+    "subcategory": "boost_regulator",
+    "manufacturer": "Aerosemi",
+    "jlcpcb_part": "C84817",
+    "datasheet": "https://www.olimex.com/Products/Breadboarding/BB-PWR-MT3608/resources/MT3608.pdf",
+    "kicad_symbol": "Regulator_Switching:MT3608",
+    "kicad_footprint": "Package_TO_SOT_SMD:SOT-23-6",
+    "footprint_info": {
+      "package": "SOT-23-6",
+      "dimensions_mm": [1.6, 2.9, 1.1],
+      "pin_count": 6,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "2.0V - 24V Vin, up to 28V Vout",
+      "max_current_a": 2.0,
+      "frequency": "1.2MHz"
+    },
+    "params": {
+      "vin_min_v": 2.0,
+      "vin_max_v": 24.0,
+      "vout_max_v": 28.0,
+      "iout_max_a": 2.0
+    },
+    "alternatives": [],
+    "notes": "Convertidor elevador Boost conmutado a 1.2MHz para generar tensiones elevadas desde baterías."
+  },
+  {
+    "id": "TP4056",
+    "category": "PMIC",
+    "family": "TP4056",
+    "subcategory": "battery_charger",
+    "manufacturer": "TopPower",
+    "jlcpcb_part": "C16581",
+    "datasheet": "https://www.dorkbotpdx.org/files/TP4056.pdf",
+    "kicad_symbol": "Battery_Management:TP4056",
+    "kicad_footprint": "Package_SO:SOP-8-1EP_3.9x4.9mm_P1.27mm_EP2.41x3.3mm",
+    "footprint_info": {
+      "package": "SOP-8-EP",
+      "dimensions_mm": [3.9, 4.9, 1.75],
+      "pin_count": 8,
+      "mounting_type": "SMD",
+      "thermal_pad": true
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "charge_current_a": 1.0,
+      "vcharge_v": 4.2
+    },
+    "params": {
+      "vin_min_v": 4.0,
+      "vin_max_v": 8.0,
+      "icharge_max_a": 1.0,
+      "vfloat_v": 4.2
+    },
+    "alternatives": [],
+    "notes": "Cargador lineal completo de 1A para baterías de Ion de Litio / LiPo de 1 celda (4.2V)."
+  },
+  {
+    "id": "DW01A",
+    "category": "PMIC",
+    "family": "DW01",
+    "subcategory": "battery_protection",
+    "manufacturer": "Fortune Semiconductor",
+    "jlcpcb_part": "C14207",
+    "datasheet": "https://www.ic-fortuner.com.tw/pdf/spec/DW01A-DS-10_EN.pdf",
+    "kicad_symbol": "Battery_Management:DW01A",
+    "kicad_footprint": "Package_TO_SOT_SMD:SOT-23-6",
+    "footprint_info": {
+      "package": "SOT-23-6",
+      "dimensions_mm": [1.6, 2.9, 1.1],
+      "pin_count": 6,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "overcharge_v": 4.3,
+      "overdischarge_v": 2.4
+    },
+    "params": {
+      "v_overcharge_v": 4.3,
+      "v_overdischarge_v": 2.4
+    },
+    "alternatives": [],
+    "notes": "CI de protección contra sobrecarga, sobredescarga y cortocircuito para baterías Li-Ion acoplado con FS8205A."
+  },
+  {
+    "id": "FS8205A",
+    "category": "Discrete",
+    "family": "FS8205",
+    "subcategory": "dual_mosfet",
+    "manufacturer": "Fortune Semiconductor",
+    "jlcpcb_part": "C16052",
+    "datasheet": "https://www.ic-fortuner.com.tw/pdf/spec/FS8205A-DS-10_EN.pdf",
+    "kicad_symbol": "Transistor_FET:FS8205A",
+    "kicad_footprint": "Package_SO:TSSOP-8_4.4x3mm_P0.65mm",
+    "footprint_info": {
+      "package": "TSSOP-8",
+      "dimensions_mm": [4.4, 3.0, 1.1],
+      "pin_count": 8,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "vds_v": 20.0,
+      "id_a": 6.0,
+      "rds_on_mohm": 25
+    },
+    "params": {
+      "vds_max_v": 20.0,
+      "id_max_a": 6.0
+    },
+    "alternatives": [],
+    "notes": "MOSFET doble Canal N de baja resistencia rDS(on) para corte de batería de protección Li-Ion."
+  },
   {
     "id": "CH340G",
     "category": "Interface",
+    "family": "CH340",
     "subcategory": "usb_uart",
     "manufacturer": "WCH",
+    "jlcpcb_part": "C14267",
+    "datasheet": "http://www.wch-ic.com/downloads/file/5.html",
     "kicad_symbol": "Interface_USB:CH340G",
     "kicad_footprint": "Package_SO:SOIC-16_3.9x9.9mm_P1.27mm",
+    "footprint_info": {
+      "package": "SOIC-16",
+      "dimensions_mm": [3.9, 9.9, 1.75],
+      "pin_count": 16,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "baud_rate_max": 2000000,
+      "requires_crystal": true
+    },
     "params": {
-      "interface_host": "USB 2.0 Full Speed",
-      "interface_device": "UART (TX/RX/RTS/CTS/DTR/DSR/DCD/RI)",
-      "baud_max": 2000000,
-      "vcc_v": 3.3,
+      "vcc_min_v": 3.3,
+      "vcc_max_v": 5.0,
+      "baud_max": 2000000
+    },
+    "alternatives": [
+      {"id": "CH340C", "reason": "Pin-compatible version with internal crystal oscillator (no external 12MHz crystal needed)"},
+      {"id": "CP2102N", "reason": "Silicon Labs high performance USB-UART bridge"}
+    ],
+    "notes": "Puente USB a UART de 12MHz para programación serie de microcontroladores."
+  },
+  {
+    "id": "CH340C",
+    "category": "Interface",
+    "family": "CH340",
+    "subcategory": "usb_uart",
+    "manufacturer": "WCH",
+    "jlcpcb_part": "C84681",
+    "datasheet": "http://www.wch-ic.com/downloads/file/5.html",
+    "kicad_symbol": "Interface_USB:CH340C",
+    "kicad_footprint": "Package_SO:SOP-16_3.9x9.9mm_P1.27mm",
+    "footprint_info": {
+      "package": "SOP-16",
+      "dimensions_mm": [3.9, 9.9, 1.75],
+      "pin_count": 16,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "baud_rate_max": 2000000,
+      "requires_crystal": false
+    },
+    "params": {
       "vcc_min_v": 3.3,
       "vcc_max_v": 5.0
     },
-    "support_circuits": {
-      "crystal":    "12MHz crystal entre X1/X2 + 2× 22pF",
-      "decoupling": "100nF + 10µF en VCC, 100nF en V3",
-      "usb":        "ESD protection (USBLC6-2) en DP/DM",
-      "dtr_rts":    "Conectar DTR→RST, RTS→BOOT/GPIO0 para auto-reset en ESP/AVR"
-    },
-    "datasheet": "http://www.wch-ic.com/downloads/file/5.html",
-    "notes": "Driver más común en clones Arduino. Puede requerir driver instalado en Windows < 10. Alternativa: CP2102 (FTDI-compatible, driverless en modern OS)."
+    "alternatives": [
+      {"id": "CH340G", "reason": "Requires external 12MHz crystal"}
+    ],
+    "notes": "Puente USB-UART con oscilador interno de cristal integrado (ahorra componentes externos)."
   },
-
+  {
+    "id": "CP2102N",
+    "category": "Interface",
+    "family": "CP210x",
+    "subcategory": "usb_uart",
+    "manufacturer": "Silicon Labs",
+    "jlcpcb_part": "C148782",
+    "datasheet": "https://www.silabs.com/documents/public/data-sheets/cp2102n-datasheet.pdf",
+    "kicad_symbol": "Interface_USB:CP2102N-A02-GQFN28",
+    "kicad_footprint": "Package_DFN_QFN:QFN-28-1EP_5x5mm_P0.5mm_EP3.35x3.35mm",
+    "footprint_info": {
+      "package": "QFN-28",
+      "dimensions_mm": [5.0, 5.0, 0.75],
+      "pin_count": 28,
+      "mounting_type": "SMD",
+      "thermal_pad": true
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "baud_rate_max": 3000000,
+      "voltage_regulator_integrated": true
+    },
+    "params": {
+      "vcc_min_v": 3.0,
+      "vcc_max_v": 3.6,
+      "baud_max": 3000000
+    },
+    "alternatives": [
+      {"id": "CH340C", "reason": "Lower cost SOIC alternative"}
+    ],
+    "notes": "Controlador de puente USB a UART de alta velocidad sin necesidad de driver externo en OS modernos."
+  },
+  {
+    "id": "FT232RL",
+    "category": "Interface",
+    "family": "FTDI",
+    "subcategory": "usb_uart",
+    "manufacturer": "FTDI Chip",
+    "jlcpcb_part": "C8690",
+    "datasheet": "https://ftdichip.com/wp-content/uploads/2020/08/DS_FT232R.pdf",
+    "kicad_symbol": "Interface_USB:FT232RL",
+    "kicad_footprint": "Package_SO:SSOP-28_5.3x10.2mm_P0.65mm",
+    "footprint_info": {
+      "package": "SSOP-28",
+      "dimensions_mm": [5.3, 10.2, 1.75],
+      "pin_count": 28,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "baud_rate_max": 3000000
+    },
+    "params": {
+      "vcc_min_v": 3.3,
+      "vcc_max_v": 5.25
+    },
+    "alternatives": [
+      {"id": "CP2102N", "reason": "Modern QFN-28 alternative"}
+    ],
+    "notes": "Chip USB UART FTDI industrial con EEPROM interna programable."
+  },
+  {
+    "id": "USBLC6-2SC6",
+    "category": "Protection",
+    "family": "USBLC6",
+    "subcategory": "esd_protection",
+    "manufacturer": "STMicroelectronics",
+    "jlcpcb_part": "C7519",
+    "datasheet": "https://www.st.com/resource/en/datasheet/usblc6-2.pdf",
+    "kicad_symbol": "Power_Protection:USBLC6-2SC6",
+    "kicad_footprint": "Package_TO_SOT_SMD:SOT-23-6",
+    "footprint_info": {
+      "package": "SOT-23-6",
+      "dimensions_mm": [1.6, 2.9, 1.1],
+      "pin_count": 6,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "capacitance_pf": 0.85,
+      "esd_voltage_kv": 15
+    },
+    "params": {
+      "capacitance_pf": 0.85,
+      "esd_kv": 15.0
+    },
+    "alternatives": [],
+    "notes": "Diodo ESD de ultra baja capacitancia (0.85pF) diseñado para proteger líneas de datos USB High-Speed D+/D-."
+  },
+  {
+    "id": "USB_C_TYPE-C-31-M-12",
+    "category": "Connector",
+    "family": "USB-C",
+    "subcategory": "usb_receptacle",
+    "manufacturer": "HRO Electronics",
+    "jlcpcb_part": "C165948",
+    "datasheet": "https://lcsc.com/product-detail/USB-Connectors_HRO-TYPE-C-31-M-12_C165948.html",
+    "kicad_symbol": "Connector:USB_C_Receptacle_USB20",
+    "kicad_footprint": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12",
+    "footprint_info": {
+      "package": "SMD-16",
+      "dimensions_mm": [8.94, 7.35, 3.16],
+      "pin_count": 16,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "current_rating_a": 5.0,
+      "gender": "Female"
+    },
+    "params": {
+      "pin_count": 16,
+      "usb_std": "USB 2.0"
+    },
+    "alternatives": [],
+    "notes": "Receptáculo USB-C hembra estándar de 16 pines (USB 2.0) montado en superficie."
+  },
+  {
+    "id": "DM3AT-SF-PEJM5",
+    "category": "Connector",
+    "family": "MicroSD",
+    "subcategory": "card_reader",
+    "manufacturer": "Hirose Electric",
+    "jlcpcb_part": "C114227",
+    "datasheet": "https://www.hirose.com/product/en/download_file/key_name/DM3/category/Catalog/doc_file_id/34720/",
+    "kicad_symbol": "Connector_Card:MicroSD_Card_Det_Hirose_DM3AT",
+    "kicad_footprint": "Connector_Card:MicroSD_Card_Det_Hirose_DM3AT",
+    "footprint_info": {
+      "package": "SMD-12",
+      "dimensions_mm": [13.8, 14.1, 1.68],
+      "pin_count": 12,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "card_type": "MicroSD",
+      "mechanism": "Push-Push"
+    },
+    "params": {
+      "pin_count": 12,
+      "spi_compatible": true
+    },
+    "alternatives": [],
+    "notes": "Zócalo Hirose Push-Push para tarjetas MicroSD con detección de inserción mecánica."
+  },
+  {
+    "id": "OLED_0.96_I2C",
+    "category": "Display",
+    "family": "SSD1306",
+    "subcategory": "oled_display",
+    "manufacturer": "Solomon Systech",
+    "jlcpcb_part": "C2897384",
+    "datasheet": "https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf",
+    "kicad_symbol": "Connector_Generic:Conn_01x04",
+    "kicad_footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+    "footprint_info": {
+      "package": "PinHeader-1x04",
+      "dimensions_mm": [2.54, 10.16, 8.5],
+      "pin_count": 4,
+      "mounting_type": "THT/Header",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "resolution": "128x64 pixels",
+      "interface": "I2C (0x3C / 0x3D)",
+      "color": "Monochrome (White/Blue)"
+    },
+    "params": {
+      "vcc_min_v": 3.3,
+      "vcc_max_v": 5.0,
+      "i2c": 1
+    },
+    "alternatives": [
+      {"id": "ILI9341_TFT_SPI", "reason": "Color 240x320 TFT LCD SPI alternative"}
+    ],
+    "notes": "Módulo de pantalla OLED de 0.96 pulgadas con controlador SSD1306 e interfaz I2C de 4 pines."
+  },
+  {
+    "id": "ILI9341_TFT_SPI",
+    "category": "Display",
+    "family": "ILI9341",
+    "subcategory": "tft_display",
+    "manufacturer": "ILITEK",
+    "jlcpcb_part": "C2897385",
+    "datasheet": "https://www.adafruit.com/product/1770",
+    "kicad_symbol": "Connector_Generic:Conn_01x14_Odd_Even",
+    "kicad_footprint": "Connector_PinHeader_2.54mm:PinHeader_1x14_P2.54mm_Vertical",
+    "footprint_info": {
+      "package": "PinHeader-1x14",
+      "dimensions_mm": [2.54, 35.56, 8.5],
+      "pin_count": 14,
+      "mounting_type": "THT/Header",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "resolution": "240x320 pixels",
+      "interface": "SPI + Touch",
+      "color": "65k Color TFT"
+    },
+    "params": {
+      "vcc_min_v": 3.3,
+      "vcc_max_v": 5.0,
+      "spi": 1
+    },
+    "alternatives": [
+      {"id": "OLED_0.96_I2C", "reason": "Compact monochrome OLED display option"}
+    ],
+    "notes": "Pantalla TFT LCD a color de 2.8 pulgadas (240x320) con controlador ILI9341 e interfaz SPI."
+  },
+  {
+    "id": "Conn_02x09_Flipper",
+    "category": "Connector",
+    "family": "Header",
+    "subcategory": "gpio_header",
+    "manufacturer": "Generic",
+    "jlcpcb_part": "C2897386",
+    "datasheet": "https://docs.flipperzero.one/gpio-and-modules",
+    "kicad_symbol": "Connector_Generic:Conn_02x09_Odd_Even",
+    "kicad_footprint": "flipper_zero_gpio",
+    "footprint_info": {
+      "package": "Header-2x9",
+      "dimensions_mm": [5.08, 22.86, 8.5],
+      "pin_count": 18,
+      "mounting_type": "THT",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "pitch_mm": 2.54,
+      "pin_count": 18
+    },
+    "params": {
+      "pins": 18,
+      "pitch_mm": 2.54
+    },
+    "alternatives": [],
+    "notes": "Header macho acodado de 18 pines (2x9) para interconexión con el puerto GPIO del Flipper Zero."
+  },
+  {
+    "id": "SW_SPST_EVQPE1",
+    "category": "Switch",
+    "family": "Tactile",
+    "subcategory": "button",
+    "manufacturer": "Panasonic",
+    "jlcpcb_part": "C318884",
+    "datasheet": "https://industrial.panasonic.com/ww/products/pt/switches/tactile-switches",
+    "kicad_symbol": "Switch:SW_Push",
+    "kicad_footprint": "Button_Switch_SMD:SW_SPST_EVQPE1",
+    "footprint_info": {
+      "package": "SMD 6x6mm",
+      "dimensions_mm": [6.0, 6.0, 4.3],
+      "pin_count": 2,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "current_max_ma": 50
+    },
+    "params": {
+      "current_max_ma": 50
+    },
+    "alternatives": [],
+    "notes": "Pulsador táctil SMD estándar 6x6mm para botones de Reset / Boot."
+  },
+  {
+    "id": "LED_0603_BLUE",
+    "category": "Opto",
+    "family": "LED",
+    "subcategory": "indicator_led",
+    "manufacturer": "Everlight",
+    "jlcpcb_part": "C72041",
+    "datasheet": "https://www.everlight.com/file/ProductFile/17-21-BHC-AN1P2-3T.pdf",
+    "kicad_symbol": "Device:LED",
+    "kicad_footprint": "LED_SMD:LED_0603_1608Metric",
+    "footprint_info": {
+      "package": "0603 SMD",
+      "dimensions_mm": [1.6, 0.8, 0.6],
+      "pin_count": 2,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "vforward_v": 3.1,
+      "iforward_ma": 20
+    },
+    "params": {
+      "vf_v": 3.1,
+      "if_ma": 20
+    },
+    "alternatives": [],
+    "notes": "Diodo LED Azul en encapsulado SMD 0603 para indicación de estado."
+  },
+  {
+    "id": "R_0402_5.1K",
+    "category": "Passive",
+    "family": "Resistor",
+    "subcategory": "smd_resistor",
+    "manufacturer": "Yageo",
+    "jlcpcb_part": "C25905",
+    "datasheet": "https://www.yageo.com/upload/yageo_sub/product_datasheet/RC_Group.pdf",
+    "kicad_symbol": "Device:R",
+    "kicad_footprint": "Resistor_SMD:R_0402_1005Metric",
+    "footprint_info": {
+      "package": "0402 SMD",
+      "dimensions_mm": [1.0, 0.5, 0.35],
+      "pin_count": 2,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "resistance_ohm": 5100,
+      "tolerance_pct": 1.0,
+      "power_w": 0.0625
+    },
+    "params": {
+      "resistance_ohm": 5100,
+      "tolerance_pct": 1.0
+    },
+    "alternatives": [],
+    "notes": "Resistencia SMD 0402 5.1kΩ 1% requerida para pull-down de líneas USB-C CC1/CC2."
+  },
+  {
+    "id": "C_0603_100NF",
+    "category": "Passive",
+    "family": "Capacitor",
+    "subcategory": "smd_capacitor",
+    "manufacturer": "Murata",
+    "jlcpcb_part": "C14663",
+    "datasheet": "https://www.murata.com/en-us/products/productdetail?partno=GRM188R71H104KA93%23",
+    "kicad_symbol": "Device:C",
+    "kicad_footprint": "Capacitor_SMD:C_0603_1608Metric",
+    "footprint_info": {
+      "package": "0603 SMD",
+      "dimensions_mm": [1.6, 0.8, 0.8],
+      "pin_count": 2,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "capacitance_uf": 0.1,
+      "voltage_rating_v": 50,
+      "dielectric": "X7R"
+    },
+    "params": {
+      "capacitance_uf": 0.1,
+      "voltage_rating_v": 50
+    },
+    "alternatives": [],
+    "notes": "Condensador cerámico SMD 0603 de 100nF (0.1µF) 50V X7R para desacoplo."
+  },
+  {
+    "id": "C_0805_10UF",
+    "category": "Passive",
+    "family": "Capacitor",
+    "subcategory": "smd_capacitor",
+    "manufacturer": "Murata",
+    "jlcpcb_part": "C15850",
+    "datasheet": "https://www.murata.com/en-us/products/productdetail?partno=GRM21BR61E106KA73%23",
+    "kicad_symbol": "Device:C",
+    "kicad_footprint": "Capacitor_SMD:C_0805_2012Metric",
+    "footprint_info": {
+      "package": "0805 SMD",
+      "dimensions_mm": [2.0, 1.25, 1.25],
+      "pin_count": 2,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "capacitance_uf": 10.0,
+      "voltage_rating_v": 16,
+      "dielectric": "X5R"
+    },
+    "params": {
+      "capacitance_uf": 10.0,
+      "voltage_rating_v": 16
+    },
+    "alternatives": [],
+    "notes": "Condensador cerámico SMD 0805 de 10µF 16V X5R para filtro de alimentación principal."
+  },
   {
     "id": "NE555P",
     "category": "Timer",
+    "family": "555",
+    "subcategory": "timer_ic",
     "manufacturer": "Texas Instruments",
+    "jlcpcb_part": "C46749",
+    "datasheet": "https://www.ti.com/lit/ds/symlink/ne555.pdf",
     "kicad_symbol": "Timer:NE555",
     "kicad_footprint": "Package_DIP:DIP-8_W7.62mm",
+    "footprint_info": {
+      "package": "DIP-8 / SOIC-8",
+      "dimensions_mm": [6.35, 9.4, 3.3],
+      "pin_count": 8,
+      "mounting_type": "THT/SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "4.5V - 16V",
+      "output_current_ma": 200
+    },
     "params": {
-      "vcc_min_v": 5.0,
-      "vcc_max_v": 15.0,
-      "freq_max_mhz": 0.5,
-      "current_out_ma": 200,
-      "modes": ["astable", "monostable"]
+      "vcc_min_v": 4.5,
+      "vcc_max_v": 16.0
     },
-    "formulas": {
-      "astable_freq":   "f = 1.44 / ((R1 + 2*R2) * C)",
-      "astable_duty":   "duty = (R1 + R2) / (R1 + 2*R2)",
-      "monostable_t":   "t = 1.1 * R * C"
-    },
-    "support_circuits": {
-      "decoupling": "100nF entre VCC y GND cerca del IC",
-      "control_v":  "100nF entre pin 5 (CV) y GND para inmunidad a ruido"
-    },
-    "datasheet": "https://www.ti.com/lit/ds/symlink/ne555.pdf"
+    "alternatives": [],
+    "notes": "CI Temporizador de precisión multipropósito para modos astable y monoestable."
   },
-
   {
     "id": "LM358",
     "category": "Amplifier",
+    "family": "LM358",
     "subcategory": "op_amp",
     "manufacturer": "Texas Instruments",
+    "jlcpcb_part": "C7940",
+    "datasheet": "https://www.ti.com/lit/ds/symlink/lm358.pdf",
     "kicad_symbol": "Amplifier_Operational:LM358",
     "kicad_footprint": "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm",
+    "footprint_info": {
+      "package": "SOIC-8",
+      "dimensions_mm": [3.9, 4.9, 1.75],
+      "pin_count": 8,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "voltage_range": "3.0V - 32V",
+      "channels": 2,
+      "gbw_mhz": 1.1
+    },
     "params": {
       "vcc_min_v": 3.0,
       "vcc_max_v": 32.0,
-      "vcc_split_v": "±1.5V to ±16V",
-      "gbw_mhz": 1.1,
-      "slew_rate_vus": 0.6,
-      "Vos_max_mv": 7.0,
-      "Ib_max_na": 500,
-      "channels": 2,
-      "rail_to_rail": false,
-      "input_common_mode": "0 to VCC-1.5V"
+      "gbw_mhz": 1.1
     },
-    "datasheet": "https://www.ti.com/lit/ds/symlink/lm358.pdf",
-    "notes": "Op-amp de propósito general. No rail-to-rail. Para aplicaciones de precisión usar TLV2372 o MCP6002."
+    "alternatives": [],
+    "notes": "Amplificador operacional doble de propósito general para acondicionamiento de señal analógica."
+  },
+  {
+    "id": "2N7002",
+    "category": "Discrete",
+    "family": "MOSFET",
+    "subcategory": "n_channel_mosfet",
+    "manufacturer": "ON Semiconductor",
+    "jlcpcb_part": "C8545",
+    "datasheet": "https://www.onsemi.com/pdf/datasheet/2n7002-d.pdf",
+    "kicad_symbol": "Transistor_FET:2N7002",
+    "kicad_footprint": "Package_TO_SOT_SMD:SOT-23",
+    "footprint_info": {
+      "package": "SOT-23",
+      "dimensions_mm": [1.3, 2.9, 1.1],
+      "pin_count": 3,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "vds_max_v": 60.0,
+      "id_max_ma": 300,
+      "rds_on_ohm": 2.5
+    },
+    "params": {
+      "vds_max_v": 60.0,
+      "id_max_ma": 300.0
+    },
+    "alternatives": [],
+    "notes": "MOSFET Canal N de pequeña señal de 60V 300mA para conmutación rápida."
+  },
+  {
+    "id": "AO3401A",
+    "category": "Discrete",
+    "family": "MOSFET",
+    "subcategory": "p_channel_mosfet",
+    "manufacturer": "Alpha & Omega Semiconductor",
+    "jlcpcb_part": "C15127",
+    "datasheet": "http://www.aosmd.com/res/datasheets/AO3401A.pdf",
+    "kicad_symbol": "Transistor_FET:AO3401A",
+    "kicad_footprint": "Package_TO_SOT_SMD:SOT-23",
+    "footprint_info": {
+      "package": "SOT-23",
+      "dimensions_mm": [1.3, 2.9, 1.1],
+      "pin_count": 3,
+      "mounting_type": "SMD",
+      "thermal_pad": false
+    },
+    "meta": {
+      "stock_status": "In Stock",
+      "vds_max_v": -30.0,
+      "id_max_a": 4.2,
+      "rds_on_mohm": 44
+    },
+    "params": {
+      "vds_max_v": -30.0,
+      "id_max_a": 4.2
+    },
+    "alternatives": [],
+    "notes": "MOSFET Canal P de 30V 4.2A para protección contra polaridad inversa y conmutación de alimentación."
   }
 ]

@@ -33,7 +33,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field, asdict
 from typing import Any, Dict, List, Optional, Tuple
 
-from sexp import parse, find_all, find_direct, first_direct, Node
+from core.sexp import parse, find_all, find_direct, first_direct, Node
 
 
 # --------------------------------------------------------------------------
@@ -80,29 +80,22 @@ def _get_num_pair(at_node: List[Node]) -> Tuple[float, float]:
     return (x, y)
 
 
-def extract_nets(root: Node) -> Dict[int, str]:
-    """Extract ONLY the top-level (net <id> "<name>") declarations.
-
-    IMPORTANT: (net ...) also appears nested inside (pad ...) blocks to
-    reference which net a pad belongs to, e.g. (net 8 "GND") inside a pad,
-    or bare (net 1) with no name. Those share the same tag "net" so a naive
-    recursive find_all() would wrongly merge pad-level net references into
-    the net *declaration* table, silently corrupting names (or blanking
-    them) for nets whose id happens to match a pad's net id.
-
-    We therefore only look at the root's DIRECT children.
-    """
+def extract_top_level_nets(root: Node) -> Dict[int, str]:
+    """Extract ONLY top-level (net <id> "<name>") declarations."""
     nets = {}
     root_list = root if isinstance(root, list) else [root]
     for n in find_direct(root_list, "net"):
-        # (net <id> "<name>")
         try:
             net_id = int(n[1])
             net_name = n[2] if len(n) > 2 else ""
             nets[net_id] = net_name
         except (ValueError, TypeError):
             pass
+    return nets
 
+
+def extract_nets(root: Node) -> Dict[int, str]:
+    nets = extract_top_level_nets(root)
     # Collect net names from footprint pads as fallback
     for fp in extract_footprints(root):
         for pad in fp.pads:
@@ -190,6 +183,7 @@ class BoardContext:
         with open(path, "r", encoding="utf-8") as f:
             text = f.read()
         self.root = parse(text)
+        self.declared_nets = extract_top_level_nets(self.root)
         self.nets = extract_nets(self.root)
         self.footprints = extract_footprints(self.root)
         self.via_nets = extract_via_nets(self.root)
@@ -373,7 +367,7 @@ def rule_R009_net_id_not_declared(ctx: BoardContext) -> List[Finding]:
     """R009: A pad/via/segment references a net id that never appears in the
     top-level (net ...) table. Indicates a corrupted or hand-merged file."""
     findings = []
-    declared = set(ctx.nets.keys())
+    declared = set(ctx.declared_nets.keys())
     used = set(ctx.via_nets) | set(ctx.segment_nets)
     for fp in ctx.footprints:
         for pad in fp.pads:

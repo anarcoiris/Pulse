@@ -4,11 +4,11 @@
 > **Status:** active  
 > **Source of truth for:** product phases, architectural milestones, and long-term themes  
 > **Last verified:** 2026-08-15  
-> **See also:** [`status/CURRENT_SPRINT.md`](./status/CURRENT_SPRINT.md) · [`last_session_review.md`](./last_session_review.md)
+> **See also:** [`last_session_review.md`](./last_session_review.md) · [`task.md`](../task.md)
 
 ---
 
-## Currently Active: Phase 1 (Completed) & Phase 2 (Expanded Hardware & SCH↔PCB Parity)
+## Completed & Active Milestones
 
 ### Phase 1: Connectivity & Core Placement Engine (Completed ✅)
 - [x] **Topological Audit Gate (`core/kicad_audit.py`)**: 14 strict structural rules (R001-R014) pre-routing.
@@ -19,16 +19,16 @@
 
 ---
 
-### Phase 2: Expanded Hardware Engines & Schematic-PCB Parity (Active ⏳)
+### Phase 2: Expanded Hardware Engines, SCH↔PCB Parity & Component Database (Completed ✅)
 
 #### A. Thermal Management Engine (Completed ✅)
 - [x] **EPAD Thermal Via Arrays (`core/thermal_engine.py`)**: Automatic $3 \times 3$ thermal via grid generation for IC ground pads (ESP32-S3 Pad 41).
-- [x] **Thermal Relief Spoke Control**: Per-zone and per-pad thermal spoke width (`thermal_bridge_width`) and gap (`thermal_gap`) parameters in S-expressions.
+- [x] **Solid Zone Pad Connections**: Support `Pad.zone_connect = 2` (`solid`) for high-current power tabs and ground thermal pads.
 
 #### B. Copper Pour & 0V Reference Plane Manager (Completed ✅)
 - [x] **Automated 0V Reference Planes (`core/copper_zone_manager.py`)**: Automatic double-sided `PWR_GND` copper pour generation on `F.Cu` and `B.Cu`.
-- [x] **Ground Via Stitching Grid**: Algorithmic via stitching array linking top and bottom ground planes.
-- [x] **Split Ground Plane Isolation**: Dynamic boundary calculation for isolated grounds (`PWR_GND` vs `PWR_GND_FLIPPER`).
+- [x] **Ground Via Stitching Grid**: Automatic inter-layer ground via stitching matrix linking top and bottom ground planes.
+- [x] **0.50mm Thermal Peninsulas**: Configured $0.50\,\text{mm}$ thermal spoke width formatting for sturdy copper peninsulas.
 
 #### C. FreeRouting Auto-Router Bridge (Completed ✅)
 - [x] **Automated Specctra DSN Export (`bridge/freerouting_bridge.py`)**: `kicad-cli pcb export dsn` bridge.
@@ -39,21 +39,25 @@
 - [x] **Vector/Bitmap Logo Ingestion (`bridge/graphics_engine.py`)**: Convert SVG/DXF graphics into KiCad `gr_poly`/`fp_poly` primitives.
 - [x] **Multi-Layer Stencil Placement**: Support logo rendering on `F.Cu`, `B.Cu`, `F.SilkS`, and `B.SilkS`.
 
-#### E. Schematic $\leftrightarrow$ PCB Parity & Verification Engine (Active ⏳)
+#### E. Schematic $\leftrightarrow$ PCB Parity & Verification Engine (Completed ✅)
 - [x] **100% SCH $\leftrightarrow$ PCB Reference Parity**: Auto-generate mechanical mounting holes (`H1..H4`) and logo symbols (`LOGO1..LOGO2`) in `.kicad_sch` with `(in_bom no) (on_board yes)` flags (25/25 reference designators matched).
-- [ ] **Automated Cross-Check Gate Integration**: Embed `sch_pcb_crosscheck.py` directly into `KiCadBridge.run_drc()` for automatic SCH $\leftrightarrow$ PCB net and reference validation.
-- [ ] **Explicit Net Labeling**: Eliminate generic fallback net labels (`N1`, `N2`) in `SchematicGenerator`.
+- [x] **Automated Cross-Check Gate Integration**: Embedded `sch_pcb_crosscheck.py` directly into `KiCadBridge.run_drc()` for automatic SCH $\leftrightarrow$ PCB net and reference validation.
 
-#### F. FastAPI Backend Gateway & Supply Chain (Active ⏳)
-- [ ] **FastAPI Backend Gateway (`app/main.py`)**: Expose `/api/v1/generate-pcb` endpoint.
-- [ ] **JLCPCB / LCSC Stock Connector**: Real-time stock lookup & auto-replacement connector for active BOM lines.
-- [ ] **LLM Context & Prompt Optimization**: Maintain multi-turn prompt stability with < 3 retries on complex circuits.
+#### F. Guaranteed Placement Topology & Component Database Systematization (Completed ✅)
+- [x] **Guaranteed Auto-Placement Fallback**: `PCBBuilder` automatically invokes `AutoPlacementEngine` for unpositioned components.
+- [x] **Systematized 39-Component Catalog**: Enriched `knowledge/data/components.json` with LCSC part numbers, official datasheet URLs, package specs, and alternative trade-off notes.
+- [x] **Interactive Decision Assistant API**: Implemented `ComponentDB.find_candidates()`, `get_alternatives()`, and `inspect_component()`.
 
 ---
 
-## Future Goals
+## Projected Future Milestones ⏳
 
-### Phase 3: Premium Web UI/UX & WebGL 3D Viewer
+### Phase 2.5: Backend API Gateway & Supply Chain (Queued ⏳)
+- [ ] **FastAPI Backend Gateway (`app/main.py`)**: Expose `/api/v1/generate-pcb` endpoint.
+- [ ] **JLCPCB / LCSC Stock Connector**: Real-time stock lookup & auto-replacement connector for active BOM lines.
+- [ ] **Passive Component Explicit Net Labeling**: Clean up single-occurrence fallback net names in `SchematicGenerator`.
+
+### Phase 3: Premium Web UI/UX & WebGL 3D Viewer (Queued ⏳)
 - [x] **Forge Studio CLI** — headless Rich REPL (`python -m studio`).
 - [ ] **Forge Studio Web Canvas** — Next.js / Vite React frontend with live 2D SVG schematic/PCB viewer.
 - [ ] **WebGL 3D PCB Viewer** — Interactive 3D board rendering with component models.

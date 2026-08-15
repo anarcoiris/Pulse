@@ -3,7 +3,7 @@
 > **Role:** living  
 > **Status:** active  
 > **Source of truth for:** verifiable metrics (tests, RAG, MCP, pipeline)  
-> **Last verified:** 2026-08-06  
+> **Last verified:** 2026-08-15  
 > **See also:** [`CURRENT_SPRINT.md`](./CURRENT_SPRINT.md) · [`../calibration_forge/index.md`](../calibration_forge/index.md)
 
 Refresh ritual after each sprint:
@@ -29,13 +29,18 @@ Topological audit gate (`core/kicad_audit.py` rules R001-R014) & DRC gate before
 
 ## Tests
 
-| Metric | Value (2026-08-06) |
+| Metric | Value (2026-08-15) |
 |--------|---------------------|
-| Tests collected | **112** (`pytest tests/ --co -q`) |
-| Test files | **18+** (in `tests/`) |
+| Tests collected & passing | **152** (`pytest tests/ -q`) |
+| Test files | **26** (in `tests/`) |
 | PCB Audit unit tests | **15** (`test_kicad_audit.py` — R001-R014) |
 | SCH↔PCB Crosscheck unit tests | **3** (`test_sch_pcb_crosscheck.py`) |
-| Signal Net Routing | **100% (33/33 segments routed)** |
+| Component DB & Decision Assistant | **5** (`test_component_db.py`) |
+| Supply Chain Multi-Provider Fetchers | **6** (`test_provider_fetcher.py`) |
+| Copper Zone & Via Stitching | **4** (`test_copper_zone_manager.py`) |
+| Thermal Via Engine | **2** (`test_thermal_engine.py`) |
+| FreeRouting Bridge | **3** (`test_freerouting_bridge.py`) |
+| Signal Net Routing | **100% DRC / 0 Unconnected Pads** |
 | KiCad 10 CLI Validation | **Returncode 0 (Clean Export)** |
 | Forge Studio unit tests | **10** (`test_ollama_native_stream`, `test_studio_session`) |
 | Last full run | Run `python -m pytest tests/ -q` locally |

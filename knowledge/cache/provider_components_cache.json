@@ -1,0 +1,125 @@
+{
+  "search:esp32-s3": {
+    "timestamp": 1786821489.4092185,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2913202",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP32-S3-WROOM-1",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:ch340g": {
+    "timestamp": 1786821489.7752311,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C14267",
+          "mpn": "CH340G",
+          "manufacturer": "WCH",
+          "description": "Puente USB a UART de 12MHz para programaci\u00f3n serie de microcontroladores.",
+          "package": "SOIC-16",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "http://www.wch-ic.com/downloads/file/5.html",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-CH340G",
+          "mpn": "CH340G",
+          "manufacturer": "WCH",
+          "description": "Puente USB a UART de 12MHz para programaci\u00f3n serie de microcontroladores.",
+          "package": "SOIC-16",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "http://www.wch-ic.com/downloads/file/5.html",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:ams1117-3.3": {
+    "timestamp": 1786821490.172001,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C6186",
+          "mpn": "AMS1117-3.3",
+          "manufacturer": "Advanced Monolithic Systems",
+          "description": "Regulador LDO est\u00e1ndar de 3.3V hasta 1A con pesta\u00f1a de disipaci\u00f3n t\u00e9rmica SOT-223.",
+          "package": "SOT-223",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "basic",
+          "datasheet_url": "https://www.alldatasheet.com/datasheet-pdf/pdf/204682/ADMOS/AMS1117-3.3.html",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-AMS1117-3.3",
+          "mpn": "AMS1117-3.3",
+          "manufacturer": "Advanced Monolithic Systems",
+          "description": "Regulador LDO est\u00e1ndar de 3.3V hasta 1A con pesta\u00f1a de disipaci\u00f3n t\u00e9rmica SOT-223.",
+          "package": "SOT-223",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.alldatasheet.com/datasheet-pdf/pdf/204682/ADMOS/AMS1117-3.3.html",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  }
+}

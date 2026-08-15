@@ -26,7 +26,7 @@ import sys
 from collections import defaultdict
 from typing import Dict, List, Set, Tuple
 
-from sexp import parse, find_all, find_direct, first_direct, Node
+from core.sexp import parse, find_all, find_direct, first_direct, Node
 
 
 def load(path: str) -> Node:
@@ -111,7 +111,7 @@ def sch_wires(root: Node) -> List[Tuple[Tuple[float, float], Tuple[float, float]
 # PCB extraction (reuse kicad_audit's BoardContext for consistency)
 # --------------------------------------------------------------------------
 
-from kicad_audit import BoardContext  # noqa: E402
+from core.kicad_audit import BoardContext  # noqa: E402
 
 
 # --------------------------------------------------------------------------

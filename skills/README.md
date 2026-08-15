@@ -1,39 +1,33 @@
-# Knowledge base de diseño electrónico — Pulse
+# Electronic Design Knowledge Base & Skills — Pulse
 
-## Empieza aquí
-1. `_corpus-meta/ARCHITECTURE.md` — por qué está desacoplado así y el
-   modelo intermedio que usan todas las reglas.
-2. `_corpus-meta/ROADMAP.md` — qué existe, qué sigue, y por qué en ese
-   orden (evidencia real, no cobertura teórica).
-3. `_case-studies/` — corridas reales anotadas; cada regla nueva debería
-   poder señalar un caso aquí que la motive.
+## Start Here
+1. [`_corpus-meta/ARCHITECTURE.md`](_corpus-meta/ARCHITECTURE.md) — Architecture, decoupling rules, and the neutral intermediate model.
+2. [`_corpus-meta/ROADMAP.md`](_corpus-meta/ROADMAP.md) — Phased roadmap, rule priorities, and real case evidence.
+3. [`_case-studies/`](_case-studies/) — Annotated real runs (e.g. [`_case-studies/pulselab_zero_run2.md`](_case-studies/pulselab_zero_run2.md)).
 
-## Estructura
+## Directory Structure
 ```
-ee-fundamentals/     física y cálculos (desacoplo, pull-up/down, márgenes)
-schematic-rules/     ERC, topología, patrones por función
-pcb-rules/            DRC, stack-up, SI/EMC (vacío aún, ver ROADMAP fase 3)
-component-library/    pinouts de referencia con roles semánticos
-dfm/                  reglas de fabricación (vacío aún)
-tool-adapter/
-  netlist-propio/     traduce el JSON actual (etype/n1/n2) al modelo intermedio
-  kicad/              (placeholder, fase 4)
-evaluation/           esquema de findings + cómo puntuar/estructurar feedback
-orchestration/        cómo itera el agente (vacío aún, ver ROADMAP fase 5)
-_corpus-meta/         arquitectura y roadmap (este dominio no es técnico)
-_case-studies/        corridas reales anotadas
+skills/
+├── _corpus-meta/          ← Knowledge base architecture & roadmap
+│   ├── ARCHITECTURE.md
+│   └── ROADMAP.md
+├── _case-studies/         ← Annotated real synthesis runs
+│   └── pulselab_zero_run2.md
+├── ee-fundamentals/       ← Physics & calculations (decoupling, pull-up/down)
+│   └── decoupling-per-ic.md
+├── schematic-rules/       ← ERC, topology & functional patterns
+│   └── power-on-reset-esp32.md
+├── tool-adapter/          ← Adapters translating tool JSON to neutral intermediate model
+│   └── netlist-propio/
+│       └── SKILL.md
+├── evaluation/            ← Finding schemas & feedback evaluation rules
+│   └── SKILL.md
+└── pcb-rules/             ← DRC, stack-up, SI/EMC rules (roadmap Phase 3)
 ```
 
-Cada `rules/*.yaml` tiene un `skill_ref` a su `skills/*.md` hermana, y
-comparten `rule_id`. Un dominio nunca importa contenido de otro dominio
-directamente — si `pcb-rules` necesita saber algo de `ee-fundamentals`,
-pasa por el modelo intermedio, no por un import cruzado.
+## Active Rules & Skills Status
 
-## Estado actual (2026-07-16)
-2 reglas activas, ambas motivadas por los 2 `run_session` de
-`pulselab_zero.json` adjuntos:
-
-- `schematic.power_on_reset.en_pullup` — critical, bug confirmado en 2/2 corridas
-- `ee_fundamentals.decoupling.per_ic_100nf` — warning (critical si es MCU)
-
-Ver `_corpus-meta/ROADMAP.md` para lo siguiente.
+- `schematic.power_on_reset.en_pullup` — [`schematic-rules/power-on-reset-esp32.md`](schematic-rules/power-on-reset-esp32.md) (Critical)
+- `ee_fundamentals.decoupling.per_ic_100nf` — [`ee-fundamentals/decoupling-per-ic.md`](ee-fundamentals/decoupling-per-ic.md) (Warning / MCU Critical)
+- `tool_adapter.netlist_propio` — [`tool-adapter/netlist-propio/SKILL.md`](tool-adapter/netlist-propio/SKILL.md)
+- `evaluation` — [`evaluation/SKILL.md`](evaluation/SKILL.md)

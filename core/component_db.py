@@ -40,6 +40,10 @@ class Component:
     datasheet:         str  = ""
     family:            str  = ""
     subcategory:       str  = ""
+    jlcpcb_part:       str  = ""
+    footprint_info:    dict = field(default_factory=dict)
+    meta:              dict = field(default_factory=dict)
+    alternatives:      list = field(default_factory=list)
     # raw dict for extra fields
     _raw:              dict = field(default_factory=dict, repr=False)
 
@@ -58,6 +62,10 @@ class Component:
             datasheet        = d.get("datasheet", ""),
             family           = d.get("family", ""),
             subcategory      = d.get("subcategory", ""),
+            jlcpcb_part      = d.get("jlcpcb_part", ""),
+            footprint_info   = d.get("footprint_info", {}),
+            meta             = d.get("meta", {}),
+            alternatives     = d.get("alternatives", []),
             _raw             = d,
         )
 
@@ -153,6 +161,7 @@ class ComponentDB:
             text = " ".join([
                 c.id.lower(), c.family.lower(), c.manufacturer.lower(),
                 c.category.lower(), c.subcategory.lower(), c.notes.lower(),
+                c.jlcpcb_part.lower(),
                 " ".join(str(v).lower() for v in c.params.values()),
                 " ".join(str(k).lower() for k in c.params.keys()),
                 " ".join(str(v).lower()
@@ -217,6 +226,123 @@ class ComponentDB:
             out = filtered
 
         return out
+
+    def find_candidates(self, query_or_spec: Any, top_k: int = 5) -> list[dict]:
+        """
+        Encuentra y clasifica opciones de componentes candidatas para asistencia en la toma de decisiones humanas.
+        Acepta una cadena de texto (query) o un diccionario de especificaciones (spec).
+        """
+        if isinstance(query_or_spec, str):
+            raw_results = self.search(query_or_spec, top_k=top_k)
+        elif isinstance(query_or_spec, dict):
+            matched = self.filter(**query_or_spec)
+            raw_results = [{"component": c.to_dict(), "score": 10, "summary": c.summary()} for c in matched[:top_k]]
+        else:
+            raw_results = []
+
+        candidates = []
+        for item in raw_results:
+            c_dict = item["component"]
+            comp_obj = self.get(c_dict.get("id", ""))
+            candidates.append({
+                "id": c_dict.get("id"),
+                "category": c_dict.get("category"),
+                "manufacturer": c_dict.get("manufacturer"),
+                "jlcpcb_part": c_dict.get("jlcpcb_part", "N/A"),
+                "datasheet": c_dict.get("datasheet", ""),
+                "kicad_symbol": c_dict.get("kicad_symbol"),
+                "kicad_footprint": c_dict.get("kicad_footprint"),
+                "footprint_info": c_dict.get("footprint_info", {}),
+                "meta": c_dict.get("meta", {}),
+                "notes": c_dict.get("notes", ""),
+                "alternatives": c_dict.get("alternatives", []),
+                "score": item.get("score", 0),
+                "summary": item.get("summary", "")
+            })
+        return candidates
+
+    def get_alternatives(self, comp_id: str) -> list[dict]:
+        """
+        Devuelve componentes alternativos compatibles y recomendados para un componente dado.
+        """
+        comp = self.get(comp_id)
+        if not comp:
+            return []
+        
+        results = []
+        if comp.alternatives:
+            for alt in comp.alternatives:
+                if isinstance(alt, dict):
+                    alt_id = alt.get("id")
+                    reason = alt.get("reason", "")
+                else:
+                    alt_id = str(alt)
+                    reason = "Compatible replacement"
+                
+                alt_obj = self.get(alt_id)
+                if alt_obj:
+                    results.append({
+                        "id": alt_obj.id,
+                        "jlcpcb_part": alt_obj.jlcpcb_part,
+                        "datasheet": alt_obj.datasheet,
+                        "kicad_footprint": alt_obj.kicad_footprint,
+                        "reason": reason,
+                        "summary": alt_obj.summary()
+                    })
+        else:
+            # Fallback to category search
+            cat_matches = self.by_category(comp.category)
+            for alt_obj in cat_matches:
+                if alt_obj.id != comp.id:
+                    results.append({
+                        "id": alt_obj.id,
+                        "jlcpcb_part": alt_obj.jlcpcb_part,
+                        "datasheet": alt_obj.datasheet,
+                        "kicad_footprint": alt_obj.kicad_footprint,
+                        "reason": f"Same category: {comp.category}",
+                        "summary": alt_obj.summary()
+                    })
+        return results
+
+    def inspect_component(self, comp_id: str) -> dict:
+        """
+        Genera un informe metadato detallado y estructurado de un componente para inspección humana.
+        """
+        comp = self.get(comp_id)
+        if not comp:
+            return {"error": f"Component '{comp_id}' not found in database."}
+
+        return {
+            "id": comp.id,
+            "category": comp.category,
+            "subcategory": comp.subcategory,
+            "manufacturer": comp.manufacturer,
+            "family": comp.family,
+            "jlcpcb_part": comp.jlcpcb_part or "N/A",
+            "datasheet": comp.datasheet or "N/A",
+            "kicad_symbol": comp.kicad_symbol,
+            "kicad_footprint": comp.kicad_footprint,
+            "footprint_info": comp.footprint_info,
+            "meta": comp.meta,
+            "params": comp.params,
+            "support_circuits": comp.support_circuits,
+            "alternatives": comp.alternatives,
+            "notes": comp.notes
+        }
+
+    def search_with_providers(self, query: str, top_k: int = 5) -> dict:
+        """
+        Búsqueda de componentes enriquecida que consulta localmente y compara disponibilidad con JLCPCB y PCBWay.
+        """
+        from core.provider_fetcher import ProviderFetchManager
+        local_results = self.find_candidates(query, top_k=top_k)
+        fetcher = ProviderFetchManager()
+        provider_comparison = fetcher.get_component_comparison(query)
+
+        return {
+            "local_candidates": local_results,
+            "provider_comparison": provider_comparison
+        }
 
     # ── IPC-2221 helpers ──────────────────────────────────────────
 

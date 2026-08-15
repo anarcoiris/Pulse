@@ -1,80 +1,82 @@
-# PulseLab documentation map
+# PulseLab Master Documentation Index
 
-> **Role:** entry / map  
+> **Role:** entry / master map  
 > **Status:** active  
-> **Source of truth for:** where to find every class of documentation in this repo  
-> **Last verified:** 2026-07-18  
+> **Source of truth for:** complete repository documentation hierarchy and structural navigation  
+> **Last verified:** 2026-08-15  
 
-## Start here
+---
 
-| Need | Document |
-|------|----------|
-| **What we're doing now** | [`status/CURRENT_SPRINT.md`](./status/CURRENT_SPRINT.md) |
-| **Current metrics** (tests, RAG chunks, MCP tools) | [`status/FORGE_STATUS.md`](./status/FORGE_STATUS.md) |
-| **Product direction** (phases, themes) | [`roadmap.md`](./roadmap.md) |
-| **System design** | [`architecture/APP_ARCHITECTURE.md`](./architecture/APP_ARCHITECTURE.md) |
+## 🚀 Quick Navigation
 
-## Calibration Forge (LLM / RAG / evaluation)
+| Need | Document / Location | Description |
+|------|---------------------|-------------|
+| **Current Sprint** | [`status/CURRENT_SPRINT.md`](./status/CURRENT_SPRINT.md) | Active sprint roadmap, completion matrix, and next actions |
+| **System Status & Metrics** | [`status/FORGE_STATUS.md`](./status/FORGE_STATUS.md) | Verified metrics (152 unit tests, RAG chunks, 31 MCP tools) |
+| **Product Roadmap** | [`roadmap.md`](./roadmap.md) | Multi-phase development roadmap and milestone progression |
+| **System Architecture** | [`architecture/APP_ARCHITECTURE.md`](./architecture/APP_ARCHITECTURE.md) | Core component isolation, solver pipelines, and data flow |
+| **Agent Knowledge & Skills** | [`../skills/README.md`](../skills/README.md) | Structured domain knowledge, EE rules, and intermediate models |
 
-| Need | Document |
-|------|----------|
-| **Research hub** (findings, status, milestones) | [`calibration_forge/index.md`](./calibration_forge/index.md) |
-| **LLM pipeline hardening** | [`calibration_forge/pipelines/llm_output_pipeline.md`](./calibration_forge/pipelines/llm_output_pipeline.md) |
-| **Evaluator / training loop plan** | [`implementation_plan.md`](./implementation_plan.md) |
-| **Agent paste prompts** (historical sessions) | [`sprints/prompts/`](./sprints/prompts/) |
+---
 
-## How to run things
+## 🛠️ Workflows & How-To Guides
 
-| Task | Document / command |
-|------|-------------------|
-| **Forge Studio** (streaming LLM debug shell) | [`calibration_forge/forge_studio.md`](./calibration_forge/forge_studio.md) — `python -m studio` |
-| Fab export + DRC gate | [`workflows/howto/fabrication_pipeline.md`](./workflows/howto/fabrication_pipeline.md) |
-| MCP ESP32 devboard workflow | [`workflows/howto/esp32_devboard_mcp.md`](./workflows/howto/esp32_devboard_mcp.md) |
-| Component / footprint management | [`workflows/howto/component_management.md`](./workflows/howto/component_management.md) |
-| Batch LLM validation | `python -m knowledge.validate_complex_apps --case esp32_sensors` |
+| Task | Guide |
+|------|-------|
+| **Gerber / CAM Export & DRC** | [`workflows/howto/fabrication_pipeline.md`](./workflows/howto/fabrication_pipeline.md) |
+| **ESP32 DevBoard Synthesis** | [`workflows/howto/esp32_devboard_mcp.md`](./workflows/howto/esp32_devboard_mcp.md) |
+| **Component & Footprint DB** | [`workflows/howto/component_management.md`](./workflows/howto/component_management.md) |
+| **Forge Studio Debug REPL** | [`calibration_forge/forge_studio.md`](./calibration_forge/forge_studio.md) — `python -m studio` |
 
-## Reference & architecture
+---
 
-- [`architecture/`](./architecture/) — APP architecture, violations, coding guidelines, design system, dependencies
-- [`calibration_forge/evaluation_metrics.md`](./calibration_forge/evaluation_metrics.md) — metric definitions
-- [`calibration_forge/logging_strategy.md`](./calibration_forge/logging_strategy.md) — PulseLogger / AI context buffer
+## 🧠 Knowledge Base & Agent Skills (`skills/`)
 
-## Historical (read-only)
+The [`../skills/`](../skills/README.md) directory houses domain-isolated rules and skills for LLM hardware synthesis:
 
-| Type | Location |
-|------|----------|
-| Point-in-time reviews | [`reviews/`](./reviews/) |
-| Frozen baselines | [`archive/`](./archive/) |
-| One-off refactor tickets | [`workflows/plans/`](./workflows/plans/) |
-| Verification / incident logs | [`calibration_forge/verification/`](./calibration_forge/verification/) |
+- **Corpus Architecture**: [`../skills/_corpus-meta/ARCHITECTURE.md`](../skills/_corpus-meta/ARCHITECTURE.md)
+- **Skill Roadmap**: [`../skills/_corpus-meta/ROADMAP.md`](../skills/_corpus-meta/ROADMAP.md)
+- **Schematic Rules**: [`../skills/schematic-rules/power-on-reset-esp32.md`](../skills/schematic-rules/power-on-reset-esp32.md)
+- **EE Fundamentals**: [`../skills/ee-fundamentals/decoupling-per-ic.md`](../skills/ee-fundamentals/decoupling-per-ic.md)
+- **Tool Adapter**: [`../skills/tool-adapter/netlist-propio/SKILL.md`](../skills/tool-adapter/netlist-propio/SKILL.md)
+- **Evaluation Rules**: [`../skills/evaluation/SKILL.md`](../skills/evaluation/SKILL.md)
+- **Annotated Case Studies**: [`../skills/_case-studies/pulselab_zero_run2.md`](../skills/_case-studies/pulselab_zero_run2.md)
 
-## Independent research (outside Forge sprints)
+---
 
-| Project | Location |
-|---------|----------|
-| Cristales Solares — transparent TE windows | [`../documents/Cristales_Solares/`](../documents/Cristales_Solares/) |
+## 🔬 Calibration Forge (LLM Hardening & RAG)
 
-See [`../documents/README.md`](../documents/README.md) for the research-projects map.
+| Module | Document |
+|--------|----------|
+| **Calibration Hub** | [`calibration_forge/index.md`](./calibration_forge/index.md) |
+| **LLM Output Pipeline** | [`calibration_forge/pipelines/llm_output_pipeline.md`](./calibration_forge/pipelines/llm_output_pipeline.md) |
+| **Evaluation Metrics** | [`calibration_forge/evaluation_metrics.md`](./calibration_forge/evaluation_metrics.md) |
+| **Logging & Context Buffer** | [`calibration_forge/logging_strategy.md`](./calibration_forge/logging_strategy.md) |
+| **Sprint Paste Prompts** | [`sprints/prompts/`](./sprints/prompts/) |
 
-## Doc roles (convention)
+---
 
-Each doc under `docs/` should declare one primary role in front matter:
+## 📑 Automated Validation Runs & Third-Party References
 
-| Role | Purpose |
-|------|---------|
-| `entry` | Navigation only |
-| `living` | Current sprint / metrics |
-| `reference` | How the system works |
-| `finding` | Research hypothesis → §Resultado |
-| `verification` | Preflight / incident audit |
-| `workflow` | Durable how-to |
-| `review` | Frozen snapshot |
-| `archive` | Do not edit in place |
+> ℹ️ *Automated evaluation run logs under `knowledge/data/validation_complex/runs/` are reference benchmark outputs generated by the validation harness. They are preserved for historical evaluation comparison.*
 
-Living docs link **down** to research §Resultado. Research docs link **up** to `CURRENT_SPRINT` for session ordering.
+- **Complex Validation Runs**: `knowledge/data/validation_complex/runs/`
+- **Steward Insight Log**: [`../knowledge/data/validation_complex/steward-insight.md`](../knowledge/data/validation_complex/steward-insight.md)
 
-## Other top-level entries
+---
 
-- [`../README.md`](../README.md) — install & run
-- [`../skills/`](../skills/) — structured knowledge base for agent evaluation (domain rules, finding schemas, case studies)
-- [`reviews/`](./reviews/) — chronological technical reviews (latest: [`pulselab_review_18072026.md`](./reviews/pulselab_review_18072026.md))
+## 📁 Archives & Historical Records (Read-Only)
+
+| Document Type | Location | Purpose |
+|---------------|----------|---------|
+| **Completed Refactor Plans** | [`archive/plans/`](./archive/plans/) | Historical implementation plans (`refactor_root_cleanup`, `refactor_testing_suite`, `refactor_ui_modals`) |
+| **Technical Reviews** | [`reviews/`](./reviews/) | Point-in-time architectural reviews |
+| **Incident / Preflight Audits**| [`calibration_forge/verification/`](./calibration_forge/verification/) | Post-mortem reports & PCIe hardware stability notes |
+| **Baseline Snapshots** | [`archive/`](./archive/) | Baseline metrics and early session reports |
+
+---
+
+## 🌐 External & Inherited Research
+
+- **External Research Hub**: [`../documents/README.md`](../documents/README.md)
+- **Cristales Solares**: Relocated to dedicated repository [`anarcoiris/Cristales_Solares`](https://github.com/anarcoiris/Cristales_Solares).

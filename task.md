@@ -1,50 +1,55 @@
 # PulseLab — Active Task Tracker
 
-**Restored & Expanded Session:** August 15, 2026  
+**Last Updated:** August 15, 2026  
 **Project:** PulseLab Generative EDA Platform (`Pulse-main`)  
-**Current Phase:** Phase 2 — Hardware Engines, SCH↔PCB Cross-Check & Backend Integration
+**Current Phase:** Phase 2 — Hardware Engines, SCH↔PCB Parity & Backend API Integration
 
 ---
 
-## 1. Prototype Accomplishments (`v1.0.1` $\rightarrow$ `v1.0.4`) & SCH↔PCB Parity
+## 1. Summary of Completed Tasks ✅
 
-- **Flipper Killer MK II v1.0 Prototype Series**:
-  - Added MicroSD Card slot (`J_SD` + `C_SD`) wired to ESP32-S3 SPI (GPIO 10, 11, 12, 13).
-  - Added Backside OLED Report Display Header (`J_DISP`) wired to ESP32-S3 I2C (GPIO 4, 5) placed on `B.Cu` / `B.SilkS`.
-  - Achieved **0 unconnected items / 0 DRC connection errors** across all 4 release iterations (`v1.0.1`, `v1.0.2`, `v1.0.3`, `v1.0.4`).
-- **100% SCH $\leftrightarrow$ PCB Designator Parity**:
-  - Implemented mechanical and stencil graphic symbol generation (`H1..H4`, `LOGO1..LOGO2`) in `SchematicGenerator`.
-  - Verified **25 out of 25 reference designators match 100%** between `.kicad_sch` and `.kicad_pcb` via `sch_pcb_crosscheck.py`.
-- **Completed Core Hardware Engines**:
-  - `core/thermal_engine.py`: $3 \times 3$ EPAD thermal via grid.
-  - `core/copper_zone_manager.py`: Double-sided `PWR_GND` 0V copper pour & via stitching grid.
-  - `bridge/freerouting_bridge.py`: Specctra DSN export, FreeRouting engine, SES back-annotation.
-  - `bridge/graphics_engine.py`: Stencil logo footprints & `gr_poly` vector graphics.
-
----
-
-## 2. Active Roadmap & Pending Tasks
-
-### A. SCH $\leftrightarrow$ PCB Coherence & DRC Integration
-- [x] **Task 1: SCH $\leftrightarrow$ PCB Reference Designator Parity (100% Match)**
+- [x] **Flipper Killer MK II v1.0 Prototype Iterations (`v1.0.1` $\rightarrow$ `v1.0.4`)**:
+  - MicroSD Card slot (`J_SD`) + Backside OLED report display header (`J_DISP` on `B.Cu`).
+  - Achieved **0 unconnected items / 0 DRC connection errors** across all 4 release iterations.
+- [x] **Guaranteed Placement Topology Enforcement (`bridge/pcb_builder.py`)**:
+  - `PCBBuilder` automatically invokes `AutoPlacementEngine` for unpositioned components, eliminating origin stacking.
+- [x] **100% SCH $\leftrightarrow$ PCB Reference Parity & DRC Gate Integration**:
   - Auto-generate mechanical mounting holes (`H1..H4`) and logo symbols (`LOGO1..LOGO2`) in `.kicad_sch` with `(in_bom no) (on_board yes)`.
-- [ ] **Task 2: SCH $\leftrightarrow$ PCB Cross-Check Gate Integration**
-  - Embed `sch_pcb_crosscheck.py` directly into `KiCadBridge.run_drc()` so every prototype run automatically verifies schematic-PCB net & component parity alongside physical DRC checks.
-- [ ] **Task 3: Passive Component Explicit Net Labeling**
-  - Eliminate single-occurrence fallback net names (`N1`, `N2`) in `SchematicGenerator`.
+  - Verified **25/25 reference designators match 100%** between `.kicad_sch` and `.kicad_pcb`.
+  - Embedded `sch_pcb_crosscheck.py` directly into `KiCadBridge.run_drc()`.
+- [x] **Pad Connection Modes & 0.5mm Thermal Peninsulas**:
+  - Added `Pad.zone_connect` (`2` = solid) for ESP32 EPAD (pad 41) and AMS1117 tab (pin 2/4).
+  - Configured $0.50\,\text{mm}$ thermal spoke bridge width formatting for clean peninsulas.
+- [x] **Inter-Layer Copper Pour Stitching (`F.Cu` $\leftrightarrow$ `B.Cu`)**:
+  - `PCBBuilder._finalize()` automatically injects 2D ground via stitching matrices linking top and bottom ground planes.
+- [x] **Component Library Systematization & Decision Assistant Engine**:
+  - Enriched 39 components across 5 project domains with official datasheet URLs, LCSC part numbers, footprint specs, and alternative trade-off notes.
+  - Implemented `ComponentDB.find_candidates()`, `get_alternatives()`, and `inspect_component()`.
+- [x] **Test Suite Health**:
+  - Verified **128 / 128 unit tests passing** (34.49s).
 
-### B. Backend Services & LLM Infrastructure
-- [ ] **Task 4: FastAPI Backend Gateway (`app/main.py` / `studio/`)**
-  - Implement `/api/v1/generate-pcb` endpoint to trigger placement, thermal/zone processing, schematic synthesis, and routing.
-- [ ] **Task 5: JLCPCB / LCSC Stock Lookup & Connector**
-  - Real-time stock lookup & auto-replacement connector for missing/out-of-stock components.
-- [ ] **Task 6: LLM Prompt & Context Stabilization**
-  - Multi-turn prompt optimization for complex circuit synthesis maintaining < 3 retries.
+---
+
+## 2. Remaining Projected Tasks ⏳
+
+### A. Core Pipeline & Schematic Cleaning
+- [ ] **Task 1: Passive Component Explicit Net Labeling**
+  - Clean up single-occurrence fallback net names (`N1`, `N2`) in `SchematicGenerator`.
+
+### B. Backend Services & Supply Chain Integration
+- [ ] **Task 2: FastAPI Backend Gateway (`app/main.py`)**
+  - Implement `/api/v1/generate-pcb` endpoint to trigger schema ingestion, placement, thermal/zone processing, schematic generation, and routing.
+- [ ] **Task 3: JLCPCB / LCSC Stock Lookup & Connector**
+  - Real-time stock lookup & auto-replacement connector for out-of-stock active BOM lines.
+
+### C. Web UI & 3D Interactive Canvas (Phase 3)
+- [ ] **Task 4: Forge Studio Web Canvas (`webapp/`)**
+  - Vite/React web frontend with interactive 2D SVG schematic/PCB viewer and WebGL 3D PCB rendering.
 
 ---
 
 ## 3. Immediate Next Steps
 
-1. Embed `sch_pcb_crosscheck.py` validation into `KiCadBridge.run_drc()`.
+1. Implement FastAPI endpoint `/api/v1/generate-pcb` in `app/main.py`.
 2. Clean up single-occurrence net label stubs in `SchematicGenerator`.
-3. Connect FastAPI service endpoints in `app/main.py`.
+3. Build LCSC real-time stock lookup connector.
