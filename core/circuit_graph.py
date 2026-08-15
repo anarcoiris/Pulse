@@ -346,7 +346,7 @@ class CircuitGraph:
                 label       = c.get("label", f"{c.get('etype', c.get('type', '?'))}{i+1}"),
                 n1          = c.get("n1", f"N{i}"),
                 n2          = c.get("n2", f"N{i+1}"),
-                pins        = c.get("pins", {}).copy(),
+                pins        = (c.get("pins") or {}).copy(),
                 symbol_id   = c.get("symbol", ""),
                 footprint_id= c.get("footprint", ""),
                 pkg_type    = c.get("pkg_type", None),
