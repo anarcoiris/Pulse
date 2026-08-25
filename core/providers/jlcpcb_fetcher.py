@@ -19,11 +19,17 @@ class JLCPCBProviderFetcher(BaseComponentProvider):
 
     def search(self, query: str, limit: int = 10) -> List[ProviderComponentResult]:
         """
-        Busca componentes en la librería SMT de JLCPCB por MPN o término.
+        Busca componentes en el catálogo JLCPCB / LCSC.
+        Prioriza la base de datos local y realiza búsqueda remota como extensión.
         """
+        # 1. First check local catalog for instant and offline resolution
+        local_results = self._fallback_local_search(query, limit)
+        if local_results:
+            return local_results[:limit]
+
+        # 2. Remote lookup fallback
         results = []
         try:
-            # JLCPCB SMT search endpoint
             url = "https://jlcpcb.com/api/overseas-pcb-order/v1/smt/components/search"
             headers = {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) PulseLab/1.0",
@@ -38,19 +44,17 @@ class JLCPCBProviderFetcher(BaseComponentProvider):
             }).encode("utf-8")
 
             req = urllib.request.Request(url, data=payload, headers=headers, method="POST")
-            with urllib.request.urlopen(req, timeout=5) as resp:
+            with urllib.request.urlopen(req, timeout=4) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 component_list = data.get("data", {}).get("list", []) or data.get("data", []) or []
                 for comp in component_list[:limit]:
                     item = self._parse_jlc_item(comp)
                     if item:
                         results.append(item)
-        except Exception as e:
-            logger.warning("jlcpcb_fetcher", f"Online search failed for '{query}': {e}. Using local catalog parser.")
-            # Local catalog fallback search
-            results = self._fallback_local_search(query, limit)
+        except Exception:
+            pass
 
-        return results
+        return results or local_results
 
     def get_by_part_number(self, part_number: str) -> Optional[ProviderComponentResult]:
         """

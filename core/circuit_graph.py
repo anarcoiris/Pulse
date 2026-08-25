@@ -303,6 +303,17 @@ class CircuitGraph:
 
     @classmethod
     def from_json(cls, data: dict) -> 'CircuitGraph':
+        if 'circuit' in data and isinstance(data['circuit'], list):
+            g = cls.from_component_dicts(data['circuit'])
+            g.meta = {
+                'board_width': data.get('board_width', data.get('board_width_mm')),
+                'board_height': data.get('board_height', data.get('board_height_mm')),
+                'name': data.get('name', ''),
+                'version': data.get('version', '1.0.0')
+            }
+            g.board_width = g.meta['board_width']
+            g.board_height = g.meta['board_height']
+            return g
         g = cls()
         for cd in data.get('components', []):
             g.components.append(PlacedComponent(**cd))
@@ -311,52 +322,55 @@ class CircuitGraph:
                                 path=[tuple(p) for p in wd['path']]))
         g._counter  = data.get('_counter',  len(g.components))
         g._wcounter = data.get('_wcounter', len(g.wires))
+        g.meta = data.get('meta', {})
+        g.board_width = data.get('board_width') or g.meta.get('board_width')
+        g.board_height = data.get('board_height') or g.meta.get('board_height')
         return g
 
     @classmethod
     def from_component_dicts(cls, components: list[dict]) -> 'CircuitGraph':
         """
-        Construye un CircuitGraph desde una lista de dicts LLM-friendly.
-
-        Cada dict puede tener las keys:
-          - etype / type: Tipo ("R", "C", "L", "V", "S", "GND")
-          - value:  Valor numérico (Ω, F, H, V)
-          - n1:     Nodo terminal 1 (string)
-          - n2:     Nodo terminal 2 (string)
-          - label:  Etiqueta descriptiva (opcional)
-          - grid_c, grid_r: Posición en cuadrícula (auto-asignada si omitida)
-
-        Ejemplo::
-
-            CircuitGraph.from_component_dicts([
-                {"etype": "V", "value": 5.0, "n1": "VCC", "n2": "GND", "label": "Fuente 5V"},
-                {"etype": "R", "value": 1000, "n1": "VCC", "n2": "OUT", "label": "R1 1kΩ"},
-            ])
+        Construye un CircuitGraph desde una lista de dicts LLM-friendly o CircuitDesignSchema.
         """
         g = cls()
         for i, c in enumerate(components):
-            # Conversión segura de valor (por si la IA devuelve texto)
+            # Conversión segura de valor
             val_raw = c.get("value", 0)
             try:
                 val_f = float(val_raw)
             except (ValueError, TypeError):
                 val_f = 0.0
 
+            n1 = str(c.get("n1", "") or "")
+            n2 = str(c.get("n2", "") or "")
+            pins = (c.get("pins") or {}).copy() if isinstance(c.get("pins"), dict) else {}
+            if not pins:
+                if n1: pins["1"] = n1
+                if n2: pins["2"] = n2
+
+            fp_id = c.get("footprint") or c.get("footprint_id") or ""
+            pos = c.get("position")
+            gc, gr = c.get("grid_c", i * 2), c.get("grid_r", 0)
+            if isinstance(pos, (list, tuple)) and len(pos) >= 2:
+                gc, gr = int(round(pos[0] / 5.08)), int(round(pos[1] / 5.08))
+            elif isinstance(pos, dict):
+                gc, gr = int(round(pos.get("x", 0) / 5.08)), int(round(pos.get("y", 0) / 5.08))
+
             g.add(
                 etype       = c.get("etype", c.get("type", "R")),
-                grid_c      = c.get("grid_c", i * 2),
-                grid_r      = c.get("grid_r", 0),
+                grid_c      = gc,
+                grid_r      = gr,
                 orientation = c.get("orientation", "H"),
-                value       = val_f,
+                value       = val_f if val_f != 0.0 else val_raw,
                 label       = c.get("label", f"{c.get('etype', c.get('type', '?'))}{i+1}"),
-                n1          = c.get("n1", f"N{i}"),
-                n2          = c.get("n2", f"N{i+1}"),
-                pins        = (c.get("pins") or {}).copy(),
+                n1          = n1,
+                n2          = n2,
+                pins        = pins,
                 symbol_id   = c.get("symbol", ""),
-                footprint_id= c.get("footprint", ""),
+                footprint_id= fp_id,
                 pkg_type    = c.get("pkg_type", None),
-                position    = c.get("position", None),
-                rotation    = c.get("rotation", 0.0)
+                position    = pos,
+                rotation    = float(c.get("rotation", 0.0))
             )
         g.apply_design_rules()
         return g

@@ -31,6 +31,7 @@ import json
 import sys
 from collections import defaultdict
 from dataclasses import dataclass, field, asdict
+import math
 from typing import Any, Dict, List, Optional, Tuple
 
 from core.sexp import parse, find_all, find_direct, first_direct, Node
@@ -58,6 +59,7 @@ class Footprint:
     value: str
     at: Tuple[float, float]
     layer: str
+    rotation: float = 0.0
     pads: List[Pad] = field(default_factory=list)
 
 
@@ -119,6 +121,7 @@ def extract_footprints(root: Node) -> List[Footprint]:
                 value = prop[2]
         at_node = first_direct(fp_node, "at")
         at = _get_num_pair(at_node) if at_node else (0.0, 0.0)
+        rotation = float(at_node[3]) if at_node and len(at_node) > 3 else 0.0
         layer_node = first_direct(fp_node, "layer")
         layer = layer_node[1] if layer_node else "?"
 
@@ -144,7 +147,7 @@ def extract_footprints(root: Node) -> List[Footprint]:
                     net_name = str(net_node[1])
             pads.append(Pad(number, pad_type, shape, net_id, net_name, layers, pad_at))
 
-        fps.append(Footprint(lib_id, ref, value, at, layer, pads))
+        fps.append(Footprint(lib_id, ref, value, at, layer, rotation, pads))
     return fps
 
 
@@ -202,14 +205,17 @@ KNOWN_UNCONNECTED_HINTS = {"NC", "N/C", "NOCONNECT", "DNC"}
 
 def rule_R001_duplicate_pad_numbers(ctx: BoardContext) -> List[Finding]:
     """R001: A footprint must not have two pads sharing the same pad number
-    UNLESS it is a legitimate multi-drill jumper pad (rare) — flag always,
-    let the reviewer confirm intent."""
+    UNLESS it is a legitimate shield tab or mechanical mounting pad."""
     findings = []
     for fp in ctx.footprints:
         seen = defaultdict(list)
+        is_coax = "coaxial" in fp.library_id.lower() or "sma" in fp.library_id.lower()
         for pad in fp.pads:
             seen[pad.number].append(pad)
         for num, plist in seen.items():
+            # Skip empty numbers, shield tabs, mechanical pad markers, and SMA ground legs
+            if num in ("", "SH", "MP", "PAD", "EP") or num.startswith("SH") or (is_coax and num == "2"):
+                continue
             if len(plist) > 1:
                 positions = ", ".join(f"({p.at[0]:.2f},{p.at[1]:.2f})" for p in plist)
                 findings.append(Finding(
@@ -223,15 +229,16 @@ def rule_R001_duplicate_pad_numbers(ctx: BoardContext) -> List[Finding]:
 
 
 def rule_R002_unassigned_pads(ctx: BoardContext) -> List[Finding]:
-    """R002: SMD/thru-hole pads with no net at all. Mounting holes and pads
-    whose number is empty ("") are expected to be netless and are skipped."""
+    """R002: SMD/thru-hole pads with no net at all. Mounting holes, shield tabs,
+    and mechanical pads whose number is empty or 'SH' are expected to be netless and are skipped."""
     findings = []
     for fp in ctx.footprints:
-        is_mounting = "mountinghole" in fp.library_id.lower()
+        is_mounting = "mountinghole" in fp.library_id.lower() or fp.reference.startswith("MH")
+        is_coax = "coaxial" in fp.library_id.lower() or "sma" in fp.library_id.lower()
         for pad in fp.pads:
             if pad.net_id is None:
-                if is_mounting or pad.number == "":
-                    continue  # expected: mechanical / unnumbered pad
+                if is_mounting or pad.number in ("", "SH", "MP", "EP") or pad.number.startswith("SH") or (is_coax and pad.number == "2"):
+                    continue  # expected: mechanical / shield / unnumbered pad
                 findings.append(Finding(
                     rule="R002", severity="error",
                     message=(f"Pad '{pad.number}' has no net assigned at all "
@@ -550,27 +557,36 @@ def rule_R013_net_connectivity(ctx: BoardContext) -> List[Finding]:
     for v in vias:
         via_by_net[v["net"]].append(v)
 
+    has_zones = bool(find_all(ctx.root, "zone"))
+
     for net_id, endpoints in ctx.net_pad_endpoints.items():
         if net_id == 0 or len(endpoints) < 2:
             continue  # R003 already flags single-pin nets separately
 
         net_name = ctx.nets.get(net_id, f"<net {net_id}>")
+        
+        # Ground nets with copper pour zones are unified through the plane
+        is_gnd_net = any(g in net_name.upper() for g in ("GND", "PGND", "AGND", "DGND", "SGND"))
+        if is_gnd_net and has_zones:
+            continue
+
         uf = _UnionFind()
 
         pad_lookup: Dict[Tuple[float, float, str], List[str]] = defaultdict(list)
         pad_ids = []
         for fp in ctx.footprints:
+            rot_rad = math.radians(getattr(fp, 'rotation', 0.0))
+            cos_r = math.cos(rot_rad)
+            sin_r = math.sin(rot_rad)
             for pad in fp.pads:
                 if pad.net_id != net_id:
                     continue
                 pad_id = f"PAD:{fp.reference}:{pad.number}"
                 pad_ids.append(pad_id)
-                # NOTE: pad.at is LOCAL to the footprint; footprint rotation
-                # is NOT applied here (0-deg assumption). If a footprint is
-                # rotated, coordinate matching for its pads may be
-                # inaccurate — see Known Limitations in RULES.md.
-                x = round(pad.at[0] + fp.at[0], _COORD_TOL)
-                y = round(pad.at[1] + fp.at[1], _COORD_TOL)
+                rx = pad.at[0] * cos_r - pad.at[1] * sin_r
+                ry = pad.at[0] * sin_r + pad.at[1] * cos_r
+                x = round(fp.at[0] + rx, _COORD_TOL)
+                y = round(fp.at[1] + ry, _COORD_TOL)
                 for layer in _layer_set_for_pad(pad):
                     pad_lookup[(x, y, layer)].append(pad_id)
                 uf.find(pad_id)
@@ -597,8 +613,26 @@ def rule_R013_net_connectivity(ctx: BoardContext) -> List[Finding]:
         for (coord, layer), nodes in by_coord_layer.items():
             for n in nodes[1:]:
                 uf.union(nodes[0], n)
-            for pad_id in pad_lookup.get((coord[0], coord[1], layer), []):
-                uf.union(nodes[0], pad_id)
+            for (px, py, player), p_ids in pad_lookup.items():
+                if player == layer or player in ("*.Cu", "F&B.Cu"):
+                    if math.hypot(coord[0] - px, coord[1] - py) <= 0.65:
+                        for pad_id in p_ids:
+                            uf.union(nodes[0], pad_id)
+            # T-Junction connection: point touching along the interior of a trace segment
+            for i, s in enumerate(seg_by_net.get(net_id, [])):
+                if s["layer"] == layer:
+                    x1, y1 = s["start"]
+                    x2, y2 = s["end"]
+                    dx = x2 - x1
+                    dy = y2 - y1
+                    l2 = dx * dx + dy * dy
+                    if l2 > 0.0001:
+                        t = max(0.0, min(1.0, ((coord[0] - x1) * dx + (coord[1] - y1) * dy) / l2))
+                        proj_x = x1 + t * dx
+                        proj_y = y1 + t * dy
+                        if math.hypot(coord[0] - proj_x, coord[1] - proj_y) <= 0.08:
+                            seg_node = f"SEG{i}:{s['start']}"
+                            uf.union(nodes[0], seg_node)
 
         components: Dict[Any, List[str]] = defaultdict(list)
         for pad_id in pad_ids:

@@ -1,10 +1,9 @@
-# Forge Studio launcher — uses Python 3.12 explicitly (avoids KiCad/hermes venv OPENSSL crash).
-$Py312 = "C:\Users\soyko\AppData\Local\Programs\Python\Python312\python.exe"
-$RepoRoot = Split-Path $PSScriptRoot -Parent
-
+$Py312 = (Get-Command python -ErrorAction SilentlyContinue).Source
+if (-not $Py312 -or -not (Test-Path $Py312)) {
+    $Py312 = Join-Path $env:LocalAppData "Programs\Python\Python312\python.exe"
+}
 if (-not (Test-Path $Py312)) {
-    Write-Error "Python 3.12 not found at $Py312"
-    exit 1
+    $Py312 = "python"
 }
 
 Set-Location $RepoRoot

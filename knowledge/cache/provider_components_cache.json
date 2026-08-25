@@ -1,6 +1,6 @@
 {
   "search:esp32-s3": {
-    "timestamp": 1786821489.4092185,
+    "timestamp": 1787666399.1195183,
     "data": {
       "jlcpcb": [
         {
@@ -41,7 +41,7 @@
     }
   },
   "search:ch340g": {
-    "timestamp": 1786821489.7752311,
+    "timestamp": 1787666399.1280177,
     "data": {
       "jlcpcb": [
         {
@@ -82,7 +82,7 @@
     }
   },
   "search:ams1117-3.3": {
-    "timestamp": 1786821490.172001,
+    "timestamp": 1787666399.1385171,
     "data": {
       "jlcpcb": [
         {
@@ -116,6 +116,1763 @@
           "price_tiers": [],
           "library_type": "standard",
           "datasheet_url": "https://www.alldatasheet.com/datasheet-pdf/pdf/204682/ADMOS/AMS1117-3.3.html",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c165948": {
+    "timestamp": 1787665781.1110384,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C165948",
+          "mpn": "USB_C_TYPE-C-31-M-12",
+          "manufacturer": "HRO Electronics",
+          "description": "Recept\u00e1culo USB-C hembra est\u00e1ndar de 16 pines (USB 2.0) montado en superficie.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "basic",
+          "datasheet_url": "https://lcsc.com/product-detail/USB-Connectors_HRO-TYPE-C-31-M-12_C165948.html",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-USB_C_TYPE-C-31-M-12",
+          "mpn": "USB_C_TYPE-C-31-M-12",
+          "manufacturer": "HRO Electronics",
+          "description": "Recept\u00e1culo USB-C hembra est\u00e1ndar de 16 pines (USB 2.0) montado en superficie.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://lcsc.com/product-detail/USB-Connectors_HRO-TYPE-C-31-M-12_C165948.html",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c17513": {
+    "timestamp": 1787665781.114046,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c2286": {
+    "timestamp": 1787665781.9073098,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:esp32": {
+    "timestamp": 1787665782.309055,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2913202",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C181781",
+          "mpn": "ESP32-WROOM-32",
+          "manufacturer": "Espressif Systems",
+          "description": "M\u00f3dulo cl\u00e1sico WiFi/Bluetooth con doble n\u00facleo para proyectos IoT generales.",
+          "package": "SMD-38",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP32-S3-WROOM-1",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP32-WROOM-32",
+          "mpn": "ESP32-WROOM-32",
+          "manufacturer": "Espressif Systems",
+          "description": "M\u00f3dulo cl\u00e1sico WiFi/Bluetooth con doble n\u00facleo para proyectos IoT generales.",
+          "package": "SMD-38",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c6186": {
+    "timestamp": 1787558492.6849282,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C6186",
+          "mpn": "AMS1117-3.3",
+          "manufacturer": "Advanced Monolithic Systems",
+          "description": "Regulador LDO est\u00e1ndar de 3.3V hasta 1A con pesta\u00f1a de disipaci\u00f3n t\u00e9rmica SOT-223.",
+          "package": "SOT-223",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "basic",
+          "datasheet_url": "https://www.alldatasheet.com/datasheet-pdf/pdf/204682/ADMOS/AMS1117-3.3.html",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-AMS1117-3.3",
+          "mpn": "AMS1117-3.3",
+          "manufacturer": "Advanced Monolithic Systems",
+          "description": "Regulador LDO est\u00e1ndar de 3.3V hasta 1A con pesta\u00f1a de disipaci\u00f3n t\u00e9rmica SOT-223.",
+          "package": "SOT-223",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.alldatasheet.com/datasheet-pdf/pdf/204682/ADMOS/AMS1117-3.3.html",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c9900027631": {
+    "timestamp": 1787558492.6904306,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:header ili9341 2.8 tft": {
+    "timestamp": 1787558493.2474036,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2897385",
+          "mpn": "ILI9341_TFT_SPI",
+          "manufacturer": "ILITEK",
+          "description": "Pantalla TFT LCD a color de 2.8 pulgadas (240x320) con controlador ILI9341 e interfaz SPI.",
+          "package": "PinHeader-1x14",
+          "mounting_type": "THT/Header",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.adafruit.com/product/1770",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2897386",
+          "mpn": "Conn_02x09_Flipper",
+          "manufacturer": "Generic",
+          "description": "Header macho acodado de 18 pines (2x9) para interconexi\u00f3n con el puerto GPIO del Flipper Zero.",
+          "package": "Header-2x9",
+          "mounting_type": "THT",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://docs.flipperzero.one/gpio-and-modules",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ILI9341_TFT_SPI",
+          "mpn": "ILI9341_TFT_SPI",
+          "manufacturer": "ILITEK",
+          "description": "Pantalla TFT LCD a color de 2.8 pulgadas (240x320) con controlador ILI9341 e interfaz SPI.",
+          "package": "PinHeader-1x14",
+          "mounting_type": "THT/Header",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.adafruit.com/product/1770",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-Conn_02x09_Flipper",
+          "mpn": "Conn_02x09_Flipper",
+          "manufacturer": "Generic",
+          "description": "Header macho acodado de 18 pines (2x9) para interconexi\u00f3n con el puerto GPIO del Flipper Zero.",
+          "package": "Header-2x9",
+          "mounting_type": "THT",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://docs.flipperzero.one/gpio-and-modules",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c13977": {
+    "timestamp": 1787558493.563659,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c15849": {
+    "timestamp": 1787558493.9480827,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c14663": {
+    "timestamp": 1787558494.1057167,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C14663",
+          "mpn": "C_0603_100NF",
+          "manufacturer": "Murata",
+          "description": "Condensador cer\u00e1mico SMD 0603 de 100nF (0.1\u00b5F) 50V X7R para desacoplo.",
+          "package": "0603 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "basic",
+          "datasheet_url": "https://www.murata.com/en-us/products/productdetail?partno=GRM188R71H104KA93%23",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-C_0603_100NF",
+          "mpn": "C_0603_100NF",
+          "manufacturer": "Murata",
+          "description": "Condensador cer\u00e1mico SMD 0603 de 100nF (0.1\u00b5F) 50V X7R para desacoplo.",
+          "package": "0603 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.murata.com/en-us/products/productdetail?partno=GRM188R71H104KA93%23",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c25905": {
+    "timestamp": 1787558494.1092265,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C25905",
+          "mpn": "R_0402_5.1K",
+          "manufacturer": "Yageo",
+          "description": "Resistencia SMD 0402 5.1k\u03a9 1% requerida para pull-down de l\u00edneas USB-C CC1/CC2.",
+          "package": "0402 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.yageo.com/upload/yageo_sub/product_datasheet/RC_Group.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-R_0402_5.1K",
+          "mpn": "R_0402_5.1K",
+          "manufacturer": "Yageo",
+          "description": "Resistencia SMD 0402 5.1k\u03a9 1% requerida para pull-down de l\u00edneas USB-C CC1/CC2.",
+          "package": "0402 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.yageo.com/upload/yageo_sub/product_datasheet/RC_Group.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c25744": {
+    "timestamp": 1787558494.3236024,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c2290": {
+    "timestamp": 1787558494.700696,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:header power output header": {
+    "timestamp": 1787457638.9094853,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2897386",
+          "mpn": "Conn_02x09_Flipper",
+          "manufacturer": "Generic",
+          "description": "Header macho acodado de 18 pines (2x9) para interconexi\u00f3n con el puerto GPIO del Flipper Zero.",
+          "package": "Header-2x9",
+          "mounting_type": "THT",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://docs.flipperzero.one/gpio-and-modules",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C14256",
+          "mpn": "MP2307DN",
+          "manufacturer": "Monolithic Power Systems",
+          "description": "Regulador s\u00edncrono Buck compacto de alta eficiencia (95%).",
+          "package": "SOIC-8-EP",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.monolithicpower.com/en/documentview/productdocument/index/docid/235",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C16581",
+          "mpn": "TP4056",
+          "manufacturer": "TopPower",
+          "description": "Cargador lineal completo de 1A para bater\u00edas de Ion de Litio / LiPo de 1 celda (4.2V).",
+          "package": "SOP-8-EP",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.dorkbotpdx.org/files/TP4056.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-Conn_02x09_Flipper",
+          "mpn": "Conn_02x09_Flipper",
+          "manufacturer": "Generic",
+          "description": "Header macho acodado de 18 pines (2x9) para interconexi\u00f3n con el puerto GPIO del Flipper Zero.",
+          "package": "Header-2x9",
+          "mounting_type": "THT",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://docs.flipperzero.one/gpio-and-modules",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-MP2307DN",
+          "mpn": "MP2307DN",
+          "manufacturer": "Monolithic Power Systems",
+          "description": "Regulador s\u00edncrono Buck compacto de alta eficiencia (95%).",
+          "package": "SOIC-8-EP",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.monolithicpower.com/en/documentview/productdocument/index/docid/235",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-TP4056",
+          "mpn": "TP4056",
+          "manufacturer": "TopPower",
+          "description": "Cargador lineal completo de 1A para bater\u00edas de Ion de Litio / LiPo de 1 celda (4.2V).",
+          "package": "SOP-8-EP",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.dorkbotpdx.org/files/TP4056.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c15850": {
+    "timestamp": 1787457639.9610293,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C15850",
+          "mpn": "C_0805_10UF",
+          "manufacturer": "Murata",
+          "description": "Condensador cer\u00e1mico SMD 0805 de 10\u00b5F 16V X5R para filtro de alimentaci\u00f3n principal.",
+          "package": "0805 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.murata.com/en-us/products/productdetail?partno=GRM21BR61E106KA73%23",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-C_0805_10UF",
+          "mpn": "C_0805_10UF",
+          "manufacturer": "Murata",
+          "description": "Condensador cer\u00e1mico SMD 0805 de 10\u00b5F 16V X5R para filtro de alimentaci\u00f3n principal.",
+          "package": "0805 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.murata.com/en-us/products/productdetail?partno=GRM21BR61E106KA73%23",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c2293": {
+    "timestamp": 1787457640.3196318,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:header flipper 1x18 gpio": {
+    "timestamp": 1787461360.5011039,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2897386",
+          "mpn": "Conn_02x09_Flipper",
+          "manufacturer": "Generic",
+          "description": "Header macho acodado de 18 pines (2x9) para interconexi\u00f3n con el puerto GPIO del Flipper Zero.",
+          "package": "Header-2x9",
+          "mounting_type": "THT",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://docs.flipperzero.one/gpio-and-modules",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-Conn_02x09_Flipper",
+          "mpn": "Conn_02x09_Flipper",
+          "manufacturer": "Generic",
+          "description": "Header macho acodado de 18 pines (2x9) para interconexi\u00f3n con el puerto GPIO del Flipper Zero.",
+          "package": "Header-2x9",
+          "mounting_type": "THT",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://docs.flipperzero.one/gpio-and-modules",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c11101": {
+    "timestamp": 1787461360.5056133,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c2401": {
+    "timestamp": 1787461361.4165747,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:connector sma edge rf": {
+    "timestamp": 1787461361.7806406,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C165948",
+          "mpn": "USB_C_TYPE-C-31-M-12",
+          "manufacturer": "HRO Electronics",
+          "description": "Recept\u00e1culo USB-C hembra est\u00e1ndar de 16 pines (USB 2.0) montado en superficie.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "basic",
+          "datasheet_url": "https://lcsc.com/product-detail/USB-Connectors_HRO-TYPE-C-31-M-12_C165948.html",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C99000",
+          "mpn": "CC1101_MODULE",
+          "manufacturer": "Texas Instruments",
+          "description": "M\u00f3dulo Transceptor Sub-1GHz para radiofrecuencia (315/433/868/915 MHz).",
+          "package": "Module-8",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.ti.com/lit/ds/symlink/cc1101.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C99001",
+          "mpn": "NRF24L01_MODULE",
+          "manufacturer": "Nordic Semiconductor",
+          "description": "Transceptor 2.4GHz ISM con protocolo ShockBurst\u2122 integrado.",
+          "package": "Module-8",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://infocenter.nordicsemi.com/pdf/nRF24L01P_PS_v1.0.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C82942",
+          "mpn": "ME6211C33M5G",
+          "manufacturer": "Microne",
+          "description": "Regulador LDO de alto PSRR y bajo ruido para alimentaci\u00f3n de etapas RF y anal\u00f3gicas.",
+          "package": "SOT-23-5",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.microne.com.cn/upload/file/20210323/ME6211.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C14267",
+          "mpn": "CH340G",
+          "manufacturer": "WCH",
+          "description": "Puente USB a UART de 12MHz para programaci\u00f3n serie de microcontroladores.",
+          "package": "SOIC-16",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "http://www.wch-ic.com/downloads/file/5.html",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-USB_C_TYPE-C-31-M-12",
+          "mpn": "USB_C_TYPE-C-31-M-12",
+          "manufacturer": "HRO Electronics",
+          "description": "Recept\u00e1culo USB-C hembra est\u00e1ndar de 16 pines (USB 2.0) montado en superficie.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://lcsc.com/product-detail/USB-Connectors_HRO-TYPE-C-31-M-12_C165948.html",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-CC1101_MODULE",
+          "mpn": "CC1101_MODULE",
+          "manufacturer": "Texas Instruments",
+          "description": "M\u00f3dulo Transceptor Sub-1GHz para radiofrecuencia (315/433/868/915 MHz).",
+          "package": "Module-8",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.ti.com/lit/ds/symlink/cc1101.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-NRF24L01_MODULE",
+          "mpn": "NRF24L01_MODULE",
+          "manufacturer": "Nordic Semiconductor",
+          "description": "Transceptor 2.4GHz ISM con protocolo ShockBurst\u2122 integrado.",
+          "package": "Module-8",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://infocenter.nordicsemi.com/pdf/nRF24L01P_PS_v1.0.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ME6211C33M5G",
+          "mpn": "ME6211C33M5G",
+          "manufacturer": "Microne",
+          "description": "Regulador LDO de alto PSRR y bajo ruido para alimentaci\u00f3n de etapas RF y anal\u00f3gicas.",
+          "package": "SOT-23-5",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.microne.com.cn/upload/file/20210323/ME6211.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-CH340G",
+          "mpn": "CH340G",
+          "manufacturer": "WCH",
+          "description": "Puente USB a UART de 12MHz para programaci\u00f3n serie de microcontroladores.",
+          "package": "SOIC-16",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "http://www.wch-ic.com/downloads/file/5.html",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c82891": {
+    "timestamp": 1787461377.519345,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C82891",
+          "mpn": "ESP8266-ESP-12F",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU WiFi de bajo coste ideal para actuadores y sensores IoT simples.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP8266-ESP-12F",
+          "mpn": "ESP8266-ESP-12F",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU WiFi de bajo coste ideal para actuadores y sensores IoT simples.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c92489": {
+    "timestamp": 1787461377.5238492,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c25900": {
+    "timestamp": 1787461377.8921914,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:esp32-s3-wroom-1u": {
+    "timestamp": 1787494605.3813224,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:esp32-s3-wroom": {
+    "timestamp": 1787494611.0315924,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2913202",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP32-S3-WROOM-1",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c2913202": {
+    "timestamp": 1787494628.6610904,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2913202",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP32-S3-WROOM-1",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:mcu esp32-s3": {
+    "timestamp": 1787495257.5464447,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2913202",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C181781",
+          "mpn": "ESP32-WROOM-32",
+          "manufacturer": "Espressif Systems",
+          "description": "M\u00f3dulo cl\u00e1sico WiFi/Bluetooth con doble n\u00facleo para proyectos IoT generales.",
+          "package": "SMD-38",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C82891",
+          "mpn": "ESP8266-ESP-12F",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU WiFi de bajo coste ideal para actuadores y sensores IoT simples.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C8734",
+          "mpn": "STM32F103C8T6",
+          "manufacturer": "STMicroelectronics",
+          "description": "MCU ARM Cortex-M3 (Blue Pill core) muy popular para sistemas de control embebido.",
+          "package": "LQFP-48",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f103c8.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2688439",
+          "mpn": "STM32F411CEU6",
+          "manufacturer": "STMicroelectronics",
+          "description": "MCU ARM Cortex-M4 (Black Pill) a 100MHz con FPU y 512KB Flash.",
+          "package": "UFQFPN-48",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f411ce.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP32-S3-WROOM-1",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP32-WROOM-32",
+          "mpn": "ESP32-WROOM-32",
+          "manufacturer": "Espressif Systems",
+          "description": "M\u00f3dulo cl\u00e1sico WiFi/Bluetooth con doble n\u00facleo para proyectos IoT generales.",
+          "package": "SMD-38",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP8266-ESP-12F",
+          "mpn": "ESP8266-ESP-12F",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU WiFi de bajo coste ideal para actuadores y sensores IoT simples.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-STM32F103C8T6",
+          "mpn": "STM32F103C8T6",
+          "manufacturer": "STMicroelectronics",
+          "description": "MCU ARM Cortex-M3 (Blue Pill core) muy popular para sistemas de control embebido.",
+          "package": "LQFP-48",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f103c8.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-STM32F411CEU6",
+          "mpn": "STM32F411CEU6",
+          "manufacturer": "STMicroelectronics",
+          "description": "MCU ARM Cortex-M4 (Black Pill) a 100MHz con FPU y 512KB Flash.",
+          "package": "UFQFPN-48",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f411ce.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:led green": {
+    "timestamp": 1787495257.5529492,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2897384",
+          "mpn": "OLED_0.96_I2C",
+          "manufacturer": "Solomon Systech",
+          "description": "M\u00f3dulo de pantalla OLED de 0.96 pulgadas con controlador SSD1306 e interfaz I2C de 4 pines.",
+          "package": "PinHeader-1x04",
+          "mounting_type": "THT/Header",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C72041",
+          "mpn": "LED_0603_BLUE",
+          "manufacturer": "Everlight",
+          "description": "Diodo LED Azul en encapsulado SMD 0603 para indicaci\u00f3n de estado.",
+          "package": "0603 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.everlight.com/file/ProductFile/17-21-BHC-AN1P2-3T.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-OLED_0.96_I2C",
+          "mpn": "OLED_0.96_I2C",
+          "manufacturer": "Solomon Systech",
+          "description": "M\u00f3dulo de pantalla OLED de 0.96 pulgadas con controlador SSD1306 e interfaz I2C de 4 pines.",
+          "package": "PinHeader-1x04",
+          "mounting_type": "THT/Header",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-LED_0603_BLUE",
+          "mpn": "LED_0603_BLUE",
+          "manufacturer": "Everlight",
+          "description": "Diodo LED Azul en encapsulado SMD 0603 para indicaci\u00f3n de estado.",
+          "package": "0603 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.everlight.com/file/ProductFile/17-21-BHC-AN1P2-3T.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c181781": {
+    "timestamp": 1787496630.1056252,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C181781",
+          "mpn": "ESP32-WROOM-32",
+          "manufacturer": "Espressif Systems",
+          "description": "M\u00f3dulo cl\u00e1sico WiFi/Bluetooth con doble n\u00facleo para proyectos IoT generales.",
+          "package": "SMD-38",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP32-WROOM-32",
+          "mpn": "ESP32-WROOM-32",
+          "manufacturer": "Espressif Systems",
+          "description": "M\u00f3dulo cl\u00e1sico WiFi/Bluetooth con doble n\u00facleo para proyectos IoT generales.",
+          "package": "SMD-38",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c2040": {
+    "timestamp": 1787496630.1116352,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2040",
+          "mpn": "RP2040",
+          "manufacturer": "Raspberry Pi",
+          "description": "Microcontrolador Dual Cortex-M0+ con 8 bloques PIO programables.",
+          "package": "QFN-56",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-RP2040",
+          "mpn": "RP2040",
+          "manufacturer": "Raspberry Pi",
+          "description": "Microcontrolador Dual Cortex-M0+ con 8 bloques PIO programables.",
+          "package": "QFN-56",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c52346": {
+    "timestamp": 1787496634.7611418,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C52346",
+          "mpn": "AP2112K-3.3",
+          "manufacturer": "Diodes Incorporated",
+          "description": "LDO de ultra bajo dropout (250mV @ 600mA) con pin de Enable (EN), ideal para alimentaci\u00f3n por bater\u00eda.",
+          "package": "SOT-23-5",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.diodes.com/assets/Datasheets/AP2112.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-AP2112K-3.3",
+          "mpn": "AP2112K-3.3",
+          "manufacturer": "Diodes Incorporated",
+          "description": "LDO de ultra bajo dropout (250mV @ 600mA) con pin de Enable (EN), ideal para alimentaci\u00f3n por bater\u00eda.",
+          "package": "SOT-23-5",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.diodes.com/assets/Datasheets/AP2112.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c82942": {
+    "timestamp": 1787496634.7656517,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C82942",
+          "mpn": "ME6211C33M5G",
+          "manufacturer": "Microne",
+          "description": "Regulador LDO de alto PSRR y bajo ruido para alimentaci\u00f3n de etapas RF y anal\u00f3gicas.",
+          "package": "SOT-23-5",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.microne.com.cn/upload/file/20210323/ME6211.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ME6211C33M5G",
+          "mpn": "ME6211C33M5G",
+          "manufacturer": "Microne",
+          "description": "Regulador LDO de alto PSRR y bajo ruido para alimentaci\u00f3n de etapas RF y anal\u00f3gicas.",
+          "package": "SOT-23-5",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.microne.com.cn/upload/file/20210323/ME6211.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:header dc power 9v": {
+    "timestamp": 1787501487.420422,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2913202",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C14256",
+          "mpn": "MP2307DN",
+          "manufacturer": "Monolithic Power Systems",
+          "description": "Regulador s\u00edncrono Buck compacto de alta eficiencia (95%).",
+          "package": "SOIC-8-EP",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.monolithicpower.com/en/documentview/productdocument/index/docid/235",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C16581",
+          "mpn": "TP4056",
+          "manufacturer": "TopPower",
+          "description": "Cargador lineal completo de 1A para bater\u00edas de Ion de Litio / LiPo de 1 celda (4.2V).",
+          "package": "SOP-8-EP",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.dorkbotpdx.org/files/TP4056.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2897386",
+          "mpn": "Conn_02x09_Flipper",
+          "manufacturer": "Generic",
+          "description": "Header macho acodado de 18 pines (2x9) para interconexi\u00f3n con el puerto GPIO del Flipper Zero.",
+          "package": "Header-2x9",
+          "mounting_type": "THT",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://docs.flipperzero.one/gpio-and-modules",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP32-S3-WROOM-1",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-MP2307DN",
+          "mpn": "MP2307DN",
+          "manufacturer": "Monolithic Power Systems",
+          "description": "Regulador s\u00edncrono Buck compacto de alta eficiencia (95%).",
+          "package": "SOIC-8-EP",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.monolithicpower.com/en/documentview/productdocument/index/docid/235",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-TP4056",
+          "mpn": "TP4056",
+          "manufacturer": "TopPower",
+          "description": "Cargador lineal completo de 1A para bater\u00edas de Ion de Litio / LiPo de 1 celda (4.2V).",
+          "package": "SOP-8-EP",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.dorkbotpdx.org/files/TP4056.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-Conn_02x09_Flipper",
+          "mpn": "Conn_02x09_Flipper",
+          "manufacturer": "Generic",
+          "description": "Header macho acodado de 18 pines (2x9) para interconexi\u00f3n con el puerto GPIO del Flipper Zero.",
+          "package": "Header-2x9",
+          "mounting_type": "THT",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://docs.flipperzero.one/gpio-and-modules",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:c7555": {
+    "timestamp": 1787501487.423427,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c17414": {
+    "timestamp": 1787501487.8460612,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c17673": {
+    "timestamp": 1787501488.1523924,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c1710": {
+    "timestamp": 1787501488.5305278,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:connector usb-c": {
+    "timestamp": 1787594280.3982759,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C165948",
+          "mpn": "USB_C_TYPE-C-31-M-12",
+          "manufacturer": "HRO Electronics",
+          "description": "Recept\u00e1culo USB-C hembra est\u00e1ndar de 16 pines (USB 2.0) montado en superficie.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "basic",
+          "datasheet_url": "https://lcsc.com/product-detail/USB-Connectors_HRO-TYPE-C-31-M-12_C165948.html",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C114227",
+          "mpn": "DM3AT-SF-PEJM5",
+          "manufacturer": "Hirose Electric",
+          "description": "Z\u00f3calo Hirose Push-Push para tarjetas MicroSD con detecci\u00f3n de inserci\u00f3n mec\u00e1nica.",
+          "package": "SMD-12",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.hirose.com/product/en/download_file/key_name/DM3/category/Catalog/doc_file_id/34720/",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2897386",
+          "mpn": "Conn_02x09_Flipper",
+          "manufacturer": "Generic",
+          "description": "Header macho acodado de 18 pines (2x9) para interconexi\u00f3n con el puerto GPIO del Flipper Zero.",
+          "package": "Header-2x9",
+          "mounting_type": "THT",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://docs.flipperzero.one/gpio-and-modules",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C25905",
+          "mpn": "R_0402_5.1K",
+          "manufacturer": "Yageo",
+          "description": "Resistencia SMD 0402 5.1k\u03a9 1% requerida para pull-down de l\u00edneas USB-C CC1/CC2.",
+          "package": "0402 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.yageo.com/upload/yageo_sub/product_datasheet/RC_Group.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-USB_C_TYPE-C-31-M-12",
+          "mpn": "USB_C_TYPE-C-31-M-12",
+          "manufacturer": "HRO Electronics",
+          "description": "Recept\u00e1culo USB-C hembra est\u00e1ndar de 16 pines (USB 2.0) montado en superficie.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://lcsc.com/product-detail/USB-Connectors_HRO-TYPE-C-31-M-12_C165948.html",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-DM3AT-SF-PEJM5",
+          "mpn": "DM3AT-SF-PEJM5",
+          "manufacturer": "Hirose Electric",
+          "description": "Z\u00f3calo Hirose Push-Push para tarjetas MicroSD con detecci\u00f3n de inserci\u00f3n mec\u00e1nica.",
+          "package": "SMD-12",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.hirose.com/product/en/download_file/key_name/DM3/category/Catalog/doc_file_id/34720/",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-Conn_02x09_Flipper",
+          "mpn": "Conn_02x09_Flipper",
+          "manufacturer": "Generic",
+          "description": "Header macho acodado de 18 pines (2x9) para interconexi\u00f3n con el puerto GPIO del Flipper Zero.",
+          "package": "Header-2x9",
+          "mounting_type": "THT",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://docs.flipperzero.one/gpio-and-modules",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-R_0402_5.1K",
+          "mpn": "R_0402_5.1K",
+          "manufacturer": "Yageo",
+          "description": "Resistencia SMD 0402 5.1k\u03a9 1% requerida para pull-down de l\u00edneas USB-C CC1/CC2.",
+          "package": "0402 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.yageo.com/upload/yageo_sub/product_datasheet/RC_Group.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:r 10k": {
+    "timestamp": 1787594280.406785,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2913202",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C181781",
+          "mpn": "ESP32-WROOM-32",
+          "manufacturer": "Espressif Systems",
+          "description": "M\u00f3dulo cl\u00e1sico WiFi/Bluetooth con doble n\u00facleo para proyectos IoT generales.",
+          "package": "SMD-38",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C82891",
+          "mpn": "ESP8266-ESP-12F",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU WiFi de bajo coste ideal para actuadores y sensores IoT simples.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C8734",
+          "mpn": "STM32F103C8T6",
+          "manufacturer": "STMicroelectronics",
+          "description": "MCU ARM Cortex-M3 (Blue Pill core) muy popular para sistemas de control embebido.",
+          "package": "LQFP-48",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f103c8.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "jlcpcb",
+          "part_number": "C2688439",
+          "mpn": "STM32F411CEU6",
+          "manufacturer": "STMicroelectronics",
+          "description": "MCU ARM Cortex-M4 (Black Pill) a 100MHz con FPU y 512KB Flash.",
+          "package": "UFQFPN-48",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f411ce.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP32-S3-WROOM-1",
+          "mpn": "ESP32-S3-WROOM-1",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU principal de alta velocidad con aceleraci\u00f3n Vector AI y soporte USB Nativo OTG.",
+          "package": "SMD-44",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-s3-wroom-1_wroom-1u_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP32-WROOM-32",
+          "mpn": "ESP32-WROOM-32",
+          "manufacturer": "Espressif Systems",
+          "description": "M\u00f3dulo cl\u00e1sico WiFi/Bluetooth con doble n\u00facleo para proyectos IoT generales.",
+          "package": "SMD-38",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-ESP8266-ESP-12F",
+          "mpn": "ESP8266-ESP-12F",
+          "manufacturer": "Espressif Systems",
+          "description": "MCU WiFi de bajo coste ideal para actuadores y sensores IoT simples.",
+          "package": "SMD-16",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.espressif.com/sites/default/files/documentation/0a-esp8266ex_datasheet_en.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-STM32F103C8T6",
+          "mpn": "STM32F103C8T6",
+          "manufacturer": "STMicroelectronics",
+          "description": "MCU ARM Cortex-M3 (Blue Pill core) muy popular para sistemas de control embebido.",
+          "package": "LQFP-48",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f103c8.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        },
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-STM32F411CEU6",
+          "mpn": "STM32F411CEU6",
+          "manufacturer": "STMicroelectronics",
+          "description": "MCU ARM Cortex-M4 (Black Pill) a 100MHz con FPU y 512KB Flash.",
+          "package": "UFQFPN-48",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.st.com/resource/en/datasheet/stm32f411ce.pdf",
           "in_stock": true,
           "extra_meta": {}
         }

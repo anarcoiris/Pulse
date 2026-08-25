@@ -219,8 +219,9 @@ class SchematicGenerator:
                 half = max(1, num_pins // 2)
                 pin_ids = sorted(c.pins.keys(), key=lambda x: (0, int(x)) if str(x).isdigit() else (1, str(x)))
                 for i_pin, p_id in enumerate(pin_ids):
-                    net_name = c.pins.get(p_id, "")
-                    if net_name:
+                    net_name = str(c.pins.get(p_id, "")).strip()
+                    # Filter out empty or placeholder dummy nets
+                    if net_name and net_name not in ("N1", "N2", "None", ""):
                         if p_id in pin_map:
                             rx_mm, ry_mm, rot = pin_map[p_id]
                             # KiCad symbol Y is inverted relative to schematic space

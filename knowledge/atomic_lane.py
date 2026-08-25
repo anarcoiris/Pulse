@@ -25,20 +25,27 @@ PROFILE_ALIASES = {
 }
 
 
+import os
+
 def _scripts_dir() -> Path:
-    p = Path(str(cfg("llm.backends.atomic.scripts_dir", "")))
-    if p.is_absolute() and p.exists():
-        return p
+    raw = str(cfg("llm.backends.atomic.scripts_dir", ""))
+    if raw:
+        expanded = os.path.expandvars(os.path.expanduser(raw))
+        p = Path(expanded)
+        if p.is_absolute() and p.exists():
+            return p
     # Repo-relative fallback
     fallback = Path(__file__).resolve().parent.parent / "scripts" / "atomic_lane"
+    fallback.mkdir(parents=True, exist_ok=True)
     return fallback
 
 
 def _state_path() -> Path:
     raw = str(cfg("llm.backends.atomic.state_file", ""))
     if raw:
-        p = Path(raw)
-        if p.is_absolute():
+        expanded = os.path.expandvars(os.path.expanduser(raw))
+        p = Path(expanded)
+        if p.is_absolute() and p.exists():
             return p
     return _scripts_dir() / "qwythos.state.json"
 

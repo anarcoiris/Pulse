@@ -430,6 +430,13 @@ class FootprintPresets:
     """Footprints predefinidos para componentes comunes."""
 
     @staticmethod
+    def from_kicad_lib(ref: str, lib: str, name: str, value: str = "") -> Optional[Footprint]:
+        """Carga un footprint real desde las bibliotecas oficiales de KiCad."""
+        from bridge.kicad_footprint_parser import KiCadFootprintParser
+        lib_id = f"{lib}:{name}"
+        return KiCadFootprintParser.load_footprint(lib_id, ref=ref, value=value)
+
+    @staticmethod
     def smd_resistor(ref: str, value: str, net1_id: int = 0,
                      net1_name: str = "", net2_id: int = 0,
                      net2_name: str = "",
@@ -611,8 +618,8 @@ class FootprintPresets:
         # Arriba / Extras (39, 40)
         fp.pads.append(Pad("39", "smd", "rect", x=-2.0, y=-11.0, w=0.9, h=2.0))
         fp.pads.append(Pad("40", "smd", "rect", x=2.0, y=-11.0, w=0.9, h=2.0))
-        # Central EPAD (41) - Thermal Ground Pad
-        fp.pads.append(Pad("41", "smd", "rect", x=0.0, y=0.0, w=6.0, h=6.0))
+        # Central EPAD (41) - Thermal Ground Pad with Solid Zone Connection
+        fp.pads.append(Pad("41", "smd", "rect", x=0.0, y=0.0, w=6.0, h=6.0, zone_connect=2))
         return fp
 
     @staticmethod
@@ -645,7 +652,7 @@ class FootprintPresets:
             Pad("1", "smd", "rect", x=-2.3, y=3.1, w=1.2, h=1.5, net_id=net1_id, net_name=net1_name),
             Pad("2", "smd", "rect", x=0.0,  y=3.1, w=1.2, h=1.5, net_id=net2_id, net_name=net2_name),
             Pad("3", "smd", "rect", x=2.3,  y=3.1, w=1.2, h=1.5, net_id=net3_id, net_name=net3_name),
-            Pad("4", "smd", "rect", x=0.0,  y=-3.1, w=3.3, h=1.5, net_id=net4_id, net_name=net4_name), # Tab
+            Pad("4", "smd", "rect", x=0.0,  y=-3.1, w=3.3, h=1.5, net_id=net4_id, net_name=net4_name, zone_connect=2), # Tab
         ]
         return fp
 
@@ -1146,12 +1153,13 @@ class PCBLayout:
         layers = ["F.Cu", "B.Cu"]
         
         for fp in self._footprints:
+            rad = math.radians(fp.rotation)
+            cos_r, sin_r = math.cos(rad), math.sin(rad)
             for p in fp.pads:
                 gnd_nets = {'GND', 'PWR_GND', 'PWR_GND_FLIPPER', 'PGND', 'AGND', 'DGND', 'SGND', '-'}
                 if p.net_name and p.net_name not in gnd_nets:  # GND nets handled by copper fill-zone
-                    rad = math.radians(fp.rotation)
-                    px = fp.x + p.x * math.cos(rad) + p.y * math.sin(rad)
-                    py = fp.y - p.x * math.sin(rad) + p.y * math.cos(rad)
+                    px = fp.x + p.x * cos_r - p.y * sin_r
+                    py = fp.y + p.x * sin_r + p.y * cos_r
                     if p.net_name not in net_pads:
                         net_pads[p.net_name] = []
                     
@@ -1171,12 +1179,14 @@ class PCBLayout:
 
         # 1. Keepout IC & MCU inner bodies so traces NEVER cross inside component bodies
         for fp in self._footprints:
-            if len(fp.pads) > 4:
+            is_conn = any(k in fp.lib_id.upper() or k in fp.ref.upper() for k in ("CONN", "HEADER", "PINHEADER", "J", "TERMINAL", "SOCKET"))
+            if not is_conn and len(fp.pads) > 4:
+                rad = math.radians(fp.rotation)
+                cos_r, sin_r = math.cos(rad), math.sin(rad)
                 pad_xs, pad_ys = [], []
                 for p in fp.pads:
-                    rad = math.radians(fp.rotation)
-                    px = fp.x + p.x * math.cos(rad) + p.y * math.sin(rad)
-                    py = fp.y - p.x * math.sin(rad) + p.y * math.cos(rad)
+                    px = fp.x + p.x * cos_r - p.y * sin_r
+                    py = fp.y + p.x * sin_r + p.y * cos_r
                     pad_xs.append(px)
                     pad_ys.append(py)
                 
@@ -1231,16 +1241,17 @@ class PCBLayout:
         # 2. Block pad copper cells AND clearance margin in occupied grid
         net_pad_cells_map = {} # net_name -> set of (l_idx, gx, gy)
         for fp in self._footprints:
+            rad = math.radians(fp.rotation)
+            cos_r, sin_r = math.cos(rad), math.sin(rad)
             for p in fp.pads:
-                rad = math.radians(fp.rotation)
-                px = fp.x + p.x * math.cos(rad) + p.y * math.sin(rad)
-                py = fp.y - p.x * math.sin(rad) + p.y * math.cos(rad)
+                px = fp.x + p.x * cos_r - p.y * sin_r
+                py = fp.y + p.x * sin_r + p.y * cos_r
                 gx, gy = int(px / grid_size), int(py / grid_size)
                 pad_layers = [0, 1] if ("thru_hole" in p.pad_type or "*.Cu" in p.layers) else ([1] if ("B.Cu" in p.layers or fp.layer == "B.Cu") else [0])
                 
                 half_w, half_h = p.w / 2.0, p.h / 2.0
-                # THT pads need larger clearance to prevent traces from squeezing
-                cl_margin = 0.28 if ("thru_hole" in p.pad_type) else 0.35
+                # Standard JLCPCB/PCBWay 6 mil (0.15mm) trace-to-pad clearance
+                cl_margin = 0.18 if ("thru_hole" in p.pad_type) else 0.15
                 
                 search_rx = int(math.ceil((half_w + cl_margin) / grid_size)) + 1
                 search_ry = int(math.ceil((half_h + cl_margin) / grid_size)) + 1
@@ -1295,7 +1306,7 @@ class PCBLayout:
             
             nodes_explored = 0
             while open_set:
-                if nodes_explored > 200000:
+                if nodes_explored > 250000:
                     return None
                 _, current = heapq.heappop(open_set)
                 c_l, cx, cy = current
@@ -1347,7 +1358,6 @@ class PCBLayout:
                         if thick_blocked: continue
                         
                     if dl != 0:
-                        # Vias are fat (0.6mm diam). Check 3x3 area to avoid stepping on the edge of another net's trace-optimized clearance
                         via_blocked = False
                         for vx in (-1, 0, 1):
                             for vy in (-1, 0, 1):
@@ -1364,12 +1374,12 @@ class PCBLayout:
                         if via_blocked:
                             continue
                         
-                        cost = 10  # Via cost penalty
+                        cost = 8  # Via cost penalty
                     tentative_g = g_score[current] + cost
                     if nb not in g_score or tentative_g < g_score[nb]:
                         came_from[nb] = current
                         g_score[nb] = tentative_g
-                        h = abs(nb_x - end_loc[0]) + abs(nb_y - end_loc[1]) + (0 if dl == 0 else 5)
+                        h = abs(nb_x - end_loc[0]) + abs(nb_y - end_loc[1]) + (0 if dl == 0 else 4)
                         heapq.heappush(open_set, (tentative_g + h, nb))
             return None
 
@@ -1377,11 +1387,10 @@ class PCBLayout:
         routed_failed = 0
         
         # Sort nets: long-distance nets first (they need the most routing freedom),
-        # then short local nets last (they can weave around existing traces more easily)
+        # then short local nets last
         def net_sort_key(item):
             n_name, p_list = item
             if len(p_list) >= 2:
-                # Calculate max pairwise distance in the net
                 max_dist = 0
                 for i in range(len(p_list)):
                     for j in range(i + 1, len(p_list)):
@@ -1396,35 +1405,64 @@ class PCBLayout:
         for net_name, pads in sorted_nets:
             if len(pads) < 2: continue
             
-            # Re-order multi-pad nets using nearest-neighbor to prevent criss-crossing long traces
-            if len(pads) > 2:
-                unvisited = pads.copy()
-                ordered = [unvisited.pop(0)]
-                while unvisited:
-                    last = ordered[-1]
-                    best_i = min(
-                        range(len(unvisited)),
-                        key=lambda idx: math.hypot(unvisited[idx][0] - last[0], unvisited[idx][1] - last[1])
-                    )
-                    ordered.append(unvisited.pop(best_i))
-                pads = ordered
-
             nid = pads[0][2]
             net_w = self.get_net_width(net_name)
-            for i in range(len(pads) - 1):
-                p1, p2 = pads[i], pads[i+1]
-                path_grid = astar(p1[0], p1[1], p1[3], p2[0], p2[1], p2[3], net_w, net_name)
+
+            # Minimum Spanning Tree / Net Expansion routing
+            connected_pads = [pads[0]]
+            unconnected_pads = list(pads[1:])
+            net_tree_points = [(pads[0][0], pads[0][1], pads[0][3])]
+
+            while unconnected_pads:
+                # Find closest unconnected pad to any connected tree point
+                best_u_idx = 0
+                best_target_pt = net_tree_points[0]
+                min_dist = float('inf')
+
+                for u_idx, u_pad in enumerate(unconnected_pads):
+                    for c_pt in net_tree_points:
+                        d = math.hypot(u_pad[0] - c_pt[0], u_pad[1] - c_pt[1])
+                        if d < min_dist:
+                            min_dist = d
+                            best_u_idx = u_idx
+                            best_target_pt = c_pt
+
+                target_u = unconnected_pads.pop(best_u_idx)
+
+                path_grid = astar(
+                    target_u[0], target_u[1], target_u[3],
+                    best_target_pt[0], best_target_pt[1], best_target_pt[2],
+                    net_w, net_name
+                )
+
+                # Fallback: attempt connecting to any other connected pad
+                if not path_grid and len(connected_pads) > 1:
+                    for alt_pad in connected_pads:
+                        path_grid = astar(
+                            target_u[0], target_u[1], target_u[3],
+                            alt_pad[0], alt_pad[1], alt_pad[3],
+                            net_w, net_name
+                        )
+                        if path_grid:
+                            break
+
                 if path_grid:
                     routed_ok += 1
+                    connected_pads.append(target_u)
+                    # Sample points along route to expand net tree
+                    step_skip = max(1, len(path_grid) // 8)
+                    for gp in path_grid[::step_skip]:
+                        net_tree_points.append((gp[1] * grid_size, gp[2] * grid_size, gp[0]))
+
                     # Simplify path: merge contiguous collinear segments on the same layer
                     simple_path = [path_grid[0]]
                     for k in range(1, len(path_grid) - 1):
-                        p_prev = simple_path[-1]
+                        p_prev = path_grid[k - 1]
                         p_curr = path_grid[k]
                         p_next = path_grid[k + 1]
-                        d1 = (p_curr[1] - p_prev[1], p_curr[2] - p_prev[2])
-                        d2 = (p_next[1] - p_curr[1], p_next[2] - p_curr[2])
-                        if p_prev[0] != p_curr[0] or p_curr[0] != p_next[0] or d1 != d2:
+                        d_prev = (p_curr[1] - p_prev[1], p_curr[2] - p_prev[2])
+                        d_next = (p_next[1] - p_curr[1], p_next[2] - p_curr[2])
+                        if p_prev[0] != p_curr[0] or p_curr[0] != p_next[0] or d_prev != d_next:
                             simple_path.append(p_curr)
                     simple_path.append(path_grid[-1])
 
@@ -1441,17 +1479,10 @@ class PCBLayout:
                                 ))
                             start_pt = gp
 
-                    # Occupy cells along the full path + clearance corridor for future nets
+                    # Occupy cells along path + clearance corridor
                     for k, pt in enumerate(path_grid):
-                        # Detect if this point is a via (layer changes compared to prev or next point)
-                        is_via = False
-                        if k > 0 and path_grid[k-1][0] != pt[0]:
-                            is_via = True
-                        if k < len(path_grid) - 1 and path_grid[k+1][0] != pt[0]:
-                            is_via = True
-                        
-                        # 3 cells (0.75mm) for vias, 2 cells (0.5mm) for standard/wide traces
-                        cl_cells = 3 if is_via else 2
+                        is_via = (k > 0 and path_grid[k-1][0] != pt[0]) or (k < len(path_grid)-1 and path_grid[k+1][0] != pt[0])
+                        cl_cells = 2 if is_via else 1
                         layers_to_block = [0, 1] if is_via else [pt[0]]
                         
                         for l_idx in layers_to_block:
@@ -1468,12 +1499,13 @@ class PCBLayout:
                                     else:
                                         occupied[occ_pt] = f"CLEARANCE_{net_name}"
                                     
-                                    # Mark the exact center as copper
+                                    # Center is exact copper
                                     if dx == 0 and dy == 0 and l_idx == pt[0]:
                                         occupied[occ_pt] = net_name
+                                        net_pad_cells_map.setdefault(net_name, set()).add(occ_pt)
                 else:
                     routed_failed += 1
-                    logger.warning("pcb_layout", f"Segmento sin rutear en net '{net_name}' (pad {i} -> {i+1})")
+                    logger.warning("pcb_layout", f"Segmento sin rutear en net '{net_name}' para pad ({target_u[0]:.2f}, {target_u[1]:.2f})")
 
         level = logger.warning if routed_failed else logger.info
         level(
@@ -1677,10 +1709,12 @@ class PCBLayout:
 
         # Ensure GND copper pour zones exist for F.Cu and B.Cu
         if not self._zones:
-            self.add_copper_pour(net="PWR_GND", layer="F.Cu", margin=0.5, priority=1)
-            self.add_copper_pour(net="PWR_GND", layer="B.Cu", margin=0.5, priority=1)
-            self.add_copper_pour(net="PWR_GND_FLIPPER", layer="F.Cu", margin=0.5, priority=0)
-            self.add_copper_pour(net="PWR_GND_FLIPPER", layer="B.Cu", margin=0.5, priority=0)
+            gnd_name = "PWR_GND" if "PWR_GND" in self._nets else ("GND" if "GND" in self._nets else "PWR_GND")
+            self.add_copper_pour(net=gnd_name, layer="F.Cu", margin=0.5, priority=1)
+            self.add_copper_pour(net=gnd_name, layer="B.Cu", margin=0.5, priority=1)
+            if "PWR_GND_FLIPPER" in self._nets:
+                self.add_copper_pour(net="PWR_GND_FLIPPER", layer="F.Cu", margin=0.5, priority=0)
+                self.add_copper_pour(net="PWR_GND_FLIPPER", layer="B.Cu", margin=0.5, priority=0)
 
         # Netclasses — use configured default_trace_width instead of hardcoded 0.25
         lines.append('  (net_class "Default" "Default netclass"')

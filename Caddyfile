@@ -1,0 +1,59 @@
+# ==============================================================================
+# PulseLab EDA Platform — Production Caddy Reverse Proxy & DDNS Gateway
+# ==============================================================================
+
+{
+	admin off
+}
+
+# Production DDNS Block (Let's Encrypt SSL when ports 80/443 are forwarded)
+{$SITE_ADDRESS:pulselab.ddns.net} {
+	# Compression for Web Studio 2D/3D visual assets
+	encode zstd gzip
+
+	# Security & Privacy Headers
+	header {
+		X-Frame-Options "SAMEORIGIN"
+		X-Content-Type-Options "nosniff"
+		X-XSS-Protection "1; mode=block"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	# API Gateway & Backend Proxies
+	handle /api/* {
+		reverse_proxy {$PULSE_BACKEND_HOST:pulselab-eda:8000}
+	}
+
+	handle /docs* {
+		reverse_proxy {$PULSE_BACKEND_HOST:pulselab-eda:8000}
+	}
+
+	handle /redoc* {
+		reverse_proxy {$PULSE_BACKEND_HOST:pulselab-eda:8000}
+	}
+
+	handle /openapi.json {
+		reverse_proxy {$PULSE_BACKEND_HOST:pulselab-eda:8000}
+	}
+
+	handle /ws* {
+		reverse_proxy {$PULSE_BACKEND_HOST:pulselab-eda:8000}
+	}
+
+	# Serve Built Production Web Studio SPA
+	handle {
+		root * /srv/webapp/dist
+		file_server
+		try_files {path} /index.html
+	}
+
+	# Access Logs
+	log {
+		output file /logs/caddy_access.log {
+			roll_size 10mb
+			roll_keep 5
+		}
+		format json
+	}
+}

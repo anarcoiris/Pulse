@@ -1,0 +1,55 @@
+rule_id: schematic.mcu.boot_strap_pins
+domain: schematic
+skill_ref: schematic-rules/skills/boot-strap-pins.md
+description: >
+  Los pines con rol boot_strap (p.ej. GPIO0 en ESP32 / ESP32-S3) determinan el modo
+  de arranque del microcontrolador durante el flanco de subida de reset (EN).
+  Deben poseer un pull-up pasivo (a 3.3V) para garantizar el arranque normal desde
+  memoria Flash SPI y opcionalmente un pulsador hacia GND para modo bootloader UART.
+  No deben tener pull-down permanente a tierra salvo que se pretenda forzar modo descarga permanente.
+
+applies_when:
+  pin_role: boot_strap
+
+checks:
+  - id: strap_pin_must_pull_high_by_default
+    condition: >
+      exists resistor R such that
+        (R.pin_a.net == this_pin.net and R.pin_b.net.role == power_rail)
+        or (R.pin_b.net == this_pin.net and R.pin_a.net.role == power_rail)
+        or (this_pin.internal_pullup == true and not exists pull_down)
+    on_fail:
+      severity: warning
+      message_template: >
+        El pin de strapping {pin.number} ({component.ref}, rol boot_strap)
+        no tiene resistencia de pull-up externa a 3.3V. Aunque algunos MCUs
+        poseen pull-ups internos débiles (45kΩ), se recomienda una resistencia
+        externa de 10kΩ para evitar arranques erráticos por ruido EMI.
+      suggested_fix:
+        action: add_component
+        details:
+          etype: R
+          value: "10k"
+          n1: "{this_pin.net}"
+          n2: "3.3V"
+
+  - id: strap_pin_not_permanently_grounded
+    condition: >
+      exists component C such that
+        C.kind in [wire, net_tie]
+        and (C connects this_pin.net directly to a net with role == ground)
+    on_fail:
+      severity: critical
+      message_template: >
+        El pin de strapping {pin.number} ({component.ref}, rol boot_strap)
+        está cortocircuitado permanentemente a masa (GND). Esto fuerza al MCU
+        a entrar en modo Download Boot (arranque por UART) en cada ciclo de energía,
+        impidiendo la ejecución del firmware de usuario.
+      suggested_fix:
+        action: rewire_pin
+        details:
+          hint: "Interpolar un pulsador momentáneo (switch) entre el pin de strapping y GND."
+
+notes: >
+  GPIO0 en ESP32-S3 se muestrea únicamente durante el flanco ascendente de CHIP_PU (EN).
+  Posteriormente puede ser utilizado como GPIO estándar de usuario.

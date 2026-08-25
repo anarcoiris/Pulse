@@ -20,8 +20,9 @@ Ambos producen un ``PCBLayout`` con las mismas mejoras profesionales:
 """
 
 from __future__ import annotations
+import math
 from pathlib import Path
-from typing import Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING, Any, Dict, List, Tuple
 
 if TYPE_CHECKING:
     from core.circuit_graph import CircuitGraph
@@ -154,8 +155,12 @@ class PCBBuilder:
         from bridge.island_layout import compute_layout
         positions, total_w, total_h = compute_layout(comps, mode='pcb')
 
-        w = self.board_width or total_w
-        h = self.board_height or total_h
+        graph_meta = getattr(graph, 'meta', {}) if hasattr(graph, 'meta') and isinstance(graph.meta, dict) else {}
+        graph_w = getattr(graph, 'board_width', None) or graph_meta.get('board_width') or graph_meta.get('board_width_mm')
+        graph_h = getattr(graph, 'board_height', None) or graph_meta.get('board_height') or graph_meta.get('board_height_mm')
+
+        w = self.board_width or graph_w or total_w
+        h = self.board_height or graph_h or total_h
 
         pcb = PCBLayout(
             board_width=w, board_height=h,
@@ -171,47 +176,46 @@ class PCBBuilder:
         pcb.board.origin_x = offset_x
         pcb.board.origin_y = offset_y
 
-        # Check if components need auto-placement
-        unpositioned = [
-            c for c in comps
-            if not (hasattr(c, 'position') and isinstance(getattr(c, 'position'), (tuple, list, dict)))
-        ]
-        if unpositioned:
-            from core.auto_placement import AutoPlacementEngine
-            comp_dicts = [
-                {
-                    "etype": getattr(c, "etype", ""),
-                    "label": getattr(c, "label", c.uid),
-                    "value": str(getattr(c, "value", "")),
-                    "symbol": str(getattr(c, "symbol", "")),
-                    "footprint": str(getattr(c, "footprint", "")),
-                    "pins": getattr(c, "pins", {}),
-                    "n1": getattr(c, "n1", ""),
-                    "n2": getattr(c, "n2", "")
-                }
-                for c in comps
-            ]
-            engine = AutoPlacementEngine(w, h)
-            placed_dicts = engine.compute_placement(comp_dicts)
-            pos_map = {d["label"]: d["position"] for d in placed_dicts if "position" in d}
-        else:
-            pos_map = {}
+        # Continual Visual Inspection & Auto-Placement Optimization
+        from core.auto_placement import AutoPlacementEngine
+        comp_dicts = []
+        for c in comps:
+            c_pos = None
+            if hasattr(c, 'position') and isinstance(c.position, (tuple, list, dict)):
+                if isinstance(c.position, dict):
+                    c_pos = [c.position.get('x', 0.0), c.position.get('y', 0.0)]
+                else:
+                    c_pos = list(c.position)
+            comp_dicts.append({
+                "etype": getattr(c, "etype", ""),
+                "label": getattr(c, "label", c.uid),
+                "value": str(getattr(c, "value", "")),
+                "symbol": str(getattr(c, "symbol_id", "") or getattr(c, "symbol", "")),
+                "symbol_id": str(getattr(c, "symbol_id", "") or getattr(c, "symbol", "")),
+                "footprint": str(getattr(c, "footprint_id", "") or getattr(c, "footprint", "")),
+                "footprint_id": str(getattr(c, "footprint_id", "") or getattr(c, "footprint", "")),
+                "rotation": float(getattr(c, "rotation", 0.0)),
+                "pins": getattr(c, "pins", {}),
+                "n1": getattr(c, "n1", ""),
+                "n2": getattr(c, "n2", ""),
+                "position": c_pos
+            })
+
+        engine = AutoPlacementEngine(w, h)
+        placed_dicts = engine.compute_placement(comp_dicts)
+        pos_map = {d["label"]: d["position"] for d in placed_dicts if "position" in d}
+        rot_map = {d["label"]: d.get("rotation", 0.0) for d in placed_dicts if "rotation" in d}
 
         for c in comps:
-            pos = None
-            if hasattr(c, 'position') and isinstance(c.position, (tuple, list, dict)):
+            label = getattr(c, 'label', c.uid)
+            pos = pos_map.get(label)
+            if not pos and hasattr(c, 'position') and isinstance(c.position, (tuple, list, dict)):
                 if isinstance(c.position, dict):
                     pos = (c.position.get('x', 0.0), c.position.get('y', 0.0))
                 else:
                     pos = c.position
             if not pos:
-                label = getattr(c, 'label', c.uid)
-                if label in pos_map:
-                    pos = pos_map[label]
-                else:
-                    pos = positions.get(c.uid) or positions.get(label)
-            if not pos:
-                pos = (0.0, 0.0)
+                pos = positions.get(c.uid) or positions.get(label) or (0.0, 0.0)
 
             x, y = pos[0], pos[1]
             x += offset_x + w / 2.0
@@ -222,7 +226,7 @@ class PCBBuilder:
 
             fp = None
             fp_added = False
-            f_id = getattr(c, 'footprint_id', None)
+            f_id = getattr(c, 'footprint_id', None) or getattr(c, 'footprint', None) or getattr(c, 'kicad_footprint', None)
             
             if f_id:
                 if ':' in f_id:
@@ -285,9 +289,21 @@ class PCBBuilder:
 
             # Bind pin nets from component definition to footprint pads
             if fp and getattr(c, "pins", None):
+                c_pins = dict(c.pins)
+                # USB-C fallback mapping: shorthand pin 1 -> VBUS (A4,A9,B4,B9) and pin 4 -> GND (A1,A12,B1,B12)
+                if ("USB" in val.upper() or "TYPE-C" in str(getattr(fp, "lib_id", "")).upper()):
+                    vbus_net = c_pins.get("1") or c_pins.get("VBUS") or c_pins.get("5V")
+                    gnd_net = c_pins.get("4") or c_pins.get("GND")
+                    if vbus_net:
+                        for p_id in ("A4", "A9", "B4", "B9"):
+                            if p_id not in c_pins: c_pins[p_id] = vbus_net
+                    if gnd_net:
+                        for p_id in ("A1", "A12", "B1", "B12", "SH"):
+                            if p_id not in c_pins: c_pins[p_id] = gnd_net
+
                 for pad in fp.pads:
-                    if pad.number in c.pins:
-                        net_name = c.pins[pad.number]
+                    if pad.number in c_pins:
+                        net_name = c_pins[pad.number]
                         pad.net_name = net_name
                         pad.net_id = pcb._get_net_id(net_name)
                     elif not pad.net_name:
@@ -296,50 +312,154 @@ class PCBBuilder:
                         pad.net_id = pcb._get_net_id(net_name)
 
             # Apply component rotation if specified
-            if fp and hasattr(c, "rotation"):
-                fp.rotation = float(getattr(c, "rotation", 0.0))
-
-            # Check for collisions with previously placed footprints
             if fp:
-                min_x, min_y, max_x, max_y = fp.bounding_box()
-                for other_fp in pcb._footprints[:-1]:
-                    if fp == other_fp:
-                        continue
-                    o_min_x, o_min_y, o_max_x, o_max_y = other_fp.bounding_box()
-                    # Check for AABB intersection
-                    if (min_x < o_max_x and max_x > o_min_x and
-                        min_y < o_max_y and max_y > o_min_y):
-                        logger.warning(
-                            "pcb_builder",
-                            f"COLLISION DETECTED: {fp.ref} overlaps with {other_fp.ref} "
-                            f"near ({x:.1f}, {y:.1f})"
-                        )
+                fp.rotation = float(rot_map.get(ref, getattr(c, "rotation", 0.0)))
+
+            # Check and resolve courtyard overlaps using full package-spec + pad-aware AABB
+            if fp:
+                from core.visual_inference import get_package_spec as _gps
+                for _ in range(12):
+                    min_x, max_x, min_y, max_y = self._get_courtyard_aabb(fp, _gps)
+
+                    has_collision = False
+                    colliding_ref = ""
+                    for other_fp in pcb._footprints:
+                        if fp == other_fp:
+                            continue
+                        o_min_x, o_max_x, o_min_y, o_max_y = self._get_courtyard_aabb(other_fp, _gps)
+
+                        if (min_x < o_max_x and max_x > o_min_x and
+                            min_y < o_max_y and max_y > o_min_y):
+                            has_collision = True
+                            colliding_ref = other_fp.ref
+                            break
+
+                    if has_collision:
+                        new_x, new_y = self._find_non_overlapping_position(pcb, fp, fp.x, fp.y)
+                        if (new_x, new_y) != (fp.x, fp.y):
+                            fp.x = new_x
+                            fp.y = new_y
+                        else:
+                            logger.warning(
+                                "pcb_builder",
+                                f"COLLISION UNRESOLVED: {fp.ref} overlaps with {colliding_ref} "
+                                f"near ({fp.x:.1f}, {fp.y:.1f})"
+                            )
+                            break
+                    else:
+                        break
 
         # Post-processing
         self._finalize(pcb, graph.all_nodes, n)
         self._pcb = pcb
 
-    def _find_non_overlapping_position(self, pcb: PCBLayout, start_x: float, start_y: float, step: float = 4.0) -> tuple[float, float]:
-        """Finds a position near (start_x, start_y) that does not overlap existing footprints."""
-        offsets = [
-            (0, 0), (0, -step), (0, step), (-step, 0), (step, 0),
-            (-step, -step), (step, -step), (-step, step), (step, step),
-            (0, -2*step), (0, 2*step), (-2*step, 0), (2*step, 0),
-            (-2*step, -step), (2*step, -step), (-2*step, step), (2*step, step),
-            (-3*step, 0), (3*step, 0), (0, -3*step), (0, 3*step)
-        ]
-        for dx, dy in offsets:
-            cx, cy = start_x + dx, start_y + dy
-            min_x, min_y, max_x, max_y = cx - 1.5, cy - 1.5, cx + 1.5, cy + 1.5
+    @staticmethod
+    def _get_courtyard_aabb(fp: Any, gps_fn: Any) -> tuple[float, float, float, float]:
+        """Returns (min_x, max_x, min_y, max_y) courtyard AABB matching VisualInferenceEngine geometry.
+        Computes from package spec, pad extent, and rotation envelope (identical to CourtyardBox.rotated_bounds)."""
+        if fp is None:
+            # Default to standard 0805 passive AABB
+            return -1.25, 1.25, -0.875, 0.875
+
+        spec = gps_fn(footprint_id=getattr(fp, 'lib_id', ''), ref=getattr(fp, 'ref', ''), etype=getattr(fp, 'value', ''))
+        w = float(spec.get('width', 3.0))
+        h = float(spec.get('height', 3.0))
+        m = float(spec.get('courtyard_margin', 0.25))
+        pads = getattr(fp, 'pads', [])
+        rot_rad = math.radians(getattr(fp, 'rotation', 0.0))
+        cos_r, sin_r = math.cos(rot_rad), math.sin(rot_rad)
+        comp_cx, comp_cy = getattr(fp, 'x', 0.0), getattr(fp, 'y', 0.0)
+
+        if pads:
+            pad_xs = [p.x for p in pads]
+            pad_ys = [p.y for p in pads]
+            max_pw = max((getattr(p, 'w', 1.0) or 1.0) for p in pads)
+            max_ph = max((getattr(p, 'h', 1.0) or 1.0) for p in pads)
+            pad_span_x = (max(pad_xs) - min(pad_xs)) + max_pw
+            pad_span_y = (max(pad_ys) - min(pad_ys)) + max_ph
+            w = max(w, pad_span_x)
+            h = max(h, pad_span_y)
+            local_cx = (min(pad_xs) + max(pad_xs)) / 2.0
+            local_cy = (min(pad_ys) + max(pad_ys)) / 2.0
+            comp_cx = getattr(fp, 'x', 0.0) + local_cx * cos_r - local_cy * sin_r
+            comp_cy = getattr(fp, 'y', 0.0) + local_cx * sin_r + local_cy * cos_r
+
+        tot_w = w + 2 * m
+        tot_h = h + 2 * m
+        cos_t = abs(math.cos(rot_rad))
+        sin_t = abs(math.sin(rot_rad))
+        eff_w = tot_w * cos_t + tot_h * sin_t
+        eff_h = tot_w * sin_t + tot_h * cos_t
+        hw = eff_w / 2.0
+        hh = eff_h / 2.0
+        return comp_cx - hw, comp_cx + hw, comp_cy - hh, comp_cy + hh
+
+
+    def _find_non_overlapping_position(
+        self,
+        pcb: PCBLayout,
+        current_fp_or_x: Any = None,
+        start_x_or_y: float = 0.0,
+        start_y: Optional[float] = None
+    ) -> tuple[float, float]:
+        """Finds a position near (start_x, start_y) that does not overlap existing footprints using spiral search.
+        Supports both (pcb, fp, x, y) and (pcb, x, y) calling conventions."""
+        from core.visual_inference import get_package_spec as _gps
+
+        if start_y is None:
+            current_fp = None
+            start_x = float(current_fp_or_x if current_fp_or_x is not None else 0.0)
+            start_y_val = float(start_x_or_y)
+        else:
+            current_fp = current_fp_or_x
+            start_x = float(start_x_or_y)
+            start_y_val = float(start_y)
+
+        ox = getattr(pcb.board, "origin_x", 0.0) if hasattr(pcb, "board") and pcb.board else 0.0
+        oy = getattr(pcb.board, "origin_y", 0.0) if hasattr(pcb, "board") and pcb.board else 0.0
+        bw = getattr(pcb.board, "width_mm", 200.0) if hasattr(pcb, "board") and pcb.board else 200.0
+        bh = getattr(pcb.board, "height_mm", 200.0) if hasattr(pcb, "board") and pcb.board else 200.0
+
+        # Compute current footprint half-extents (same as _get_courtyard_aabb, offset-agnostic)
+        if current_fp is not None:
+            c_min_x, c_max_x, c_min_y, c_max_y = self._get_courtyard_aabb(current_fp, _gps)
+            cur_hw = (c_max_x - c_min_x) / 2.0
+            cur_hh = (c_max_y - c_min_y) / 2.0
+        else:
+            cur_hw = 1.25
+            cur_hh = 0.875
+
+        # Spiral search: 1.5mm step up to 18mm radius
+        offsets = [(0, 0)]
+        for r_step in range(1, 12):
+            dist = r_step * 1.5
+            for angle_deg in range(0, 360, 30):
+                ang_rad = math.radians(angle_deg)
+                offsets.append((round(dist * math.cos(ang_rad), 2), round(dist * math.sin(ang_rad), 2)))
+
+        for ddx, ddy in offsets:
+            cx, cy = start_x + ddx, start_y_val + ddy
+            min_x, max_x = cx - cur_hw, cx + cur_hw
+            min_y, max_y = cy - cur_hh, cy + cur_hh
+
+            # Keep inside board WITH 2.5mm IPC visual keepout from edges (same as VisualInferenceEngine.edge_margin_mm)
+            edge_keepout = 2.5
+            if min_x < ox + edge_keepout or max_x > ox + bw - edge_keepout or min_y < oy + edge_keepout or max_y > oy + bh - edge_keepout:
+                continue
+
             collision = False
             for fp in pcb._footprints:
-                o_min_x, o_min_y, o_max_x, o_max_y = fp.bounding_box()
+                if fp == current_fp:
+                    continue
+                o_min_x, o_max_x, o_min_y, o_max_y = self._get_courtyard_aabb(fp, _gps)
                 if (min_x < o_max_x and max_x > o_min_x and min_y < o_max_y and max_y > o_min_y):
                     collision = True
                     break
             if not collision:
                 return cx, cy
-        return start_x, start_y
+        return start_x, start_y_val
+
+
 
     def _apply_ic_extras(self, pcb: PCBLayout, comp, ref: str, val: str, x: float, y: float) -> None:
         """Decoupling caps and antenna keepout for IC/MCU (including raw footprints)."""

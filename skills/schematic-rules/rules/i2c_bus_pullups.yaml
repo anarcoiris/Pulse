@@ -1,0 +1,70 @@
+rule_id: schematic.i2c_bus.pullup_to_power_rail
+domain: schematic
+skill_ref: schematic-rules/skills/i2c-bus-pullups.md
+description: >
+  Toda línea de bus I2C (roles i2c_sda, i2c_scl) es de colector/drenador abierto
+  y requiere una resistencia de pull-up conectada a una red de alimentación
+  (power_rail, típicamente 3.3V). Si una línea I2C se conecta a GND mediante
+  resistor, es un error crítico que bloquea el bus en nivel bajo permanente.
+
+applies_when:
+  pin_role:
+    in: [i2c_sda, i2c_scl]
+
+checks:
+  - id: i2c_must_have_pullup_to_vcc
+    condition: >
+      exists resistor R such that
+        (R.pin_a.net == this_pin.net and R.pin_b.net.role == power_rail)
+        or (R.pin_b.net == this_pin.net and R.pin_a.net.role == power_rail)
+    on_fail:
+      severity: critical
+      message_template: >
+        La línea I2C {pin.role} conectada al pin {pin.number} ({component.ref})
+        no posee resistencia de pull-up a una red de alimentación (3.3V).
+        El bus quedará flotante o inoperativo.
+      suggested_fix:
+        action: add_component
+        details:
+          etype: R
+          value: "4.7k"
+          n1: "{this_pin.net}"
+          n2: "3.3V"
+
+  - id: i2c_never_pulled_down_to_gnd
+    condition: >
+      exists component C such that
+        C.kind in [resistor, wire, net_tie]
+        and (C connects this_pin.net directly to a net with role == ground)
+    on_fail:
+      severity: critical
+      message_template: >
+        La línea I2C {pin.role} conectada al pin {pin.number} ({component.ref})
+        está unida a tierra (GND). Esto fuerza el bus a cero lógico permanente,
+        provocando un bus lockup y evitando toda comunicación I2C.
+      suggested_fix:
+        action: rewire_pin
+        details:
+          hint: "Desconectar la resistencia de GND y conectarla al rail de 3.3V."
+
+  - id: i2c_pullup_resistor_value_range
+    condition: >
+      for every resistor R connected between this_pin.net and power_rail:
+        1000.0 <= R.numeric_value <= 10000.0
+    on_fail:
+      severity: warning
+      message_template: >
+        El valor de pull-up en la línea I2C ({pin.role}) es {R.part_value}.
+        Los valores recomendados para I2C estándar/rápido están entre 2.2kΩ y 10kΩ.
+      suggested_fix:
+        action: change_value
+        details:
+          value: "4.7k"
+
+notes: >
+  En el modelo intermedio neutral, el rol del pin debe ser resuelto por el adaptador
+  o el componente de biblioteca (esp32-s3.yaml, ssd1306.yaml, pn532.yaml).
+
+observed_cases:
+  - run_session: validate_20260713_003837_9f03979b
+    finding: "SCL con resistor 4.7k conectado a GND en lugar de VCC (bug de polaridad invertida)"

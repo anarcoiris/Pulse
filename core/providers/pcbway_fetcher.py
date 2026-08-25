@@ -20,29 +20,33 @@ class PCBWayProviderFetcher(BaseComponentProvider):
     def search(self, query: str, limit: int = 10) -> List[ProviderComponentResult]:
         """
         Busca componentes en la librería Turnkey SMT de PCBWay.
+        Prioriza la base de datos local y realiza búsqueda remota como extensión.
         """
+        # 1. First check local catalog
+        local_results = self._fallback_local_search(query, limit)
+        if local_results:
+            return local_results[:limit]
+
+        # 2. Remote lookup fallback
         results = []
         try:
-            # PCBWay SMT search endpoint
             url = f"https://www.pcbway.com/api/assembly/components/search?keyword={urllib.parse.quote(query)}&limit={limit}"
             headers = {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) PulseLab/1.0",
                 "Accept": "application/json"
             }
             req = urllib.request.Request(url, headers=headers, method="GET")
-            with urllib.request.urlopen(req, timeout=5) as resp:
+            with urllib.request.urlopen(req, timeout=4) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 component_list = data.get("data", []) or data.get("list", []) or []
                 for comp in component_list[:limit]:
                     item = self._parse_pcbway_item(comp)
                     if item:
                         results.append(item)
-        except Exception as e:
-            logger.warning("pcbway_fetcher", f"Online search failed for '{query}': {e}. Using local catalog parser.")
-            # Local catalog fallback search
-            results = self._fallback_local_search(query, limit)
+        except Exception:
+            pass
 
-        return results
+        return results or local_results
 
     def get_by_part_number(self, part_number: str) -> Optional[ProviderComponentResult]:
         """

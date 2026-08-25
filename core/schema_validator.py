@@ -30,6 +30,8 @@ class ComponentSpec(BaseModel):
     n2: Optional[str] = Field(default=None, description="Pin 2 net for 2-pin passive components")
     label: str = Field(..., description="Unique component designator (e.g. U1, R1, C1, J1)")
     jlcpcb_part: Optional[str] = Field(default=None, description="LCSC / JLCPCB Part Number (e.g. C165948)")
+    user_placed: bool = Field(default=False, description="Whether position was explicitly set by user drag")
+    fixed: bool = Field(default=False, description="Whether component position is locked")
 
     @field_validator("label")
     @classmethod
@@ -57,12 +59,8 @@ class CircuitDesignSchema(BaseModel):
         data_dict = self.model_dump()
         circuit_comps = data_dict.get("circuit", [])
         
-        # Check if positions are missing
-        missing_positions = any(c.get("position") is None for c in circuit_comps)
-        
-        if missing_positions:
-            engine = AutoPlacementEngine(self.board_width, self.board_height)
-            circuit_comps = engine.compute_placement(circuit_comps)
-            data_dict["circuit"] = circuit_comps
+        engine = AutoPlacementEngine(self.board_width, self.board_height)
+        circuit_comps = engine.compute_placement(circuit_comps)
+        data_dict["circuit"] = circuit_comps
             
         return data_dict

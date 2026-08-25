@@ -1,0 +1,43 @@
+rule_id: pcb.stackup.two_layer_reference_plane
+domain: pcb
+skill_ref: pcb-rules/skills/stackup-basics.md
+description: >
+  En PCBs de 2 capas estándar (1.6mm FR-4), la capa inferior (B.Cu) debe
+  mantenerse predominantemente como plano de masa ininterrumpido (0V Ground Reference Plane).
+  Las pistas de señal y alimentación deben concentrarse en F.Cu para minimizar
+  el área de bucle de retorno de corriente y prevenir emisiones EMI.
+
+applies_when:
+  pcb_layers_count: 2
+
+checks:
+  - id: bottom_copper_gnd_coverage
+    condition: >
+      bottom_copper_zone.net == "GND" and bottom_copper_coverage_ratio >= 0.65
+    on_fail:
+      severity: warning
+      message_template: >
+        El plano de masa en B.Cu tiene una cobertura de {actual_ratio}%,
+        inferior al 65% recomendado para PCBs de 2 capas.
+      suggested_fix:
+        action: add_copper_zone
+        details:
+          layer: "B.Cu"
+          net: "GND"
+
+  - id: track_width_power_minimum
+    condition: >
+      for every track T on net where net.role == power_rail:
+        T.width >= 0.40  # mm
+    on_fail:
+      severity: warning
+      message_template: >
+        La pista de alimentación en la red {track.net} tiene un ancho de {track.width}mm.
+        Se recomienda un ancho mínimo de 0.40mm - 0.60mm para rails de potencia.
+      suggested_fix:
+        action: change_track_width
+        details:
+          min_width: 0.50
+
+notes: >
+  Para PCBs de 4 capas, la estructura estándar es L1(Signal/RF) - L2(GND Plane) - L3(PWR Plane) - L4(Signal).

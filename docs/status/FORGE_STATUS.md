@@ -20,19 +20,23 @@ python -c "import re; from pathlib import Path; t=Path('mcp_server/server.py').r
 ## Pipeline
 
 ```
-CircuitGraph / LLM JSON → PCBBuilder → PCBLayout → kicad_audit (14 reglas) → .kicad_pcb → kicad-cli → Gerber + Drill + CPL
+Prompt / LLM JSON → AutoPlacementEngine → CircuitGraph → PCBBuilder → PCBLayout → kicad_audit (14 reglas) → sch_pcb_crosscheck → .kicad_pcb + .kicad_sch → kicad-cli → Gerber + Drill + CPL → 2D SVG / 3D Three.js WebGL
 ```
 
-Topological audit gate (`core/kicad_audit.py` rules R001-R014) & DRC gate before Gerber export — see [`../workflows/howto/fabrication_pipeline.md`](../workflows/howto/fabrication_pipeline.md).
+Topological audit gate (`core/kicad_audit.py` rules R001-R014) & 100% SCH $\leftrightarrow$ PCB parity gate before Gerber export — see [`../workflows/howto/fabrication_pipeline.md`](../workflows/howto/fabrication_pipeline.md).
 
 ---
 
 ## Tests
 
-| Metric | Value (2026-08-15) |
+| Metric | Value (2026-08-25) |
 |--------|---------------------|
-| Tests collected & passing | **152** (`pytest tests/ -q`) |
-| Test files | **26** (in `tests/`) |
+| Tests collected & passing | **178** (`pytest tests/ -q` in 35.45s) |
+| Test files | **30** (in `tests/`) |
+| API Gateway integration tests | **7** (`test_api_gateway.py`) |
+| Chat Session Manager unit tests | **5** (`test_chat_session_manager.py`) |
+| Visual Inference unit tests | **9** (`test_visual_inference.py` — VIS-001..VIS-009) |
+| Corpus Rules evaluator tests | **5** (`test_corpus_rules.py`) |
 | PCB Audit unit tests | **15** (`test_kicad_audit.py` — R001-R014) |
 | SCH↔PCB Crosscheck unit tests | **3** (`test_sch_pcb_crosscheck.py`) |
 | Component DB & Decision Assistant | **5** (`test_component_db.py`) |
@@ -43,23 +47,21 @@ Topological audit gate (`core/kicad_audit.py` rules R001-R014) & DRC gate before
 | Signal Net Routing | **100% DRC / 0 Unconnected Pads** |
 | KiCad 10 CLI Validation | **Returncode 0 (Clean Export)** |
 | Forge Studio unit tests | **10** (`test_ollama_native_stream`, `test_studio_session`) |
-| Last full run | Run `python -m pytest tests/ -q` locally |
-
-Historical note: pre-Session-3 baseline was 8/8 in `test_forge.py` only — see [`../archive/baseline_report_20260705.md`](../archive/baseline_report_20260705.md).
+| Web Frontend Build | **Vite build returncode 0** (2.55s) |
 
 ---
 
 ## RAG knowledge base
 
-| Metric | Value (2026-08-06) |
+| Metric | Value (2026-08-23) |
 |--------|---------------------|
-| Total chunks | **5687** |
+| Total chunks | **5708** |
 | `pinout` | 5328 |
 | `circuit_example` | 326 |
 | `design_rule` | 13 |
-| `component` | 10 |
+| `component` | 20 |
 | `support_circuit` | 9 |
-| `design_experience` | 1 |
+| `design_experience` | 12 |
 | Hybrid embed index loaded | **true** (`vectors.npy` manifest matches chunk count) |
 | Backend | `hybrid` (dense + TF-IDF per `Pulse_cfg.json`) |
 

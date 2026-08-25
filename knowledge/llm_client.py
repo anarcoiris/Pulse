@@ -472,13 +472,13 @@ class LLMClient:
                 content = msg.content or ""
                 thinking = ""
                 if not content.strip():
-                    for attr in ("thinking", "reasoning"):
+                    for attr in ("thinking", "reasoning", "reasoning_content"):
                         alt = getattr(msg, attr, None) or ""
                         if alt.strip():
                             content = alt
                             break
                 else:
-                    thinking = getattr(msg, "thinking", None) or ""
+                    thinking = getattr(msg, "thinking", None) or getattr(msg, "reasoning_content", None) or ""
                 finish_reason = getattr(choice, "finish_reason", None) or ""
                 return {
                     "content": content,

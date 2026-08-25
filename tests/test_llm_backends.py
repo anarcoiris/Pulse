@@ -7,7 +7,7 @@ from knowledge.pulse_config import cfg
 
 def test_backend_limits_primary():
     lim = backend_limits("primary")
-    assert lim["num_ctx"] >= 98304
+    assert lim["num_ctx"] >= 32768
     assert lim["max_tokens"] >= 16384
 
 

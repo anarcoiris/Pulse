@@ -41,6 +41,8 @@ def tokenize(text: str) -> Iterator[str]:
 def parse(text: str) -> Node:
     """Parse the full file text; returns the single top-level node."""
     tokens = list(tokenize(text))
+    if not tokens:
+        return []
     pos = 0
 
     def _unquote(tok: str) -> str:
@@ -50,13 +52,17 @@ def parse(text: str) -> Node:
         return tok
 
     def _parse_expr(i: int):
+        if i >= len(tokens):
+            raise SyntaxError("Unexpected end of input while parsing S-expression")
         tok = tokens[i]
         if tok == "(":
             lst: List[Node] = []
             i += 1
-            while tokens[i] != ")":
+            while i < len(tokens) and tokens[i] != ")":
                 node, i = _parse_expr(i)
                 lst.append(node)
+            if i >= len(tokens):
+                raise SyntaxError("Unclosed parenthesis in S-expression")
             return lst, i + 1
         elif tok == ")":
             raise SyntaxError(f"Unexpected ')' at token {i}")

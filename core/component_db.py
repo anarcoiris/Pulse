@@ -129,11 +129,27 @@ class ComponentDB:
         return list(self._components)
 
     def get(self, comp_id: str) -> Optional[Component]:
-        """Obtiene componente por ID exacto."""
-        comp_id_lower = comp_id.lower()
+        """Obtiene componente por ID exacto, part number LCSC, o coincidencia parcial."""
+        if not comp_id:
+            return None
+        comp_id_clean = comp_id.strip().lower()
+
+        # 1. Exact ID match
         for c in self._components:
-            if c.id.lower() == comp_id_lower:
+            if c.id.lower() == comp_id_clean:
                 return c
+
+        # 2. Exact LCSC Part match
+        for c in self._components:
+            if c.jlcpcb_part and c.jlcpcb_part.lower() == comp_id_clean:
+                return c
+
+        # 3. Substring / Prefix match
+        for c in self._components:
+            cid = c.id.lower()
+            if comp_id_clean in cid or cid in comp_id_clean:
+                return c
+
         return None
 
     def by_category(self, category: str) -> list[Component]:

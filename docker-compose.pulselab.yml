@@ -1,0 +1,52 @@
+services:
+  pulselab:
+    image: ghcr.io/anarcoiris/pulse:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pulselab-eda
+    ports:
+      - "${PULSE_PORT:-8000}:8000"
+    environment:
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://host.docker.internal:11434}
+      - PRIMARY_LLM_HOST=${PRIMARY_LLM_HOST:-http://host.docker.internal:11431}
+      - ATOMIC_LLM_HOST=${ATOMIC_LLM_HOST:-http://host.docker.internal:11439}
+      - LLAMACPP_BASE_URL=${LLAMACPP_BASE_URL:-http://host.docker.internal:11440/v1}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./output:/app/output
+      - ./presets:/app/presets
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/presets"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  caddy-proxy:
+    image: caddy:2-alpine
+    container_name: pulselab-caddy
+    profiles: ["prod", "proxy"]
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - SITE_ADDRESS=${SITE_ADDRESS:-localhost}
+      - PULSE_BACKEND_HOST=pulselab-eda:8000
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./webapp/dist:/srv/webapp/dist:ro
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./logs:/logs
+    depends_on:
+      pulselab:
+        condition: service_healthy
+
+volumes:
+  caddy_data:
+  caddy_config:

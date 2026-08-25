@@ -1,10 +1,10 @@
 {
   "llm": {
-    "ollama_base_url": "http://localhost:11431/v1",
-    "model": "qwythos-9b-96k",
-    "api": "auto",
+    "ollama_base_url": "http://localhost:11440/v1",
+    "model": "Qwen3.8-9B",
+    "api": "openai",
     "think": "low",
-    "num_ctx": 131072,
+    "num_ctx": 32768,
     "max_tokens": 16384,
     "num_predict": 16384,
     "timeout_s": 900,
@@ -42,12 +42,12 @@
     },
     "backends": {
       "primary": {
-        "label": "llamacpp Qwythos 9B (reasoning)",
+        "label": "llamacpp Qwen3.8-9B (reasoning)",
         "base_url": "http://localhost:11440/v1",
-        "model": "qwythos-9b-96k",
+        "model": "Qwen3.8-9B",
         "api": "openai",
         "think": "low",
-        "num_ctx": 131072,
+        "num_ctx": 32768,
         "max_tokens": 16384,
         "num_predict": 16384,
         "cache_prompt": true,
@@ -58,15 +58,15 @@
         ]
       },
       "atomic": {
-        "label": "llama-server atomic lane (MCP execution)",
-        "port": 11439,
-        "base_url": "http://localhost:11439/v1",
-        "model": "auto",
+        "label": "llama-server Qwen3.8-4B lane (MCP execution)",
+        "port": 11440,
+        "base_url": "http://localhost:11440/v1",
+        "model": "Qwen3.8-4B",
         "api": "openai",
         "think": "none",
         "json_mode": true,
-        "num_ctx": 98304,
-        "max_tokens": 32768,
+        "num_ctx": 32768,
+        "max_tokens": 16384,
         "num_predict": 8192,
         "prompt_max_chars": 24000,
         "roles": [
@@ -74,8 +74,8 @@
           "fast_json",
           "parallel_slots"
         ],
-        "state_file": "C:/Users/soyko/Documents/Ollama/docker/llamacpp/qwythos.state.json",
-        "scripts_dir": "C:/Users/soyko/Documents/Ollama/docker/llamacpp",
+        "state_file": "${OLLAMA_DOCKER_DIR}/llamacpp/qwythos.state.json",
+        "scripts_dir": "${OLLAMA_DOCKER_DIR}/llamacpp",
         "default_profile": "concurrent2",
         "switch_idle_timeout_s": 90,
         "switch_timeout_s": 600,

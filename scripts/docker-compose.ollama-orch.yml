@@ -1,0 +1,41 @@
+# ==============================================================================
+# PulseLab EDA Platform Service Definition for Ollama Multi-GPU Docker Stack
+# ==============================================================================
+# Integrates with Ollama services:
+#   - ollama-planner (:11434)
+#   - ollama-gemma   (:11431)
+#   - ollama-atomic  (:11439)
+# ==============================================================================
+
+services:
+  pulselab-eda:
+    image: ghcr.io/anarcoiris/pulse:latest
+    build:
+      context: ${PULSE_REPO_PATH:-.}
+      dockerfile: Dockerfile
+    container_name: pulselab-eda
+    restart: unless-stopped
+    ports:
+      - "${PULSE_PORT:-8000}:8000"
+    environment:
+      - OLLAMA_HOST=${OLLAMA_HOST:-http://ollama-planner:11434}
+      - PRIMARY_LLM_HOST=${PRIMARY_LLM_HOST:-http://ollama-gemma:11434}
+      - ATOMIC_LLM_HOST=${ATOMIC_LLM_HOST:-http://ollama-atomic:11434}
+      - LLAMACPP_BASE_URL=${LLAMACPP_BASE_URL:-http://host.docker.internal:11440/v1}
+      - LOCAL_OLLAMA_FALLBACK=http://host.docker.internal:11434
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ${PULSE_OUTPUT_DIR:-./output}:/app/output
+      - ${PULSE_PRESETS_DIR:-./presets}:/app/presets
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/presets"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
