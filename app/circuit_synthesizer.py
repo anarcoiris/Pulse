@@ -60,11 +60,32 @@ class CircuitSynthesizer:
         """
         prompt_lower = prompt.lower()
 
-        # Attempt LLM compilation first if an explicit provider is selected
-        if provider in ("openai", "gemini", "anthropic", "groq", "openrouter", "ollama", "local"):
+        # Attempt LLM compilation first if an explicit provider is selected or if LLM service is online
+        if provider in ("openai", "gemini", "anthropic", "groq", "openrouter", "ollama", "local", "auto"):
             llm_result = self._call_llm_provider(prompt, provider, api_key, model)
-            if llm_result:
+            if llm_result and isinstance(llm_result, dict):
                 try:
+                    # Sanitize schema keys
+                    if "circuit" not in llm_result and "components" in llm_result:
+                        llm_result["circuit"] = llm_result["components"]
+                    if not llm_result.get("name"):
+                        llm_result["name"] = "PulseLab Custom Circuit"
+                    if not llm_result.get("board_width"):
+                        llm_result["board_width"] = 80.0
+                    if not llm_result.get("board_height"):
+                        llm_result["board_height"] = 55.0
+                    
+                    # Sanitize component specs
+                    for idx, c in enumerate(llm_result.get("circuit", [])):
+                        if not c.get("label"):
+                            c["label"] = f"U{idx+1}"
+                        if not c.get("etype"):
+                            c["etype"] = "IC"
+                        if not c.get("value"):
+                            c["value"] = c["label"]
+                        if not c.get("pins") and not c.get("n1"):
+                            c["pins"] = {"1": "PWR_3V3_ESP", "2": "PWR_GND"}
+
                     schema = CircuitDesignSchema(**llm_result)
                     return schema.process_and_auto_place()
                 except Exception as e:
@@ -90,25 +111,42 @@ class CircuitSynthesizer:
     def _call_llm_provider(self, prompt: str, provider: str, api_key: Optional[str], model: Optional[str]) -> Optional[Dict[str, Any]]:
         """Invokes external or local LLM provider."""
         try:
-            if provider in ("local", "ollama"):
-                base_url = cfg("llm.backends.primary.base_url") or cfg("llm.ollama_base_url") or "http://127.0.0.1:11440/v1"
-                url = f"{base_url.rstrip('/')}/chat/completions"
+            if provider in ("local", "ollama", "auto"):
+                from core.llm_service_manager import llm_service_mgr
+                status = llm_service_mgr.get_status()
+                target_model = model or status.get("active_model") or "hf.co/empero-ai/Qwen3.8-9B-Distill-GGUF:Q4_K_M"
+                primary_endpoint = status.get("active_endpoint") or "http://host.docker.internal:11434/v1"
+                
+                candidate_endpoints = [primary_endpoint.rstrip("/")]
+                target_port = status.get("port") or 11434
+                for h in ["ollama-planner", "host.docker.internal", "172.18.0.3", "127.0.0.1", "localhost"]:
+                    cand = f"http://{h}:{target_port}/v1"
+                    if cand not in candidate_endpoints:
+                        candidate_endpoints.append(cand)
+
                 payload = {
-                    "model": model or cfg("llm.model", "Qwen3.8-9B"),
+                    "model": target_model,
                     "messages": [
-                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "system", "content": SYSTEM_PROMPT + "\nKeep thinking extremely brief and output ONLY the raw JSON block."},
                         {"role": "user", "content": prompt}
                     ],
                     "temperature": 0.2,
-                    "max_tokens": 8192
+                    "max_tokens": 4096
                 }
                 headers = {"Content-Type": "application/json"}
-                req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers=headers)
-                with urllib.request.urlopen(req, timeout=180) as resp:
-                    data = json.loads(resp.read().decode("utf-8"))
-                    msg = data["choices"][0]["message"]
-                    content = msg.get("content") or msg.get("reasoning_content") or ""
-                    return self._extract_json(content)
+                for endpoint in candidate_endpoints:
+                    url = f"{endpoint}/chat/completions"
+                    try:
+                        req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers=headers)
+                        with urllib.request.urlopen(req, timeout=240) as resp:
+                            data = json.loads(resp.read().decode("utf-8"))
+                            msg = data["choices"][0]["message"]
+                            content = msg.get("content") or msg.get("reasoning_content") or ""
+                            parsed = self._extract_json(content)
+                            if parsed:
+                                return parsed
+                    except Exception as e:
+                        logger.warning("circuit_synthesizer", f"Endpoint {endpoint} failed: {e}")
 
             elif provider == "openai":
                 key = api_key or os.environ.get("OPENAI_API_KEY", "")
@@ -171,18 +209,25 @@ class CircuitSynthesizer:
         return None
 
     def _extract_json(self, text: str) -> Optional[Dict[str, Any]]:
-        """Extracts JSON structure from Markdown code fences or raw text."""
-        match = re.search(r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", text)
+        """Extracts JSON structure from Markdown code fences, think blocks, or raw text."""
+        # Strip reasoning think tags
+        clean_text = re.sub(r"<think>[\s\S]*?</think>", "", text).strip()
+        match = re.search(r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", clean_text)
         if match:
-            text = match.group(1)
+            target = match.group(1)
         else:
-            m2 = re.search(r"(\{[\s\S]*\})", text)
+            m2 = re.search(r"(\{[\s\S]*\})", clean_text)
             if m2:
-                text = m2.group(1)
+                target = m2.group(1)
+            else:
+                target = clean_text
         try:
-            return json.loads(text)
+            return json.loads(target)
         except Exception:
-            return None
+            try:
+                return json.loads(text)
+            except Exception:
+                return None
 
     def _synthesize_esp32_console(self, prompt: str) -> Dict[str, Any]:
         """Synthesizes an ESP32-S3 TFT Gaming Console with buttons & power supply."""

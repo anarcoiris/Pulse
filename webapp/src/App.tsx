@@ -12,6 +12,7 @@ import { SchematicViewer } from './components/SchematicViewer';
 import { BOMSupplyChainTable } from './components/BOMSupplyChainTable';
 import { DRCReportModal } from './components/DRCReportModal';
 import { AIChatDrawer } from './components/AIChatDrawer';
+import { LLMServiceModal } from './components/LLMServiceModal';
 import confetti from 'canvas-confetti';
 import {
   Cpu,
@@ -34,14 +35,28 @@ import {
   ChevronRight,
   MessageSquare,
 } from 'lucide-react';
+import { LLMServiceStatus } from './types';
+import { LLMEnginePanel } from './components/LLMEnginePanel';
 
-const API_BASE = 'http://127.0.0.1:8000/api/v1';
+export const getApiBase = () => {
+  if (typeof window !== 'undefined') {
+    if (window.location.port === '3000' || window.location.port === '5173') {
+      return 'http://127.0.0.1:8000/api/v1';
+    }
+    return '/api/v1';
+  }
+  return 'http://127.0.0.1:8000/api/v1';
+};
+
+const API_BASE = getApiBase();
 
 export default function App() {
   // Navigation & Active Tabs
-  const [activeTab, setActiveTab] = useState<'pcb2d' | 'pcb3d' | 'schematic' | 'bom'>('pcb2d');
+  const [activeTab, setActiveTab] = useState<'pcb2d' | 'pcb3d' | 'schematic' | 'bom' | 'llm'>('pcb2d');
   const [isDRCModalOpen, setIsDRCModalOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isLLMModalOpen, setIsLLMModalOpen] = useState(false);
+  const [llmStatus, setLlmStatus] = useState<LLMServiceStatus | null>(null);
 
   // AI & Generation States
   const [prompt, setPrompt] = useState('ESP32-S3 TFT Console with 5 tactile buttons, USB-C, and AMS1117-3.3 power supply');
@@ -61,8 +76,21 @@ export default function App() {
   // Fetch initial presets and health on mount
   useEffect(() => {
     fetchPresets();
+    fetchLLMStatus();
     loadPresetDetails('esp32_tft_console');
   }, []);
+
+  const fetchLLMStatus = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/llm/status`);
+      if (res.ok) {
+        const data: LLMServiceStatus = await res.json();
+        setLlmStatus(data);
+      }
+    } catch (err) {
+      console.warn('Failed to fetch LLM status:', err);
+    }
+  };
 
   const fetchPresets = async () => {
     try {
@@ -143,6 +171,11 @@ export default function App() {
       if (res.ok) {
         const data: GeneratePCBResponse = await res.json();
         setGenResponse(data);
+        // Sync circuitData from server's post-placement schema
+        if (data.circuit_data) {
+          setCircuitData(data.circuit_data);
+          setJsonText(JSON.stringify(data.circuit_data, null, 2));
+        }
         if (data.audit?.passed && data.crosscheck?.parity_match) {
           confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
         }
@@ -174,6 +207,10 @@ export default function App() {
       if (res.ok) {
         const data: GeneratePCBResponse = await res.json();
         setGenResponse(data);
+        if (data.circuit_data) {
+          setCircuitData(data.circuit_data);
+          setJsonText(JSON.stringify(data.circuit_data, null, 2));
+        }
       }
     } catch (err) {
       console.error(err);
@@ -223,6 +260,10 @@ export default function App() {
       if (res.ok) {
         const data: GeneratePCBResponse = await res.json();
         setGenResponse(data);
+        if (data.circuit_data) {
+          setCircuitData(data.circuit_data);
+          setJsonText(JSON.stringify(data.circuit_data, null, 2));
+        }
       }
     } catch (err) {
       console.error('Update component position failed:', err);
@@ -265,6 +306,11 @@ export default function App() {
       if (res.ok) {
         const data: GeneratePCBResponse = await res.json();
         setGenResponse(data);
+        // Sync circuitData from server's post-patch placed schema
+        if (data.circuit_data) {
+          setCircuitData(data.circuit_data);
+          setJsonText(JSON.stringify(data.circuit_data, null, 2));
+        }
         if (data.audit?.passed) {
           confetti({ particleCount: 60, spread: 70, origin: { y: 0.7 } });
         }
@@ -297,6 +343,29 @@ export default function App() {
 
         {/* Quick Actions & Downloads */}
         <div className="flex items-center gap-3">
+          {/* Local LLM Inference Engine Status / Launcher */}
+          <button
+            onClick={() => setIsLLMModalOpen(true)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer ${
+              llmStatus?.online
+                ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                : 'bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border-rose-500/30'
+            }`}
+            title="Click to manage & launch local LLM engine"
+          >
+            <Server className="w-3.5 h-3.5" />
+            <span className="flex items-center gap-1.5">
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  llmStatus?.online ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'
+                }`}
+              />
+              <span className="max-w-[140px] truncate">
+                {llmStatus?.online ? `LLM: ${llmStatus.active_model || 'ONLINE'}` : 'LLM: OFFLINE'}
+              </span>
+            </span>
+          </button>
+
           {/* AI Co-Pilot Drawer Toggle */}
           <button
             onClick={() => setIsChatOpen(!isChatOpen)}
@@ -433,6 +502,27 @@ export default function App() {
                 className="w-full mt-2 bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1 text-[11px] text-zinc-300 placeholder-zinc-600 focus:outline-none font-mono"
               />
             )}
+
+            {/* Quick LLM Status & Launcher Link */}
+            <div className="mt-2.5 pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[10px] font-mono text-zinc-400">
+              <div className="flex items-center gap-1.5 truncate max-w-[200px]">
+                <span
+                  className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                    llmStatus?.online ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'
+                  }`}
+                />
+                <span className="truncate">
+                  {llmStatus?.online ? (llmStatus.active_model || 'Ollama Online') : 'LLM Offline'}
+                </span>
+              </div>
+              <button
+                onClick={() => setIsLLMModalOpen(true)}
+                className="text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors underline cursor-pointer shrink-0"
+              >
+                <Sliders className="w-2.5 h-2.5" />
+                <span>{llmStatus?.online ? 'Manage' : 'Launch LLM'}</span>
+              </button>
+            </div>
           </div>
 
           {/* JSON Spec Editor Header */}
@@ -537,6 +627,23 @@ export default function App() {
                 <ShoppingCart className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Supply Chain & BOM</span>
               </button>
+
+              <button
+                onClick={() => setActiveTab('llm')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  activeTab === 'llm'
+                    ? 'bg-zinc-800 text-white font-semibold shadow-inner'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                <Server className="w-3.5 h-3.5 text-cyan-400" />
+                <span>LLM Engine & Hub</span>
+                <span
+                  className={`w-1.5 h-1.5 rounded-full ml-0.5 ${
+                    llmStatus?.online ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'
+                  }`}
+                />
+              </button>
             </div>
 
             {/* Status Feedback */}
@@ -588,6 +695,14 @@ export default function App() {
                 onSearchProviders={handleSearchProviders}
               />
             )}
+
+            {activeTab === 'llm' && (
+              <LLMEnginePanel
+                status={llmStatus}
+                onRefresh={fetchLLMStatus}
+                apiBase={API_BASE}
+              />
+            )}
           </div>
         </main>
       </div>
@@ -617,6 +732,14 @@ export default function App() {
         genResponse={genResponse}
         onApplyPatch={handleApplyChatPatch}
         apiBase={API_BASE}
+      />
+
+      {/* Local LLM Inference Engine Manager Modal */}
+      <LLMServiceModal
+        isOpen={isLLMModalOpen}
+        onClose={() => setIsLLMModalOpen(false)}
+        status={llmStatus}
+        onRefresh={fetchLLMStatus}
       />
     </div>
   );

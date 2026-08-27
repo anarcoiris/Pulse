@@ -251,7 +251,7 @@
     }
   },
   "search:c6186": {
-    "timestamp": 1787558492.6849282,
+    "timestamp": 1787690946.7657945,
     "data": {
       "jlcpcb": [
         {
@@ -292,14 +292,14 @@
     }
   },
   "search:c9900027631": {
-    "timestamp": 1787558492.6904306,
+    "timestamp": 1787690946.809566,
     "data": {
       "jlcpcb": [],
       "pcbway": []
     }
   },
   "search:header ili9341 2.8 tft": {
-    "timestamp": 1787558493.2474036,
+    "timestamp": 1787690947.470613,
     "data": {
       "jlcpcb": [
         {
@@ -372,21 +372,21 @@
     }
   },
   "search:c13977": {
-    "timestamp": 1787558493.563659,
+    "timestamp": 1787690947.505062,
     "data": {
       "jlcpcb": [],
       "pcbway": []
     }
   },
   "search:c15849": {
-    "timestamp": 1787558493.9480827,
+    "timestamp": 1787690947.8579895,
     "data": {
       "jlcpcb": [],
       "pcbway": []
     }
   },
   "search:c14663": {
-    "timestamp": 1787558494.1057167,
+    "timestamp": 1787690948.289827,
     "data": {
       "jlcpcb": [
         {
@@ -427,7 +427,7 @@
     }
   },
   "search:c25905": {
-    "timestamp": 1787558494.1092265,
+    "timestamp": 1787690948.3224277,
     "data": {
       "jlcpcb": [
         {
@@ -468,14 +468,14 @@
     }
   },
   "search:c25744": {
-    "timestamp": 1787558494.3236024,
+    "timestamp": 1787690948.3575287,
     "data": {
       "jlcpcb": [],
       "pcbway": []
     }
   },
   "search:c2290": {
-    "timestamp": 1787558494.700696,
+    "timestamp": 1787690948.7799652,
     "data": {
       "jlcpcb": [],
       "pcbway": []
@@ -628,14 +628,14 @@
     }
   },
   "search:c2293": {
-    "timestamp": 1787457640.3196318,
+    "timestamp": 1787691473.082629,
     "data": {
       "jlcpcb": [],
       "pcbway": []
     }
   },
   "search:header flipper 1x18 gpio": {
-    "timestamp": 1787461360.5011039,
+    "timestamp": 1787691471.8834386,
     "data": {
       "jlcpcb": [
         {
@@ -676,21 +676,21 @@
     }
   },
   "search:c11101": {
-    "timestamp": 1787461360.5056133,
+    "timestamp": 1787691471.9008303,
     "data": {
       "jlcpcb": [],
       "pcbway": []
     }
   },
   "search:c2401": {
-    "timestamp": 1787461361.4165747,
+    "timestamp": 1787691472.6822486,
     "data": {
       "jlcpcb": [],
       "pcbway": []
     }
   },
   "search:connector sma edge rf": {
-    "timestamp": 1787461361.7806406,
+    "timestamp": 1787691473.06151,
     "data": {
       "jlcpcb": [
         {
@@ -859,7 +859,7 @@
     }
   },
   "search:c82891": {
-    "timestamp": 1787461377.519345,
+    "timestamp": 1787693499.746183,
     "data": {
       "jlcpcb": [
         {
@@ -900,14 +900,14 @@
     }
   },
   "search:c92489": {
-    "timestamp": 1787461377.5238492,
+    "timestamp": 1787693499.7806637,
     "data": {
       "jlcpcb": [],
       "pcbway": []
     }
   },
   "search:c25900": {
-    "timestamp": 1787461377.8921914,
+    "timestamp": 1787693500.5264091,
     "data": {
       "jlcpcb": [],
       "pcbway": []
@@ -1172,7 +1172,7 @@
     }
   },
   "search:led green": {
-    "timestamp": 1787495257.5529492,
+    "timestamp": 1787693983.9344018,
     "data": {
       "jlcpcb": [
         {
@@ -1574,7 +1574,7 @@
     }
   },
   "search:connector usb-c": {
-    "timestamp": 1787594280.3982759,
+    "timestamp": 1787685669.8672755,
     "data": {
       "jlcpcb": [
         {
@@ -1711,7 +1711,7 @@
     }
   },
   "search:r 10k": {
-    "timestamp": 1787594280.406785,
+    "timestamp": 1787685669.8763502,
     "data": {
       "jlcpcb": [
         {
@@ -1877,6 +1877,89 @@
           "extra_meta": {}
         }
       ]
+    }
+  },
+  "search:resistor 330\u03c9": {
+    "timestamp": 1787693983.911686,
+    "data": {
+      "jlcpcb": [
+        {
+          "provider": "jlcpcb",
+          "part_number": "C25905",
+          "mpn": "R_0402_5.1K",
+          "manufacturer": "Yageo",
+          "description": "Resistencia SMD 0402 5.1k\u03a9 1% requerida para pull-down de l\u00edneas USB-C CC1/CC2.",
+          "package": "0402 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 1000,
+          "unit_price_usd": 0.25,
+          "price_tiers": [],
+          "library_type": "extended",
+          "datasheet_url": "https://www.yageo.com/upload/yageo_sub/product_datasheet/RC_Group.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ],
+      "pcbway": [
+        {
+          "provider": "pcbway",
+          "part_number": "PCBWAY-R_0402_5.1K",
+          "mpn": "R_0402_5.1K",
+          "manufacturer": "Yageo",
+          "description": "Resistencia SMD 0402 5.1k\u03a9 1% requerida para pull-down de l\u00edneas USB-C CC1/CC2.",
+          "package": "0402 SMD",
+          "mounting_type": "SMD",
+          "stock_count": 850,
+          "unit_price_usd": 0.28,
+          "price_tiers": [],
+          "library_type": "standard",
+          "datasheet_url": "https://www.yageo.com/upload/yageo_sub/product_datasheet/RC_Group.pdf",
+          "in_stock": true,
+          "extra_meta": {}
+        }
+      ]
+    }
+  },
+  "search:resistor_smd:r_0603_1608metric 330\u03c9": {
+    "timestamp": 1787694066.5079305,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c5439": {
+    "timestamp": 1787705030.964523,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c76850": {
+    "timestamp": 1787705031.722969,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c10984": {
+    "timestamp": 1787705032.1248577,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c890": {
+    "timestamp": 1787705032.528359,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:c47": {
+    "timestamp": 1787705032.938085,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
     }
   }
 }

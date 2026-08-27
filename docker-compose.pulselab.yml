@@ -14,8 +14,17 @@ services:
       - LLAMACPP_BASE_URL=${LLAMACPP_BASE_URL:-http://host.docker.internal:11440/v1}
       - PYTHONUNBUFFERED=1
     volumes:
+      - ./app:/app/app
+      - ./core:/app/core
+      - ./bridge:/app/bridge
+      - ./knowledge:/app/knowledge
       - ./output:/app/output
       - ./presets:/app/presets
+      - ./webapp/dist:/app/webapp/dist
+      - ./Pulse_cfg.json:/app/Pulse_cfg.json
+    networks:
+      - default
+      - ollama-net
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
@@ -43,10 +52,20 @@ services:
       - caddy_data:/data
       - caddy_config:/config
       - ./logs:/logs
+    networks:
+      - default
+      - ollama-net
     depends_on:
       pulselab:
         condition: service_healthy
 
+networks:
+  default:
+  ollama-net:
+    external: true
+    name: docker_default
+
 volumes:
   caddy_data:
   caddy_config:
+

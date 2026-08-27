@@ -516,11 +516,15 @@ def _extract_segments_raw(root: Node) -> List[Dict[str, Any]]:
         net_node = first_direct(s, "net")
         if not (start and end and layer_node and net_node):
             continue
+        try:
+            net_val = int(net_node[1])
+        except (ValueError, TypeError):
+            net_val = str(net_node[1])
         out.append({
             "start": (round(float(start[1]), _COORD_TOL), round(float(start[2]), _COORD_TOL)),
             "end": (round(float(end[1]), _COORD_TOL), round(float(end[2]), _COORD_TOL)),
             "layer": layer_node[1],
-            "net": int(net_node[1]),
+            "net": net_val,
         })
     return out
 
@@ -535,10 +539,14 @@ def _extract_vias_raw(root: Node) -> List[Dict[str, Any]]:
         size_node = first_direct(v, "size")
         if not (at and layers_node and net_node):
             continue
+        try:
+            net_val = int(net_node[1])
+        except (ValueError, TypeError):
+            net_val = str(net_node[1])
         out.append({
             "at": (round(float(at[1]), _COORD_TOL), round(float(at[2]), _COORD_TOL)),
             "layers": [l for l in layers_node[1:]],
-            "net": int(net_node[1]),
+            "net": net_val,
             "drill": float(drill_node[1]) if drill_node else None,
             "size": float(size_node[1]) if size_node else None,
         })

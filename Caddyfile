@@ -6,8 +6,8 @@
 	admin off
 }
 
-# Production DDNS Block (Let's Encrypt SSL when ports 80/443 are forwarded)
-{$SITE_ADDRESS:pulselab.ddns.net} {
+# Production DDNS & Local Gateway Block
+{$SITE_ADDRESS:pulselab.ddns.net}, localhost, 127.0.0.1, :80 {
 	# Compression for Web Studio 2D/3D visual assets
 	encode zstd gzip
 

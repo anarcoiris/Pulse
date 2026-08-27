@@ -292,17 +292,26 @@ def execute_chat_completion(
     max_tokens: int = 2048
 ) -> Dict[str, Any]:
     """Sends chat completion to local llama-server (port 11440) or active LLM backend."""
-    cfg_data = PulseConfig.get().data
-    base_url = (
-        os.environ.get("LLAMACPP_BASE_URL") or
-        os.environ.get("PULSE_ATOMIC_BASE_URL") or
-        cfg_data.get("llm", {}).get("backends", {}).get("atomic", {}).get("base_url") or
-        "http://127.0.0.1:11440/v1"
-    )
-    if not base_url.endswith("/chat/completions"):
-        server_url = f"{base_url.rstrip('/')}/chat/completions"
-    else:
-        server_url = base_url
+    from core.llm_service_manager import llm_service_mgr
+    status = llm_service_mgr.get_status()
+    primary_endpoint = status.get("active_endpoint") or "http://host.docker.internal:11434/v1"
+    target_port = status.get("port") or 11434
+
+    candidate_endpoints = []
+    if primary_endpoint:
+        candidate_endpoints.append(primary_endpoint.rstrip("/"))
+    for h in ["ollama-planner", "host.docker.internal", "172.18.0.3", "127.0.0.1", "localhost"]:
+        cand = f"http://{h}:{target_port}/v1"
+        if cand not in candidate_endpoints:
+            candidate_endpoints.append(cand)
+    # Also add llama-server port 11440
+    for h in ["127.0.0.1", "host.docker.internal"]:
+        cand = f"http://{h}:11440/v1"
+        if cand not in candidate_endpoints:
+            candidate_endpoints.append(cand)
+
+    # Select model based on active or preferred
+    chosen_model = status.get("active_model") or "hf.co/empero-ai/Qwen3.8-9B-Distill-GGUF:Q4_K_M"
 
     system_prompt = build_system_prompt_with_context(circuit_data, audit_data, visual_data)
     formatted_messages = [{"role": "system", "content": system_prompt}]
@@ -316,29 +325,33 @@ def execute_chat_completion(
         })
 
     payload = {
-        "model": "qwythos-9b-96k",
+        "model": chosen_model,
         "messages": formatted_messages,
         "temperature": temperature,
         "max_tokens": max_tokens,
         "stream": False
     }
 
-    try:
-        resp = requests.post(server_url, json=payload, timeout=90)
-        if resp.status_code == 200:
-            data = resp.json()
-            raw_content = data["choices"][0]["message"]["content"]
-            clean_content, patches = extract_circuit_patches(raw_content)
-            return {
-                "success": True,
-                "content": clean_content,
-                "patches": patches,
-                "usage": data.get("usage", {})
-            }
-        else:
-            logger.warning("chat", f"llama-server returned {resp.status_code}: {resp.text}")
-    except Exception as local_err:
-        logger.warning("chat", f"Local llama-server unreachable ({local_err}), checking cloud fallback...")
+    last_error = None
+    for endpoint in candidate_endpoints:
+        server_url = f"{endpoint}/chat/completions"
+        try:
+            resp = requests.post(server_url, json=payload, timeout=90)
+            if resp.status_code == 200:
+                data = resp.json()
+                raw_content = data["choices"][0]["message"]["content"]
+                clean_content, patches = extract_circuit_patches(raw_content)
+                return {
+                    "success": True,
+                    "content": clean_content,
+                    "patches": patches,
+                    "usage": data.get("usage", {})
+                }
+            else:
+                logger.warning("chat", f"Endpoint {server_url} returned {resp.status_code}: {resp.text}")
+        except Exception as local_err:
+            last_error = local_err
+            logger.warning("chat", f"Endpoint {server_url} unreachable: {local_err}")
 
     # Cloud fallback if configured
     try:

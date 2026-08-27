@@ -24,7 +24,10 @@
       "value": "Flipper Zero Male Header",
       "symbol": "Connector_Generic:Conn_02x09_Odd_Even",
       "footprint": "flipper_zero_gpio",
-      "position": { "x": 0.00, "y": 16.00 },
+      "position": {
+        "x": 0.0,
+        "y": 15.5
+      },
       "rotation": -90.0,
       "pins": {
         "1": "PWR_5V_USB",
@@ -53,7 +56,10 @@
       "value": "USB-C",
       "symbol": "Connector:USB_C_Receptacle_USB20",
       "footprint": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12",
-      "position": { "x": -20.00, "y": -11.50 },
+      "position": {
+        "x": -22.0,
+        "y": -13.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C165948",
       "pins": {
@@ -79,7 +85,10 @@
       "value": "5.1k",
       "symbol": "Device:R",
       "footprint": "Resistor_SMD:R_0402_1005Metric",
-      "position": { "x": -28.00, "y": -9.00 },
+      "position": {
+        "x": -28.0,
+        "y": -8.0
+      },
       "rotation": 90.0,
       "jlcpcb_part": "C25905",
       "pins": {
@@ -93,7 +102,10 @@
       "value": "5.1k",
       "symbol": "Device:R",
       "footprint": "Resistor_SMD:R_0402_1005Metric",
-      "position": { "x": -28.00, "y": -14.00 },
+      "position": {
+        "x": -28.0,
+        "y": -13.0
+      },
       "rotation": 90.0,
       "jlcpcb_part": "C25905",
       "pins": {
@@ -107,7 +119,10 @@
       "value": "DM3AT-SF-PEJM5",
       "symbol": "Connector_Card:MicroSD_Card_Det_Hirose_DM3AT",
       "footprint": "Connector_Card:MicroSD_Card_Det_Hirose_DM3AT",
-      "position": { "x": 16.00, "y": -14.00 },
+      "position": {
+        "x": 20.0,
+        "y": -11.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C114227",
       "pins": {
@@ -131,7 +146,10 @@
       "value": "100nF",
       "symbol": "Device:C",
       "footprint": "Capacitor_SMD:C_0603_1608Metric",
-      "position": { "x": 24.00, "y": -14.00 },
+      "position": {
+        "x": 11.0,
+        "y": -15.0
+      },
       "rotation": 90.0,
       "jlcpcb_part": "C14663",
       "pins": {
@@ -145,7 +163,10 @@
       "value": "OLED_0.96_I2C",
       "symbol": "Connector_Generic:Conn_01x04",
       "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
-      "position": { "x": -14.00, "y": 12.00 },
+      "position": {
+        "x": -8.0,
+        "y": -1.0
+      },
       "rotation": 0.0,
       "layer": "B.Cu",
       "jlcpcb_part": "C2897384",
@@ -162,7 +183,10 @@
       "value": "AMS1117-3.3",
       "symbol": "Regulator_Linear:AMS1117-3.3",
       "footprint": "Package_TO_SOT_SMD:SOT-223-3_TabPin2",
-      "position": { "x": 0.00, "y": -16.00 },
+      "position": {
+        "x": -2.0,
+        "y": -15.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C6186",
       "pins": {
@@ -177,7 +201,10 @@
       "value": "10uF",
       "symbol": "Device:C",
       "footprint": "Capacitor_SMD:C_0805_2012Metric",
-      "position": { "x": -8.00, "y": -16.00 },
+      "position": {
+        "x": -8.0,
+        "y": -16.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C15850",
       "pins": {
@@ -191,7 +218,10 @@
       "value": "10uF",
       "symbol": "Device:C",
       "footprint": "Capacitor_SMD:C_0805_2012Metric",
-      "position": { "x": 8.00, "y": -16.00 },
+      "position": {
+        "x": 4.0,
+        "y": -16.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C15850",
       "pins": {
@@ -205,7 +235,10 @@
       "value": "100nF",
       "symbol": "Device:C",
       "footprint": "Capacitor_SMD:C_0603_1608Metric",
-      "position": { "x": -13.50, "y": -6.50 },
+      "position": {
+        "x": -18.0,
+        "y": -12.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C14663",
       "pins": {
@@ -219,7 +252,10 @@
       "value": "ESP32-S3-WROOM-1U",
       "symbol": "RF_Module:ESP32-S3-WROOM-1",
       "footprint": "RF_Module:ESP32-S3-WROOM-1",
-      "position": { "x": 0.00, "y": 2.00 },
+      "position": {
+        "x": -8.0,
+        "y": -1.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C2913202",
       "pins": {
@@ -248,7 +284,10 @@
       "value": "10k",
       "symbol": "Device:R",
       "footprint": "Resistor_SMD:R_0805_2012Metric",
-      "position": { "x": -13.50, "y": -2.00 },
+      "position": {
+        "x": -18.0,
+        "y": -8.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C17414",
       "pins": {
@@ -262,7 +301,10 @@
       "value": "Reset",
       "symbol": "Switch:SW_Push",
       "footprint": "Button_Switch_SMD:SW_SPST_EVQPE1",
-      "position": { "x": -22.00, "y": 5.00 },
+      "position": {
+        "x": -26.0,
+        "y": 0.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C318884",
       "pins": {
@@ -276,7 +318,10 @@
       "value": "100nF",
       "symbol": "Device:C",
       "footprint": "Capacitor_SMD:C_0603_1608Metric",
-      "position": { "x": -22.00, "y": 10.00 },
+      "position": {
+        "x": -26.0,
+        "y": 5.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C14663",
       "pins": {
@@ -290,7 +335,10 @@
       "value": "Boot",
       "symbol": "Switch:SW_Push",
       "footprint": "Button_Switch_SMD:SW_SPST_EVQPE1",
-      "position": { "x": 16.00, "y": -1.00 },
+      "position": {
+        "x": -26.0,
+        "y": 10.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C318884",
       "pins": {
@@ -304,7 +352,10 @@
       "value": "BLUE",
       "symbol": "Device:LED",
       "footprint": "LED_SMD:LED_0603_1608Metric",
-      "position": { "x": 16.00, "y": 5.00 },
+      "position": {
+        "x": -26.0,
+        "y": 15.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C72041",
       "pins": {
@@ -318,7 +369,10 @@
       "value": "330",
       "symbol": "Device:R",
       "footprint": "Resistor_SMD:R_0603_1608Metric",
-      "position": { "x": 16.00, "y": 9.00 },
+      "position": {
+        "x": -20.0,
+        "y": 15.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C23138",
       "pins": {
@@ -332,7 +386,10 @@
       "value": "CC1101_MODULE",
       "symbol": "RF_Module:CC1101_Module",
       "footprint": "RF_Module:CC1101_Module",
-      "position": { "x": 25.00, "y": 6.00 },
+      "position": {
+        "x": 21.0,
+        "y": -2.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C99000",
       "pins": {
@@ -352,7 +409,10 @@
       "value": "NRF24L01_MODULE",
       "symbol": "RF_Module:NRF24L01_Module",
       "footprint": "RF_Module:NRF24L01_Module",
-      "position": { "x": 25.00, "y": -6.00 },
+      "position": {
+        "x": 21.0,
+        "y": 8.0
+      },
       "rotation": 0.0,
       "jlcpcb_part": "C99001",
       "pins": {

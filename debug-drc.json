@@ -1,0 +1,1479 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-08-27T16:21:42",
+    "ignored_checks": [
+        {
+            "description": "Footprint has no courtyard defined",
+            "key": "missing_courtyard"
+        },
+        {
+            "description": "Track endpoint not centered on via",
+            "key": "track_not_centered_on_via"
+        },
+        {
+            "description": "Tuning profile track geometries",
+            "key": "tuning_profile_track_geometries"
+        },
+        {
+            "description": "Footprint doesn't match symbol's footprint filters",
+            "key": "footprint_filters_mismatch"
+        },
+        {
+            "description": "Footprint component type doesn't match footprint pads",
+            "key": "footprint_type_mismatch"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.3",
+    "schematic_parity": [],
+    "source": "debug.kicad_pcb",
+    "unconnected_items": [
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                },
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                },
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        }
+    ],
+    "violations": [
+        {
+            "description": "Infracción de margen ( margen 0,2000 mm; real 0,0945 mm)",
+            "items": [
+                {
+                    "description": "Vía [SPI_MOSI] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 138.0,
+                        "y": 115.0
+                    },
+                    "uuid": "11111111-2222-3333-4444-555555555554"
+                },
+                {
+                    "description": "Pista [SD_SPI_CS] en (B.Cu), longitud 3,3358 mm",
+                    "pos": {
+                        "x": 137.0906,
+                        "y": 114.4055
+                    },
+                    "uuid": "629967b3-fffc-488b-bb4f-65e7ef9855a5"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Infracción de margen ( margen 0,2000 mm; real 0,0000 mm)",
+            "items": [
+                {
+                    "description": "Vía [SPI_MOSI] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 138.0,
+                        "y": 115.0
+                    },
+                    "uuid": "11111111-2222-3333-4444-555555555554"
+                },
+                {
+                    "description": "Zona [PWR_GND] en B.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "068d4bb3-5b36-4c6b-bec0-132daee626d9"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Infracción de margen de orificio (restricciones de configuración de placa para orificios margen 0,2500 mm; real 0,0000 mm)",
+            "items": [
+                {
+                    "description": "Vía [SPI_MOSI] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 138.0,
+                        "y": 115.0
+                    },
+                    "uuid": "11111111-2222-3333-4444-555555555554"
+                },
+                {
+                    "description": "Zona [PWR_GND] en B.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "068d4bb3-5b36-4c6b-bec0-132daee626d9"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Infracción de margen ( margen 0,2000 mm; real 0,0150 mm)",
+            "items": [
+                {
+                    "description": "Vía [PWR_GND] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 155.0,
+                        "y": 115.0
+                    },
+                    "uuid": "11111111-2222-3333-4444-555555555555"
+                },
+                {
+                    "description": "Pad 24 [<no net>] de U2 en F.Cu",
+                    "pos": {
+                        "x": 155.02,
+                        "y": 113.835
+                    },
+                    "uuid": "9618a84e-ad30-4ad6-9a99-83d1507e681a"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Infracción de margen ( margen 0,2000 mm; real 0,0000 mm)",
+            "items": [
+                {
+                    "description": "Vía [PWR_5V_FLIPPER_IN] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 175.0,
+                        "y": 120.0
+                    },
+                    "uuid": "11111111-2222-3333-4444-555555555557"
+                },
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                }
+            ],
+            "severity": "error",
+            "type": "clearance"
+        },
+        {
+            "description": "Infracción de margen de orificio (restricciones de configuración de placa para orificios margen 0,2500 mm; real 0,0000 mm)",
+            "items": [
+                {
+                    "description": "Vía [PWR_5V_FLIPPER_IN] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 175.0,
+                        "y": 120.0
+                    },
+                    "uuid": "11111111-2222-3333-4444-555555555557"
+                },
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Infracción de margen de orificio (restricciones de configuración de placa para orificios margen 0,2500 mm; real 0,2005 mm)",
+            "items": [
+                {
+                    "description": "Pad NPTH de J1",
+                    "pos": {
+                        "x": 125.61,
+                        "y": 90.9
+                    },
+                    "uuid": "e13b4b37-788a-41d5-87ca-c66be43ee32d"
+                },
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Infracción de margen de orificio (restricciones de configuración de placa para orificios margen 0,2500 mm; real 0,2005 mm)",
+            "items": [
+                {
+                    "description": "Pad NPTH de J1",
+                    "pos": {
+                        "x": 125.61,
+                        "y": 90.9
+                    },
+                    "uuid": "e13b4b37-788a-41d5-87ca-c66be43ee32d"
+                },
+                {
+                    "description": "Zona [PWR_GND] en B.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "068d4bb3-5b36-4c6b-bec0-132daee626d9"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Infracción de margen de orificio (restricciones de configuración de placa para orificios margen 0,2500 mm; real 0,2150 mm)",
+            "items": [
+                {
+                    "description": "Pad 24 [<no net>] de U2 en F.Cu",
+                    "pos": {
+                        "x": 155.02,
+                        "y": 113.835
+                    },
+                    "uuid": "9618a84e-ad30-4ad6-9a99-83d1507e681a"
+                },
+                {
+                    "description": "Vía [PWR_GND] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 155.0,
+                        "y": 115.0
+                    },
+                    "uuid": "11111111-2222-3333-4444-555555555555"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Infracción de margen de orificio (restricciones de configuración de placa para orificios margen 0,2500 mm; real 0,2005 mm)",
+            "items": [
+                {
+                    "description": "Pad NPTH de J1",
+                    "pos": {
+                        "x": 131.39,
+                        "y": 90.9
+                    },
+                    "uuid": "4558f1f0-2fa3-46e1-a220-284fa2707bb5"
+                },
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Infracción de margen de orificio (restricciones de configuración de placa para orificios margen 0,2500 mm; real 0,2005 mm)",
+            "items": [
+                {
+                    "description": "Pad NPTH de J1",
+                    "pos": {
+                        "x": 131.39,
+                        "y": 90.9
+                    },
+                    "uuid": "4558f1f0-2fa3-46e1-a220-284fa2707bb5"
+                },
+                {
+                    "description": "Zona [PWR_GND] en B.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "068d4bb3-5b36-4c6b-bec0-132daee626d9"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 147.675,
+                        "y": 103.095
+                    },
+                    "uuid": "167d0150-f5c3-4fa4-baee-c39ddae18415"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 147.675,
+                        "y": 104.495
+                    },
+                    "uuid": "baee9895-0b55-43f1-9df1-133c7ad84e7a"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 148.375,
+                        "y": 102.395
+                    },
+                    "uuid": "465d0027-0d59-4af5-be91-65bbf130ec9b"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 148.375,
+                        "y": 103.795
+                    },
+                    "uuid": "38443abe-b7d2-4517-b5da-ccaf40bed97d"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 148.375,
+                        "y": 105.195
+                    },
+                    "uuid": "636e2629-68ad-40b8-b200-3c3b2b3ab9bc"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 149.075,
+                        "y": 103.095
+                    },
+                    "uuid": "1a723e50-f72a-4de6-85a5-194a09268b46"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 149.075,
+                        "y": 104.495
+                    },
+                    "uuid": "57f6c7b7-48bc-406a-bb67-ad1b6a1c0be1"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 149.775,
+                        "y": 102.395
+                    },
+                    "uuid": "e50eadc9-def6-4236-80c0-1a3def5d97df"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 149.775,
+                        "y": 103.795
+                    },
+                    "uuid": "af6c1940-9ed8-46e9-a193-d41c0101cadf"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 149.775,
+                        "y": 105.195
+                    },
+                    "uuid": "911820e4-5a89-4b45-b32c-59798a15da97"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 150.475,
+                        "y": 103.095
+                    },
+                    "uuid": "6ac05d4d-3849-4b5e-909f-80867176e0ff"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 150.475,
+                        "y": 104.495
+                    },
+                    "uuid": "b1627bff-4ffc-4ee8-b376-d9adcd33e5dc"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [PWR_3V3_ESP] en (F.Cu), longitud 0,0055 mm",
+                    "pos": {
+                        "x": 142.8517,
+                        "y": 97.3505
+                    },
+                    "uuid": "29a8c430-9e25-45fe-9730-741db05d08bd"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [PWR_3V3_ESP] en (F.Cu), longitud 0,7273 mm",
+                    "pos": {
+                        "x": 143.366,
+                        "y": 97.8648
+                    },
+                    "uuid": "7cf92cd2-035f-47e3-b316-e30975d170bd"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [PWR_3V3_ESP] en (F.Cu), longitud 1,0267 mm",
+                    "pos": {
+                        "x": 141.825,
+                        "y": 97.345
+                    },
+                    "uuid": "8e437780-419d-4933-8991-13e445549657"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [SPI_FLIPPER_MOSI] en (F.Cu), longitud 0,6068 mm",
+                    "pos": {
+                        "x": 165.401,
+                        "y": 118.9256
+                    },
+                    "uuid": "8d5373a6-2bc4-4821-8518-89e81bfc69b8"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [SPI_FLIPPER_MOSI] en (F.Cu), longitud 0,2002 mm",
+                    "pos": {
+                        "x": 165.401,
+                        "y": 119.1258
+                    },
+                    "uuid": "e600c038-c400-408c-8097-c71d9f73ba28"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [USB_CC2] en (F.Cu), longitud 0,1403 mm",
+                    "pos": {
+                        "x": 130.3492,
+                        "y": 90.4873
+                    },
+                    "uuid": "163cfd8f-6092-4912-a2c2-ef61cb8ad9a7"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [USB_CC2] en (F.Cu), longitud 2,4934 mm",
+                    "pos": {
+                        "x": 130.3362,
+                        "y": 93.1235
+                    },
+                    "uuid": "3c065070-ae88-4161-8e53-a3541487e571"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [USB_CC2] en (F.Cu), longitud 0,1102 mm",
+                    "pos": {
+                        "x": 130.3362,
+                        "y": 90.6301
+                    },
+                    "uuid": "c64811f1-2d56-47e2-b9f9-af5059d588ad"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [USB_CC2] en (F.Cu), longitud 0,9331 mm",
+                    "pos": {
+                        "x": 130.25,
+                        "y": 90.3881
+                    },
+                    "uuid": "df2989a4-2ff6-4f05-8443-b8837763ead6"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "La apertura de máscara de soldadura frontal puentea elementos de redes diferentes",
+            "items": [
+                {
+                    "description": "Vía [PWR_GND] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 155.0,
+                        "y": 115.0
+                    },
+                    "uuid": "11111111-2222-3333-4444-555555555555"
+                },
+                {
+                    "description": "Pad 24 [<no net>] de U2 en F.Cu",
+                    "pos": {
+                        "x": 155.02,
+                        "y": 113.835
+                    },
+                    "uuid": "9618a84e-ad30-4ad6-9a99-83d1507e681a"
+                }
+            ],
+            "severity": "error",
+            "type": "solder_mask_bridge"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [EN_ESP_RESET] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 136.45,
+                        "y": 110.5
+                    },
+                    "uuid": "db7e1712-a81b-43d3-bdcd-b076dd5603fb"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [GDO0_RF_CC1101] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 178.188,
+                        "y": 93.2129
+                    },
+                    "uuid": "9e72c011-d861-48d0-b4c3-ab788cda190b"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 149.675,
+                        "y": 85.3
+                    },
+                    "uuid": "046a78b9-3bf0-4d18-bad6-0d49f01322b3"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 148.425,
+                        "y": 85.275
+                    },
+                    "uuid": "25d0a278-d976-4d02-afba-e33ac86e0862"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 150.5,
+                        "y": 84.5
+                    },
+                    "uuid": "53ac59bc-aa06-443a-ad7c-8367f6a052ba"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 150.5,
+                        "y": 86.5
+                    },
+                    "uuid": "6671f9d9-b3b2-480f-9ffa-a1c85140a7fb"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 148.5,
+                        "y": 84.5
+                    },
+                    "uuid": "66880605-ac8c-44dd-9b87-e9d2aeb00cff"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 149.75,
+                        "y": 86.775
+                    },
+                    "uuid": "7374ae7d-3485-4227-b4b2-ae79f156fa27"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 148.425,
+                        "y": 86.775
+                    },
+                    "uuid": "840d0f4d-ca0f-4f4c-96a0-fd342f8a4473"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 147.2,
+                        "y": 88.3
+                    },
+                    "uuid": "9c1cc74d-a85f-4d9c-8ce3-dff02b0f534c"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 148.425,
+                        "y": 88.275
+                    },
+                    "uuid": "d1be0d12-77c3-4ef0-a5c0-1e6400774ba9"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 149.725,
+                        "y": 88.3
+                    },
+                    "uuid": "eb0b77dd-a886-49e9-aa9f-2980c002e0ef"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [SD_SPI_CS] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 135.194,
+                        "y": 115.957
+                    },
+                    "uuid": "c9b7674f-4055-4fb0-8f2d-7563ca64fe50"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [USB_ESP_DN] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 129.736,
+                        "y": 90.7229
+                    },
+                    "uuid": "fa1359c5-38e6-44c9-8092-dc089c587d2d"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "La configuración actual no incluye la biblioteca de huellas 'Custom'",
+            "items": [
+                {
+                    "description": "Huella J2",
+                    "pos": {
+                        "x": 148.5,
+                        "y": 121.0
+                    },
+                    "uuid": "683a43ac-6b1c-4a1d-ba81-e6d0031c8e20"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Campo de referencia de R_SD_CS",
+                    "pos": {
+                        "x": 136.35,
+                        "y": 99.625
+                    },
+                    "uuid": "b2415964-837d-4a18-8661-676dba3a8a05"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Campo de referencia de C_RF1",
+                    "pos": {
+                        "x": 166.925,
+                        "y": 99.95
+                    },
+                    "uuid": "83c390a0-d56c-4449-b49b-f6cddc6926b1"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Campo de referencia de C_SD",
+                    "pos": {
+                        "x": 136.375,
+                        "y": 102.575
+                    },
+                    "uuid": "2db8c7a1-5ca1-45db-8f7e-5421aae0bcbc"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Campo de referencia de U4",
+                    "pos": {
+                        "x": 172.5,
+                        "y": 115.5
+                    },
+                    "uuid": "a6b37593-4b62-47ad-881b-a867f85f1989"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Campo de referencia de J1",
+                    "pos": {
+                        "x": 128.5,
+                        "y": 89.0
+                    },
+                    "uuid": "a144ce76-cc23-44fb-8108-bf18e64a4c3d"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Campo de referencia de R_ISO_MISO",
+                    "pos": {
+                        "x": 162.2,
+                        "y": 119.725
+                    },
+                    "uuid": "8ff4a45e-fe57-4895-87d8-7e824ea5a06f"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Campo de referencia de LED1",
+                    "pos": {
+                        "x": 166.5,
+                        "y": 98.0
+                    },
+                    "uuid": "93499ed0-4720-43a1-9122-8296d18821ef"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Campo de referencia de R_ISO_SCK",
+                    "pos": {
+                        "x": 167.2,
+                        "y": 119.725
+                    },
+                    "uuid": "d2ce3a71-0514-4af8-a397-9af72bb49e1e"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Campo de referencia de J_SD",
+                    "pos": {
+                        "x": 134.225,
+                        "y": 106.25
+                    },
+                    "uuid": "178d7288-4fe0-46bf-b106-3d8608f6400f"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Campo de referencia de R2",
+                    "pos": {
+                        "x": 120.425,
+                        "y": 91.74
+                    },
+                    "uuid": "2786aea5-1571-48c1-9c3d-8238cd5c86cf"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clipped by solder mask",
+            "items": [
+                {
+                    "description": "Campo de referencia de R_ISO_MOSI",
+                    "pos": {
+                        "x": 164.7,
+                        "y": 119.725
+                    },
+                    "uuid": "10ddf26a-2446-43f6-83e5-73f08b17e397"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_over_copper"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Segmento de J_SD en F.Silkscreen",
+                    "pos": {
+                        "x": 133.61,
+                        "y": 99.725
+                    },
+                    "uuid": "2cbe1ede-b4a9-415d-a707-7a8921396521"
+                },
+                {
+                    "description": "Campo de referencia de R_SD_CS",
+                    "pos": {
+                        "x": 136.35,
+                        "y": 99.625
+                    },
+                    "uuid": "b2415964-837d-4a18-8661-676dba3a8a05"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Segmento de J_SD en F.Silkscreen",
+                    "pos": {
+                        "x": 133.61,
+                        "y": 99.275
+                    },
+                    "uuid": "54012b7f-ea40-4cc5-9fce-636ec10ccd3f"
+                },
+                {
+                    "description": "Campo de referencia de R_SD_CS",
+                    "pos": {
+                        "x": 136.35,
+                        "y": 99.625
+                    },
+                    "uuid": "b2415964-837d-4a18-8661-676dba3a8a05"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Segmento de C3 en F.Silkscreen",
+                    "pos": {
+                        "x": 136.25942,
+                        "y": 99.21
+                    },
+                    "uuid": "74e0aa5f-419a-4209-8284-2a698db160f7"
+                },
+                {
+                    "description": "Campo de referencia de R_SD_CS",
+                    "pos": {
+                        "x": 136.35,
+                        "y": 99.625
+                    },
+                    "uuid": "b2415964-837d-4a18-8661-676dba3a8a05"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Campo de referencia de C_SD",
+                    "pos": {
+                        "x": 136.375,
+                        "y": 102.575
+                    },
+                    "uuid": "2db8c7a1-5ca1-45db-8f7e-5421aae0bcbc"
+                },
+                {
+                    "description": "Segmento de R_SD_CS en F.Silkscreen",
+                    "pos": {
+                        "x": 136.112742,
+                        "y": 102.1475
+                    },
+                    "uuid": "dfb04b52-1798-42d5-b315-787ce1cc35f4"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Segmento de LED1 en F.Silkscreen",
+                    "pos": {
+                        "x": 165.015,
+                        "y": 99.265
+                    },
+                    "uuid": "16cb03ad-8ac5-4f81-97d4-d97e93133d06"
+                },
+                {
+                    "description": "Campo de referencia de C_RF1",
+                    "pos": {
+                        "x": 166.925,
+                        "y": 99.95
+                    },
+                    "uuid": "83c390a0-d56c-4449-b49b-f6cddc6926b1"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Segmento de C_RF1 en F.Silkscreen",
+                    "pos": {
+                        "x": 168.69,
+                        "y": 100.211252
+                    },
+                    "uuid": "14a182b0-0cb4-4298-87e5-48bfd1806910"
+                },
+                {
+                    "description": "Campo de referencia de C_RF1",
+                    "pos": {
+                        "x": 166.925,
+                        "y": 99.95
+                    },
+                    "uuid": "83c390a0-d56c-4449-b49b-f6cddc6926b1"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Campo de referencia de C_RF2",
+                    "pos": {
+                        "x": 172.5,
+                        "y": 100.5
+                    },
+                    "uuid": "4f2e128a-ab0d-472b-b6e0-5e66c7805bfb"
+                },
+                {
+                    "description": "Segmento de U3 en F.Silkscreen",
+                    "pos": {
+                        "x": 171.12,
+                        "y": 100.0
+                    },
+                    "uuid": "777e6098-06bc-46f0-8b61-467c28850915"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Campo de referencia de C_RF2",
+                    "pos": {
+                        "x": 172.5,
+                        "y": 100.5
+                    },
+                    "uuid": "4f2e128a-ab0d-472b-b6e0-5e66c7805bfb"
+                },
+                {
+                    "description": "Segmento de U3 en F.Silkscreen",
+                    "pos": {
+                        "x": 171.12,
+                        "y": 92.27
+                    },
+                    "uuid": "6de5c474-1b62-4f3d-82f6-8564f6900e8b"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Segmento de D1 en F.Silkscreen",
+                    "pos": {
+                        "x": 135.5525,
+                        "y": 88.09
+                    },
+                    "uuid": "765b356e-a54d-41cd-b471-b38d0e9cdb9f"
+                },
+                {
+                    "description": "Campo de referencia de D1",
+                    "pos": {
+                        "x": 136.3125,
+                        "y": 87.6
+                    },
+                    "uuid": "e17c839d-cd52-4ad8-b3ca-de4b28c5a0dc"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Segmento de D1 en F.Silkscreen",
+                    "pos": {
+                        "x": 135.5525,
+                        "y": 88.04
+                    },
+                    "uuid": "663ebf8a-c604-4a0c-bae0-6b77098057d4"
+                },
+                {
+                    "description": "Campo de referencia de D1",
+                    "pos": {
+                        "x": 136.3125,
+                        "y": 87.6
+                    },
+                    "uuid": "e17c839d-cd52-4ad8-b3ca-de4b28c5a0dc"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Campo de referencia de D1",
+                    "pos": {
+                        "x": 136.3125,
+                        "y": 87.6
+                    },
+                    "uuid": "e17c839d-cd52-4ad8-b3ca-de4b28c5a0dc"
+                },
+                {
+                    "description": "Segmento de D1 en F.Silkscreen",
+                    "pos": {
+                        "x": 137.0725,
+                        "y": 88.04
+                    },
+                    "uuid": "fa488bbe-e6a0-4555-bdf5-1f7ae3972348"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Campo de referencia de U1",
+                    "pos": {
+                        "x": 148.5,
+                        "y": 84.0
+                    },
+                    "uuid": "065d10d5-be73-4f3e-8690-a2f2ef8934c5"
+                },
+                {
+                    "description": "Segmento de U1 en F.Silkscreen",
+                    "pos": {
+                        "x": 146.65,
+                        "y": 84.09
+                    },
+                    "uuid": "e98ec803-a6f4-4196-9fa0-d9f7619efa9d"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Campo de referencia de R_ISO_MISO",
+                    "pos": {
+                        "x": 162.2,
+                        "y": 119.725
+                    },
+                    "uuid": "8ff4a45e-fe57-4895-87d8-7e824ea5a06f"
+                },
+                {
+                    "description": "Segmento de R_ISO_MISO en F.Silkscreen",
+                    "pos": {
+                        "x": 162.7225,
+                        "y": 117.962258
+                    },
+                    "uuid": "ba5f1dfa-69ca-45c7-a9c5-ccaec81f3265"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Segmento de R_ISO_MISO en F.Silkscreen",
+                    "pos": {
+                        "x": 161.6775,
+                        "y": 117.962258
+                    },
+                    "uuid": "2913aab4-9888-42b4-9418-e1b4b57dac76"
+                },
+                {
+                    "description": "Campo de referencia de R_ISO_MISO",
+                    "pos": {
+                        "x": 162.2,
+                        "y": 119.725
+                    },
+                    "uuid": "8ff4a45e-fe57-4895-87d8-7e824ea5a06f"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Segmento de R_ISO_SCK en F.Silkscreen",
+                    "pos": {
+                        "x": 166.6775,
+                        "y": 117.962258
+                    },
+                    "uuid": "2b8926eb-144a-4a6a-96bf-83f0234fdf4d"
+                },
+                {
+                    "description": "Campo de referencia de R_ISO_SCK",
+                    "pos": {
+                        "x": 167.2,
+                        "y": 119.725
+                    },
+                    "uuid": "d2ce3a71-0514-4af8-a397-9af72bb49e1e"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Campo de referencia de R_ISO_MOSI",
+                    "pos": {
+                        "x": 164.7,
+                        "y": 119.725
+                    },
+                    "uuid": "10ddf26a-2446-43f6-83e5-73f08b17e397"
+                },
+                {
+                    "description": "Segmento de R_ISO_MOSI en F.Silkscreen",
+                    "pos": {
+                        "x": 164.1775,
+                        "y": 117.962258
+                    },
+                    "uuid": "6e95345a-24b0-4ea4-916c-a8c544701718"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Campo de referencia de R_ISO_MOSI",
+                    "pos": {
+                        "x": 164.7,
+                        "y": 119.725
+                    },
+                    "uuid": "10ddf26a-2446-43f6-83e5-73f08b17e397"
+                },
+                {
+                    "description": "Segmento de R_ISO_MOSI en F.Silkscreen",
+                    "pos": {
+                        "x": 165.2225,
+                        "y": 117.962258
+                    },
+                    "uuid": "6116900b-d97f-45d2-8d2e-9723dc384ad8"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        },
+        {
+            "description": "Silkscreen clearance",
+            "items": [
+                {
+                    "description": "Segmento de R4 en F.Silkscreen",
+                    "pos": {
+                        "x": 166.262742,
+                        "y": 97.5225
+                    },
+                    "uuid": "3bc3b33b-a491-4c17-b292-0ca02aa8634c"
+                },
+                {
+                    "description": "Campo de referencia de LED1",
+                    "pos": {
+                        "x": 166.5,
+                        "y": 98.0
+                    },
+                    "uuid": "93499ed0-4720-43a1-9122-8296d18821ef"
+                }
+            ],
+            "severity": "warning",
+            "type": "silk_overlap"
+        }
+    ]
+}

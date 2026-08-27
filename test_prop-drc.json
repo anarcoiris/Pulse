@@ -1,0 +1,716 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-08-27T16:22:37",
+    "ignored_checks": [
+        {
+            "description": "Footprint has no courtyard defined",
+            "key": "missing_courtyard"
+        },
+        {
+            "description": "Track endpoint not centered on via",
+            "key": "track_not_centered_on_via"
+        },
+        {
+            "description": "Tuning profile track geometries",
+            "key": "tuning_profile_track_geometries"
+        },
+        {
+            "description": "Footprint doesn't match symbol's footprint filters",
+            "key": "footprint_filters_mismatch"
+        },
+        {
+            "description": "Footprint component type doesn't match footprint pads",
+            "key": "footprint_type_mismatch"
+        }
+    ],
+    "included_severities": [
+        "error",
+        "warning"
+    ],
+    "kicad_version": "10.0.3",
+    "schematic_parity": [],
+    "source": "test_prop.kicad_pcb",
+    "unconnected_items": [
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                },
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                },
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        }
+    ],
+    "violations": [
+        {
+            "description": "Infracción de margen de orificio (restricciones de configuración de placa para orificios margen 0,2500 mm; real 0,2005 mm)",
+            "items": [
+                {
+                    "description": "Pad NPTH de J1",
+                    "pos": {
+                        "x": 125.61,
+                        "y": 90.9
+                    },
+                    "uuid": "e13b4b37-788a-41d5-87ca-c66be43ee32d"
+                },
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Infracción de margen de orificio (restricciones de configuración de placa para orificios margen 0,2500 mm; real 0,2005 mm)",
+            "items": [
+                {
+                    "description": "Pad NPTH de J1",
+                    "pos": {
+                        "x": 125.61,
+                        "y": 90.9
+                    },
+                    "uuid": "e13b4b37-788a-41d5-87ca-c66be43ee32d"
+                },
+                {
+                    "description": "Zona [PWR_GND] en B.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "068d4bb3-5b36-4c6b-bec0-132daee626d9"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Infracción de margen de orificio (restricciones de configuración de placa para orificios margen 0,2500 mm; real 0,2005 mm)",
+            "items": [
+                {
+                    "description": "Pad NPTH de J1",
+                    "pos": {
+                        "x": 131.39,
+                        "y": 90.9
+                    },
+                    "uuid": "4558f1f0-2fa3-46e1-a220-284fa2707bb5"
+                },
+                {
+                    "description": "Zona [PWR_GND] en F.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "6b289959-92ae-4655-a9b6-e335cd841e13"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Infracción de margen de orificio (restricciones de configuración de placa para orificios margen 0,2500 mm; real 0,2005 mm)",
+            "items": [
+                {
+                    "description": "Pad NPTH de J1",
+                    "pos": {
+                        "x": 131.39,
+                        "y": 90.9
+                    },
+                    "uuid": "4558f1f0-2fa3-46e1-a220-284fa2707bb5"
+                },
+                {
+                    "description": "Zona [PWR_GND] en B.Cu, prioridad 0",
+                    "pos": {
+                        "x": 116.5,
+                        "y": 82.0
+                    },
+                    "uuid": "068d4bb3-5b36-4c6b-bec0-132daee626d9"
+                }
+            ],
+            "severity": "error",
+            "type": "hole_clearance"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 147.675,
+                        "y": 103.095
+                    },
+                    "uuid": "167d0150-f5c3-4fa4-baee-c39ddae18415"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 147.675,
+                        "y": 104.495
+                    },
+                    "uuid": "baee9895-0b55-43f1-9df1-133c7ad84e7a"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 148.375,
+                        "y": 102.395
+                    },
+                    "uuid": "465d0027-0d59-4af5-be91-65bbf130ec9b"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 148.375,
+                        "y": 103.795
+                    },
+                    "uuid": "38443abe-b7d2-4517-b5da-ccaf40bed97d"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 148.375,
+                        "y": 105.195
+                    },
+                    "uuid": "636e2629-68ad-40b8-b200-3c3b2b3ab9bc"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 149.075,
+                        "y": 103.095
+                    },
+                    "uuid": "1a723e50-f72a-4de6-85a5-194a09268b46"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 149.075,
+                        "y": 104.495
+                    },
+                    "uuid": "57f6c7b7-48bc-406a-bb67-ad1b6a1c0be1"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 149.775,
+                        "y": 102.395
+                    },
+                    "uuid": "e50eadc9-def6-4236-80c0-1a3def5d97df"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 149.775,
+                        "y": 103.795
+                    },
+                    "uuid": "af6c1940-9ed8-46e9-a193-d41c0101cadf"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 149.775,
+                        "y": 105.195
+                    },
+                    "uuid": "911820e4-5a89-4b45-b32c-59798a15da97"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 150.475,
+                        "y": 103.095
+                    },
+                    "uuid": "6ac05d4d-3849-4b5e-909f-80867176e0ff"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 0,2000 mm)",
+            "items": [
+                {
+                    "description": "Pad PTH 41 [PWR_GND] de U2",
+                    "pos": {
+                        "x": 150.475,
+                        "y": 104.495
+                    },
+                    "uuid": "b1627bff-4ffc-4ee8-b376-d9adcd33e5dc"
+                }
+            ],
+            "severity": "error",
+            "type": "drill_out_of_range"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [PWR_3V3_ESP] en (F.Cu), longitud 0,0055 mm",
+                    "pos": {
+                        "x": 142.8517,
+                        "y": 97.3505
+                    },
+                    "uuid": "29a8c430-9e25-45fe-9730-741db05d08bd"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [PWR_3V3_ESP] en (F.Cu), longitud 0,7273 mm",
+                    "pos": {
+                        "x": 143.366,
+                        "y": 97.8648
+                    },
+                    "uuid": "7cf92cd2-035f-47e3-b316-e30975d170bd"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [PWR_3V3_ESP] en (F.Cu), longitud 1,0267 mm",
+                    "pos": {
+                        "x": 141.825,
+                        "y": 97.345
+                    },
+                    "uuid": "8e437780-419d-4933-8991-13e445549657"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [SPI_FLIPPER_MOSI] en (F.Cu), longitud 0,6068 mm",
+                    "pos": {
+                        "x": 165.401,
+                        "y": 118.9256
+                    },
+                    "uuid": "8d5373a6-2bc4-4821-8518-89e81bfc69b8"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [SPI_FLIPPER_MOSI] en (F.Cu), longitud 0,2002 mm",
+                    "pos": {
+                        "x": 165.401,
+                        "y": 119.1258
+                    },
+                    "uuid": "e600c038-c400-408c-8097-c71d9f73ba28"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [USB_CC2] en (F.Cu), longitud 0,1403 mm",
+                    "pos": {
+                        "x": 130.3492,
+                        "y": 90.4873
+                    },
+                    "uuid": "163cfd8f-6092-4912-a2c2-ef61cb8ad9a7"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [USB_CC2] en (F.Cu), longitud 2,4934 mm",
+                    "pos": {
+                        "x": 130.3362,
+                        "y": 93.1235
+                    },
+                    "uuid": "3c065070-ae88-4161-8e53-a3541487e571"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [USB_CC2] en (F.Cu), longitud 0,1102 mm",
+                    "pos": {
+                        "x": 130.3362,
+                        "y": 90.6301
+                    },
+                    "uuid": "c64811f1-2d56-47e2-b9f9-af5059d588ad"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Anchura de pista (restricciones de configuración de placa anchura mínima 0,2000 mm; real 0,1500 mm)",
+            "items": [
+                {
+                    "description": "Pista [USB_CC2] en (F.Cu), longitud 0,9331 mm",
+                    "pos": {
+                        "x": 130.25,
+                        "y": 90.3881
+                    },
+                    "uuid": "df2989a4-2ff6-4f05-8443-b8837763ead6"
+                }
+            ],
+            "severity": "error",
+            "type": "track_width"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [EN_ESP_RESET] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 136.45,
+                        "y": 110.5
+                    },
+                    "uuid": "db7e1712-a81b-43d3-bdcd-b076dd5603fb"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [GDO0_RF_CC1101] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 178.188,
+                        "y": 93.2129
+                    },
+                    "uuid": "9e72c011-d861-48d0-b4c3-ab788cda190b"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 149.675,
+                        "y": 85.3
+                    },
+                    "uuid": "046a78b9-3bf0-4d18-bad6-0d49f01322b3"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 148.425,
+                        "y": 85.275
+                    },
+                    "uuid": "25d0a278-d976-4d02-afba-e33ac86e0862"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 150.5,
+                        "y": 84.5
+                    },
+                    "uuid": "53ac59bc-aa06-443a-ad7c-8367f6a052ba"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 150.5,
+                        "y": 86.5
+                    },
+                    "uuid": "6671f9d9-b3b2-480f-9ffa-a1c85140a7fb"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 148.5,
+                        "y": 84.5
+                    },
+                    "uuid": "66880605-ac8c-44dd-9b87-e9d2aeb00cff"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 149.75,
+                        "y": 86.775
+                    },
+                    "uuid": "7374ae7d-3485-4227-b4b2-ae79f156fa27"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 148.425,
+                        "y": 86.775
+                    },
+                    "uuid": "840d0f4d-ca0f-4f4c-96a0-fd342f8a4473"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 147.2,
+                        "y": 88.3
+                    },
+                    "uuid": "9c1cc74d-a85f-4d9c-8ce3-dff02b0f534c"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 148.425,
+                        "y": 88.275
+                    },
+                    "uuid": "d1be0d12-77c3-4ef0-a5c0-1e6400774ba9"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [PWR_3V3_ESP] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 149.725,
+                        "y": 88.3
+                    },
+                    "uuid": "eb0b77dd-a886-49e9-aa9f-2980c002e0ef"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [SD_SPI_CS] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 135.194,
+                        "y": 115.957
+                    },
+                    "uuid": "c9b7674f-4055-4fb0-8f2d-7563ca64fe50"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Vía [USB_ESP_DN] en F.Cu - B.Cu",
+                    "pos": {
+                        "x": 129.736,
+                        "y": 90.7229
+                    },
+                    "uuid": "fa1359c5-38e6-44c9-8092-dc089c587d2d"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "La configuración actual no incluye la biblioteca de huellas 'Custom'",
+            "items": [
+                {
+                    "description": "Huella J2",
+                    "pos": {
+                        "x": 148.5,
+                        "y": 121.0
+                    },
+                    "uuid": "683a43ac-6b1c-4a1d-ba81-e6d0031c8e20"
+                }
+            ],
+            "severity": "warning",
+            "type": "lib_footprint_issues"
+        }
+    ]
+}

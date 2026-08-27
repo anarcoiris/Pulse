@@ -66,9 +66,9 @@ class AgentRunResult:
     drc_warnings_count: int
     visual_score: float
     visual_violations_count: int
-    radar: Dict[str, float] = field(default_factory=dict)
     correction_cycles: int
     steps: List[Dict[str, Any]]
+    radar: Dict[str, float] = field(default_factory=dict)
     pcb_path: str = ""
     sch_path: str = ""
     output_dir: str = ""

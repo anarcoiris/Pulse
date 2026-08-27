@@ -1,0 +1,28 @@
+{
+  "board_id": "sim_t2_ex01_esp32_wroom_minimal",
+  "timestamp": "2026-08-25T21:39:43.707225+00:00",
+  "mcu": "USB-C 3.3V Power Supply",
+  "mcu_package": "",
+  "board_size_mm": [
+    0,
+    0
+  ],
+  "component_count": 7,
+  "layer_count": 2,
+  "drc_violations": 4,
+  "routing_success_rate": 1.0,
+  "manufacturing_target": "generic",
+  "lessons_learned": [
+    "EN pin must have RC delay network (10k pull-up to 3.3V and 1uF to GND) for clean power-on reset",
+    "GPIO0 must be pulled high with 10k and pulled to GND via Boot button during flashing",
+    "Antenna keepout area on PCB top/bottom layers must have zero copper traces or ground planes",
+    "Remediated issue: Missing pin connections on component C1",
+    "Remediated issue: Missing pin connections on component C2",
+    "Remediated issue: Missing pin connections on component D1",
+    "Remediated issue: Missing pin connections on component D2"
+  ],
+  "component_placement_rules": [],
+  "critical_nets": [],
+  "gerber_path": "",
+  "passed": false
+}

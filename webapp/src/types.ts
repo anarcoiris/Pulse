@@ -232,6 +232,7 @@ export interface GeneratePCBResponse {
   };
   vectors_2d: PCBVectors2D;
   mesh_3d: Mesh3DData;
+  circuit_data?: CircuitDesignSchema;
 }
 
 export interface PresetInfo {
@@ -331,4 +332,61 @@ export interface AgentRunResult {
   mesh_3d: Mesh3DCollection;
   supply_chain: SupplyChainSummary;
 }
+
+export interface GGUFFileInfo {
+  name: string;
+  path: string;
+  size_gb: number;
+  source: string;
+}
+
+export interface LLMPresetInfo {
+  id: string;
+  name: string;
+  model: string;
+  backend: 'ollama' | 'llamacpp';
+  port: number;
+  category: string;
+  recommended_for: string;
+  description: string;
+}
+
+export interface LLMServiceStatus {
+  online: boolean;
+  service_type: string;
+  active_backend?: string;
+  active_endpoint: string;
+  active_model: string;
+  available_models: string[];
+  ollama_models?: string[];
+  gguf_files?: GGUFFileInfo[];
+  presets?: LLMPresetInfo[];
+  port: number;
+  ports_status?: Record<string, boolean>;
+  context_size?: number;
+  temperature?: number;
+  thinking_mode?: string;
+}
+
+export interface LaunchLLMRequest {
+  model?: string;
+  port?: number;
+  provider?: string;
+  context_size?: number;
+  temperature?: number;
+  thinking_mode?: string;
+}
+
+export interface LLMTestResult {
+  success: boolean;
+  latency_ms?: number;
+  tokens_per_sec?: number;
+  model_used?: string;
+  endpoint?: string;
+  response?: string;
+  reasoning?: string;
+  error?: string;
+}
+
+
 

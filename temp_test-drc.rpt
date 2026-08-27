@@ -1,0 +1,30 @@
+** Drc report for temp_test.kicad_pcb **
+** Created on 2026-08-27T14:23:13 **
+** Report includes: Errors, Warnings **
+
+** Found 4 DRC violations **
+[padstack_invalid]: Apilado de pad inválido (El tamaño del agujero del pad PTH debe ser mayor que 0,000004 mm)
+    Local override; error
+    @(148.5000 mm, 121.0000 mm): PTH pad 1 [<no net>] of J2
+[drill_out_of_range]: Tamaño de orificio fuera del rango (restricciones de configuración de placa taladro mín. 0,3000 mm; real 1,000e-06 mm)
+    Rule: restricciones de configuración de placa; error
+    @(148.5000 mm, 121.0000 mm): PTH pad 1 [<no net>] of J2
+[invalid_outline]: La placa tiene un contorno mal formado (no se han encontrado bordes en la capa Edge.Cuts)
+    Local override; error
+    @(0.0000 mm, 0.0000 mm): PCB
+[lib_footprint_issues]: La configuración actual no incluye la biblioteca de huellas 'Custom'
+    Local override; warning
+    @(148.5000 mm, 121.0000 mm): Footprint J2
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

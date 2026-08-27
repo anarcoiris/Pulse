@@ -1,0 +1,28 @@
+{
+  "board_id": "sim_t1_ex01_ams1117_ldo",
+  "timestamp": "2026-08-25T21:39:41.790703+00:00",
+  "mcu": "USB-C 3.3V Power Supply",
+  "mcu_package": "",
+  "board_size_mm": [
+    0,
+    0
+  ],
+  "component_count": 7,
+  "layer_count": 2,
+  "drc_violations": 4,
+  "routing_success_rate": 1.0,
+  "manufacturing_target": "generic",
+  "lessons_learned": [
+    "Input cap must be >= 10uF placed adjacent to Vin pin 3",
+    "Output cap must be >= 22uF for error amplifier loop stability",
+    "USB-C CC pins must have 5.1k pull-downs to GND for 5V UFP sink detection",
+    "Remediated issue: Missing pin connections on component C1",
+    "Remediated issue: Missing pin connections on component C2",
+    "Remediated issue: Missing pin connections on component D1",
+    "Remediated issue: Missing pin connections on component D2"
+  ],
+  "component_placement_rules": [],
+  "critical_nets": [],
+  "gerber_path": "",
+  "passed": false
+}

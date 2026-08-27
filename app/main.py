@@ -585,7 +585,8 @@ def generate_pcb(req: GeneratePCBRequest):
                 "total_components": len(bom_rows)
             },
             "vectors_2d": vectors_2d,
-            "mesh_3d": mesh_3d
+            "mesh_3d": mesh_3d,
+            "circuit_data": placed_data
         }
 
     except Exception as e:
@@ -967,10 +968,90 @@ def run_agent_preset(req: AgentPresetRunRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+# ─── LLM Inference Service Management Endpoints ──────────────────────────────
+from core.llm_service_manager import llm_service_mgr
+
+class LaunchLLMServiceRequest(BaseModel):
+    model: Optional[str] = Field(default=None, description="Model identifier or GGUF filename")
+    port: Optional[int] = Field(default=None, description="Service port (e.g. 11434 or 11440)")
+    provider: str = Field(default="auto", description="llama-server, ollama, or auto")
+    context_size: Optional[int] = Field(default=None, description="Context window tokens (e.g. 32768, 65536, 98304)")
+    temperature: Optional[float] = Field(default=None, description="Sampling temperature (0.0 to 1.0)")
+    thinking_mode: Optional[str] = Field(default=None, description="Thinking reasoning mode: auto, low, none, high")
+
+class ConfigureLLMRequest(BaseModel):
+    model: Optional[str] = Field(default=None, description="Model identifier or GGUF filename")
+    backend: Optional[str] = Field(default=None, description="ollama or llamacpp")
+    port: Optional[int] = Field(default=None, description="Port number")
+    context_size: Optional[int] = Field(default=None, description="Context size in tokens")
+    temperature: Optional[float] = Field(default=None, description="Temperature")
+    thinking_mode: Optional[str] = Field(default=None, description="Thinking mode")
+
+class PullLLMModelRequest(BaseModel):
+    model_name: str = Field(..., description="Model identifier to pull (e.g. hf.co/empero-ai/Qwen3.8-9B-Distill-GGUF:Q4_K_M)")
+
+class TestLLMInferenceRequest(BaseModel):
+    prompt: str = Field(default="Explain what a decoupling capacitor does in 1 sentence.", description="Test prompt")
+    model: Optional[str] = Field(default=None, description="Optional model override")
+    max_tokens: int = Field(default=512, description="Max tokens for test completion")
+    temperature: Optional[float] = Field(default=None, description="Temperature override")
+
+@app.get("/api/v1/llm/status")
+def get_llm_service_status():
+    """Returns the live health, active model, endpoint, presets, and available models for local LLM inference."""
+    return llm_service_mgr.get_status()
+
+@app.post("/api/v1/llm/launch")
+def launch_llm_service(req: LaunchLLMServiceRequest):
+    """Starts or attaches to the local LLM inference service (Ollama or llama-server) with designated config."""
+    res = llm_service_mgr.launch_service(
+        model=req.model,
+        port=req.port,
+        provider=req.provider,
+        context_size=req.context_size,
+        temperature=req.temperature,
+        thinking_mode=req.thinking_mode
+    )
+    return res
+
+@app.post("/api/v1/llm/config")
+def configure_llm_service(req: ConfigureLLMRequest):
+    """Configures active LLM parameters without full service restart."""
+    return llm_service_mgr.configure_service(
+        model=req.model,
+        backend=req.backend,
+        port=req.port,
+        context_size=req.context_size,
+        temperature=req.temperature,
+        thinking_mode=req.thinking_mode
+    )
+
+@app.post("/api/v1/llm/pull")
+def pull_llm_model(req: PullLLMModelRequest):
+    """Triggers background pull of an Ollama/HuggingFace model."""
+    return llm_service_mgr.pull_model(req.model_name)
+
+@app.post("/api/v1/llm/stop")
+def stop_llm_service():
+    """Stops running local LLM services/containers."""
+    return llm_service_mgr.stop_service()
+
+@app.post("/api/v1/llm/test")
+def test_llm_service_inference(req: TestLLMInferenceRequest):
+    """Runs a live latency benchmark / test completion against the active local LLM."""
+    return llm_service_mgr.test_inference(
+        prompt=req.prompt,
+        model=req.model,
+        max_tokens=req.max_tokens,
+        temperature=req.temperature
+    )
+
+
 # ─── Static SPA Web Studio Mounting (Optional Container / Production Mode) ────
 _DIST_DIR = _ROOT / "webapp" / "dist"
 if _DIST_DIR.exists():
     from fastapi.staticfiles import StaticFiles
     app.mount("/", StaticFiles(directory=str(_DIST_DIR), html=True), name="static_spa")
+
 
 
