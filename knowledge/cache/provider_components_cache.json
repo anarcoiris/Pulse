@@ -1711,7 +1711,7 @@
     }
   },
   "search:r 10k": {
-    "timestamp": 1787685669.8763502,
+    "timestamp": 1787860394.3727953,
     "data": {
       "jlcpcb": [
         {
@@ -1957,6 +1957,20 @@
   },
   "search:c47": {
     "timestamp": 1787705032.938085,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:10k": {
+    "timestamp": 1787860393.7504241,
+    "data": {
+      "jlcpcb": [],
+      "pcbway": []
+    }
+  },
+  "search:bat54c": {
+    "timestamp": 1787860394.4058435,
     "data": {
       "jlcpcb": [],
       "pcbway": []

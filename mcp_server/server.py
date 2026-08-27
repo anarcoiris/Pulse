@@ -1112,6 +1112,99 @@ if _MCP_OK:
 
         return status
 
+    # ══════════════════════════════════════════════════════════════
+    # UNIFIED ENGINE MASTER PIPELINE TOOLS
+    # ══════════════════════════════════════════════════════════════
+
+    @mcp.tool()
+    def run_drc_audit(pcb_path: str) -> dict:
+        """
+        Ejecuta la auditoría formal KiCad 10 DRC y análisis de reglas topológicas PulseLab (R001-R014).
+        
+        Args:
+            pcb_path: Ruta al archivo .kicad_pcb.
+            
+        Returns:
+            dict con lista de violaciones, ítems desconectados y estado del DRC.
+        """
+        from core.service_kernel import PulseLabEngine
+        engine = PulseLabEngine()
+        return engine.audit_drc(Path(pcb_path))
+
+    @mcp.tool()
+    def autoroute_with_freerouting(pcb_path: str, timeout_sec: int = 120) -> dict:
+        """
+        Ejecuta auto-enrutamiento sobre el PCB exportando Specctra DSN, ejecutando FreeRouting y reimportando trazas SES.
+        
+        Args:
+            pcb_path: Ruta al archivo .kicad_pcb.
+            timeout_sec: Tiempo límite en segundos.
+            
+        Returns:
+            dict con éxito, ruta del archivo ruteado y log de ejecución.
+        """
+        from bridge.freerouting_bridge import FreeRoutingBridge
+        bridge = FreeRoutingBridge()
+        res = bridge.auto_route_pipeline(Path(pcb_path), timeout_sec=timeout_sec)
+        return {
+            "success": res.success,
+            "pcb_path": str(res.output_pcb_path) if res.output_pcb_path else str(pcb_path),
+            "message": res.message,
+            "exit_code": res.exit_code
+        }
+
+    @mcp.tool()
+    def search_supply_chain_live(query: str, limit: int = 5) -> dict:
+        """
+        Busca componentes y stock en tiempo real en múltiples proveedores SMT (JLCPCB/LCSC y PCBWay) con caché local.
+        
+        Args:
+            query: Texto de búsqueda, valor o MPN (ej: 'ESP32-S3', 'BAT54C', '10k 0603').
+            limit: Número máximo de resultados por proveedor.
+            
+        Returns:
+            dict con resultados indexados por proveedor (jlcpcb, pcbway).
+        """
+        from core.provider_fetcher import ProviderFetchManager
+        mgr = ProviderFetchManager()
+        raw_res = mgr.search_all_providers(query, limit=limit)
+        return {
+            "query": query,
+            "results": {
+                p: [asdict(item) if hasattr(item, "__dataclass_fields__") else item for item in items]
+                for p, items in raw_res.items()
+            }
+        }
+
+    @mcp.tool()
+    def build_complete_project(project_id: str, circuit_data: dict) -> dict:
+        """
+        Ejecuta el ciclo de vida completo de PulseLabEngine:
+        Validación Schema -> Auto-Placement -> Esquemático KiCad -> PCB -> Zonas de Masa -> DRC -> Gerbers -> BOM -> CPL.
+        
+        Args:
+            project_id: Identificador único del proyecto (ej: 'lora_node_01').
+            circuit_data: Diccionario conforme a CircuitDesignSchema.
+            
+        Returns:
+            dict con rutas de los entregables generados y reporte de DRC.
+        """
+        from core.service_kernel import PulseLabEngine
+        engine = PulseLabEngine()
+        bundle = engine.create_project(project_id, circuit_data)
+        return {
+            "success": bundle.success,
+            "project_id": bundle.project_id,
+            "output_dir": str(bundle.output_dir),
+            "sch_file": str(bundle.sch_file),
+            "pcb_file": str(bundle.pcb_file),
+            "gerber_dir": str(bundle.gerber_dir),
+            "jlcpcb_bom": str(bundle.jlcpcb_bom),
+            "jlcpcb_cpl": str(bundle.jlcpcb_cpl),
+            "drc_report": bundle.drc_report,
+            "message": bundle.message
+        }
+
 
 # ─── Entry Point ─────────────────────────────────────────────────────────────
 
