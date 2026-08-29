@@ -3,8 +3,8 @@
 > **Role:** living  
 > **Status:** active  
 > **Source of truth for:** product phases, architectural milestones, and long-term themes  
-> **Last verified:** 2026-08-23  
-> **See also:** [`last_session_review.md`](./last_session_review.md) · [`task.md`](../task.md)
+> **Last verified:** 2026-08-30  
+> **See also:** [`status/CURRENT_SPRINT.md`](./status/CURRENT_SPRINT.md) · [`status/FORGE_STATUS.md`](./status/FORGE_STATUS.md)
 
 ---
 

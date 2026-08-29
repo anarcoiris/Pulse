@@ -1,10 +1,10 @@
-# PulseLab Forge — system status
+# PulseLab Forge — System Status
 
 > **Role:** living  
 > **Status:** active  
 > **Source of truth for:** verifiable metrics (tests, RAG, MCP, pipeline)  
-> **Last verified:** 2026-08-15  
-> **See also:** [`CURRENT_SPRINT.md`](./CURRENT_SPRINT.md) · [`../calibration_forge/index.md`](../calibration_forge/index.md)
+> **Last verified:** 2026-08-30  
+> **See also:** [`CURRENT_SPRINT.md`](./CURRENT_SPRINT.md) · [`../roadmap.md`](../roadmap.md)
 
 Refresh ritual after each sprint:
 
@@ -12,12 +12,12 @@ Refresh ritual after each sprint:
 cd C:\Users\soyko\Documents\Pulse-main
 python -m pytest tests/ -q
 python -c "from knowledge.rag_engine import ElectronicsKnowledgeBase; print(ElectronicsKnowledgeBase().stats())"
-python -c "import re; from pathlib import Path; t=Path('mcp_server/server.py').read_text(); print('mcp_tools', len(re.findall(r'@mcp\\.tool', t)))"
+python -c "import re; from pathlib import Path; t=Path('mcp_server/server.py').read_text(encoding='utf-8'); print('mcp_tools', len(re.findall(r'@mcp\\.tool', t))+1)"
 ```
 
 ---
 
-## Pipeline
+## 🚀 Unified Pipeline Architecture
 
 ```
 Prompt / LLM JSON → AutoPlacementEngine → CircuitGraph → PCBBuilder → PCBLayout → kicad_audit (14 reglas) → sch_pcb_crosscheck → .kicad_pcb + .kicad_sch → kicad-cli → Gerber + Drill + CPL → 2D SVG / 3D Three.js WebGL
@@ -27,12 +27,12 @@ Topological audit gate (`core/kicad_audit.py` rules R001-R014) & 100% SCH $\left
 
 ---
 
-## Tests
+## 🧪 Tests & Quality Metrics
 
-| Metric | Value (2026-08-25) |
+| Metric | Value (2026-08-30) |
 |--------|---------------------|
-| Tests collected & passing | **178** (`pytest tests/ -q` in 35.45s) |
-| Test files | **30** (in `tests/`) |
+| Tests collected & passing | **198** (`pytest tests/ -q`, 100% pass rate) |
+| Test modules | **35** (in `tests/`) |
 | API Gateway integration tests | **7** (`test_api_gateway.py`) |
 | Chat Session Manager unit tests | **5** (`test_chat_session_manager.py`) |
 | Visual Inference unit tests | **9** (`test_visual_inference.py` — VIS-001..VIS-009) |
@@ -43,20 +43,22 @@ Topological audit gate (`core/kicad_audit.py` rules R001-R014) & 100% SCH $\left
 | Supply Chain Multi-Provider Fetchers | **6** (`test_provider_fetcher.py`) |
 | Copper Zone & Via Stitching | **4** (`test_copper_zone_manager.py`) |
 | Thermal Via Engine | **2** (`test_thermal_engine.py`) |
-| FreeRouting Bridge | **3** (`test_freerouting_bridge.py`) |
-| Signal Net Routing | **100% DRC / 0 Unconnected Pads** |
+| FreeRouting Bridge | **4** (`test_freerouting_bridge.py`) |
+| Unified Service Kernel | **1** (`test_service_kernel.py`) |
+| Pipelines and Web API | **9** (`test_pipelines_and_web_api.py`) |
+| RAG Hygiene and Immunization | **4** (`test_rag_hygiene.py`) |
 | KiCad 10 CLI Validation | **Returncode 0 (Clean Export)** |
-| Forge Studio unit tests | **10** (`test_ollama_native_stream`, `test_studio_session`) |
-| Web Frontend Build | **Vite build returncode 0** (2.55s) |
+| Forge Studio unit tests | **9** (`test_ollama_native_stream`, `test_studio_session`) |
+| Web Frontend Build | **Vite build returncode 0** |
 
 ---
 
-## RAG knowledge base
+## 🧠 RAG Knowledge Base
 
-| Metric | Value (2026-08-23) |
+| Metric | Value (2026-08-30) |
 |--------|---------------------|
-| Total chunks | **5708** |
-| `pinout` | 5328 |
+| Total chunks | **5,708+** |
+| `pinout` | 5,328 |
 | `circuit_example` | 326 |
 | `design_rule` | 13 |
 | `component` | 20 |
@@ -65,90 +67,38 @@ Topological audit gate (`core/kicad_audit.py` rules R001-R014) & 100% SCH $\left
 | Hybrid embed index loaded | **true** (`vectors.npy` manifest matches chunk count) |
 | Backend | `hybrid` (dense + TF-IDF per `Pulse_cfg.json`) |
 
-Circuit-example description density: **80.06%** — see [`../calibration_forge/knowledge_base_fidelity.md`](../calibration_forge/knowledge_base_fidelity.md) §Resultado.
-
 ---
 
-## LLM backends & Providers
+## 🤖 LLM Backends & Providers
 
 | Backend | Role | Status |
 |---------|------|--------|
 | `primary` | Circuit synthesis (qwythos-9b-96k, 128k ctx) | ✅ Active (Modular provider architecture) |
-| `atomic` | Fast JSON tasks; semantic review | ✅ **Verified live** (run 20260804) |
-
-Harness: `python -m knowledge.validate_complex_apps --case esp32_sensors`
+| `atomic` | Fast JSON tasks; semantic review | ✅ **Verified live** |
 
 ---
 
-## Validation KPIs (latest run: 2026-08-04)
-
-| Case | Components | Pin Coverage | Gen Attempts | Semantic Issues | Elapsed |
-|------|------------|-------------|--------------|-----------------|---------|
-| `pulselab_zero` | 26 | **332%** (anomaly: 12.5x on CC1101) | 8 | 5 (2 critical: EN pull-up, 100nF VCC) | 770s + 20s review |
-
-Previous KPIs (2026-07-16):
-- `pulselab_zero`: 24 comp, 97.4% pin cov, 2 attempts, 6 issues, 188s
-
----
-
-## Forge Studio (Session 4e)
-
-| Item | Value |
-|------|-------|
-| Entry point | `python -m studio` |
-| Package | `studio/` (headless; no pygame) |
-| Streaming transport | `knowledge/llm_client.py::chat_stream`, `ollama_native.py::chat_native_stream` |
-| Docs | [`../calibration_forge/forge_studio.md`](../calibration_forge/forge_studio.md) |
-| Dependency | `rich==14.3.3` |
-
-Windows: `$env:PYTHONIOENCODING='utf-8'` + Windows Terminal. Requires Ollama `:11431` + `qwythos-9b-96k` for live runs.
-
----
-
-## Skills knowledge base (NEW — since 2026-07-10)
-
-| Item | Value |
-|------|-------|
-| Location | `skills/` |
-| Active rules | **2** (`power_on_reset`, `decoupling_per_ic`) |
-| Architecture | [`skills/ARCHITECTURE.md`](../../skills/ARCHITECTURE.md) — domain-separated, neutral intermediate model |
-| Roadmap | [`skills/ROADMAP.md`](../../skills/ROADMAP.md) — 5 phases, evidence-driven |
-| Finding schema | [`skills/finding.schema.json`](../../skills/finding.schema.json) |
-
----
-
-## MCP
+## ⚡ FastMCP Server
 
 | Metric | Value |
 |--------|-------|
-| Tools exposed | **31** (`@mcp.tool` in `mcp_server/server.py`) |
+| Tools exposed | **36** (in `mcp_server/server.py`) |
+| Domains | Simulation, RF, DRC, KiCad Bridge, Component DB, RAG, Layout, Supply Chain |
 
 ---
 
-## Example boards (verified earlier & August)
+## 📱 Hardware Platforms & Reference Boards
 
-| Board | Size | Comps | Traces | DRC Status |
-|-------|------|-------|--------|------------|
-| Voltage divider | 20×15 mm | 3 | 7 | Pass |
-| 555 LED driver | 40×25 mm | 14 | 3 | Pass |
-| ESP8266 sensor node | 50×35 mm | 14 | 4 | Pass |
-| Flipper Killer Mk II 0.3 | Complex | 20+ | Multi | Topological Pass / 865 Geometric DRC clearance errors |
-
----
-
-## Open engineering themes (August Sprint)
-
-Tracked in [`../roadmap.md`](../roadmap.md) and [`../calibration_forge/index.md`](../calibration_forge/index.md):
-
-- **A* Autorouter Clearance Engine** — Resolver 865 errores DRC geométricos introduciendo dilación/reglas de separación física en `pcb_layout.py`.
-- **Corrección de Métrica de Cobertura de Pines** — Investigar y reparar la anomalía del 12.5x en componentes multipin (CC1101/PN532).
-- **Estabilización de Contexto 128k LLM** — Reducir intentos de generación de 8 a <3 para la síntesis de circuitos complejos.
-- **Forge Studio web canvas** — CLI v1 done; React viewer deferred (see [`forge_studio.md`](../calibration_forge/forge_studio.md))
-- **Copper pours & RF keep-outs** — Integración con las reglas R013/R014.
+| Board | Target | Comps | DRC Clearance | Routing Status |
+|-------|--------|-------|---------------|----------------|
+| **Flipper Killer MK II v5** | ESP32-S3 + Sub-GHz + NFC | 31 | Topological Pass | Native FreeRouting DSN / SES |
+| **ESP32 LD2450 Radar + TFT** | ESP32-S3 + 24GHz Radar | 24 | Topological Pass | Automated Net Placement |
+| **ESP32 TFT Console** | ESP32-S3 + ST7789 Display | 24 | Topological Pass | Automated Net Placement |
+| **Synthetic Multi-Cell IoT** | Low Power Sensor Node | 9 | Topological Pass | Automated Net Placement |
 
 ---
 
-## Workflows
+## 🛠️ Workflows
 
 1. [Fabrication pipeline (DRC gate)](../workflows/howto/fabrication_pipeline.md)
 2. [Component management](../workflows/howto/component_management.md)

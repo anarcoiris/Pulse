@@ -1,20 +1,44 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# PulseLab Web EDA Studio
 
-# Run and deploy your AI Studio app
+Frontend web moderno para la plataforma **PulseLab Forge**, desarrollado con **React 19, TypeScript, Vite, Tailwind CSS y Three.js**.
 
-This contains everything you need to run your app locally.
+---
 
-View your app in AI Studio: https://ai.studio/apps/3f4b5902-9721-40a0-a435-48188ab16457
+## 🎨 Características Principales
 
-## Run Locally
+- **Visor 2D Interactivo (`PCBViewer2D`)**: Canvas HTML5 acelerado con renderizado de pistas, serigrafía, componentes interactivos con drag-and-drop en tiempo real y cálculo de courtyards.
+- **Visor 3D WebGL (`PCBViewer3D`)**: Renderizado tridimensional fotorrealista de la placa de circuito con texturas de máscara de soldadura, serigrafía y modelos de componentes.
+- **Visor de Esquemáticos (`SchematicViewer`)**: Visualización interactiva de netlists y esquemas KiCad.
+- **Tabla de Cadena de Suministro (`BOMSupplyChainTable`)**: Búsqueda en vivo y comparación de disponibilidad de componentes entre **JLCPCB (LCSC)** y **PCBWay**.
+- **Co-Pilot IA Multisesión (`AIChatDrawer`)**: Asistente generativo para sintetizar topologías de circuitos, aplicar parches y consultar el motor RAG.
+- **Reportes DRC en Tiempo Real (`DRCReportModal`)**: Visualización y auditoría de reglas de diseño geométrico y topológico.
+- **Gestión de Modelos LLM (`LLMEnginePanel` & `LLMServiceModal`)**: Configuración de backends locales (Ollama / Qwythos / LLaMA) y proveedores cloud.
 
-**Prerequisites:**  Node.js
+---
 
+## 🚀 Puesta en Marcha
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### Prerrequisitos
+
+- **Node.js 18+** y `npm`
+- Servidor backend de PulseLab ejecutándose en `http://localhost:8000` (vía `python -m uvicorn app.main:app --port 8000` o `./scripts/launch-pulselab.ps1`).
+
+### Instalación y Ejecución
+
+```bash
+# 1. Instalar dependencias
+npm install
+
+# 2. Iniciar servidor de desarrollo
+npm run dev
+```
+
+La aplicación estará disponible en `http://localhost:5173`.
+
+### Compilación para Producción
+
+```bash
+npm run build
+```
+
+Los archivos estáticos optimizados se generarán en la carpeta `dist/` para ser servidos por FastAPI o Caddy en despliegues Docker.

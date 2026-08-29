@@ -7,9 +7,8 @@
 <div align="center">
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
-[![KiCad](https://img.shields.io/badge/KiCad-8%2B%20%7C%2010.0-1BA94C.svg)](https://www.kicad.org/)
-[![Tests](https://img.shields.io/badge/Tests-152%20passing-brightgreen.svg)](https://github.com/anarcoiris/Pulse)
-[![MCP Tools](https://img.shields.io/badge/MCP-31%20tools-orange.svg)](https://github.com/anarcoiris/Pulse/tree/main/mcp_server)
+[![KiCad](https://img.shields.io/badge/KiCad-8%2B%20%7C%2010.0-1BA94C.svg)](https://www.kicad.org/)[![Tests](https://img.shields.io/badge/Tests-198%20passing-brightgreen.svg)](https://github.com/anarcoiris/Pulse)
+[![MCP Tools](https://img.shields.io/badge/MCP-36%20tools-orange.svg)](https://github.com/anarcoiris/Pulse/tree/main/mcp_server)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 </div>
@@ -46,7 +45,7 @@
 Unlike standard CAD packages, Pulse incorporates:
 1. **Procedural PCB Layout Engine**: Force-directed attraction/repulsion, thermal via matrix generator, ground plane manager with inter-layer via stitching, and Specctra DSN/FreeRouting auto-routing bridge.
 2. **Multi-Provider Supply Chain Engine**: Live component fetching from **JLCPCB (LCSC)** and **PCBWay** catalogs with local 24h disk caching and interactive component candidate decision matching.
-3. **Local MCP Server (31 Tools)**: Exposes structural circuit design, schematic cross-checks, DRC verification, thermal calculation, and CAM exports directly to LLM agents (Claude Desktop, Ollama, etc.).
+3. **Local FastMCP Server (36 Tools)**: Exposes structural circuit design, schematic cross-checks, DRC verification, thermal calculation, and CAM exports directly to LLM agents (Claude Desktop, Ollama, etc.).
 
 ---
 
@@ -55,6 +54,8 @@ Unlike standard CAD packages, Pulse incorporates:
 | Module | Location | Description |
 |---|---|---|
 | 🖥️ **MNA Simulator & UI** | `pulse_lab.py` | PyGame visual editor with anti-aliased rendering, real-time MNA solver, live oscilloscope, and interactive passive/active components. |
+| 🌐 **FastAPI Web Backend** | `app/` | REST API gateway, WebSocket streaming, LLM session manager, and FastMCP bridge. |
+| 🎨 **Web EDA Studio** | `webapp/` | Modern React/Vite/Three.js web canvas with 2D/3D PCB viewer, AI chat assistant, and BOM tables. |
 | 📐 **Algorithmic PCB Builder** | `bridge/pcb_builder.py` | Generates KiCad 8+/10 S-expressions, coordinates auto-placement heuristics, thermal pads, and DRC gates. |
 | 📍 **2D Auto-Placement Engine** | `core/auto_placement.py` | Physics-based placement relaxation using Hooke attraction, Coulomb pin repulsion, and domain orientation rules. |
 | ⚡ **Thermal Management Engine** | `core/thermal_engine.py` | Automated $3 \times 3$ thermal via grids under high-power pads (e.g. ESP32 EPAD 41, AMS1117 tab) with solid zone connections. |
@@ -63,7 +64,7 @@ Unlike standard CAD packages, Pulse incorporates:
 | 🎨 **Graphics & Stencil Engine** | `bridge/graphics_engine.py` | Converts DXF/SVG vector artwork into silk/copper KiCad polygon primitives (`gr_poly`). |
 | 🛣️ **FreeRouting Auto-Router Bridge** | `bridge/freerouting_bridge.py` | DSN export (`kicad-cli pcb export dsn`), headless FreeRouting CLI runner, and SES back-annotation import. |
 | 📑 **100% SCH $\leftrightarrow$ PCB Parity** | `core/sch_pcb_crosscheck.py` | Automatic net and symbol cross-check gate embedded into DRC validation. |
-| 🧠 **MCP Server (31 Tools)** | `mcp_server/` | FastMCP service exposing complete hardware synthesis capabilities to external LLM client apps. |
+| 🧠 **MCP Server (36 Tools)** | `mcp_server/` | FastMCP service exposing complete hardware synthesis capabilities to external LLM client apps. |
 
 ---
 
@@ -73,6 +74,7 @@ Unlike standard CAD packages, Pulse incorporates:
 
 - **Python 3.10+**
 - **KiCad 8+ or KiCad 10+** (in `PATH` for Gerber/Drill generation and SVG export via `kicad-cli`)
+- *(Optional)* **Node.js 18+** for running the Web Studio locally.
 - *(Optional)* **Ollama** running locally on `:11434` or `:11431` for Forge Studio LLM agent features.
 
 ### Installation
@@ -83,13 +85,19 @@ cd Pulse
 pip install -r requirements.txt
 ```
 
-### Launch the Visual Circuit Editor & Simulator
+### Launch the Visual Circuit Editor & Simulator (PyGame Desktop)
 
 ```bash
 python pulse_lab.py
 ```
 
-### Run Full Test Suite (152 Unit Tests)
+### Launch the Full Web Studio (FastAPI + Vite React Canvas)
+
+```powershell
+./scripts/launch-pulselab.ps1
+```
+
+### Run Full Test Suite (198 Unit Tests)
 
 ```bash
 python -m pytest tests/
@@ -101,36 +109,24 @@ python -m pytest tests/
 
 ```
 Pulse/
-├── core/                 ← Physics simulation, placement algorithms, supply chain & audit gates
-│   ├── auto_placement.py ← 2D spatial layout physics engine
-│   ├── circuit_engine.py ← Modified Nodal Analysis (MNA) solver
-│   ├── component_db.py   ← Systematized component database & decision assistant
-│   ├── copper_zone_manager.py ← Ground plane pour & via stitching manager
-│   ├── kicad_audit.py    ← 14-rule topological pre-routing audit gate
-│   ├── provider_fetcher.py ← JLCPCB / PCBWay multi-provider fetcher & cache
-│   ├── providers/        ← Supplier API fetchers (JLCPCB, PCBWay)
-│   ├── sch_pcb_crosscheck.py ← Schematic <-> PCB net & symbol validator
-│   └── thermal_engine.py ← Thermal via grid & pad zone connection manager
+├── app/                  ← FastAPI backend gateway, synthesis orchestrator & WebSockets
 ├── bridge/               ← KiCad compilation, S-expressions, graphics & auto-routing
-│   ├── freerouting_bridge.py ← Specctra DSN export & SES import wrapper
-│   ├── gerber_export.py  ← Fabrication CAM export orchestrator (kicad-cli)
-│   ├── graphics_engine.py← Polygon vector logo artwork renderer
-│   ├── kicad_bridge.py   ← Cross-platform KiCad CLI wrapper & DRC gate
-│   ├── pcb_builder.py    ← S-expression PCB generator & auto-placement fallback
-│   ├── pcb_layout.py     ← S-expression primitives & zone connection overrides
-│   └── schematic_generator.py ← Automatic .kicad_sch builder with mounting holes
+├── core/                 ← Physics simulation, placement algorithms, supply chain & audit gates
+├── docs/                 ← Project documentation, architectural blueprints & how-to guides
+├── examples/             ← Python runnable examples and demonstration circuits
 ├── knowledge/            ← RAG knowledge base, prompt templates & agent engines
-│   ├── circuit_agent.py  ← Multi-turn hardware agent loop
-│   ├── circuit_synthesizer.py ← High-level NLP circuit synthesis
-│   └── rag_engine.py     ← Hybrid RAG over IPC-2221 standards & KiCad libraries
-├── studio/               ← Forge Studio headless LLM REPL (`python -m studio`)
-├── mcp_server/           ← Local MCP server (31 exposed tools)
-├── ui/                   ← PyGame presentation layer & oscilloscope UI
-├── webapp/               ← Next.js / Vite web frontend canvas
-├── docs/                 ← Project documentation, status metrics & roadmap
+├── mcp_server/           ← Local FastMCP server (36 exposed tools)
 ├── presets/              ← Circuit templates (ESP32 DevKit, EMP PFN, MCU UART)
-├── scripts/              ← Automation scripts & reference generation loops
-└── tests/                ← Pytest regression suite (152 tests)
+├── scripts/              ← Automation scripts, pipeline validation & stack launchers
+├── skills/               ← Hardware synthesis agent skills and KiCad adapters
+├── studio/               ← Forge Studio headless LLM REPL (`python -m studio`)
+├── tests/                ← Pytest regression suite (198 tests, 100% passing)
+├── ui/                   ← PyGame desktop simulator GUI & oscilloscope
+├── webapp/               ← Modern React / Vite / Three.js Web Studio frontend
+├── .github/              ← GitHub Actions CI & Docker image release pipelines
+├── Caddyfile / Dockerfile / docker-compose.pulselab.yml
+├── pulse_lab.py          ← Desktop circuit simulator entrypoint
+└── Pulse_cfg.json        ← Unified platform configuration (SSOT)
 ```
 
 ---
