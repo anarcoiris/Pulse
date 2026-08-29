@@ -1,0 +1,115 @@
+{
+  "title": "Synthetic Multi-Cell IoT Node",
+  "version": "1.0.0",
+  "net_classes": {
+    "power": {
+      "width": 0.5,
+      "nets": ["PWR_3V3", "PWR_GND", "PWR_5V"]
+    },
+    "i2c": {
+      "width": 0.25,
+      "nets": ["I2C_SDA", "I2C_SCL"]
+    },
+    "default": {
+      "width": 0.2
+    }
+  },
+  "circuit": [
+    {
+      "label": "U1",
+      "etype": "MCU",
+      "value": "RP2040",
+      "symbol": "MCU_RaspberryPi:RP2040",
+      "footprint": "Package_DFN_QFN:QFN-56-1EP_7x7mm_P0.4mm_EP3.2x3.2mm",
+      "pins": {
+        "1": "I2C_SDA",
+        "2": "I2C_SCL",
+        "19": "PWR_3V3",
+        "57": "PWR_GND"
+      }
+    },
+    {
+      "label": "J1",
+      "etype": "Connector",
+      "value": "USB-C",
+      "symbol": "Connector:USB_C_Receptacle_USB20",
+      "footprint": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12",
+      "pins": {
+        "A4": "PWR_5V",
+        "A9": "PWR_5V",
+        "A1": "PWR_GND",
+        "A12": "PWR_GND"
+      }
+    },
+    {
+      "label": "U2",
+      "etype": "IC",
+      "value": "AP2112K-3.3",
+      "symbol": "Regulator_Linear:AP2112K-3.3",
+      "footprint": "Package_TO_SOT_SMD:SOT-23-5",
+      "pins": {
+        "1": "PWR_5V",
+        "2": "PWR_GND",
+        "3": "PWR_5V",
+        "5": "PWR_3V3"
+      }
+    },
+    {
+      "label": "U3",
+      "etype": "IC",
+      "value": "BME280",
+      "symbol": "Sensor:BME280",
+      "footprint": "Package_LGA:LGA-8_2.5x2.5mm_P0.65mm_Clockwise",
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3",
+        "3": "I2C_SDA",
+        "4": "I2C_SCL",
+        "5": "PWR_3V3",
+        "6": "PWR_3V3",
+        "7": "PWR_GND",
+        "8": "PWR_3V3"
+      }
+    },
+    {
+      "label": "R1",
+      "etype": "R",
+      "value": "4.7k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "I2C_SDA", "2": "PWR_3V3"}
+    },
+    {
+      "label": "R2",
+      "etype": "R",
+      "value": "4.7k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "I2C_SCL", "2": "PWR_3V3"}
+    },
+    {
+      "label": "C1",
+      "etype": "C",
+      "value": "10uF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0805_2012Metric",
+      "pins": {"1": "PWR_5V", "2": "PWR_GND"}
+    },
+    {
+      "label": "C2",
+      "etype": "C",
+      "value": "10uF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0805_2012Metric",
+      "pins": {"1": "PWR_3V3", "2": "PWR_GND"}
+    },
+    {
+      "label": "C3",
+      "etype": "C",
+      "value": "100nF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "pins": {"1": "PWR_3V3", "2": "PWR_GND"}
+    }
+  ]
+}

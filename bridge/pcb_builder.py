@@ -143,6 +143,15 @@ class PCBBuilder:
             SchematicGenerator(self._graph).save(str(sch_path))
             result["sch_path"] = str(sch_path)
 
+        # Export FreeRouting DSN file
+        try:
+            from bridge.freerouting_bridge import FreeRoutingBridge
+            fr_bridge = FreeRoutingBridge()
+            dsn_path = fr_bridge.export_dsn(out_path)
+            result["dsn_path"] = str(dsn_path)
+        except Exception as e:
+            result["dsn_error"] = str(e)
+
         return result
 
     # ── Internal: Build from CircuitGraph ─────────────────────
@@ -161,20 +170,6 @@ class PCBBuilder:
 
         w = self.board_width or graph_w or total_w
         h = self.board_height or graph_h or total_h
-
-        pcb = PCBLayout(
-            board_width=w, board_height=h,
-            corner_radius=self.corner_radius,
-            trace_width=self.trace_width,
-            project_name=self.project_name,
-            net_classes=self.net_classes,
-        )
-        
-        # Center the board on an A4 sheet (297x210mm)
-        offset_x = (297.0 - w) / 2.0
-        offset_y = (210.0 - h) / 2.0
-        pcb.board.origin_x = offset_x
-        pcb.board.origin_y = offset_y
 
         # Continual Visual Inspection & Auto-Placement Optimization
         from core.auto_placement import AutoPlacementEngine
@@ -198,11 +193,34 @@ class PCBBuilder:
                 "pins": getattr(c, "pins", {}),
                 "n1": getattr(c, "n1", ""),
                 "n2": getattr(c, "n2", ""),
-                "position": c_pos
+                "position": c_pos,
+                "fixed": bool(getattr(c, "fixed", False)),
+                "user_placed": bool(getattr(c, "user_placed", False))
             })
 
         engine = AutoPlacementEngine(w, h)
         placed_dicts = engine.compute_placement(comp_dicts)
+
+        if not self.board_width:
+            dyn_w, dyn_h, shifted_dicts = engine.compute_dynamic_board_outline(placed_dicts)
+            w = dyn_w
+            h = dyn_h
+            placed_dicts = shifted_dicts
+
+        pcb = PCBLayout(
+            board_width=w, board_height=h,
+            corner_radius=self.corner_radius,
+            trace_width=self.trace_width,
+            project_name=self.project_name,
+            net_classes=self.net_classes,
+        )
+        
+        # Center the board on an A4 sheet (297x210mm)
+        offset_x = (297.0 - w) / 2.0
+        offset_y = (210.0 - h) / 2.0
+        pcb.board.origin_x = offset_x
+        pcb.board.origin_y = offset_y
+
         pos_map = {d["label"]: d["position"] for d in placed_dicts if "position" in d}
         rot_map = {d["label"]: d.get("rotation", 0.0) for d in placed_dicts if "rotation" in d}
 

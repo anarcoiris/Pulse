@@ -84,7 +84,10 @@ class AutoPlacementEngine:
         # 4. Topological Force-Directed Netlist Relaxation
         self._relax_netlist_forces(placed_components, comp_to_nets, net_to_comps, roles=roles, iterations=40)
 
-        # 5. Continual Geometric Inspection & Collision Elimination Loop
+        # 5. Optimize Rigid Footprint Rotations for Pin Alignment
+        self._optimize_rotations(placed_components, comp_to_nets, net_to_comps, roles=roles)
+
+        # 6. Continual Geometric Inspection & Collision Elimination Loop
         self.continual_inspection_and_optimization_loop(placed_components, roles=roles, max_iterations=150)
 
         return placed_components
@@ -412,8 +415,82 @@ class AutoPlacementEngine:
                                     else:
                                         new_y = ic_pos[1] + (req_dy if new_y >= ic_pos[1] else -req_dy)
 
-                        pos[0] = new_x
-                        pos[1] = new_y
+    # ── 4.1 Rigid Footprint Rotation Optimization ────────────────────────────
+
+    def _optimize_rotations(
+        self,
+        components: List[Dict[str, Any]],
+        comp_to_nets: Dict[str, Set[str]],
+        net_to_comps: Dict[str, Set[str]],
+        roles: Optional[Dict[str, str]] = None
+    ):
+        """
+        Optimizes rigid footprint rotations (0, 90, 180, 270) to minimize
+        inter-pad wirelength without altering internal relative pad layouts.
+        """
+        comp_map = {str(c.get("label", c.get("uid", ""))): c for c in components}
+        roles = roles or {}
+        power_rails = ("GND", "0V", "PWR", "VCC", "VDD", "5V", "3V3", "3.3V", "VBAT", "VBUS")
+
+        for c in components:
+            ref = str(c.get("label", c.get("uid", "")))
+            if c.get("fixed") or c.get("user_placed") or roles.get(ref) == "external_io":
+                continue
+
+            pins = c.get("pins", {})
+            if not isinstance(pins, dict) or len(pins) < 2:
+                continue
+
+            net_targets = {}
+            for pin_num, net in pins.items():
+                if not net or any(p in str(net).upper() for p in power_rails):
+                    continue
+                other_members = [m for m in net_to_comps.get(net, []) if m != ref and m in comp_map]
+                if other_members:
+                    avg_x = sum(comp_map[m]["position"][0] for m in other_members if "position" in comp_map[m]) / len(other_members)
+                    avg_y = sum(comp_map[m]["position"][1] for m in other_members if "position" in comp_map[m]) / len(other_members)
+                    net_targets[pin_num] = (avg_x, avg_y)
+
+            if not net_targets:
+                continue
+
+            w, h, m = self.get_component_bounds(c)
+            rel_pads = {}
+            if len(pins) == 2 and ("1" in pins and "2" in pins):
+                rel_pads["1"] = (-w * 0.4, 0.0)
+                rel_pads["2"] = (w * 0.4, 0.0)
+            else:
+                pin_keys = list(pins.keys())
+                n_p = len(pin_keys)
+                for p_idx, p_key in enumerate(pin_keys):
+                    angle = (2 * math.pi * p_idx) / n_p
+                    rel_pads[p_key] = ((w * 0.4) * math.cos(angle), (h * 0.4) * math.sin(angle))
+
+            best_rot = float(c.get("rotation", 0.0))
+            best_cost = float("inf")
+            orig_rot = best_rot
+            cx, cy = c.get("position", [0.0, 0.0])
+
+            for test_rot in (0.0, 90.0, 180.0, 270.0):
+                rot_rad = math.radians(test_rot)
+                cos_r, sin_r = math.cos(rot_rad), math.sin(rot_rad)
+                cost = 0.0
+                for pin_num, (tx, ty) in net_targets.items():
+                    if pin_num in rel_pads:
+                        rx, ry = rel_pads[pin_num]
+                        px = cx + rx * cos_r - ry * sin_r
+                        py = cy + rx * sin_r + ry * cos_r
+                        cost += math.hypot(tx - px, ty - py)
+
+                if cost < best_cost:
+                    c["rotation"] = test_rot
+                    test_collisions = self.inspect_layout_collisions(components)
+                    if not test_collisions:
+                        best_cost = cost
+                        best_rot = test_rot
+                    c["rotation"] = orig_rot
+
+            c["rotation"] = best_rot
 
     # ── 5. Exact Footprint Dimensions & Bounding Boxes ─────────────────────────
 
@@ -606,3 +683,53 @@ class AutoPlacementEngine:
             "iterations": max_iterations,
             "collisions_remaining": len(final_collisions)
         }
+
+    # ── 7. Dynamic Bounding Box & Minimum Perimeter Edge.Cuts ────────────────
+
+    def compute_dynamic_board_outline(
+        self, components: List[Dict[str, Any]], edge_margin: float = 3.0
+    ) -> Tuple[float, float, List[Dict[str, Any]]]:
+        """
+        Calculates the minimum enclosing substrate bounding box (Edge.Cuts)
+        surrounding all placed components' courtyards plus edge margin, and
+        normalizes the coordinates so the board center is (0,0).
+        """
+        if not components:
+            return 25.0, 20.0, []
+
+        min_x = float("inf")
+        max_x = float("-inf")
+        min_y = float("inf")
+        max_y = float("-inf")
+
+        for c in components:
+            pos = c.get("position", [0.0, 0.0])
+            w, h, m = self.get_component_bounds(c)
+            hw = w / 2.0 + m
+            hh = h / 2.0 + m
+            min_x = min(min_x, pos[0] - hw)
+            max_x = max(max_x, pos[0] + hw)
+            min_y = min(min_y, pos[1] - hh)
+            max_y = max(max_y, pos[1] + hh)
+
+        total_w = (max_x - min_x) + 2.0 * edge_margin
+        total_h = (max_y - min_y) + 2.0 * edge_margin
+
+        # Snap up to 0.5mm grid
+        total_w = max(25.0, math.ceil(total_w * 2.0) / 2.0)
+        total_h = max(20.0, math.ceil(total_h * 2.0) / 2.0)
+
+        center_x = (min_x + max_x) / 2.0
+        center_y = (min_y + max_y) / 2.0
+
+        shifted = []
+        for c in components:
+            c_copy = dict(c)
+            pos = list(c_copy.get("position", [0.0, 0.0]))
+            pos[0] = round(pos[0] - center_x, 3)
+            pos[1] = round(pos[1] - center_y, 3)
+            c_copy["position"] = pos
+            shifted.append(c_copy)
+
+        return total_w, total_h, shifted
+

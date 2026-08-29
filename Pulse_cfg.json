@@ -1,7 +1,7 @@
 {
   "llm": {
-    "ollama_base_url": "http://localhost:11440/v1",
-    "model": "Qwen3.8-9B",
+    "ollama_base_url": "http://localhost:11434/v1",
+    "model": "hf.co/empero-ai/Qwen3.8-9B-Distill-GGUF:Q4_K_M",
     "api": "openai",
     "think": "low",
     "num_ctx": 32768,
@@ -42,9 +42,9 @@
     },
     "backends": {
       "primary": {
-        "label": "llamacpp Qwen3.8-9B (reasoning)",
-        "base_url": "http://localhost:11440/v1",
-        "model": "Qwen3.8-9B",
+        "label": "Ollama Qwen3.8-9B (reasoning)",
+        "base_url": "http://localhost:11434/v1",
+        "model": "hf.co/empero-ai/Qwen3.8-9B-Distill-GGUF:Q4_K_M",
         "api": "openai",
         "think": "low",
         "num_ctx": 32768,
@@ -58,10 +58,10 @@
         ]
       },
       "atomic": {
-        "label": "llama-server Qwen3.8-4B lane (MCP execution)",
-        "port": 11440,
-        "base_url": "http://localhost:11440/v1",
-        "model": "Qwen3.8-4B",
+        "label": "Ollama Qwen3-4B lane (MCP execution)",
+        "port": 11434,
+        "base_url": "http://localhost:11434/v1",
+        "model": "qwen3:4b-thinking-2507-q4_K_M",
         "api": "openai",
         "think": "none",
         "json_mode": true,

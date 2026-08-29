@@ -450,12 +450,25 @@ class LLMClient:
         if is_reasoning_model(self.model):
             call_kwargs.pop("response_format", None)
 
+        extra = dict(call_kwargs.pop("extra_body", {}) or {})
+        effective_ctx = num_ctx if num_ctx is not None else self.num_ctx
+        if effective_ctx is not None:
+            extra.setdefault("num_ctx", int(effective_ctx))
+            extra.setdefault("n_ctx", int(effective_ctx))
+            options = dict(extra.get("options", {}) or {})
+            options.setdefault("num_ctx", int(effective_ctx))
+            if temperature is not None:
+                options.setdefault("temperature", float(temperature))
+            if max_tokens is not None:
+                options.setdefault("num_predict", int(max_tokens))
+            extra["options"] = options
+
         if disable_thinking or json_mode:
-            extra = dict(call_kwargs.pop("extra_body", {}) or {})
             extra.setdefault("reasoning_effort", "none")
-            if num_ctx is not None:
-                extra.setdefault("num_ctx", num_ctx)
-            call_kwargs["extra_body"] = extra
+        elif self.think and self.think not in (False, "false", "none"):
+            extra.setdefault("reasoning_effort", str(self.think))
+
+        call_kwargs["extra_body"] = extra
 
         last_error = None
         for attempt in range(self.MAX_RETRIES):

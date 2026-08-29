@@ -1,0 +1,429 @@
+{
+  "title": "Flipper Killer MK II v4.3 Production",
+  "version": "4.3.0",
+  "board_width_mm": 64.0,
+  "board_height_mm": 44.0,
+  "net_classes": {
+    "power": {
+      "width": 0.5,
+      "nets": [
+        "PWR_5V_USB",
+        "PWR_5V_FLIPPER_IN",
+        "VSYS",
+        "PWR_3V3_ESP",
+        "PWR_3V3_FLIPPER",
+        "PWR_GND"
+      ]
+    },
+    "rf_control": {
+      "width": 0.25,
+      "nets": [
+        "CS_RF_CC1101",
+        "GDO0_RF_CC1101",
+        "CS_RF_NRF24",
+        "CE_RF_NRF24",
+        "ESP_IO9_CC_CS",
+        "ESP_IO21_CC_GDO0",
+        "ESP_IO47_NRF_CS",
+        "ESP_IO48_NRF_CE"
+      ]
+    },
+    "spi_bus": {
+      "width": 0.25,
+      "nets": [
+        "SPI_SCK",
+        "SPI_MOSI",
+        "SPI_MISO",
+        "SPI_FLIPPER_SCK",
+        "SPI_FLIPPER_MOSI",
+        "SPI_FLIPPER_MISO",
+        "SD_CS"
+      ]
+    },
+    "default": {
+      "width": 0.2,
+      "autoroute.grid_size_mm": 0.125
+    }
+  },
+  "circuit": [
+    {
+      "label": "J2",
+      "etype": "Header",
+      "value": "Flipper Zero Male Header",
+      "symbol": "Connector_Generic:Conn_02x09_Odd_Even",
+      "footprint": "Custom:Flipper_Zero_GPIO",
+      "position": [0.0, 16.0],
+      "rotation": -90.0,
+      "fixed": true,
+      "jlcpcb_part": "C2897383",
+      "pins": {
+        "1": "PWR_5V_FLIPPER_IN",
+        "2": "SPI_FLIPPER_MOSI",
+        "3": "SPI_FLIPPER_MISO",
+        "4": "CS_RF_CC1101",
+        "5": "SPI_FLIPPER_SCK",
+        "6": "GDO0_RF_CC1101",
+        "7": "CS_RF_NRF24",
+        "8": "PWR_GND",
+        "9": "PWR_3V3_FLIPPER",
+        "10": "NC_SWC_10",
+        "11": "PWR_GND",
+        "12": "NC_SIO_12",
+        "13": "UART_ESP_RX",
+        "14": "UART_ESP_TX",
+        "15": "NC_GPIO15_15",
+        "16": "CE_RF_NRF24",
+        "17": "PWR_GND",
+        "18": "PWR_GND"
+      }
+    },
+    {
+      "label": "J1",
+      "etype": "Connector",
+      "value": "USB-C",
+      "symbol": "Connector:USB_C_Receptacle_USB20",
+      "footprint": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12",
+      "position": [-20.0, -11.5],
+      "rotation": 0.0,
+      "jlcpcb_part": "C165948",
+      "pins": {
+        "A1": "PWR_GND",
+        "A4": "PWR_5V_USB",
+        "A5": "USB_CC1",
+        "A6": "USB_ESP_DP",
+        "A7": "USB_ESP_DN",
+        "A9": "PWR_5V_USB",
+        "A12": "PWR_GND",
+        "B1": "PWR_GND",
+        "B4": "PWR_5V_USB",
+        "B5": "USB_CC2",
+        "B6": "USB_ESP_DP",
+        "B7": "USB_ESP_DN",
+        "B9": "PWR_5V_USB",
+        "B12": "PWR_GND",
+        "SH": "PWR_GND"
+      }
+    },
+    {
+      "label": "R1",
+      "etype": "R",
+      "value": "5.1k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "USB_CC1", "2": "PWR_GND"},
+      "jlcpcb_part": "C23186"
+    },
+    {
+      "label": "R2",
+      "etype": "R",
+      "value": "5.1k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "USB_CC2", "2": "PWR_GND"},
+      "jlcpcb_part": "C23186"
+    },
+    {
+      "label": "D1",
+      "etype": "Diode",
+      "value": "BAT54C",
+      "symbol": "Diode:BAT54C",
+      "footprint": "Package_TO_SOT_SMD:SOT-23",
+      "jlcpcb_part": "C3177",
+      "pins": {
+        "1": "PWR_5V_USB",
+        "2": "PWR_5V_FLIPPER_IN",
+        "3": "VSYS"
+      }
+    },
+    {
+      "label": "U1",
+      "etype": "IC",
+      "value": "AMS1117-3.3",
+      "symbol": "Regulator_Linear:AMS1117-3.3",
+      "footprint": "Package_TO_SOT_SMD:SOT-223-3_TabPin2",
+      "jlcpcb_part": "C6186",
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_ESP",
+        "3": "VSYS",
+        "4": "PWR_3V3_ESP"
+      }
+    },
+    {
+      "label": "C1",
+      "etype": "C",
+      "value": "10uF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0805_2012Metric",
+      "pins": {"1": "VSYS", "2": "PWR_GND"},
+      "jlcpcb_part": "C15850"
+    },
+    {
+      "label": "C2",
+      "etype": "C",
+      "value": "10uF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0805_2012Metric",
+      "pins": {"1": "PWR_3V3_ESP", "2": "PWR_GND"},
+      "jlcpcb_part": "C15850"
+    },
+    {
+      "label": "C3",
+      "etype": "C",
+      "value": "100nF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "pins": {"1": "PWR_3V3_ESP", "2": "PWR_GND"},
+      "jlcpcb_part": "C14663"
+    },
+    {
+      "label": "C4",
+      "etype": "C",
+      "value": "100nF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "pins": {"1": "PWR_3V3_ESP", "2": "PWR_GND"},
+      "jlcpcb_part": "C14663"
+    },
+    {
+      "label": "C_RF1",
+      "etype": "C",
+      "value": "10uF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0805_2012Metric",
+      "pins": {"1": "PWR_3V3_FLIPPER", "2": "PWR_GND"},
+      "jlcpcb_part": "C15850"
+    },
+    {
+      "label": "C_RF2",
+      "etype": "C",
+      "value": "100nF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "pins": {"1": "PWR_3V3_FLIPPER", "2": "PWR_GND"},
+      "jlcpcb_part": "C14663"
+    },
+    {
+      "label": "C_SD",
+      "etype": "C",
+      "value": "100nF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "pins": {"1": "PWR_3V3_ESP", "2": "PWR_GND"},
+      "jlcpcb_part": "C14663"
+    },
+    {
+      "label": "U2",
+      "etype": "MCU",
+      "value": "ESP32-S3-WROOM-1U-N16R8",
+      "symbol": "RF_Module:ESP32-S3-WROOM-1U",
+      "footprint": "RF_Module:ESP32-S3-WROOM-1U",
+      "jlcpcb_part": "C2913200",
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_ESP",
+        "3": "EN_ESP",
+        "4": "BOOT_ESP_IO0",
+        "8": "SD_CS",
+        "9": "SD_MOSI",
+        "10": "SD_SCK",
+        "11": "SD_MISO",
+        "17": "ESP_IO9_CC_CS",
+        "19": "USB_ESP_DN",
+        "20": "USB_ESP_DP",
+        "21": "SPI_MISO",
+        "22": "SPI_MOSI",
+        "23": "ESP_IO21_CC_GDO0",
+        "24": "ESP_IO47_NRF_CS",
+        "25": "ESP_IO48_NRF_CE",
+        "36": "SPI_SCK",
+        "37": "UART_ESP_TX",
+        "38": "UART_ESP_RX",
+        "40": "PWR_GND",
+        "41": "PWR_GND"
+      }
+    },
+    {
+      "label": "R3",
+      "etype": "R",
+      "value": "10k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "EN_ESP", "2": "PWR_3V3_ESP"},
+      "jlcpcb_part": "C25804"
+    },
+    {
+      "label": "R4",
+      "etype": "R",
+      "value": "1k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "LED_STATUS", "2": "PWR_3V3_ESP"},
+      "jlcpcb_part": "C21190"
+    },
+    {
+      "label": "R_BOOT_PU",
+      "etype": "R",
+      "value": "10k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "BOOT_ESP_IO0", "2": "PWR_3V3_ESP"},
+      "jlcpcb_part": "C25804"
+    },
+    {
+      "label": "R_SD_CS",
+      "etype": "R",
+      "value": "10k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "SD_CS", "2": "PWR_3V3_ESP"},
+      "jlcpcb_part": "C25804"
+    },
+    {
+      "label": "R_ISO_SCK",
+      "etype": "R",
+      "value": "330",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "SPI_SCK", "2": "SPI_FLIPPER_SCK"},
+      "jlcpcb_part": "C23158"
+    },
+    {
+      "label": "R_ISO_MOSI",
+      "etype": "R",
+      "value": "330",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "SPI_MOSI", "2": "SPI_FLIPPER_MOSI"},
+      "jlcpcb_part": "C23158"
+    },
+    {
+      "label": "R_ISO_MISO",
+      "etype": "R",
+      "value": "330",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "SPI_MISO", "2": "SPI_FLIPPER_MISO"},
+      "jlcpcb_part": "C23158"
+    },
+    {
+      "label": "R_ISO_CC_CS",
+      "etype": "R",
+      "value": "330",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "ESP_IO9_CC_CS", "2": "CS_RF_CC1101"},
+      "jlcpcb_part": "C23158"
+    },
+    {
+      "label": "R_ISO_CC_GDO0",
+      "etype": "R",
+      "value": "330",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "ESP_IO21_CC_GDO0", "2": "GDO0_RF_CC1101"},
+      "jlcpcb_part": "C23158"
+    },
+    {
+      "label": "R_ISO_NRF_CS",
+      "etype": "R",
+      "value": "330",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "ESP_IO47_NRF_CS", "2": "CS_RF_NRF24"},
+      "jlcpcb_part": "C23158"
+    },
+    {
+      "label": "R_ISO_NRF_CE",
+      "etype": "R",
+      "value": "330",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "pins": {"1": "ESP_IO48_NRF_CE", "2": "CE_RF_NRF24"},
+      "jlcpcb_part": "C23158"
+    },
+    {
+      "label": "LED1",
+      "etype": "LED",
+      "value": "BLUE_0603",
+      "symbol": "Device:LED",
+      "footprint": "LED_SMD:LED_0603_1608Metric",
+      "pins": {"1": "LED_STATUS", "2": "PWR_GND"},
+      "jlcpcb_part": "C72041"
+    },
+    {
+      "label": "SW1",
+      "etype": "Button",
+      "value": "RESET",
+      "symbol": "Switch:SW_Push",
+      "footprint": "Button_Switch_SMD:SW_SPST_B3S-1000",
+      "pins": {"1": "EN_ESP", "2": "PWR_GND"},
+      "jlcpcb_part": "C318884"
+    },
+    {
+      "label": "SW2",
+      "etype": "Button",
+      "value": "BOOT",
+      "symbol": "Switch:SW_Push",
+      "footprint": "Button_Switch_SMD:SW_SPST_B3S-1000",
+      "pins": {"1": "BOOT_ESP_IO0", "2": "PWR_GND"},
+      "jlcpcb_part": "C318884"
+    },
+    {
+      "label": "CC1101",
+      "etype": "Module",
+      "value": "CC1101_SPI_Module",
+      "symbol": "Connector_Generic:Conn_02x04_Odd_Even",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x04_P2.54mm_Vertical",
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_FLIPPER",
+        "3": "GDO0_RF_CC1101",
+        "4": "CS_RF_CC1101",
+        "5": "SPI_FLIPPER_SCK",
+        "6": "SPI_FLIPPER_MOSI",
+        "7": "SPI_FLIPPER_MISO",
+        "8": "NC_GDO2"
+      }
+    },
+    {
+      "label": "NRF24",
+      "etype": "Module",
+      "value": "NRF24L01_Module",
+      "symbol": "Connector_Generic:Conn_02x04_Odd_Even",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_2x04_P2.54mm_Vertical",
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_FLIPPER",
+        "3": "CE_RF_NRF24",
+        "4": "CS_RF_NRF24",
+        "5": "SPI_FLIPPER_SCK",
+        "6": "SPI_FLIPPER_MOSI",
+        "7": "SPI_FLIPPER_MISO",
+        "8": "NC_IRQ"
+      }
+    },
+    {
+      "label": "J_SD",
+      "etype": "Connector",
+      "value": "MicroSD_DM3AT",
+      "symbol": "Connector:Micro_SD_Card_Det",
+      "footprint": "Connector_Card:microSD_HC_Hirose_DM3AT-SF-PEJM5",
+      "jlcpcb_part": "C114170",
+      "pins": {
+        "1": "NC_DAT2",
+        "2": "SD_CS",
+        "3": "SD_MOSI",
+        "4": "PWR_3V3_ESP",
+        "5": "SD_SCK",
+        "6": "PWR_GND",
+        "7": "SD_MISO",
+        "8": "NC_DAT1",
+        "9": "PWR_GND",
+        "10": "PWR_GND",
+        "11": "PWR_GND",
+        "12": "PWR_GND"
+      }
+    }
+  ]
+}

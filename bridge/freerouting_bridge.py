@@ -63,9 +63,23 @@ class FreeRoutingBridge:
 
         return None
 
+    def _get_kicad_python(self) -> Optional[Path]:
+        local_app_data = os.environ.get("LOCALAPPDATA", "")
+        candidates = [
+            Path(local_app_data) / "Programs" / "KiCad" / "10.0" / "bin" / "python.exe",
+            Path("C:/Program Files/KiCad/10.0/bin/python.exe"),
+            Path("C:/Program Files/KiCad/9.0/bin/python.exe"),
+            Path("C:/Program Files/KiCad/8.0/bin/python.exe"),
+            Path.home() / "AppData" / "Local" / "Programs" / "KiCad" / "10.0" / "bin" / "python.exe"
+        ]
+        for c in candidates:
+            if c.exists():
+                return c
+        return None
+
     def export_dsn(self, pcb_path: Path, dsn_path: Optional[Path] = None) -> Path:
         """
-        Exports a KiCad PCB file to Specctra DSN format using kicad-cli.
+        Exports a KiCad PCB file to Specctra DSN format using pcbnew API.
         """
         pcb_path = Path(pcb_path).resolve()
         if not pcb_path.exists():
@@ -76,18 +90,28 @@ class FreeRoutingBridge:
         else:
             dsn_path = Path(dsn_path).resolve()
 
-        # Command: kicad-cli pcb export dsn <input.kicad_pcb> -o <output.dsn>
-        cmd = ["kicad-cli", "pcb", "export", "dsn", str(pcb_path), "-o", str(dsn_path)]
-        res = subprocess.run(cmd, capture_output=True, text=True)
+        # 1. Try KiCad Python pcbnew native export
+        k_py = self._get_kicad_python()
+        if k_py:
+            cmd = [str(k_py), "-c", f"import pcbnew; b = pcbnew.LoadBoard(r'{pcb_path}'); pcbnew.ExportSpecctraDSN(b, r'{dsn_path}')"]
+            res = subprocess.run(cmd, capture_output=True, text=True)
+            if dsn_path.exists():
+                return dsn_path
 
-        if res.returncode != 0 and not dsn_path.exists():
-            raise RuntimeError(f"kicad-cli DSN export failed (code {res.returncode}): {res.stderr}")
+        # 2. Fallback to direct import if running under KiCad Python
+        try:
+            import pcbnew
+            b = pcbnew.LoadBoard(str(pcb_path))
+            if pcbnew.ExportSpecctraDSN(b, str(dsn_path)) and dsn_path.exists():
+                return dsn_path
+        except Exception:
+            pass
 
-        return dsn_path
+        raise RuntimeError(f"Specctra DSN export failed for {pcb_path}")
 
-    def run_freerouting(self, dsn_path: Path, output_ses_path: Optional[Path] = None, timeout_sec: int = 120, max_passes: int = 10, threads: int = 1) -> FreeRoutingResult:
+    def run_freerouting(self, dsn_path: Path, output_ses_path: Optional[Path] = None, timeout_sec: int = 120, max_passes: int = 15, threads: int = 1) -> FreeRoutingResult:
         """
-        Runs FreeRouting auto-router engine on input DSN file.
+        Runs FreeRouting auto-router engine on input DSN file with single-threaded route optimization.
         """
         dsn_path = Path(dsn_path).resolve()
         if not dsn_path.exists():
@@ -143,7 +167,7 @@ class FreeRoutingBridge:
 
     def import_ses(self, pcb_path: Path, ses_path: Path, output_pcb_path: Optional[Path] = None) -> Path:
         """
-        Imports routed Specctra SES session file back into KiCad PCB using kicad-cli.
+        Imports routed Specctra SES session file back into KiCad PCB using pcbnew API.
         """
         pcb_path = Path(pcb_path).resolve()
         ses_path = Path(ses_path).resolve()
@@ -157,11 +181,24 @@ class FreeRoutingBridge:
         else:
             output_pcb_path = Path(output_pcb_path).resolve()
 
-        # Command: kicad-cli pcb import ses <input.kicad_pcb> --input-ses <input.ses> -o <output.kicad_pcb>
-        cmd = ["kicad-cli", "pcb", "import", "ses", str(pcb_path), "--input-ses", str(ses_path), "-o", str(output_pcb_path)]
-        res = subprocess.run(cmd, capture_output=True, text=True)
+        # 1. Try KiCad Python pcbnew native import
+        k_py = self._get_kicad_python()
+        if k_py:
+            cmd = [str(k_py), "-c", f"import pcbnew; b = pcbnew.LoadBoard(r'{pcb_path}'); pcbnew.ImportSpecctraSES(b, r'{ses_path}'); b.Save(r'{output_pcb_path}')"]
+            res = subprocess.run(cmd, capture_output=True, text=True)
+            if output_pcb_path.exists():
+                return output_pcb_path
 
-        if res.returncode != 0 and not output_pcb_path.exists():
-            raise RuntimeError(f"kicad-cli SES import failed (code {res.returncode}): {res.stderr}")
+        # 2. Fallback to direct import if running under KiCad Python
+        try:
+            import pcbnew
+            b = pcbnew.LoadBoard(str(pcb_path))
+            pcbnew.ImportSpecctraSES(b, str(ses_path))
+            b.Save(str(output_pcb_path))
+            if output_pcb_path.exists():
+                return output_pcb_path
+        except Exception:
+            pass
 
-        return output_pcb_path
+        raise RuntimeError(f"Specctra SES import failed for {ses_path}")
+
