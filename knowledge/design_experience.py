@@ -45,21 +45,30 @@ class DesignExperience:
         return cls(**data)
 
     def ingest_to_rag(self) -> int:
-        """Add lessons to the electronics KB for future retrieval."""
+        """Add lessons to the electronics KB for future retrieval (Strict Gatekeeper)."""
+        if not self.passed or self.drc_violations > 0:
+            return 0  # Do not poison RAG memory with unverified or failing designs
+
         from knowledge.rag_engine import ElectronicsKnowledgeBase
 
         kb = ElectronicsKnowledgeBase()
         n = 0
         for lesson in self.lessons_learned:
+            clean_lesson = str(lesson).strip()
+            if not clean_lesson or clean_lesson.lower().startswith("remediated issue:"):
+                continue
             kb.ingest_text(
-                f"Design experience {self.board_id} MCU {self.mcu}: {lesson}",
+                f"Design experience {self.board_id} MCU {self.mcu}: {clean_lesson}",
                 source=f"Experience:{self.board_id}",
                 chunk_type="design_experience",
             )
             n += 1
         for rule in self.component_placement_rules:
+            clean_rule = str(rule).strip()
+            if not clean_rule:
+                continue
             kb.ingest_text(
-                f"Placement rule {self.board_id}: {rule}",
+                f"Placement rule {self.board_id}: {clean_rule}",
                 source=f"Experience:{self.board_id}#placement",
                 chunk_type="design_experience",
             )

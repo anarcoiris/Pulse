@@ -17,3 +17,4 @@
   - `ESP32_TFT_Console` en `output/test_console_production/`
   - `Synthetic_IoT_Node` en `output/test_synthetic_multicell/`
 - [x] **Documentación de Deprecación:** Documentados los scripts ad-hoc obsoletos en `walkthrough.md`.
+- [x] **Auditoría Forense RAG & Plan de Inmunización:** Identificadas 5 vulnerabilidades de envenenamiento vectorial y creado el blueprint canónico en [`docs/RAG_HYGIENE_AND_IMMUNIZATION_BLUEPRINT.md`](file:///c:/Users/soyko/Documents/Pulse-main/docs/RAG_HYGIENE_AND_IMMUNIZATION_BLUEPRINT.md).

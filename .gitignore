@@ -85,3 +85,4 @@ out/
 # Logs
 *.log
 logs/
+.env

@@ -208,13 +208,29 @@ class ElectronicsKnowledgeBase:
 
     # ── Ingesta ───────────────────────────────────────────────────
 
+    def _compute_chunks_hash(self) -> str:
+        """Compute SHA-256 fingerprint of current chunks for strict vector cache validation."""
+        import hashlib
+        h = hashlib.sha256()
+        for c in self._chunks:
+            h.update(c.get("text", "").encode("utf-8"))
+            h.update(c.get("source", "").encode("utf-8"))
+        return h.hexdigest()
+
     def _load_training_examples(self) -> None:
-        """Load parsed KiCad training JSON as circuit_example chunks."""
+        """Load parsed KiCad training JSON as circuit_example chunks, filtering QA error test fixtures."""
         train_dir = self._data_dir / "training"
         if not train_dir.exists():
             return
         loaded = 0
+        excluded_keywords = (
+            "_error", "bugtest", "erc_", "noconnect", "no_connect",
+            "topology_mismatch", "issue", "test_", "untitled", "test1243"
+        )
         for path in sorted(train_dir.glob("*.json")):
+            stem_low = path.stem.lower()
+            if any(kw in stem_low for kw in excluded_keywords):
+                continue
             try:
                 with open(path, encoding="utf-8") as f:
                     sample = json.load(f)
@@ -226,17 +242,7 @@ class ElectronicsKnowledgeBase:
             pass  # _fit() called by _load_default_data after this
 
     def _load_experiences(self) -> None:
-        """Load previously recorded design experiences as design_experience chunks.
-
-        `DesignExperience.ingest_to_rag()` only ever touches a throwaway,
-        in-memory `ElectronicsKnowledgeBase()` instance and never persists the
-        resulting chunks anywhere. Without this loader, every *new* KB
-        instance (e.g. the next process, the next `kb.stats()` call) would
-        show zero `design_experience` chunks even after `knowledge/experiences/`
-        has real files on disk. This mirrors `_load_training_examples()` but
-        reads from the sibling `experiences/` directory (not under `data/`),
-        matching `knowledge/design_experience.py::_EXPERIENCES_DIR`.
-        """
+        """Load previously recorded design experiences as design_experience chunks (Strict Gatekeeper)."""
         exp_dir = _HERE / "experiences"
         if not exp_dir.exists():
             return
@@ -246,21 +252,32 @@ class ElectronicsKnowledgeBase:
                     exp = json.load(f)
             except (json.JSONDecodeError, OSError):
                 continue
+
+            # Strict Gatekeeper assertion
+            if not exp.get("passed", False) or exp.get("drc_violations", 0) > 0:
+                continue
+
             board_id = exp.get("board_id", path.stem)
             mcu = exp.get("mcu", "")
             for lesson in exp.get("lessons_learned", []) or []:
+                clean_lesson = str(lesson).strip()
+                if not clean_lesson or clean_lesson.lower().startswith("remediated issue:"):
+                    continue
                 self._chunks.append({
-                    "text": f"Design experience {board_id} MCU {mcu}: {lesson}",
+                    "text": f"Design experience {board_id} MCU {mcu}: {clean_lesson}",
                     "source": f"Experience:{board_id}",
                     "type": "design_experience",
-                    "data": {"text": lesson, "board_id": board_id, "mcu": mcu},
+                    "data": {"text": clean_lesson, "board_id": board_id, "mcu": mcu},
                 })
             for rule in exp.get("component_placement_rules", []) or []:
+                clean_rule = str(rule).strip()
+                if not clean_rule:
+                    continue
                 self._chunks.append({
-                    "text": f"Placement rule {board_id}: {rule}",
+                    "text": f"Placement rule {board_id}: {clean_rule}",
                     "source": f"Experience:{board_id}#placement",
                     "type": "design_experience",
-                    "data": {"text": rule, "board_id": board_id, "mcu": mcu},
+                    "data": {"text": clean_rule, "board_id": board_id, "mcu": mcu},
                 })
 
     def _load_symbol_index(self) -> None:
@@ -346,7 +363,7 @@ class ElectronicsKnowledgeBase:
             self._chunks.append(pinout_chunks[key])
 
     def _load_embed_cache(self) -> None:
-        """Load persisted dense vectors if manifest matches chunk count."""
+        """Load persisted dense vectors if manifest matches chunk count and SHA-256 fingerprint."""
         if not _SKLEARN_OK or np is None:
             return
         if not _EMBED_MATRIX.exists() or not _EMBED_MANIFEST.exists():
@@ -356,6 +373,9 @@ class ElectronicsKnowledgeBase:
                 manifest = json.load(f)
             if manifest.get("chunk_count") != len(self._chunks):
                 return
+            manifest_hash = manifest.get("content_hash", "")
+            if manifest_hash and manifest_hash != self._compute_chunks_hash():
+                return  # Cache is stale due to chunk content modifications
             self._embed_matrix = np.load(_EMBED_MATRIX)
         except (OSError, ValueError, json.JSONDecodeError):
             self._embed_matrix = None
@@ -367,7 +387,7 @@ class ElectronicsKnowledgeBase:
         return self._embed_client
 
     def rebuild_embed_index(self, force: bool = False) -> dict:
-        """Embed all chunks via Ollama and persist to disk."""
+        """Embed all chunks via Ollama and persist to disk with SHA-256 fingerprinting."""
         client = self._get_embed_client()
         if not client.available:
             return {"error": client.status().get("last_error", "embed unavailable")}
@@ -393,6 +413,7 @@ class ElectronicsKnowledgeBase:
         np.save(_EMBED_MATRIX, mat)
         manifest = {
             "chunk_count": len(self._chunks),
+            "content_hash": self._compute_chunks_hash(),
             "model": client.model,
             "sources": [c["source"] for c in self._chunks],
         }
