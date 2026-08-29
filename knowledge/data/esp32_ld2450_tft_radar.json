@@ -1,0 +1,354 @@
+{
+  "name": "ESP32-S3 LD2450 mmWave Radar & TFT Display Smart Presence Sensor",
+  "version": "1.0.0",
+  "board_width": 75.0,
+  "board_height": 55.0,
+  "net_classes": {
+    "Default": {
+      "clearance": 0.15,
+      "trace_width": 0.20,
+      "via_dia": 0.6,
+      "via_drill": 0.3
+    },
+    "Power": {
+      "clearance": 0.20,
+      "trace_width": 0.50,
+      "via_dia": 0.8,
+      "via_drill": 0.4,
+      "nets": ["PWR_5V_USB", "PWR_3V3_ESP", "PWR_GND"]
+    },
+    "HighSpeedSPI": {
+      "clearance": 0.15,
+      "trace_width": 0.25,
+      "via_dia": 0.6,
+      "via_drill": 0.3,
+      "nets": ["TFT_SCK", "TFT_MOSI"]
+    }
+  },
+  "circuit": [
+    {
+      "etype": "Connector",
+      "value": "USB-C",
+      "symbol": "Connector:USB_C_Receptacle_USB20",
+      "footprint": "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12",
+      "position": [-18.0, -21.0],
+      "pins": {
+        "A5": "USB_CC1",
+        "A6": "USB_ESP_DP",
+        "A7": "USB_ESP_DN",
+        "A9": "PWR_5V_USB",
+        "A12": "PWR_GND",
+        "B5": "USB_CC2",
+        "SH": "PWR_GND"
+      },
+      "label": "J1",
+      "jlcpcb_part": "C165948"
+    },
+    {
+      "etype": "R",
+      "value": "5.1k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": [-28.0, -14.0],
+      "rotation": 0.0,
+      "n1": "USB_CC1",
+      "n2": "PWR_GND",
+      "label": "R2",
+      "jlcpcb_part": "C23186"
+    },
+    {
+      "etype": "R",
+      "value": "5.1k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": [-28.0, -9.0],
+      "rotation": 0.0,
+      "n1": "USB_CC2",
+      "n2": "PWR_GND",
+      "label": "R3",
+      "jlcpcb_part": "C23186"
+    },
+    {
+      "etype": "IC",
+      "value": "AMS1117-3.3",
+      "symbol": "Regulator_Linear:AMS1117-3.3",
+      "footprint_id": "sot223",
+      "position": [-6.0, -18.0],
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_ESP",
+        "3": "PWR_5V_USB",
+        "4": "PWR_3V3_ESP"
+      },
+      "label": "U1",
+      "jlcpcb_part": "C6186"
+    },
+    {
+      "etype": "C",
+      "value": "10uF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0805_2012Metric",
+      "position": [-12.0, -14.0],
+      "n1": "PWR_5V_USB",
+      "n2": "PWR_GND",
+      "label": "C1",
+      "jlcpcb_part": "C15850"
+    },
+    {
+      "etype": "C",
+      "value": "10uF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0805_2012Metric",
+      "position": [-6.0, -11.0],
+      "n1": "PWR_3V3_ESP",
+      "n2": "PWR_GND",
+      "label": "C2",
+      "jlcpcb_part": "C15850"
+    },
+    {
+      "etype": "C",
+      "value": "100nF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "position": [-1.0, -11.0],
+      "n1": "PWR_3V3_ESP",
+      "n2": "PWR_GND",
+      "label": "C3",
+      "jlcpcb_part": "C14663"
+    },
+    {
+      "etype": "MCU",
+      "value": "ESP32-S3-WROOM-1U",
+      "symbol": "RF_Module:ESP32-S3-WROOM-1U",
+      "position": [-3.0, 3.0],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_ESP",
+        "3": "EN_ESP_RESET",
+        "4": "USER_KEY_IO4",
+        "5": "I2C_SDA",
+        "6": "I2C_SCL",
+        "7": "TFT_BLK",
+        "8": "TFT_RST",
+        "9": "TFT_DC",
+        "10": "TFT_CS",
+        "11": "TFT_MOSI",
+        "12": "TFT_SCK",
+        "13": "RADAR_RX",
+        "14": "USB_ESP_DN",
+        "15": "USB_ESP_DP",
+        "16": "LED_STATUS_IO16",
+        "17": "RADAR_TX",
+        "18": "RADAR_RX",
+        "27": "BOOT_ESP_IO0",
+        "40": "PWR_GND",
+        "41": "PWR_GND"
+      },
+      "label": "U2",
+      "jlcpcb_part": "C2913200"
+    },
+    {
+      "etype": "Header",
+      "value": "HLK-LD2450 Radar 5P Socket",
+      "symbol": "Connector:Conn_01x05_Pin",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x05_P2.54mm_Vertical",
+      "position": [25.0, -16.0],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_5V_USB",
+        "2": "PWR_GND",
+        "3": "RADAR_TX",
+        "4": "RADAR_RX",
+        "5": "PWR_GND"
+      },
+      "label": "J_RAD",
+      "jlcpcb_part": "C2897385"
+    },
+    {
+      "etype": "C",
+      "value": "10uF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0805_2012Metric",
+      "position": [18.0, -16.0],
+      "n1": "PWR_5V_USB",
+      "n2": "PWR_GND",
+      "label": "C_RAD1",
+      "jlcpcb_part": "C15850"
+    },
+    {
+      "etype": "C",
+      "value": "100nF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "position": [18.0, -11.0],
+      "n1": "PWR_5V_USB",
+      "n2": "PWR_GND",
+      "label": "C_RAD2",
+      "jlcpcb_part": "C14663"
+    },
+    {
+      "etype": "Header",
+      "value": "ST7789 TFT 8P Socket",
+      "symbol": "Connector:Conn_01x08_Pin",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical",
+      "position": [25.0, -2.0],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_GND",
+        "2": "PWR_3V3_ESP",
+        "3": "TFT_SCK",
+        "4": "TFT_MOSI",
+        "5": "TFT_RST",
+        "6": "TFT_DC",
+        "7": "TFT_CS",
+        "8": "TFT_BLK"
+      },
+      "label": "J_TFT",
+      "jlcpcb_part": "C2897384"
+    },
+    {
+      "etype": "Header",
+      "value": "BH1750 I2C Sensor 4P Socket",
+      "symbol": "Connector:Conn_01x04_Pin",
+      "footprint": "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical",
+      "position": [25.0, 12.0],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_3V3_ESP",
+        "2": "PWR_GND",
+        "3": "I2C_SCL",
+        "4": "I2C_SDA"
+      },
+      "label": "J_ENV",
+      "jlcpcb_part": "C2897383"
+    },
+    {
+      "etype": "R",
+      "value": "4.7k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0805_2012Metric",
+      "position": [14.0, 5.0],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_3V3_ESP",
+        "2": "I2C_SCL"
+      },
+      "label": "R_SCL",
+      "jlcpcb_part": "C25900"
+    },
+    {
+      "etype": "R",
+      "value": "4.7k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0805_2012Metric",
+      "position": [14.0, 9.0],
+      "rotation": 0.0,
+      "pins": {
+        "1": "PWR_3V3_ESP",
+        "2": "I2C_SDA"
+      },
+      "label": "R_SDA",
+      "jlcpcb_part": "C25900"
+    },
+    {
+      "etype": "R",
+      "value": "10k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": [-20.0, -7.0],
+      "n1": "PWR_3V3_ESP",
+      "n2": "EN_ESP_RESET",
+      "label": "R1",
+      "jlcpcb_part": "C25804"
+    },
+    {
+      "etype": "Button",
+      "value": "RESET",
+      "symbol": "Switch:SW_Push",
+      "footprint_id": "tactile_switch_6x6",
+      "position": [-28.0, -7.0],
+      "n1": "EN_ESP_RESET",
+      "n2": "PWR_GND",
+      "label": "SW_RESET",
+      "jlcpcb_part": "C139797"
+    },
+    {
+      "etype": "C",
+      "value": "100nF",
+      "symbol": "Device:C",
+      "footprint": "Capacitor_SMD:C_0603_1608Metric",
+      "position": [-20.0, -2.0],
+      "n1": "EN_ESP_RESET",
+      "n2": "PWR_GND",
+      "label": "C4",
+      "jlcpcb_part": "C14663"
+    },
+    {
+      "etype": "R",
+      "value": "10k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": [-20.0, 4.0],
+      "n1": "PWR_3V3_ESP",
+      "n2": "BOOT_ESP_IO0",
+      "label": "R4",
+      "jlcpcb_part": "C25804"
+    },
+    {
+      "etype": "Button",
+      "value": "BOOT",
+      "symbol": "Switch:SW_Push",
+      "footprint_id": "tactile_switch_6x6",
+      "position": [-28.0, 4.0],
+      "n1": "BOOT_ESP_IO0",
+      "n2": "PWR_GND",
+      "label": "SW_BOOT",
+      "jlcpcb_part": "C139797"
+    },
+    {
+      "etype": "Button",
+      "value": "USER_KEY",
+      "symbol": "Switch:SW_Push",
+      "footprint_id": "tactile_switch_6x6",
+      "position": [-28.0, 15.0],
+      "n1": "USER_KEY_IO4",
+      "n2": "PWR_GND",
+      "label": "SW_USER",
+      "jlcpcb_part": "C139797"
+    },
+    {
+      "etype": "R",
+      "value": "10k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": [-20.0, 15.0],
+      "n1": "PWR_3V3_ESP",
+      "n2": "USER_KEY_IO4",
+      "label": "R_USER",
+      "jlcpcb_part": "C25804"
+    },
+    {
+      "etype": "LED",
+      "value": "Green",
+      "symbol": "Device:LED",
+      "footprint": "LED_SMD:LED_0603_1608Metric",
+      "position": [-10.0, 20.0],
+      "n1": "LED_RES_NET",
+      "n2": "PWR_GND",
+      "label": "LED1",
+      "jlcpcb_part": "C72043"
+    },
+    {
+      "etype": "R",
+      "value": "1k",
+      "symbol": "Device:R",
+      "footprint": "Resistor_SMD:R_0603_1608Metric",
+      "position": [-4.0, 20.0],
+      "n1": "LED_STATUS_IO16",
+      "n2": "LED_RES_NET",
+      "label": "R5",
+      "jlcpcb_part": "C21190"
+    }
+  ]
+}

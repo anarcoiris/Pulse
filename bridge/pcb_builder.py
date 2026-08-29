@@ -290,23 +290,45 @@ class PCBBuilder:
             # Bind pin nets from component definition to footprint pads
             if fp and getattr(c, "pins", None):
                 c_pins = dict(c.pins)
-                # USB-C fallback mapping: shorthand pin 1 -> VBUS (A4,A9,B4,B9) and pin 4 -> GND (A1,A12,B1,B12)
+                # USB-C fallback mapping: only if shorthand pin numbers ("1", "4", "VBUS") were used
                 if ("USB" in val.upper() or "TYPE-C" in str(getattr(fp, "lib_id", "")).upper()):
-                    vbus_net = c_pins.get("1") or c_pins.get("VBUS") or c_pins.get("5V")
-                    gnd_net = c_pins.get("4") or c_pins.get("GND")
-                    if vbus_net:
-                        for p_id in ("A4", "A9", "B4", "B9"):
-                            if p_id not in c_pins: c_pins[p_id] = vbus_net
-                    if gnd_net:
-                        for p_id in ("A1", "A12", "B1", "B12", "SH"):
-                            if p_id not in c_pins: c_pins[p_id] = gnd_net
+                    if not any(k.startswith(("A", "B")) for k in c_pins):
+                        vbus_net = c_pins.get("1") or c_pins.get("VBUS") or c_pins.get("5V") or "PWR_5V_USB"
+                        gnd_net = c_pins.get("4") or c_pins.get("GND") or "PWR_GND"
+                        if vbus_net: c_pins["A9"] = vbus_net
+                        if gnd_net: c_pins["A12"] = gnd_net
 
                 for pad in fp.pads:
-                    if pad.number in c_pins:
+                    if pad.pad_type == "np_thru_hole":
+                        pad.net_name = ""
+                        pad.net_id = 0
+                    elif pad.number in c_pins and pad.number:
                         net_name = c_pins[pad.number]
                         pad.net_name = net_name
                         pad.net_id = pcb._get_net_id(net_name)
-                    elif not pad.net_name:
+                    elif ("USB" in val.upper() or "TYPE-C" in str(getattr(fp, "lib_id", "")).upper()):
+                        # Standard USB-C internal parallel pin assignments
+                        if pad.number in ("A4", "B4", "A9", "B9"):
+                            pad.net_name = "PWR_5V_USB"
+                            pad.net_id = pcb._get_net_id("PWR_5V_USB")
+                        elif pad.number in ("A1", "B1", "A12", "B12", "SH"):
+                            pad.net_name = "PWR_GND"
+                            pad.net_id = pcb._get_net_id("PWR_GND")
+                        elif pad.number in ("A6", "B6"):
+                            pad.net_name = "USB_ESP_DP"
+                            pad.net_id = pcb._get_net_id("USB_ESP_DP")
+                        elif pad.number in ("A7", "B7"):
+                            pad.net_name = "USB_ESP_DN"
+                            pad.net_id = pcb._get_net_id("USB_ESP_DN")
+                        elif not pad.net_name and pad.number:
+                            pad.net_name = f"NC_{ref}_{pad.number}"
+                            pad.net_id = pcb._get_net_id(pad.net_name)
+                    elif pad.pad_type == "thru_hole" and not pad.number:
+                        # Shield mechanical PTH pad on connector
+                        gnd_net = "PWR_GND" if "PWR_GND" in pcb._nets else "GND"
+                        pad.net_name = gnd_net
+                        pad.net_id = pcb._get_net_id(gnd_net)
+                    elif not pad.net_name and pad.number:
                         net_name = f"NC_{ref}_{pad.number}"
                         pad.net_name = net_name
                         pad.net_id = pcb._get_net_id(net_name)
@@ -537,16 +559,6 @@ class PCBBuilder:
             pcb.board.origin_y + pcb.board.height_mm + 2,
             size=float(_pcb("silkscreen.text_size_mm", 0.8)),
         )
-
-        gnd_net = "PWR_GND" if "PWR_GND" in all_nodes else ("GND" if "GND" in all_nodes else None)
-        if gnd_net and not pcb._zones:
-            margin = float(_pcb("copper_pour.margin_mm", 0.5))
-            pcb.add_copper_pour(gnd_net, layer="F.Cu", margin=margin)
-            pcb.add_copper_pour(gnd_net, layer="B.Cu", margin=margin)
-
-        # Inject ground via stitching matrix to bridge F.Cu and B.Cu copper pour zones
-        if gnd_net:
-            pcb.add_gnd_via_stitching(spacing_mm=6.0, net=gnd_net)
 
         if not self.skip_routing:
             self._route_usb_nets(pcb)

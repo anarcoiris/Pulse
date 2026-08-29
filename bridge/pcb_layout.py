@@ -1060,8 +1060,25 @@ class PCBLayout:
 
     def add_via(self, x: float, y: float,
                 size: float = 0.6, drill: float = 0.3,
-                net: str = "") -> Via:
-        """Coloca una vía."""
+                net: str = "") -> Optional[Via]:
+        """Coloca una vía evitando duplicados y colisiones con taladros NPTH/pads."""
+        for v in self._vias:
+            if math.hypot(v.x - x, v.y - y) < 0.3:
+                return v
+        for mh in self._mounting_holes:
+            if math.hypot(mh.x - x, mh.y - y) < (mh.drill_mm / 2.0 + drill / 2.0 + 0.3):
+                return None
+        for fp in self._footprints:
+            rad = math.radians(fp.rotation)
+            cos_r, sin_r = math.cos(rad), math.sin(rad)
+            for p in fp.pads:
+                p_drill = getattr(p, "drill", 0.0) or (0.65 if ("thru_hole" in p.pad_type or not p.net_name) else 0.0)
+                if p_drill > 0.0 or not p.net_name:
+                    px = fp.x + p.x * cos_r - p.y * sin_r
+                    py = fp.y + p.x * sin_r + p.y * cos_r
+                    eff_drill = max(p_drill, 0.65)
+                    if math.hypot(px - x, py - y) < (eff_drill / 2.0 + drill / 2.0 + 0.35):
+                        return None
         v = Via(x, y, size, drill, self._get_net_id(net) if net else 0)
         self._vias.append(v)
         return v
@@ -1102,15 +1119,15 @@ class PCBLayout:
         x1 = self.board.origin_x + self.board.width_mm - 5.0
         y1 = self.board.origin_y + self.board.height_mm - 5.0
 
-        # Bloqueos de pads que no son del net GND
+        # Bloqueos de TODOS los pads para evitar colisiones taladro-pad o taladro-taladro
         avoid_points = []
         for fp in self._footprints:
+            rad = math.radians(fp.rotation)
+            cos_r, sin_r = math.cos(rad), math.sin(rad)
             for p in fp.pads:
-                if p.net_name != net:
-                    rad = math.radians(fp.rotation)
-                    px = fp.x + p.x * math.cos(rad) + p.y * math.sin(rad)
-                    py = fp.y - p.x * math.sin(rad) + p.y * math.cos(rad)
-                    avoid_points.append((px, py))
+                px = fp.x + p.x * cos_r - p.y * sin_r
+                py = fp.y + p.x * sin_r + p.y * cos_r
+                avoid_points.append((px, py))
 
         curr_x = x0
         vias_added = 0
@@ -1129,12 +1146,27 @@ class PCBLayout:
                         break
 
                 if not inside_keepout:
-                    # Comprobar distancia a pads/pistas de señal
+                    # Comprobar distancia a pads
                     safe = True
                     for ax, ay in avoid_points:
-                        if math.hypot(curr_x - ax, curr_y - ay) < clearance_mm:
+                        if math.hypot(curr_x - ax, curr_y - ay) < 2.5:
                             safe = False
                             break
+                    
+                    # Comprobar distancia a agujeros de montaje
+                    if safe:
+                        for mh in self._mounting_holes:
+                            if math.hypot(curr_x - mh.x, curr_y - mh.y) < 3.5:
+                                safe = False
+                                break
+
+                    # Comprobar distancia a vias existentes
+                    if safe:
+                        for v in self._vias:
+                            if math.hypot(curr_x - v.x, curr_y - v.y) < 2.5:
+                                safe = False
+                                break
+
                     if safe:
                         self.add_via(curr_x, curr_y, size=0.6, drill=0.3, net=net)
                         vias_added += 1
@@ -1142,22 +1174,55 @@ class PCBLayout:
                 curr_y += spacing_mm
             curr_x += spacing_mm
 
-        logger.info("pcb_layout", f"add_gnd_via_stitching(): {vias_added} vías de cosido GND colocadas.")
+        logger.info("pcb_layout", f"add_gnd_via_stitching(): {vias_added} vías de cosido GND colocadas con espaciado seguro.")
 
     # ── Auto-Router ───────────────────────────────────────────────
 
-    def autoroute(self, layer: str = "F.Cu", width: float = 0.25, grid_size: float = 0.25):
-        """Enruta usando A* todas las nets no ruteadas en 2 capas (F.Cu y B.Cu)."""
-        logger.info("pcb_layout", f"autoroute() iniciado: {len(self._footprints)} footprints, grid={grid_size}mm")
+    def autoroute(self, layer: str = "F.Cu", width: float = 0.25, grid_size: float = 0.25, prefer_freerouting: bool = False):
+        """Enruta todas las nets no ruteadas en 2 capas (F.Cu y B.Cu).
+        Si prefer_freerouting=True y el binario FreeRouting está disponible, utiliza FreeRouting.
+        De lo contrario o como fallback, utiliza el motor nativo A* octilineal a 45°."""
+        if prefer_freerouting:
+            try:
+                from bridge.freerouting_bridge import FreeRoutingBridge
+                import tempfile
+                fr = FreeRoutingBridge()
+                if fr.exe_path:
+                    logger.info("pcb_layout", f"autoroute(): Ejecutando FreeRouting ({fr.exe_path})...")
+                    with tempfile.TemporaryDirectory() as tmp_d:
+                        tmp_pcb = Path(tmp_d) / "board.kicad_pcb"
+                        self.save(str(tmp_pcb))
+                        dsn_path = fr.export_dsn(tmp_pcb)
+                        res = fr.run_freerouting(dsn_path, max_passes=5)
+                        if res.success and res.ses_path and res.ses_path.exists():
+                            out_routed = fr.import_ses(tmp_pcb, res.ses_path, tmp_pcb)
+                            if out_routed.exists():
+                                logger.info("pcb_layout", "autoroute(): FreeRouting completado con éxito.")
+                                return
+            except Exception as e:
+                logger.warning("pcb_layout", f"FreeRouting falló ({e}), continuando con A* octilineal nativo.")
+
+        logger.info("pcb_layout", f"autoroute() iniciado (A* octilineal 45°): {len(self._footprints)} footprints, grid={grid_size}mm")
         net_pads = {} # net_name -> list of (x, y, net_id, pad_layer)
         layers = ["F.Cu", "B.Cu"]
         
+        seen_fp_net_pads = set()
         for fp in self._footprints:
             rad = math.radians(fp.rotation)
             cos_r, sin_r = math.cos(rad), math.sin(rad)
             for p in fp.pads:
                 gnd_nets = {'GND', 'PWR_GND', 'PWR_GND_FLIPPER', 'PGND', 'AGND', 'DGND', 'SGND', '-'}
                 if p.net_name and p.net_name not in gnd_nets:  # GND nets handled by copper fill-zone
+                    # Skip secondary parallel pins on USB-C receptacles (use primary pins A9, A6, A7)
+                    if getattr(p, "number", "") in ("A4", "B4", "B9", "A1", "B1", "B12", "B6", "B7"):
+                        continue
+
+                    # Avoid routing between redundant parallel pins on the same component
+                    fp_key = (fp.ref, p.net_name)
+                    if fp_key in seen_fp_net_pads:
+                        continue
+                    seen_fp_net_pads.add(fp_key)
+
                     px = fp.x + p.x * cos_r - p.y * sin_r
                     py = fp.y + p.x * sin_r + p.y * cos_r
                     if p.net_name not in net_pads:
@@ -1246,12 +1311,27 @@ class PCBLayout:
             for p in fp.pads:
                 px = fp.x + p.x * cos_r - p.y * sin_r
                 py = fp.y + p.x * sin_r + p.y * cos_r
-                gx, gy = int(px / grid_size), int(py / grid_size)
-                pad_layers = [0, 1] if ("thru_hole" in p.pad_type or "*.Cu" in p.layers) else ([1] if ("B.Cu" in p.layers or fp.layer == "B.Cu") else [0])
+                gx, gy = int(round(px / grid_size)), int(round(py / grid_size))
+                is_npth = (not p.net_name or "np_thru_hole" in p.pad_type or p.number == "MP")
+                pad_layers = [0, 1] if (is_npth or "thru_hole" in p.pad_type or "*.Cu" in p.layers) else ([1] if ("B.Cu" in p.layers or fp.layer == "B.Cu") else [0])
                 
-                half_w, half_h = p.w / 2.0, p.h / 2.0
-                # Standard JLCPCB/PCBWay 6 mil (0.15mm) trace-to-pad clearance
-                cl_margin = 0.18 if ("thru_hole" in p.pad_type) else 0.15
+                if is_npth:
+                    p_dr = getattr(p, "drill", 0.0) or 0.65
+                    np_rad = p_dr / 2.0 + 0.55
+                    search_r = int(math.ceil(np_rad / grid_size))
+                    for dx in range(-search_r, search_r + 1):
+                        for dy in range(-search_r, search_r + 1):
+                            cx = (gx + dx) * grid_size
+                            cy = (gy + dy) * grid_size
+                            if math.hypot(cx - px, cy - py) <= np_rad:
+                                for l_idx in (0, 1):
+                                    occupied[(l_idx, gx + dx, gy + dy)] = "KEEPOUT_BODY"
+                    continue
+
+                eff_w = max(p.w, getattr(p, "drill", 0.0), 0.2)
+                eff_h = max(p.h, getattr(p, "drill", 0.0), 0.2)
+                half_w, half_h = eff_w / 2.0, eff_h / 2.0
+                cl_margin = 0.18 if "thru_hole" in p.pad_type else 0.15
                 
                 search_rx = int(math.ceil((half_w + cl_margin) / grid_size)) + 1
                 search_ry = int(math.ceil((half_h + cl_margin) / grid_size)) + 1
@@ -1281,27 +1361,63 @@ class PCBLayout:
                                     if occ.startswith("CLEARANCE_") and occ != f"CLEARANCE_{p.net_name}":
                                         occupied[pt] = "CLEARANCE_CONFLICT"
 
+        # 2b. Block all Mounting Holes with full pad/clearance envelope as KEEPOUT_BODY
+        for mh in self._mounting_holes:
+            mh_gx, mh_gy = int(mh.x / grid_size), int(mh.y / grid_size)
+            mh_rad_cells = int(math.ceil((mh.pad_mm / 2.0 + 0.3) / grid_size))
+            for l_idx in (0, 1):
+                for dx in range(-mh_rad_cells, mh_rad_cells + 1):
+                    for dy in range(-mh_rad_cells, mh_rad_cells + 1):
+                        if dx*dx + dy*dy <= mh_rad_cells * mh_rad_cells:
+                            occupied[(l_idx, mh_gx + dx, mh_gy + dy)] = "KEEPOUT_BODY"
+
+        # 2c. Precompute via keepout envelope (mounting holes + all footprint pads)
+        via_keepout_cells = set()
+        for mh in self._mounting_holes:
+            mh_gx, mh_gy = int(mh.x / grid_size), int(mh.y / grid_size)
+            rad_cells = int(math.ceil((mh.drill_mm / 2.0 + 0.8) / grid_size))
+            for dx in range(-rad_cells, rad_cells + 1):
+                for dy in range(-rad_cells, rad_cells + 1):
+                    if dx*dx + dy*dy <= rad_cells * rad_cells:
+                        via_keepout_cells.add((mh_gx + dx, mh_gy + dy))
+                        
+        for fp in self._footprints:
+            rad = math.radians(fp.rotation)
+            cos_r, sin_r = math.cos(rad), math.sin(rad)
+            for p in fp.pads:
+                px = fp.x + p.x * cos_r - p.y * sin_r
+                py = fp.y + p.x * sin_r + p.y * cos_r
+                p_gx, p_gy = int(round(px / grid_size)), int(round(py / grid_size))
+                is_np = (not p.net_name or "np_thru_hole" in p.pad_type or p.number == "MP")
+                p_dr = getattr(p, "drill", 0.0) or (0.65 if is_np else 0.0)
+                pad_span = max(p.w, p.h) / 2.0
+                min_d = (p_dr / 2.0 + 0.70) if is_np else ((p_dr / 2.0 + 0.55) if p_dr > 0 else (pad_span + 0.50))
+                rad_cells = int(math.ceil(min_d / grid_size))
+                for dx in range(-rad_cells, rad_cells + 1):
+                    for dy in range(-rad_cells, rad_cells + 1):
+                        if dx*dx + dy*dy <= rad_cells * rad_cells:
+                            via_keepout_cells.add((p_gx + dx, p_gy + dy))
+
         def astar(start_px, start_py, start_l, end_px, end_py, end_l, current_net_width, net_name):
             start_x_g, start_y_g = int(start_px/grid_size), int(start_py/grid_size)
             end_loc = (int(end_px/grid_size), int(end_py/grid_size))
-            target_net_cells = net_pad_cells_map.get(net_name, set())
+            # Restrict allowed copper/clearance entry strictly to start and target endpoints
+            target_net_cells = set()
+            for l_idx in (0, 1):
+                for dx in range(-1, 2):
+                    for dy in range(-1, 2):
+                        target_net_cells.add((l_idx, start_x_g + dx, start_y_g + dy))
+                        target_net_cells.add((l_idx, end_loc[0] + dx, end_loc[1] + dy))
             
-            start_layers = [0, 1] if start_l == -1 else [start_l]
             open_set = []
+            heapq.heappush(open_set, (0, (start_l if start_l != -1 else 0, start_x_g, start_y_g)))
             came_from = {}
-            g_score = {}
+            g_score = {(start_l if start_l != -1 else 0, start_x_g, start_y_g): 0}
             
-            for sl in start_layers:
-                sg = (sl, start_x_g, start_y_g)
-                open_set.append((0, sg))
-                g_score[sg] = 0
-            
-            directions = [(0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1), (1, 0, 0)]
-            
-            margin_edge = 0.8
+            margin_edge = 1.0 # mm
             min_x = int((self.board.origin_x + margin_edge) / grid_size)
-            min_y = int((self.board.origin_y + margin_edge) / grid_size)
             max_x = int((self.board.origin_x + self.board.width_mm - margin_edge) / grid_size)
+            min_y = int((self.board.origin_y + margin_edge) / grid_size)
             max_y = int((self.board.origin_y + self.board.height_mm - margin_edge) / grid_size)
             
             nodes_explored = 0
@@ -1319,69 +1435,137 @@ class PCBLayout:
                         pths.append(current)
                     return pths[::-1]
 
-                for dl, dx, dy in directions:
+                # 8 planar directions (4 orthogonal + 4 diagonal) + 1 layer change (via)
+                directions = [
+                    (0, 1, 0, 1.0), (0, -1, 0, 1.0), (0, 0, 1, 1.0), (0, 0, -1, 1.0),
+                    (0, 1, 1, 1.4142), (0, 1, -1, 1.4142), (0, -1, 1, 1.4142), (0, -1, -1, 1.4142),
+                    (1, 0, 0, 8.0)
+                ]
+
+                for dl, dx, dy, step_cost in directions:
                     nb_l = c_l if dl == 0 else 1 - c_l
                     nb_x, nb_y = cx + dx, cy + dy
                     nb = (nb_l, nb_x, nb_y)
                     
                     if nb_x < min_x or nb_x > max_x or nb_y < min_y or nb_y > max_y:
                         continue
-                        
+                    
+                    # For diagonal moves, ensure both adjacent cardinal cells are strictly clear of other nets
+                    if dl == 0 and dx != 0 and dy != 0:
+                        card1 = (c_l, cx + dx, cy)
+                        card2 = (c_l, cx, cy + dy)
+                        diag_corner_blocked = False
+                        for c_pt in (card1, card2):
+                            if c_pt in occupied:
+                                c_occ = occupied[c_pt]
+                                if c_occ == "KEEPOUT_BODY" or (c_occ != net_name and not c_occ.startswith(f"CLEARANCE_{net_name}")):
+                                    if c_pt not in target_net_cells:
+                                        diag_corner_blocked = True
+                                        break
+                        if diag_corner_blocked:
+                            continue
+
+                    cost = step_cost
                     if nb in occupied:
                         occ_val = occupied[nb]
                         if occ_val == "KEEPOUT_BODY":
                             continue  # Absolutely NEVER enter IC/MCU body interiors!
                         
-                        if occ_val.startswith("CLEARANCE_"):
+                        if occ_val.startswith("CLEARANCE_") or occ_val == "CLEARANCE_CONFLICT":
                             cl_net = occ_val.replace("CLEARANCE_", "")
                             if cl_net != net_name:
                                 if nb not in target_net_cells:
-                                    continue # Hard block for different net's clearance corridor
+                                    continue # Hard block across board
                         elif occ_val != net_name:
                             # Hard block for different net's exact copper
                             if nb not in target_net_cells:
                                 continue
-                            
-                    cost = 1
                     if current_net_width > self.default_trace_width and dl == 0:
-                        thick_blocked = False
-                        for vx, vy in ((1,0), (-1,0), (0,1), (0,-1)):
-                            v_nb = (nb_l, nb_x + vx, nb_y + vy)
-                            if v_nb in occupied:
-                                vocc = occupied[v_nb]
-                                if vocc.startswith("CLEARANCE_") and vocc != f"CLEARANCE_{net_name}":
-                                    thick_blocked = True
-                                    break
-                                elif vocc == "CLEARANCE_CONFLICT":
-                                    thick_blocked = True
-                                    break
-                        if thick_blocked: continue
-                        
-                    if dl != 0:
-                        via_blocked = False
-                        for vx in (-1, 0, 1):
-                            for vy in (-1, 0, 1):
+                        if nb not in target_net_cells:
+                            thick_blocked = False
+                            for vx, vy in ((1,0), (-1,0), (0,1), (0,-1)):
                                 v_nb = (nb_l, nb_x + vx, nb_y + vy)
                                 if v_nb in occupied:
                                     vocc = occupied[v_nb]
                                     if vocc.startswith("CLEARANCE_") and vocc != f"CLEARANCE_{net_name}":
-                                        via_blocked = True
+                                        thick_blocked = True
                                         break
                                     elif vocc == "CLEARANCE_CONFLICT":
-                                        via_blocked = True
+                                        thick_blocked = True
                                         break
-                            if via_blocked: break
+                            if thick_blocked: continue
+                        
+                    if dl != 0:
+                        if (nb_x, nb_y) in via_keepout_cells:
+                            continue
+                            
+                        via_blocked = False
+                        curr_via_x, curr_via_y = nb_x * grid_size, nb_y * grid_size
+                                
+                        # 3. Check distance to existing vias (min 0.8mm)
+                        for ev in self._vias:
+                            if math.hypot(curr_via_x - ev.x, curr_via_y - ev.y) < 0.8:
+                                via_blocked = True
+                                break
+                                    
+                        # 4. Check 3-cell keepout envelope on both layers (0.35mm radius)
+                        if not via_blocked:
+                            for l_check in (0, 1):
+                                for vx in range(-3, 4):
+                                    for vy in range(-3, 4):
+                                        if vx*vx + vy*vy <= 8:
+                                            v_nb = (l_check, nb_x + vx, nb_y + vy)
+                                            if v_nb in occupied:
+                                                vocc = occupied[v_nb]
+                                                if vocc == "KEEPOUT_BODY" or (vocc != net_name and not vocc.startswith(f"CLEARANCE_{net_name}")):
+                                                    via_blocked = True
+                                                    break
+                                    if via_blocked: break
+                                if via_blocked: break
+                                    
                         if via_blocked:
                             continue
                         
-                        cost = 8  # Via cost penalty
+                        cost = 8.0  # Via cost penalty
+
                     tentative_g = g_score[current] + cost
                     if nb not in g_score or tentative_g < g_score[nb]:
                         came_from[nb] = current
                         g_score[nb] = tentative_g
-                        h = abs(nb_x - end_loc[0]) + abs(nb_y - end_loc[1]) + (0 if dl == 0 else 4)
+                        # Euclidean distance heuristic
+                        h = math.hypot(nb_x - end_loc[0], nb_y - end_loc[1]) + (0 if dl == 0 else 4.0)
                         heapq.heappush(open_set, (tentative_g + h, nb))
             return None
+
+        def _chamfer_points(pts_mm, max_c=0.6):
+            if len(pts_mm) < 3:
+                return pts_mm
+            res = [pts_mm[0]]
+            for i in range(1, len(pts_mm) - 1):
+                p_prev = res[-1]
+                p_curr = pts_mm[i]
+                p_next = pts_mm[i + 1]
+                v1_x, v1_y = p_curr[0] - p_prev[0], p_curr[1] - p_prev[1]
+                l1 = math.hypot(v1_x, v1_y)
+                v2_x, v2_y = p_next[0] - p_curr[0], p_next[1] - p_curr[1]
+                l2 = math.hypot(v2_x, v2_y)
+                if l1 < 1e-4 or l2 < 1e-4:
+                    continue
+                u1_x, u1_y = v1_x / l1, v1_y / l1
+                u2_x, u2_y = v2_x / l2, v2_y / l2
+                dot = u1_x * u2_x + u1_y * u2_y
+                if dot > 0.999:
+                    continue
+                c = min(max_c, l1 * 0.4, l2 * 0.4)
+                if c > 0.05 and dot < 0.9:
+                    p1a = (p_curr[0] - u1_x * c, p_curr[1] - u1_y * c)
+                    p1b = (p_curr[0] + u2_x * c, p_curr[1] + u2_y * c)
+                    res.append(p1a)
+                    res.append(p1b)
+                else:
+                    res.append(p_curr)
+            res.append(pts_mm[-1])
+            return res
 
         routed_ok = 0
         routed_failed = 0
@@ -1429,6 +1613,11 @@ class PCBLayout:
 
                 target_u = unconnected_pads.pop(best_u_idx)
 
+                # If pad is collocated/adjacent with already connected tree point (<1.5mm on same part), mark as connected
+                if min_dist < 1.5:
+                    connected_pads.append(target_u)
+                    continue
+
                 path_grid = astar(
                     target_u[0], target_u[1], target_u[3],
                     best_target_pt[0], best_target_pt[1], best_target_pt[2],
@@ -1454,55 +1643,92 @@ class PCBLayout:
                     for gp in path_grid[::step_skip]:
                         net_tree_points.append((gp[1] * grid_size, gp[2] * grid_size, gp[0]))
 
-                    # Simplify path: merge contiguous collinear segments on the same layer
-                    simple_path = [path_grid[0]]
-                    for k in range(1, len(path_grid) - 1):
-                        p_prev = path_grid[k - 1]
-                        p_curr = path_grid[k]
-                        p_next = path_grid[k + 1]
-                        d_prev = (p_curr[1] - p_prev[1], p_curr[2] - p_prev[2])
-                        d_next = (p_next[1] - p_curr[1], p_next[2] - p_curr[2])
-                        if p_prev[0] != p_curr[0] or p_curr[0] != p_next[0] or d_prev != d_next:
-                            simple_path.append(p_curr)
-                    simple_path.append(path_grid[-1])
+                    # Raycast string-pulling along octilinear directions (0°, 90°, 45°)
+                    def _simplify_octilinear(p_list):
+                        if len(p_list) <= 2:
+                            return p_list
+                        res = [p_list[0]]
+                        idx = 0
+                        while idx < len(p_list) - 1:
+                            best_j = idx + 1
+                            l_curr = p_list[idx][0]
+                            for j in range(len(p_list) - 1, idx, -1):
+                                if p_list[j][0] != l_curr:
+                                    continue
+                                p1 = p_list[idx]
+                                p2 = p_list[j]
+                                dx = p2[1] - p1[1]
+                                dy = p2[2] - p1[2]
+                                if dx == 0 or dy == 0 or abs(dx) == abs(dy):
+                                    steps = max(abs(dx), abs(dy))
+                                    step_x = dx // steps
+                                    step_y = dy // steps
+                                    clear = True
+                                    for s in range(0, steps + 1):
+                                        cx = p1[1] + s * step_x
+                                        cy = p1[2] + s * step_y
+                                        for cdx in (-1, 0, 1):
+                                            for cdy in (-1, 0, 1):
+                                                t_pt = (l_curr, cx + cdx, cy + cdy)
+                                                if t_pt in occupied:
+                                                    occ = occupied[t_pt]
+                                                    if occ == "KEEPOUT_BODY":
+                                                        clear = False
+                                                        break
+                                                    if occ != net_name and not occ.startswith(f"CLEARANCE_{net_name}"):
+                                                        clear = False
+                                                        break
+                                            if not clear: break
+                                        if not clear: break
+                                    if clear:
+                                        best_j = j
+                                        break
+                            res.append(p_list[best_j])
+                            idx = best_j
+                        return res
+
+                    simple_path = _simplify_octilinear(path_grid)
 
                     start_pt = simple_path[0]
                     for gp in simple_path[1:]:
                         if start_pt != gp:
                             if start_pt[0] != gp[0]:
                                 self.add_via(start_pt[1] * grid_size, start_pt[2] * grid_size, net=net_name)
+                                # Mark via keepout on both layers
+                                for l_idx in (0, 1):
+                                    for dx in range(-4, 5):
+                                        for dy in range(-4, 5):
+                                            if dx*dx + dy*dy <= 16:
+                                                occ_pt = (l_idx, start_pt[1] + dx, start_pt[2] + dy)
+                                                if dx == 0 and dy == 0:
+                                                    occupied[occ_pt] = net_name
+                                                    net_pad_cells_map.setdefault(net_name, set()).add(occ_pt)
+                                                else:
+                                                    occupied[occ_pt] = f"CLEARANCE_{net_name}"
                             else:
                                 self._traces.append(Trace(
                                     start_pt[1] * grid_size, start_pt[2] * grid_size,
                                     gp[1] * grid_size, gp[2] * grid_size,
                                     width=net_w, layer=layers[start_pt[0]], net_id=nid
                                 ))
-                            start_pt = gp
-
-                    # Occupy cells along path + clearance corridor
-                    for k, pt in enumerate(path_grid):
-                        is_via = (k > 0 and path_grid[k-1][0] != pt[0]) or (k < len(path_grid)-1 and path_grid[k+1][0] != pt[0])
-                        cl_cells = 2 if is_via else 1
-                        layers_to_block = [0, 1] if is_via else [pt[0]]
-                        
-                        for l_idx in layers_to_block:
-                            for dx in range(-cl_cells, cl_cells + 1):
-                                for dy in range(-cl_cells, cl_cells + 1):
-                                    occ_pt = (l_idx, pt[1] + dx, pt[2] + dy)
-                                    if occ_pt in occupied:
-                                        occ = occupied[occ_pt]
-                                        if occ not in (net_name, "KEEPOUT_BODY"):
-                                            if occ.startswith("CLEARANCE_") and occ != f"CLEARANCE_{net_name}":
-                                                occupied[occ_pt] = "CLEARANCE_CONFLICT"
+                                # Mark trace and clearance corridor along actual physical segment
+                                l_idx = start_pt[0]
+                                dx = gp[1] - start_pt[1]
+                                dy = gp[2] - start_pt[2]
+                                steps = max(abs(dx), abs(dy), 1)
+                                for s in range(0, steps + 1):
+                                    cx = int(round(start_pt[1] + s * dx / steps))
+                                    cy = int(round(start_pt[2] + s * dy / steps))
+                                    for cdx in range(-2, 3):
+                                        for cdy in range(-2, 3):
+                                            occ_pt = (l_idx, cx + cdx, cy + cdy)
+                                            if cdx == 0 and cdy == 0:
+                                                occupied[occ_pt] = net_name
+                                                net_pad_cells_map.setdefault(net_name, set()).add(occ_pt)
                                             else:
-                                                occupied[occ_pt] = f"CLEARANCE_{net_name}"
-                                    else:
-                                        occupied[occ_pt] = f"CLEARANCE_{net_name}"
-                                    
-                                    # Center is exact copper
-                                    if dx == 0 and dy == 0 and l_idx == pt[0]:
-                                        occupied[occ_pt] = net_name
-                                        net_pad_cells_map.setdefault(net_name, set()).add(occ_pt)
+                                                if occ_pt not in occupied or occupied[occ_pt] != net_name:
+                                                    occupied[occ_pt] = f"CLEARANCE_{net_name}"
+                            start_pt = gp
                 else:
                     routed_failed += 1
                     logger.warning("pcb_layout", f"Segmento sin rutear en net '{net_name}' para pad ({target_u[0]:.2f}, {target_u[1]:.2f})")

@@ -330,7 +330,8 @@ def get_health():
         "status": "healthy",
         "kicad_available": kicad_bridge.available,
         "kicad_version": kicad_bridge.version if kicad_bridge.available else "Not detected",
-        "freerouting_available": freerouting_bridge.jar_path != "",
+        "freerouting_available": freerouting_bridge.exe_path is not None,
+        "freerouting_path": str(freerouting_bridge.exe_path) if freerouting_bridge.exe_path else None,
         "rag_chunks": kb_stats.get("total_chunks", 5708),
         "components_in_db": len(comp_db.all()),
         "supported_providers": ["jlcpcb", "pcbway"]

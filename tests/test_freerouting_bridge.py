@@ -32,3 +32,10 @@ def test_export_dsn_mock(mock_run, tmp_path):
     result_dsn = bridge.export_dsn(pcb_file, dsn_file)
     assert result_dsn == dsn_file
     mock_run.assert_called_once()
+
+def test_discover_freerouting_local():
+    bridge = FreeRoutingBridge()
+    discovered = bridge._discover_freerouting()
+    if discovered:
+        assert discovered.exists()
+        assert "freerouting" in discovered.name.lower()

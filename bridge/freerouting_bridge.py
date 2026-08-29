@@ -27,10 +27,41 @@ class FreeRoutingResult:
 class FreeRoutingBridge:
     def __init__(self, freerouting_jar_path: Optional[str] = None):
         """
-        Initializes FreeRouting Bridge. If freerouting_jar_path is not specified,
-        attempts to find 'freerouting' in PATH or default locations.
+        Initializes FreeRouting Bridge. Detects 'freerouting.exe' in AppData/Local,
+        PATH, or custom JAR/executable path.
         """
-        self.jar_path = freerouting_jar_path or os.environ.get("FREEROUTING_JAR", "")
+        self.jar_path = freerouting_jar_path or os.environ.get("FREEROUTING_JAR", "") or os.environ.get("FREEROUTING_EXE", "")
+        self.exe_path = self._discover_freerouting()
+
+    def _discover_freerouting(self) -> Optional[Path]:
+        # 1. Custom specified path
+        if self.jar_path:
+            p = Path(self.jar_path).resolve()
+            if p.exists():
+                return p
+
+        # 2. Check AppData Local on Windows
+        local_app_data = os.environ.get("LOCALAPPDATA", "")
+        candidates = []
+        if local_app_data:
+            candidates.append(Path(local_app_data) / "freerouting" / "freerouting.exe")
+        candidates.extend([
+            Path.home() / "AppData" / "Local" / "freerouting" / "freerouting.exe",
+            Path.home() / ".local" / "bin" / "freerouting",
+            Path("/usr/local/bin/freerouting"),
+            Path("/usr/bin/freerouting")
+        ])
+
+        for c in candidates:
+            if c.exists():
+                return c
+
+        # 3. Check system PATH
+        which_fr = shutil.which("freerouting") or shutil.which("freerouting.exe")
+        if which_fr:
+            return Path(which_fr)
+
+        return None
 
     def export_dsn(self, pcb_path: Path, dsn_path: Optional[Path] = None) -> Path:
         """
@@ -54,7 +85,7 @@ class FreeRoutingBridge:
 
         return dsn_path
 
-    def run_freerouting(self, dsn_path: Path, output_ses_path: Optional[Path] = None, timeout_sec: int = 120) -> FreeRoutingResult:
+    def run_freerouting(self, dsn_path: Path, output_ses_path: Optional[Path] = None, timeout_sec: int = 120, max_passes: int = 10, threads: int = 1) -> FreeRoutingResult:
         """
         Runs FreeRouting auto-router engine on input DSN file.
         """
@@ -72,14 +103,19 @@ class FreeRoutingBridge:
         else:
             output_ses_path = Path(output_ses_path).resolve()
 
-        # Check for java / jar execution
+        # Check for executable or java / jar execution
+        exe = self._discover_freerouting()
         java_cmd = shutil.which("java")
-        if self.jar_path and Path(self.jar_path).exists() and java_cmd:
-            cmd = [java_cmd, "-jar", self.jar_path, "-de", str(dsn_path), "-out", str(output_ses_path)]
-        elif shutil.which("freerouting"):
-            cmd = ["freerouting", "-de", str(dsn_path), "-out", str(output_ses_path)]
+
+        if exe and exe.suffix.lower() == ".exe":
+            cmd = [str(exe), "-de", str(dsn_path), "-do", str(output_ses_path), "-mt", str(threads), "-mp", str(max_passes)]
+        elif exe and exe.suffix.lower() == ".jar" and java_cmd:
+            cmd = [java_cmd, "-jar", str(exe), "-de", str(dsn_path), "-do", str(output_ses_path), "-mt", str(threads), "-mp", str(max_passes)]
+        elif exe and not exe.suffix: # linux/macos binary
+            cmd = [str(exe), "-de", str(dsn_path), "-do", str(output_ses_path), "-mt", str(threads), "-mp", str(max_passes)]
+        elif self.jar_path and Path(self.jar_path).exists() and java_cmd:
+            cmd = [java_cmd, "-jar", self.jar_path, "-de", str(dsn_path), "-do", str(output_ses_path), "-mt", str(threads), "-mp", str(max_passes)]
         else:
-            # If FreeRouting engine binary is not installed locally, return status indicating missing runner
             return FreeRoutingResult(
                 success=False,
                 dsn_path=dsn_path,
