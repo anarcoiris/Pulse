@@ -712,15 +712,15 @@ class AutoPlacementEngine:
             min_y = min(min_y, pos[1] - hh)
             max_y = max(max_y, pos[1] + hh)
 
-        total_w = (max_x - min_x) + 2.0 * edge_margin
-        total_h = (max_y - min_y) + 2.0 * edge_margin
+        half_w = max(abs(min_x), abs(max_x)) + edge_margin
+        half_h = max(abs(min_y), abs(max_y)) + edge_margin
 
-        # Snap up to 0.5mm grid
-        total_w = max(25.0, math.ceil(total_w * 2.0) / 2.0)
-        total_h = max(20.0, math.ceil(total_h * 2.0) / 2.0)
+        # Snap up to 0.5mm grid symmetrically around (0,0)
+        total_w = max(25.0, math.ceil(half_w * 4.0) / 2.0)
+        total_h = max(20.0, math.ceil(half_h * 4.0) / 2.0)
 
-        center_x = (min_x + max_x) / 2.0
-        center_y = (min_y + max_y) / 2.0
+        center_x = 0.0
+        center_y = 0.0
 
         shifted = []
         for c in components:

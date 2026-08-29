@@ -28,15 +28,14 @@ ENV/
 .DS_Store
 Thumbs.db
 
-# IDEs
+# IDEs & Agents
 .vscode/
 .idea/
 .cursor/
-# Keep shared Cursor rules/skills if you choose to track them later:
-# !.cursor/rules/
-# !.cursor/skills/
+task.md
+.gemini/
 
-# Understand-Anything knowledge graphs (large; commit intentionally if sharing)
+# Understand-Anything knowledge graphs
 .understand-anything/
 
 # Test caches
@@ -45,18 +44,22 @@ Thumbs.db
 # Office temp files
 ~$*
 
-# PulseLab Forge Artifacts
+# PulseLab Forge Artifacts & Dumps
 outputs/
 output/
 _archive/
 manufacturing/
 reports/
 knowledge/data/llm_sessions/
-knowledge/data/validation_complex/
+knowledge/data/validation_complex/runs/
+knowledge/experiences/quarantine/
 *_drc.json
+*drc*.json
+*drc*.rpt
 drc_report.json
 board-drc.rpt
 board_statistics.rpt
+test_out.svg
 *.kicad_pcb
 *.kicad_prl
 *.kicad_pro
@@ -65,13 +68,12 @@ fp-info-cache
 *.gbr
 *.drl
 *.pdf
-# Doc archive: track markdown/tex sources; skip LaTeX build artifacts and binaries
-docs/archive/**/*.aux
-docs/archive/**/*.out
-docs/archive/**/*.toc
-docs/archive/**/*.png
+
+# Scratch & Temporary Scripts
+scratch/
 scripts/test*.py
-scratch/*
+scripts/*_synth*.json
+
 # Webapp
 node_modules/
 .next/
@@ -85,4 +87,3 @@ out/
 # Logs
 *.log
 logs/
-.env
